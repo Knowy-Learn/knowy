@@ -16,10 +16,14 @@
 	<link rel="stylesheet" th:href="@{/styles/global-reset.css}">
 	<link rel="stylesheet" th:href="@{/styles/font.css}">
 	<link rel="stylesheet" th:href="@{/styles/layouts/user-postlogin-layout.css}">
+
+	<link rel="icon" href="/images/logoWoutText.png" type="image/png">
 </head>
 <body>
 
-<header th:replace="~{components/navbar :: knowy-navbar(username=${nickname}, avatar=${profileImageUrl})}"></header>
+<div th:if="${nickname != null}">
+	<header th:replace="~{components/navbar :: knowy-navbar(username=${nickname}, avatar=${profileImageUrl})}"></header>
+</div>
 
 <div class="layout-body">
 	<main layout:fragment="main-content"></main>
