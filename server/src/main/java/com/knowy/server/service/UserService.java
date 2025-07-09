@@ -72,7 +72,7 @@ public class UserService {
 		if (publicUser.isEmpty()) {
 			throw new UserNotFoundException("User not found");
 		}
-		if (!isCurrentNickname(newNickname, publicUser.get())) {
+		if (isCurrentNickname(newNickname, publicUser.get())) {
 			throw new UnchangedNicknameException("Nickname must be different from the current one.");
 		}
 		if (publicUserRepository.existsByNickname(newNickname)) {
@@ -102,11 +102,17 @@ public class UserService {
 	}
 
 	public void updateLanguages(@Nonnull Integer userId, String[] languages) throws UserNotFoundException {
+
+		if(languages == null){
+			return;
+		}
+
 		PublicUserEntity user = publicUserRepository.findUserById(userId)
 			.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 		Set<LanguageEntity> newLanguages = languageRepository.findByNameInIgnoreCase(languages);
 
 		user.setLanguages(newLanguages);
+
 		publicUserRepository.save(user);
 	}
 
