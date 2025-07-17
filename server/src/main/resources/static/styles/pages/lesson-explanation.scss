@@ -1,6 +1,7 @@
 @use "../global-vars" as *;
 @use "../components/lesson/documents-links" as *;
 @use "../pages/course-page" as *;
+@use "../components/lesson/solutions-component" as *;
 
 body {
 	box-sizing: border-box;

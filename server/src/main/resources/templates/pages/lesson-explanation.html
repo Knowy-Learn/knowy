@@ -74,6 +74,7 @@
 	</div>
 
 	<th:block th:if="${!isIntro and lesson != null and lesson.status.name() == 'COMPLETE'}">
+
 		<div class="component"
 			 th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">
 		</div>
