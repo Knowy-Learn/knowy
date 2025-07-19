@@ -18,5 +18,5 @@ public interface PublicUserLessonRepository {
 
 	int countByUserIdAndCourseIdAndStatus(Integer userId, Integer courseId, String status);
 
-	Optional<PublicUserLessonEntity> findById(PublicUserLessonIdEntity publicUserLessonIdEntity);
+	Optional<PublicUserLessonEntity> findById(PublicUserLessonIdEntity id);
 }
