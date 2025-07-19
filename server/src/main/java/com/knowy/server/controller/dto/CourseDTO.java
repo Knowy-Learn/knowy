@@ -7,10 +7,13 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class CourseDTO {
 	private String name;
 	private int percentageCompleted;
 	private List<LessonDTO> lessons;
+	private String description;
+	private String image;
+	private List<String> languages;
 }

@@ -9,8 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SolutionDto {
-	private String cardTitle;
-	private String question;
-	private String answer;
+public class LessonPageDataDTO {
+	private CourseDTO course;
+	private LessonDTO lesson;
+	private String lessonContent;
+	private int lastLesson;
+	private Integer nextLessonId;
 }

@@ -1,17 +1,13 @@
 package com.knowy.server.service;
 
-import com.knowy.server.controller.dto.CourseCardDTO;
+import com.knowy.server.controller.dto.*;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.entity.*;
-import com.knowy.server.repository.ports.CourseRepository;
-import com.knowy.server.repository.ports.LanguageRepository;
-import com.knowy.server.repository.ports.LessonRepository;
-import com.knowy.server.repository.ports.PublicUserLessonRepository;
+import com.knowy.server.repository.ports.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,12 +16,14 @@ public class CourseSubscriptionService {
 	private final LessonRepository lessonRepository;
 	private final PublicUserLessonRepository publicUserLessonRepository;
 	private final LanguageRepository languageRepository;
+	private final ExerciseRepository exerciseRepository;
 
-	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository, LanguageRepository languageRepository) {
+	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository, LanguageRepository languageRepository, ExerciseRepository exerciseRepository) {
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
 		this.publicUserLessonRepository = publicUserLessonRepository;
 		this.languageRepository = languageRepository;
+		this.exerciseRepository = exerciseRepository;
 	}
 
 	public List<CourseCardDTO> getUserCourses(Integer userId) {
@@ -39,58 +37,50 @@ public class CourseSubscriptionService {
 
 	public List<CourseCardDTO> getRecommendedCourses(Integer userId) {
 		List<CourseEntity> userCourses = findCoursesByUserId(userId);
-
-		List<Integer> userCourseIds = userCourses.stream()
-			.map(CourseEntity::getId)
-			.toList();
-
 		Set<String> userLanguages = userCourses.stream()
-			.flatMap(course -> findLanguagesForCourse(course).stream())
+			.flatMap(course -> course.getLanguages().stream())
+			.map(LanguageEntity::getName)
 			.collect(Collectors.toSet());
 
-		List<CourseEntity> allCourses = findAllCourses().stream()
+		Set<Integer> userCourseIds = userCourses.stream()
+			.map(CourseEntity::getId)
+			.collect(Collectors.toSet());
+
+		List<CourseEntity> recommendations = findAllCourses().stream()
 			.filter(course -> !userCourseIds.contains(course.getId()))
+			.sorted((a, b) -> {
+				// Ordenar primero los cursos que comparten idioma
+				boolean aMatches = matchesAnyLanguage(a, userLanguages);
+				boolean bMatches = matchesAnyLanguage(b, userLanguages);
+				return Boolean.compare(!aMatches, !bMatches); // true va después
+			})
+			.limit(3)
 			.toList();
 
-		List<CourseEntity> langMatching = allCourses.stream()
-			.filter(course -> {
-				List<String> courseLangs = findLanguagesForCourse(course);
-				return courseLangs.stream().anyMatch(userLanguages::contains);
-			}).toList();
-
-		List<CourseCardDTO> recommendations = langMatching.stream()
-			.limit(3)
+		return recommendations.stream()
 			.map(course -> CourseCardDTO.fromRecommendation(
-				course, findLanguagesForCourse(course), course.getCreationDate()))
-			.collect(Collectors.toList());
-
-		if (recommendations.size() < 3) {
-			List<CourseEntity> remaining = allCourses.stream()
-				.filter(course -> !langMatching.contains(course))
-				.toList();
-
-			for(CourseEntity course : remaining){
-				if(recommendations.size() >= 3){
-					break;
-				}
-				recommendations.add(CourseCardDTO.fromRecommendation(
-					course, findLanguagesForCourse(course), course.getCreationDate()
-				));
-			}
-		}
-		return recommendations;
+				course,
+				findLanguagesForCourse(course),
+				course.getCreationDate()))
+			.toList();
 	}
 
-	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException{
+	private boolean matchesAnyLanguage(CourseEntity course, Set<String> userLanguages) {
+		return course.getLanguages().stream()
+			.map(LanguageEntity::getName)
+			.anyMatch(userLanguages::contains);
+	}
+
+	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException {
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
-		if (lessons.isEmpty()){
+		if (lessons.isEmpty()) {
 			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
 		}
 
 		boolean alreadySubscribed = lessons.stream()
 			.allMatch(lesson ->
 				publicUserLessonRepository.existsByUserIdAndLessonId(userId, lesson.getId()));
-		if (alreadySubscribed){
+		if (alreadySubscribed) {
 			throw new KnowyCourseSubscriptionException("Ya estás suscrito a este curso");
 		}
 
@@ -129,10 +119,56 @@ public class CourseSubscriptionService {
 		int completedLessons = publicUserLessonRepository.countByUserIdAndCourseIdAndStatus(userId, courseId, "completed");
 		return (int) Math.round((completedLessons * 100.0 / totalLessons));
 	}
+
 	public List<String> findAllLanguages() {
 		return languageRepository.findAll()
 			.stream()
 			.map(LanguageEntity::getName)
 			.toList();
 	}
+
+	public CourseEntity getCourseById(Integer courseId) {
+		return courseRepository.findById(courseId)
+			.orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+	}
+
+	public List<LessonEntity> getLessonsByCourseId(Integer courseId) {
+		return lessonRepository.findByCourseId(courseId);
+	}
+
+	public String getLessonStatus(Integer userId, Integer lessonId) {
+		return publicUserLessonRepository.findById(new PublicUserLessonIdEntity(userId, lessonId))
+			.map(PublicUserLessonEntity::getStatus)
+			.orElse("blocked");
+	}
+
+	public LessonEntity getLessonById(Integer lessonId) {
+		return lessonRepository.findById(lessonId)
+			.orElseThrow(() -> new RuntimeException("Lección no encontrada"));
+	}
+
+	public int findLessonIndexByTitle(List<LessonEntity> lessons, String title) {
+		for (int i = 0; i < lessons.size(); i++) {
+			if (lessons.get(i).getTitle().equalsIgnoreCase(title)) return i;
+		}
+		throw new RuntimeException("No se encontró la lección");
+	}
+
+	public List<DocumentationEntity> getLessonDocumentsRaw(Integer lessonId) {
+		LessonEntity lesson = lessonRepository.findById(lessonId)
+			.orElseThrow(() -> new RuntimeException("Lección no encontrada"));
+		return Optional.ofNullable(lesson.getDocumentations()).orElse(List.of());
+	}
+
+	public List<DocumentationEntity> getAllCourseDocumentsRaw(Integer courseId) {
+		return lessonRepository.findByCourseId(courseId).stream()
+			.flatMap(lesson -> Optional.ofNullable(lesson.getDocumentations()).stream().flatMap(Collection::stream))
+			.distinct()
+			.toList();
+	}
+
+	public List<ExerciseEntity> getLessonExercises(Integer lessonId) {
+		return exerciseRepository.findByLessonId(lessonId);
+	}
 }
+
