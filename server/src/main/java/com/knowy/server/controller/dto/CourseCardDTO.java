@@ -22,6 +22,7 @@ public class CourseCardDTO {
 	private ActionType action;
 	private ArrayList<String> languages;
 	private LocalDateTime creationDate;
+	private String imageUrl;
 
 	public enum ActionType {
 		START,
@@ -37,6 +38,7 @@ public class CourseCardDTO {
 		dto.setAction(ActionType.START);
 		dto.setLanguages(new ArrayList<>(languages));
 		dto.setCreationDate(creationDate);
+		dto.setImageUrl(course.getImage());
 		return dto;
 	}
 
@@ -50,6 +52,7 @@ public class CourseCardDTO {
 		dto.setAction(ActionType.ACQUIRE);
 		dto.setLanguages(new ArrayList<>(languages));
 		dto.setCreationDate(creationDate);
+		dto.setImageUrl(course.getImage());
 		return dto;
 	}
 }

@@ -9,7 +9,8 @@ public record LessonDto(
         String title,
         String image,
         String duration,
-        LessonStatus status
+        LessonStatus status,
+		Integer nextLessonId
 ) {
 
     public static List<LessonDto> fromEntities(List<PublicUserLessonEntity> userLessons) {
@@ -19,13 +20,18 @@ public record LessonDto(
     }
 
     public static LessonDto fromEntity(PublicUserLessonEntity userLesson) {
-        return new LessonDto(
-                userLesson.getLessonId(),
-                userLesson.getLessonEntity().getTitle(),
-                null,
-                null,
-                LessonDto.LessonStatus.fromString(userLesson.getStatus())
-        );
+		Integer nextLessonId = null;
+		if (userLesson.getLessonEntity().getNextLesson() != null) {
+			nextLessonId = userLesson.getLessonEntity().getNextLesson().getId();
+		}
+		return new LessonDto(
+			userLesson.getLessonId(),
+			userLesson.getLessonEntity().getTitle(),
+			null,
+			null,
+			LessonDto.LessonStatus.fromString(userLesson.getStatus()),
+			nextLessonId
+		);
     }
 
     public enum LessonStatus {

@@ -61,15 +61,25 @@ public class PublicUserLessonService {
 			.orElseThrow(() -> new PublicUserLessonException("Relation public user lesson not found"));
 		publicUserLesson.setStatus("completed");
 
-		Optional<PublicUserLessonEntity> publicUserLessonNext = findById(
-			userId,
-			publicUserLesson.getLessonEntity().getNextLesson().getId()
-		);
+		if (publicUserLesson.getLessonEntity().getNextLesson() != null) {
+			int nextLessonId = publicUserLesson.getLessonEntity().getNextLesson().getId();
 
-		publicUserLessonNext.ifPresent(nextLesson ->
-			nextLesson.setStatus("in_progress")
-		);
+			Optional<PublicUserLessonEntity> publicUserLessonNext = findById(userId, nextLessonId);
+			publicUserLessonNext.ifPresent(nextLesson -> nextLesson.setStatus("in_progress"));
+		}
 
 		publicUserLessonRepository.save(publicUserLesson);
+
+
+//		Optional<PublicUserLessonEntity> publicUserLessonNext = findById(
+//			userId,
+//			publicUserLesson.getLessonEntity().getNextLesson().getId()
+//		);
+//
+//		publicUserLessonNext.ifPresent(nextLesson ->
+//			nextLesson.setStatus("in_progress")
+//		);
+//
+//		publicUserLessonRepository.save(publicUserLesson);
 	}
 }

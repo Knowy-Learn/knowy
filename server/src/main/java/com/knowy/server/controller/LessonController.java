@@ -74,6 +74,9 @@ public class LessonController {
 		model.addAttribute("courseId", courseDto.id());
 		model.addAttribute("isIntro", true);
 		model.addAttribute("LinksList", documentationDto);
+		Integer nextLessonId = getNextLessonId(lessonsDto);
+		model.addAttribute("nextLessonId", nextLessonId);
+		model.addAttribute("isCourseCompleted", nextLessonId == null);
 	}
 
 	private List<DocumentationEntity> getAllLessonDocumentations(List<PublicUserLessonEntity> publicUserLessonEntities) {
@@ -83,12 +86,15 @@ public class LessonController {
 			.toList();
 	}
 
-	private int getNextLessonId(List<LessonDto> lessons) throws NextLessonNotFoundException {
+	private Integer getNextLessonId(List<LessonDto> lessons) {
 		return lessons.stream()
-			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.NEXT_LESSON)
+			.filter(lesson ->
+				lesson.status() == LessonDto.LessonStatus.NEXT_LESSON ||
+					lesson.status() == LessonDto.LessonStatus.COMPLETE
+			)
 			.findFirst()
 			.map(LessonDto::id)
-			.orElseThrow(() -> new NextLessonNotFoundException("No fue posible identificar la próxima lección en el curso actual."));
+			.orElse(null);
 	}
 
 	/**
