@@ -26,17 +26,6 @@
 									th:selected="${category != null and #strings.equalsIgnoreCase(category, lang)}"></option>
 						</select>
 
-						<!-- Difficulty (Implement in the future when courses were implemented) -->
-						<!-- <div class="dropdown-categories">-->
-						<!-- <label for="difficulty" class="form-label d-block mb-1">Dificultad</label>-->
-						<!-- <select class="form-select btn-difficulty w-100" name="difficulty" id="difficulty">-->
-						<!-- <option value="">Todas</option>-->
-						<!-- <option value="1">Fácil</option>-->
-						<!-- <option value="2">Intermedio</option>-->
-						<!-- <option value="2">Difícil</option>-->
-						<!-- </select>-->
-						<!-- </div>-->
-
 						<!-- Order -->
 						<select class="form-select filter-select me-2" name="order" id="order">
 							<option value="alpha_asc" th:selected="${order == 'alpha_asc'}">Alfabético A→Z</option>
