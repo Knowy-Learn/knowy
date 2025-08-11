@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class UserPrivate extends User implements Serializable {
-	private final String email;
+	private final Email email;
 	private final String password;
 	private final boolean active;
 
@@ -14,7 +14,7 @@ public class UserPrivate extends User implements Serializable {
 		String nickname,
 		ProfileImage profileImage,
 		Set<Category> categories,
-		String email,
+		Email email,
 		String password,
 		boolean active
 	) {
@@ -24,15 +24,15 @@ public class UserPrivate extends User implements Serializable {
 		this.active = active;
 	}
 
-	public UserPrivate(User user, String email, String password, boolean active) {
+	public UserPrivate(User user, Email email, String password, boolean active) {
 		this(user.id(), user.nickname(), user.profileImage(), user.categories(), email, password, active);
 	}
 
-	public UserPrivate(User user, String email, String password) {
+	public UserPrivate(User user, Email email, String password) {
 		this(user, email, password, true);
 	}
 
-	public String email() {
+	public Email email() {
 		return email;
 	}
 

@@ -2,6 +2,8 @@ package com.knowy.server.infrastructure.config;
 
 import com.knowy.server.application.*;
 import com.knowy.server.application.ports.*;
+import com.knowy.server.application.usecase.register.UserSignUpUseCase;
+import com.knowy.server.application.usecase.register.UserSingUpCommand;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,12 +32,31 @@ public class ApplicationConfiguration {
 	public UserFacadeService userFacadeService(
 		KnowyEmailClientTool knowyEmailClientTool,
 		UserPrivateService userPrivateService,
-		UserService userService
+		UserService userService,
+		UserSignUpUseCase userSignUpUseCase
 	) {
 		return new UserFacadeService(
 			knowyEmailClientTool,
 			userPrivateService,
-			userService
+			userService,
+			userSignUpUseCase
+		);
+	}
+
+	@Bean
+	public UserSignUpUseCase userSignUpUseCase(
+		UserRepository userRepository,
+		UserPrivateRepository privateUserRepository,
+		KnowyPasswordChecker knowyPasswordChecker,
+		KnowyPasswordEncoder knowyPasswordEncoder,
+		ProfileImageRepository profileImageRepository
+	) {
+		return new UserSignUpUseCase(
+			userRepository,
+			privateUserRepository,
+			knowyPasswordEncoder,
+			knowyPasswordChecker,
+			profileImageRepository
 		);
 	}
 

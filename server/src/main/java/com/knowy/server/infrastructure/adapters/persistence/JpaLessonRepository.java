@@ -1,10 +1,9 @@
 package com.knowy.server.infrastructure.adapters.persistence;
 
-import com.knowy.server.domain.Lesson;
 import com.knowy.server.application.ports.LessonRepository;
+import com.knowy.server.domain.Lesson;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaLessonDao;
 import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaLessonMapper;
-import com.knowy.server.infrastructure.adapters.repository.mapper.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

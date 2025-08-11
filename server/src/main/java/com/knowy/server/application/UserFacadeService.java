@@ -1,5 +1,7 @@
 package com.knowy.server.application;
 
+import com.knowy.server.application.usecase.register.UserSignUpUseCase;
+import com.knowy.server.application.usecase.register.UserSingUpCommand;
 import com.knowy.server.domain.UserPrivate;
 import com.knowy.server.application.exception.*;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
@@ -15,6 +17,7 @@ public class UserFacadeService {
 	private final KnowyEmailClientTool knowyEmailClientTool;
 	private final UserPrivateService userPrivateService;
 	private final UserService userService;
+	private final UserSignUpUseCase userSignUpUseCase;
 
 	/**
 	 * The constructor
@@ -26,11 +29,12 @@ public class UserFacadeService {
 	public UserFacadeService(
 		KnowyEmailClientTool knowyEmailClientTool,
 		UserPrivateService userPrivateService,
-		UserService publicUserService
+		UserService publicUserService, UserSignUpUseCase userSignUpUseCase
 	) {
 		this.knowyEmailClientTool = knowyEmailClientTool;
 		this.userPrivateService = userPrivateService;
 		this.userService = publicUserService;
+		this.userSignUpUseCase = userSignUpUseCase;
 	}
 
 	/**
@@ -48,8 +52,7 @@ public class UserFacadeService {
 	 */
 	public UserPrivate registerNewUser(String nickname, String email, String password)
 		throws KnowyInvalidUserException, KnowyImageNotFoundException {
-		NewUserResult newPublicUser = userService.create(nickname);
-		return userPrivateService.create(email, password, newPublicUser);
+		return userSignUpUseCase.execute(new UserSingUpCommand(nickname, email, password));
 	}
 
 	/**

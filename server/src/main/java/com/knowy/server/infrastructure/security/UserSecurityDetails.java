@@ -32,7 +32,7 @@ public class UserSecurityDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return userPrivate.email();
+		return userPrivate.email().value();
 	}
 
 	@Override

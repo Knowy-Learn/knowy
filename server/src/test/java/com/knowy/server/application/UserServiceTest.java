@@ -1,6 +1,5 @@
-package com.knowy.server.application.service;
+package com.knowy.server.application;
 
-import com.knowy.server.application.UserService;
 import com.knowy.server.domain.Category;
 import com.knowy.server.domain.ProfileImage;
 import com.knowy.server.domain.User;
@@ -41,7 +40,7 @@ class UserServiceTest {
 	@InjectMocks
 	private UserService userService;
 
-	// method create
+/*	// method create
 	@Test
 	void given_validNickname_when_creatingUser_then_returnNewUserCommand() {
 
@@ -85,7 +84,7 @@ class UserServiceTest {
 			.thenReturn(Optional.empty());
 
 		assertThrows(KnowyImageNotFoundException.class, () -> userService.create("ValidNickname"));
-	}
+	}*/
 
 	// method save
 	@Test

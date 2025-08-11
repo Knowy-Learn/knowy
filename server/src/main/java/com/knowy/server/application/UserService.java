@@ -41,32 +41,6 @@ public class UserService {
     }
 
     /**
-     * Creates a new {@code PublicUserEntity} with the specified nickname.
-     *
-     * <p>Validates that the nickname is unique and assigns a default profile image (ID 1).
-     * Throws exceptions if the nickname is already taken or the default image cannot be found.</p>
-     *
-     * @param nickname the desired nickname for the new user
-     * @return a new {@code PublicUserEntity} instance with the default profile image set
-     * @throws KnowyInvalidUserException   if the nickname is already in use
-     * @throws KnowyImageNotFoundException if the default profile image (ID 1) does not exist
-     */
-    public NewUserResult create(String nickname) throws KnowyInvalidUserException, KnowyImageNotFoundException {
-        assertNotBlankNickname(nickname);
-
-        if (userRepository.findByNickname(nickname).isPresent()) {
-            throw new KnowyInvalidUserNicknameException("Nickname already exists");
-        }
-
-        return new NewUserResult(
-                nickname,
-                profileImageRepository.findById(1)
-                        .orElseThrow(() -> new KnowyImageNotFoundException("Not found profile image")),
-                new HashSet<>()
-        );
-    }
-
-    /**
      * Persists the given {@code PublicUserEntity} in the database.
      *
      * <p>If the entity already exists, it will be updated; otherwise, a new record will be created.</p>

@@ -1,7 +1,7 @@
-package com.knowy.server.application.service;
+package com.knowy.server.application;
 
 
-import com.knowy.server.application.UserPrivateService;
+import com.knowy.server.domain.Email;
 import com.knowy.server.domain.ProfileImage;
 import com.knowy.server.domain.User;
 import com.knowy.server.domain.UserPrivate;
@@ -52,69 +52,7 @@ class UserPrivateServiceTest {
 	@InjectMocks
 	private UserPrivateService userPrivateService;
 
-	// method create
-	@Test
-	void given_validEmailAndPassword_when_createNewPrivateUser_then_returnNewPrivateUser() throws Exception {
-		NewUserResult newUserResult = new NewUserResult(
-			"TestNickname", new ProfileImage(1, "https://knowy/image.png"), new HashSet<>()
-		);
-		UserPrivate userPrivateResult = new UserPrivate(
-			1,
-			"TestNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>(),
-			"test@email.com",
-			"ValidPass123@",
-			true
-		);
 
-		Mockito.when(userPrivateRepository.findByEmail(userPrivateResult.email()))
-			.thenReturn(Optional.empty());
-		Mockito.when(passwordChecker.isRightPasswordFormat(userPrivateResult.password()))
-			.thenReturn(true);
-		Mockito.when(passwordEncoder.encode(userPrivateResult.password()))
-			.thenReturn("ENCODED_PASS");
-		Mockito.when(userPrivateRepository.save(any(UserPrivate.class)))
-			.thenReturn(userPrivateResult);
-
-		UserPrivate newUserPrivate = userPrivateService.create("test@email.com", "ValidPass123@", newUserResult);
-		assertEquals(newUserPrivate, userPrivateResult);
-	}
-
-	@Test
-	void given_existingEmail_when_createNewPrivateUser_then_throwKnowyInvalidUserEmailException() {
-		NewUserResult newUserResult = new NewUserResult(
-			"TestNickname", new ProfileImage(1, "https://knowy/image.png"), new HashSet<>()
-		);
-
-		User user = new User(
-			1, newUserResult.nickname(), newUserResult.profileImage(), newUserResult.categories()
-		);
-		UserPrivate userPrivate = new UserPrivate(user, "exists@gmail.com", "ValidPass123");
-
-		Mockito.when(userPrivateRepository.findByEmail("exists@gmail.com"))
-			.thenReturn(Optional.of(userPrivate));
-
-		assertThrows(
-			KnowyInvalidUserEmailException.class,
-			() -> userPrivateService.create("exists@gmail.com", "ValidPass123", newUserResult)
-		);
-	}
-
-	@Test
-	void given_invalidPassword_when_createNewPrivateUser_then_throwKnowyInvalidUserPasswordFormatException() {
-		NewUserResult newUserResult = new NewUserResult(
-			"TestNickname", new ProfileImage(1, "https://knowy/image.png"), new HashSet<>()
-		);
-
-		Mockito.when(userPrivateRepository.findByEmail("test@email.com"))
-			.thenReturn(Optional.empty());
-
-		assertThrows(
-			KnowyInvalidUserPasswordFormatException.class, () ->
-				userPrivateService.create("test@email.com", "invalidPassword", newUserResult)
-		);
-	}
 
 
 	// method updateEmail
@@ -126,14 +64,14 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"old@email.com",
+			new Email("old@email.com"),
 			"ENCODED_PASS",
 			true
 		);
 
 		UserPrivate newUserPrivate = new UserPrivate(
 			userPrivate.cropToUser(),
-			"new@mail.com",
+			new Email("new@mail.com"),
 			userPrivate.password()
 		);
 
@@ -154,7 +92,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"same@email.com",
+			new Email("same@email.com"),
 			"ENCODED_PASS",
 			true
 		);
@@ -175,7 +113,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"old@email.com",
+			new Email("old@email.com"),
 			"ENCODED_PASS",
 			true
 		);
@@ -185,7 +123,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"other@email.com",
+			new Email("other@email.com"),
 			"ENCODED_PASS",
 			true
 		);
@@ -208,7 +146,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"old@email.com",
+			new Email("old@email.com"),
 			"ValidPass123@",
 			true
 		);
@@ -236,7 +174,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"test@email.com",
+			new Email("test@email.com"),
 			"ValidOldPass123@",
 			true
 		);
@@ -246,7 +184,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"test@email.com",
+			new Email("test@email.com"),
 			"ENCODED_NEW_PASSWORD",
 			true
 		);
@@ -316,7 +254,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"test@email.com",
+			new Email("test@email.com"),
 			"ValidPass123@",
 			true
 		);
@@ -350,7 +288,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"test@email.com",
+			new Email("test@email.com"),
 			"ValidOldPass123@",
 			true
 		);
@@ -394,7 +332,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"test@email.com",
+			new Email("test@email.com"),
 			"ValidOldPass123@",
 			true
 		);
@@ -439,7 +377,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"user@mail.com",
+			new Email("user@mail.com"),
 			"ENCODED_PASSWORD",
 			true
 		);
@@ -465,7 +403,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"user@mail.com",
+			new Email("user@mail.com"),
 			"ENCODED_PASSWORD",
 			true
 		);
@@ -502,7 +440,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"user@mail.com",
+			new Email("user@mail.com"),
 			"ENCODED_PASSWORD",
 			true
 		);
@@ -541,7 +479,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"user@mail.com",
+			new Email("user@mail.com"),
 			"ENCODED_PASSWORD",
 			true
 		);
@@ -594,7 +532,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"user@mail.com",
+			new Email("user@mail.com"),
 			"ENCODED_PASSWORD",
 			true
 		);
@@ -621,12 +559,12 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"user@mail.com",
+			new Email("user@mail.com"),
 			"ENCODED_PASSWORD",
 			false
 		);
 		UserPrivate newUserPrivate = new UserPrivate(
-			userPrivate.cropToUser(), "user@mail.com", "ENCODED_PASSWORD", true
+			userPrivate.cropToUser(), new Email("user@mail.com"), "ENCODED_PASSWORD", true
 		);
 		Mockito.when(tokenTools.decodeUnverified(token, PasswordResetInfo.class))
 			.thenReturn(passwordResetInfo);
@@ -677,7 +615,7 @@ class UserPrivateServiceTest {
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"user@mail.com",
+			new Email("user@mail.com"),
 			"ENCODED_PASSWORD",
 			true
 		);

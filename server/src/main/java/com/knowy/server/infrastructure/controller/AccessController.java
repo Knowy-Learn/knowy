@@ -101,7 +101,7 @@ public class AccessController {
 				user.getPassword()
 			);
 
-			userSecurityDetailsHelper.autoLoginUserByEmail(userPrivate.email());
+			userSecurityDetailsHelper.autoLoginUserByEmail(userPrivate.email().value());
 			return "redirect:/home";
 		} catch (KnowyInvalidUserException e) {
 			redirectAttributes.addFlashAttribute("user", user);
