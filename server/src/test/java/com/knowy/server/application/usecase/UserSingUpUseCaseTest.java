@@ -1,11 +1,17 @@
 package com.knowy.server.application.usecase;
 
-import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
-import com.knowy.server.application.exception.validation.user.KnowyInvalidUserException;
-import com.knowy.server.application.ports.*;
+import com.knowy.server.application.exception.KnowyException;
+import com.knowy.server.application.exception.validation.user.KnowyInvalidUserEmailException;
+import com.knowy.server.application.exception.validation.user.KnowyInvalidUserNicknameException;
+import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
+import com.knowy.server.application.ports.KnowyPasswordEncoder;
+import com.knowy.server.application.ports.ProfileImageRepository;
+import com.knowy.server.application.ports.UserPrivateRepository;
+import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.register.UserSingUpCommand;
 import com.knowy.server.domain.Email;
+import com.knowy.server.domain.Password;
 import com.knowy.server.domain.ProfileImage;
 import com.knowy.server.domain.UserPrivate;
 import org.junit.jupiter.api.Test;
@@ -19,120 +25,130 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-public class UserSingUpUseCaseTest {
+class UserSingUpUseCaseTest {
 
-	@Mock
-	private UserRepository userRepository;
+    @Mock
+    private UserRepository userRepository;
 
-	@Mock
-	private UserPrivateRepository userPrivateRepository;
+    @Mock
+    private UserPrivateRepository userPrivateRepository;
 
-	@Mock
-	private ProfileImageRepository profileImageRepository;
+    @Mock
+    private ProfileImageRepository profileImageRepository;
 
-	@Mock
-	private KnowyPasswordEncoder passwordEncoder;
+    @Mock
+    private KnowyPasswordEncoder passwordEncoder;
 
-	@Mock
-	private KnowyPasswordChecker passwordChecker;
+    @InjectMocks
+    private UserSignUpUseCase userSignUpUseCase;
 
-	@InjectMocks
-	private UserSignUpUseCase userSignUpUseCase;
+    @Test
+    void given_userSignUpCommand_when_executeSignUp_then_registerNewUser() throws KnowyException {
+        UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
+                "TestNickname", "test@email.com", "ValidPass123@"
+        );
+        UserPrivate userPrivateResult = new UserPrivate(
+                1,
+                "TestNickname",
+                new ProfileImage(1, "https://knowy/image.png"),
+                new HashSet<>(),
+                new Email("test@email.com"),
+                new Password("ENCODED_PASS"),
+                true
+        );
 
-	@Test
-	void given_userSignUpCommand_when_executeSignUp_then_registerNewUser() throws KnowyInvalidUserException, KnowyImageNotFoundException {
-		UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
-			"TestNickname", "test@email.com", "ValidPass123@"
-		);
-		UserPrivate userPrivateResult = new UserPrivate(
-			1,
-			"TestNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>(),
-			new Email("test@email.com"),
-			"ENCODED_PASS",
-			true
-		);
+        Mockito.when(userPrivateRepository.findByEmail(userSingUpCommand.email()))
+                .thenReturn(Optional.empty());
+        Mockito.when(passwordEncoder.encode(userSingUpCommand.password()))
+                .thenReturn("ENCODED_PASS");
+        Mockito.when(profileImageRepository.findById(1))
+                .thenReturn(Optional.of(new ProfileImage(1, "https://knowy/image.png")));
+        Mockito.when(userPrivateRepository.save(any(UserPrivate.class)))
+                .thenReturn(userPrivateResult);
 
-		Mockito.when(userPrivateRepository.findByEmail(userSingUpCommand.email()))
-			.thenReturn(Optional.empty());
-		Mockito.when(passwordChecker.isRightPasswordFormat(userSingUpCommand.password()))
-			.thenReturn(true);
-		Mockito.when(passwordEncoder.encode(userSingUpCommand.password()))
-			.thenReturn("ENCODED_PASS");
-		Mockito.when(profileImageRepository.findById(1))
-			.thenReturn(Optional.of(new ProfileImage(1, "https://knowy/image.png")));
-		Mockito.when(userPrivateRepository.save(any(UserPrivate.class)))
-			.thenReturn(userPrivateResult);
+        UserPrivate newUserPrivate = userSignUpUseCase.execute(userSingUpCommand);
+        assertEquals(newUserPrivate, userPrivateResult);
+    }
 
-		UserPrivate newUserPrivate = userSignUpUseCase.execute(userSingUpCommand);
-		assertEquals(newUserPrivate, userPrivateResult);
-	}
+    @Test
+    void given_blankNickname_when_executeSingUp_then_KnowyInvalidUserNicknameException() {
+        UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
+                "   ", "test@email.com", "ValidPass123@"
+        );
 
-/*	// method create
-	@Test
-	void given_validEmailAndPassword_when_createNewPrivateUser_then_returnNewPrivateUser() throws Exception {
-		NewUserResult newUserResult = new NewUserResult(
-			"TestNickname", new ProfileImage(1, "https://knowy/image.png"), new HashSet<>()
-		);
-		UserPrivate userPrivateResult = new UserPrivate(
-			1,
-			"TestNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>(),
-			new Email("test@email.com"),
-			"ValidPass123@",
-			true
-		);
+        assertThrows(
+                KnowyInvalidUserNicknameException.class,
+                () -> userSignUpUseCase.execute(userSingUpCommand)
+        );
+    }
 
-		Mockito.when(userPrivateRepository.findByEmail(userPrivateResult.email().value()))
-			.thenReturn(Optional.empty());
-		Mockito.when(passwordChecker.isRightPasswordFormat(userPrivateResult.password()))
-			.thenReturn(true);
-		Mockito.when(passwordEncoder.encode(userPrivateResult.password()))
-			.thenReturn("ENCODED_PASS");
-		Mockito.when(userPrivateRepository.save(any(UserPrivate.class)))
-			.thenReturn(userPrivateResult);
+    @Test
+    void given_existNickname_when_executeSingUp_then_KnowyInvalidUserNicknameException() {
+        String existNickname = "existNickname";
+        UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
+                existNickname, "test@email.com", "ValidPass123@"
+        );
+        UserPrivate userPrivateResult = new UserPrivate(
+                1,
+                existNickname,
+                new ProfileImage(1, "https://knowy/image.png"),
+                new HashSet<>(),
+                new Email("test@email.com"),
+                new Password("ENCODED_PASS"),
+                true
+        );
 
-		UserPrivate newUserPrivate = userPrivateService.create("test@email.com", "ValidPass123@", newUserResult);
-		assertEquals(newUserPrivate, userPrivateResult);
-	}
+        Mockito.when(userRepository.findByNickname(existNickname))
+                .thenReturn(Optional.of(userPrivateResult));
 
-	@Test
-	void given_existingEmail_when_createNewPrivateUser_then_throwKnowyInvalidUserEmailException() {
-		NewUserResult newUserResult = new NewUserResult(
-			"TestNickname", new ProfileImage(1, "https://knowy/image.png"), new HashSet<>()
-		);
+        assertThrows(
+                KnowyInvalidUserNicknameException.class,
+                () -> userSignUpUseCase.execute(userSingUpCommand)
+        );
+    }
 
-		User user = new User(
-			1, newUserResult.nickname(), newUserResult.profileImage(), newUserResult.categories()
-		);
-		UserPrivate userPrivate = new UserPrivate(user, "exists@gmail.com", "ValidPass123");
+    @Test
+    void given_existingEmail_when_executeSingUp_then_throwKnowyInvalidUserEmailException() {
+        String existMail = "existmail@mail.com";
 
-		Mockito.when(userPrivateRepository.findByEmail("exists@gmail.com"))
-			.thenReturn(Optional.of(userPrivate));
+        UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
+                "TestNickname", existMail, "ValidPass123@"
+        );
+        UserPrivate userPrivate = new UserPrivate(
+                1,
+                "OtherTestNickname",
+                new ProfileImage(1, "https://knowy/image.png"),
+                new HashSet<>(),
+                new Email(existMail),
+                new Password("ValidPass123"),
+                true
+        );
 
-		assertThrows(
-			KnowyInvalidUserEmailException.class,
-			() -> userPrivateService.create("exists@gmail.com", "ValidPass123", newUserResult)
-		);
-	}
+        Mockito.when(userPrivateRepository.findByEmail(existMail))
+                .thenReturn(Optional.of(userPrivate));
 
-	@Test
-	void given_invalidPassword_when_createNewPrivateUser_then_throwKnowyInvalidUserPasswordFormatException() {
-		NewUserResult newUserResult = new NewUserResult(
-			"TestNickname", new ProfileImage(1, "https://knowy/image.png"), new HashSet<>()
-		);
+        assertThrows(
+                KnowyInvalidUserEmailException.class,
+                () -> userSignUpUseCase.execute(userSingUpCommand)
+        );
+    }
 
-		Mockito.when(userPrivateRepository.findByEmail("test@email.com"))
-			.thenReturn(Optional.empty());
+    @Test
+    void given_invalidPassword_when_executeSingUp_then_throwKnowyInvalidUserPasswordFormatException() {
+        UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
+                "TestNickname", "test@mail.com", "invalidPassword"
+        );
 
-		assertThrows(
-			KnowyInvalidUserPasswordFormatException.class, () ->
-				userPrivateService.create("test@email.com", "invalidPassword", newUserResult)
-		);
-	}*/
+        Mockito.when(userPrivateRepository.findByEmail(userSingUpCommand.email()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                KnowyPasswordFormatException.class, () ->
+                        userSignUpUseCase.execute(userSingUpCommand)
+        );
+    }
 }

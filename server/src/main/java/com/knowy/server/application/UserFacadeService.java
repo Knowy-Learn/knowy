@@ -37,21 +37,8 @@ public class UserFacadeService {
 		this.userSignUpUseCase = userSignUpUseCase;
 	}
 
-	/**
-	 * Registers a new user by creating both public and private user entities.
-	 *
-	 * <p>This method first creates a public user with the given nickname,
-	 * then links it with a private user using the provided email and password.</p>
-	 *
-	 * @param nickname the desired public nickname of the user
-	 * @param email    the user's email address used for private identification
-	 * @param password the user's password
-	 * @return the created private user entity
-	 * @throws KnowyInvalidUserException   if the user data is invalid or violates business rules
-	 * @throws KnowyImageNotFoundException if a default profile image could not be found
-	 */
 	public UserPrivate registerNewUser(String nickname, String email, String password)
-		throws KnowyInvalidUserException, KnowyImageNotFoundException {
+            throws KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException {
 		return userSignUpUseCase.execute(new UserSingUpCommand(nickname, email, password));
 	}
 

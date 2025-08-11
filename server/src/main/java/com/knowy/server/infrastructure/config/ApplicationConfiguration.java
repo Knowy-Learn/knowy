@@ -1,30 +1,34 @@
 package com.knowy.server.infrastructure.config;
 
 import com.knowy.server.application.*;
+import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
 import com.knowy.server.application.ports.*;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.register.UserSingUpCommand;
+import com.knowy.server.domain.UserPrivate;
+import com.knowy.server.infrastructure.adapters.security.PasswordEncoderAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Objects;
 
 @Configuration
 public class ApplicationConfiguration {
 
 	@Bean
 	public KnowyPasswordEncoder knowyPasswordEncoder(PasswordEncoder passwordEncoder) {
-		return passwordEncoder::encode;
+		return new PasswordEncoderAdapter(passwordEncoder);
 	}
 
 	@Bean
 	public UserPrivateService privateUserService(
 		UserPrivateRepository privateUserRepository,
-		KnowyPasswordChecker knowyPasswordChecker,
 		KnowyPasswordEncoder knowyPasswordEncoder,
 		KnowyTokenTools knowyTokenTools
 	) {
 		return new UserPrivateService(
-			privateUserRepository, knowyPasswordChecker, knowyPasswordEncoder, knowyTokenTools
+			privateUserRepository, knowyPasswordEncoder, knowyTokenTools
 		);
 	}
 
@@ -47,7 +51,6 @@ public class ApplicationConfiguration {
 	public UserSignUpUseCase userSignUpUseCase(
 		UserRepository userRepository,
 		UserPrivateRepository privateUserRepository,
-		KnowyPasswordChecker knowyPasswordChecker,
 		KnowyPasswordEncoder knowyPasswordEncoder,
 		ProfileImageRepository profileImageRepository
 	) {
@@ -55,7 +58,6 @@ public class ApplicationConfiguration {
 			userRepository,
 			privateUserRepository,
 			knowyPasswordEncoder,
-			knowyPasswordChecker,
 			profileImageRepository
 		);
 	}

@@ -1,35 +1,25 @@
 package com.knowy.server.infrastructure.adapters.security;
 
-import com.knowy.server.domain.UserPrivate;
-import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
-import com.knowy.server.application.ports.KnowyPasswordChecker;
+import com.knowy.server.application.ports.KnowyPasswordEncoder;
+import com.knowy.server.domain.UserPrivate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 @Component
-public class PasswordChecker implements KnowyPasswordChecker {
+public class PasswordEncoderAdapter implements KnowyPasswordEncoder {
 
 	private final PasswordEncoder passwordEncoder;
 
-	public PasswordChecker(PasswordEncoder passwordEncoder) {
+	public PasswordEncoderAdapter(PasswordEncoder passwordEncoder) {
 		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
-	public void assertPasswordFormatIsRight(String password) throws KnowyPasswordFormatException {
-		if (!isRightPasswordFormat(password)) {
-			throw new KnowyPasswordFormatException("Invalid password format");
-		}
-	}
-
-	@Override
-	public boolean isRightPasswordFormat(String password) {
-		String regex = "^(?=.*\\d)(?=.*[!-/:-@])(?=.*[A-Z])(?=.*[a-z])\\S{8,}$";
-		return Pattern.matches(regex, password);
+	public String encode(String password) {
+		return passwordEncoder.encode(password);
 	}
 
 	@Override
@@ -42,6 +32,6 @@ public class PasswordChecker implements KnowyPasswordChecker {
 	@Override
 	public boolean hasPassword(UserPrivate user, String password) {
 		Objects.requireNonNull(user, "Can't check user password of null user");
-		return passwordEncoder.matches(password, user.password());
+		return passwordEncoder.matches(password, user.password().value());
 	}
 }

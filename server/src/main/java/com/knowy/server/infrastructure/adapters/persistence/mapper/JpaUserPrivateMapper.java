@@ -1,6 +1,7 @@
 package com.knowy.server.infrastructure.adapters.persistence.mapper;
 
 import com.knowy.server.domain.Email;
+import com.knowy.server.domain.Password;
 import com.knowy.server.domain.UserPrivate;
 import com.knowy.server.infrastructure.adapters.persistence.entity.PrivateUserEntity;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class JpaUserPrivateMapper implements EntityMapper<UserPrivate, PrivateUs
 		return new UserPrivate(
 			jpaUserMapper.toDomain(entity.getPublicUserEntity()),
 			new Email(entity.getEmail()),
-			entity.getPassword(),
+			new Password(entity.getPassword()),
 			entity.isActive()
 		);
 	}
@@ -29,7 +30,7 @@ public class JpaUserPrivateMapper implements EntityMapper<UserPrivate, PrivateUs
 		PrivateUserEntity privateUserEntity = new PrivateUserEntity();
 		privateUserEntity.setId(domain.id());
 		privateUserEntity.setEmail(domain.email().value());
-		privateUserEntity.setPassword(domain.password());
+		privateUserEntity.setPassword(domain.password().value());
 		privateUserEntity.setActive(domain.active());
 		privateUserEntity.setPublicUserEntity(jpaUserMapper.toEntity(domain.cropToUser()));
 		return privateUserEntity;
