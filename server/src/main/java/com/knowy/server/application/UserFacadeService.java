@@ -12,6 +12,8 @@ import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.register.UserSingUpCommand;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailCommand;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailUseCase;
+import com.knowy.server.application.usecase.update.password.UserUpdatePasswordCommand;
+import com.knowy.server.application.usecase.update.password.UserUpdatePasswordUseCase;
 import com.knowy.server.domain.UserPrivate;
 
 public class UserFacadeService {
@@ -21,6 +23,7 @@ public class UserFacadeService {
     private final UserService userService;
     private final UserSignUpUseCase userSignUpUseCase;
     private final UserUpdateEmailUseCase userUpdateEmailUseCase;
+    private final UserUpdatePasswordUseCase userUpdatePasswordUseCase;
 
     /**
      * The constructor
@@ -32,13 +35,14 @@ public class UserFacadeService {
     public UserFacadeService(
             KnowyEmailClientTool knowyEmailClientTool,
             UserPrivateService userPrivateService,
-            UserService publicUserService, UserSignUpUseCase userSignUpUseCase, UserUpdateEmailUseCase userUpdateEmailUseCase
+            UserService publicUserService, UserSignUpUseCase userSignUpUseCase, UserUpdateEmailUseCase userUpdateEmailUseCase, UserUpdatePasswordUseCase userUpdatePasswordUseCase
     ) {
         this.knowyEmailClientTool = knowyEmailClientTool;
         this.userPrivateService = userPrivateService;
         this.userService = publicUserService;
         this.userSignUpUseCase = userSignUpUseCase;
         this.userUpdateEmailUseCase = userUpdateEmailUseCase;
+        this.userUpdatePasswordUseCase = userUpdatePasswordUseCase;
     }
 
     public UserPrivate registerNewUser(String nickname, String email, String password)
@@ -89,7 +93,7 @@ public class UserFacadeService {
      * @throws KnowyUserNotFoundException if the user does not exist
      */
     public void updateLanguages(int userId, String[] languages)
-            throws KnowyInconsistentDataException, KnowyUserNotFoundException {
+            throws KnowyInconsistentDataException {
         userService.updateCategories(userId, languages);
     }
 
@@ -107,7 +111,7 @@ public class UserFacadeService {
      */
     public void updatePassword(String token, String password, String confirmPassword)
             throws KnowyTokenException, KnowyPasswordFormatException, KnowyWrongPasswordException, KnowyUserNotFoundException {
-        userPrivateService.resetPassword(token, password, confirmPassword);
+        userUpdatePasswordUseCase.execute(new UserUpdatePasswordCommand(token, password, confirmPassword));
     }
 
     public void updateEmail(String email, int userId, String password)

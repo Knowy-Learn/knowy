@@ -41,9 +41,6 @@ public class UserPrivateService {
         this.tokenTools = tokenTools;
     }
 
-
-
-
     /**
      * Resets the password of a private user using a valid recovery token.
      *

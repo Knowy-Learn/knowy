@@ -4,6 +4,7 @@ import com.knowy.server.application.*;
 import com.knowy.server.application.ports.*;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailUseCase;
+import com.knowy.server.application.usecase.update.password.UserUpdatePasswordUseCase;
 import com.knowy.server.infrastructure.adapters.security.PasswordEncoderAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,14 +35,16 @@ public class ApplicationConfiguration {
             UserPrivateService userPrivateService,
             UserService userService,
             UserSignUpUseCase userSignUpUseCase,
-            UserUpdateEmailUseCase userUpdateEmailUseCase
+            UserUpdateEmailUseCase userUpdateEmailUseCase,
+            UserUpdatePasswordUseCase userUpdatePasswordUseCase
     ) {
         return new UserFacadeService(
                 knowyEmailClientTool,
                 userPrivateService,
                 userService,
                 userSignUpUseCase,
-                userUpdateEmailUseCase
+                userUpdateEmailUseCase,
+                userUpdatePasswordUseCase
         );
     }
 
@@ -66,6 +69,19 @@ public class ApplicationConfiguration {
             PasswordEncoderAdapter passwordEncoderAdapter
     ) {
         return new UserUpdateEmailUseCase(userPrivateRepository, passwordEncoderAdapter);
+    }
+
+    @Bean
+    public UserUpdatePasswordUseCase userUpdatePasswordUseCase(
+            UserPrivateRepository userPrivateRepository,
+            PasswordEncoderAdapter passwordEncoderAdapter,
+            KnowyTokenTools knowyTokenTools
+    ) {
+        return new UserUpdatePasswordUseCase(
+                userPrivateRepository,
+                passwordEncoderAdapter,
+                knowyTokenTools
+        );
     }
 
     @Bean
