@@ -9,6 +9,7 @@ import com.knowy.server.application.ports.KnowyPasswordEncoder;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.ports.UserRepository;
+import com.knowy.server.application.usecase.KnowyUseCase;
 import com.knowy.server.application.util.StringUtils;
 import com.knowy.server.domain.Email;
 import com.knowy.server.domain.Password;
@@ -19,7 +20,7 @@ import java.util.HashSet;
 /**
  * Use case class responsible for handling the user sign-up process.
  */
-public class UserSignUpUseCase {
+public class UserSignUpUseCase  implements KnowyUseCase<UserSingUpCommand, UserPrivate> {
 
     private final UserRepository userRepository;
     private final UserPrivateRepository userPrivateRepository;

@@ -42,40 +42,7 @@ public class UserPrivateService {
     }
 
 
-    /**
-     * Updates the email address of an existing private user after verifying the user's password.
-     *
-     * <p>Fails if the new email is the same as the current one or if the provided password is incorrect.
-     * After validation, updates the email and persists the user entity.</p>
-     *
-     * @param email    the new email address to assign
-     * @param userId   the ID of the user whose email is being updated
-     * @param password the current password used for verification
-     * @throws KnowyUserNotFoundException   if no user exists with the given ID
-     * @throws KnowyUnchangedEmailException if the new email is identical to the current one
-     * @throws KnowyWrongPasswordException  if the provided password is incorrect
-     */
-    public void updateEmail(String email, int userId, String password)
-            throws KnowyUserNotFoundException, KnowyUnchangedEmailException, KnowyWrongPasswordException, KnowyInvalidUserEmailException {
 
-        UserPrivate userPrivate = getPrivateUserById(userId);
-        if (Objects.equals(email, userPrivate.email().value())) {
-            throw new KnowyUnchangedEmailException("Email must be different from the current one.");
-        }
-
-        if (findPrivateUserByEmail(email).isPresent()) {
-            throw new KnowyInvalidUserEmailException("The provided email is already associated with an existing account.");
-        }
-
-        passwordEncoder.assertHasPassword(userPrivate, password);
-
-        UserPrivate newUserPrivate = new UserPrivate(
-                userPrivate.cropToUser(),
-                new Email(email),
-                userPrivate.password()
-        );
-        privateUserRepository.save(newUserPrivate);
-    }
 
     /**
      * Resets the password of a private user using a valid recovery token.

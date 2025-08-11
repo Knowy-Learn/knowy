@@ -1,4 +1,4 @@
-package com.knowy.server.application.usecase;
+package com.knowy.server.application.usecase.register;
 
 import com.knowy.server.application.exception.KnowyException;
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserEmailException;
@@ -8,8 +8,6 @@ import com.knowy.server.application.ports.KnowyPasswordEncoder;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.ports.UserRepository;
-import com.knowy.server.application.usecase.register.UserSignUpUseCase;
-import com.knowy.server.application.usecase.register.UserSingUpCommand;
 import com.knowy.server.domain.Email;
 import com.knowy.server.domain.Password;
 import com.knowy.server.domain.ProfileImage;
