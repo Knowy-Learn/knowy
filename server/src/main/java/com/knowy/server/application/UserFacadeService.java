@@ -6,9 +6,9 @@ import com.knowy.server.application.exception.data.inconsistent.KnowyInconsisten
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.exception.validation.user.*;
-import com.knowy.server.application.ports.KnowyEmailClientTool;
 import com.knowy.server.application.usecase.manage.DeactivateAccountCommand;
 import com.knowy.server.application.usecase.manage.DeactivateAccountUseCase;
+import com.knowy.server.application.usecase.manage.SendRecoveryPasswordUseCase;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.register.UserSingUpCommand;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailCommand;
@@ -22,7 +22,6 @@ import com.knowy.server.domain.UserPrivate;
 
 public class UserFacadeService {
 
-	private final KnowyEmailClientTool knowyEmailClientTool;
 	private final UserPrivateService userPrivateService;
 	private final UserService userService;
 	private final TokenUserPrivateTool tokenUserPrivateTool;
@@ -30,20 +29,23 @@ public class UserFacadeService {
 	private final UserUpdateEmailUseCase userUpdateEmailUseCase;
 	private final UserUpdatePasswordUseCase userUpdatePasswordUseCase;
 	private final DeactivateAccountUseCase deactivateAccountUseCase;
+	private final SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase;
 
 	/**
 	 * The constructor
 	 *
-	 * @param knowyEmailClientTool the emailClientService
-	 * @param userPrivateService   the privateUserService
-	 * @param publicUserService    the publicUserService
+	 * @param userPrivateService the privateUserService
+	 * @param publicUserService  the publicUserService
 	 */
 	public UserFacadeService(
-		KnowyEmailClientTool knowyEmailClientTool,
 		UserPrivateService userPrivateService,
-		UserService publicUserService, TokenUserPrivateTool tokenUserPrivateTool, UserSignUpUseCase userSignUpUseCase, UserUpdateEmailUseCase userUpdateEmailUseCase, UserUpdatePasswordUseCase userUpdatePasswordUseCase, DeactivateAccountUseCase deactivateAccountUseCase
+		UserService publicUserService,
+		TokenUserPrivateTool tokenUserPrivateTool,
+		UserSignUpUseCase userSignUpUseCase,
+		UserUpdateEmailUseCase userUpdateEmailUseCase,
+		UserUpdatePasswordUseCase userUpdatePasswordUseCase,
+		DeactivateAccountUseCase deactivateAccountUseCase, SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase
 	) {
-		this.knowyEmailClientTool = knowyEmailClientTool;
 		this.userPrivateService = userPrivateService;
 		this.userService = publicUserService;
 		this.tokenUserPrivateTool = tokenUserPrivateTool;
@@ -51,6 +53,7 @@ public class UserFacadeService {
 		this.userUpdateEmailUseCase = userUpdateEmailUseCase;
 		this.userUpdatePasswordUseCase = userUpdatePasswordUseCase;
 		this.deactivateAccountUseCase = deactivateAccountUseCase;
+		this.sendRecoveryPasswordUseCase = sendRecoveryPasswordUseCase;
 	}
 
 	public UserPrivate registerNewUser(String nickname, String email, String password)
@@ -153,7 +156,7 @@ public class UserFacadeService {
 	 */
 	public void sendRecoveryPasswordEmail(Email email, String recoveryBaseUrl)
 		throws KnowyTokenException, KnowyMailDispatchException, KnowyUserNotFoundException {
-		// TODO
+		sendRecoveryPasswordUseCase.execute(email, recoveryBaseUrl);
 	}
 
 	/**

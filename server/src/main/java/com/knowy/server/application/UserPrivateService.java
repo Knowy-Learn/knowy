@@ -24,8 +24,6 @@ public class UserPrivateService {
 
     private final UserPrivateRepository privateUserRepository;
 	private final TokenUserPrivateTool tokenUserPrivateTool;
-    private final KnowyPasswordEncoder passwordEncoder;
-    private final KnowyTokenTools tokenTools;
 
     /**
      * The constructor
@@ -40,8 +38,6 @@ public class UserPrivateService {
 		KnowyTokenTools tokenTools, TokenUserPrivateTool tokenUserPrivateTool
 	) {
         this.privateUserRepository = privateUserRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.tokenTools = tokenTools;
 		this.tokenUserPrivateTool = tokenUserPrivateTool;
 	}
 
@@ -82,36 +78,6 @@ public class UserPrivateService {
                 .orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
     }
 
-    /**
-     * Deactivates a user account by verifying the provided password and confirmation password.
-     *
-     * @param email           the email address of the user whose account will be deactivated
-     * @param password        the password entered by the user for verification
-     * @param confirmPassword the confirmation password to ensure correctness
-     * @throws KnowyWrongPasswordException if the passwords do not match or the password is incorrect
-     * @throws KnowyUserNotFoundException  if no user is found for the given email
-     */
-    public void desactivateUserAccount(
-            Email email,
-            String password,
-            String confirmPassword
-    ) throws KnowyWrongPasswordException, KnowyUserNotFoundException {
-        if (!password.equals(confirmPassword)) {
-            throw new KnowyWrongPasswordException("Passwords do not match");
-        }
-
-        UserPrivate userPrivate = findPrivateUserByEmail(email.value())
-                .orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
-
-        passwordEncoder.assertHasPassword(userPrivate, password);
-
-        UserPrivate newUserPrivate = new UserPrivate(
-                userPrivate.cropToUser(),
-                userPrivate.email(),
-                userPrivate.password(),
-                false);
-        privateUserRepository.save(newUserPrivate);
-    }
 
     /**
      * Reactivates a user account based on a valid token.

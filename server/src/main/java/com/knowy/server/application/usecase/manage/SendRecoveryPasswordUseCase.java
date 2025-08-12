@@ -1,8 +1,9 @@
 package com.knowy.server.application.usecase.manage;
 
+import com.knowy.server.application.exception.KnowyMailDispatchException;
 import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
-import com.knowy.server.application.model.MailMessage;
+import com.knowy.server.application.ports.KnowyEmailClientTool;
 import com.knowy.server.application.util.TokenUserPrivateTool;
 import com.knowy.server.domain.Email;
 
@@ -10,40 +11,44 @@ import com.knowy.server.domain.Email;
  * Use case responsible for initiating the password recovery process.
  * <p>
  * Generates a password recovery token for a user identified by their email, constructs a recovery email message
- * containing the token link.
+ * containing a secure link to reset the password, and sends it via the configured email client.
  */
-public class UserRecoveryPasswordUseCase {
+public class SendRecoveryPasswordUseCase {
 
 	private final TokenUserPrivateTool tokenUserPrivateTool;
+	private final KnowyEmailClientTool knowyEmailClientTool;
 
 	/**
-	 * Constructs a new {@code RecoveryPasswordUseCase} with the specified token tool.
+	 * Constructs a new {@code SendRecoveryPasswordUseCase} with the specified dependencies.
 	 *
 	 * @param tokenUserPrivateTool Utility for generating and verifying user tokens.
+	 * @param knowyEmailClientTool Email client used to send recovery messages.
 	 */
-	public UserRecoveryPasswordUseCase(TokenUserPrivateTool tokenUserPrivateTool) {
+	public SendRecoveryPasswordUseCase(TokenUserPrivateTool tokenUserPrivateTool, KnowyEmailClientTool knowyEmailClientTool) {
 		this.tokenUserPrivateTool = tokenUserPrivateTool;
+		this.knowyEmailClientTool = knowyEmailClientTool;
 	}
 
 	/**
-	 * Executes the password recovery process for the given email.
+	 * Executes the password recovery process for the given email address.
 	 * <p>
-	 * Creates a token for the user associated with the email and generates a recovery email message containing a link
-	 * to reset the password.
+	 * Creates a recovery token for the user associated with the specified email, generates an email message containing
+	 * the reset password link, and sends the email.
 	 *
-	 * @param email           The user's email to send the recovery link to.
-	 * @param recoveryBaseUrl The base URL used to construct the recovery link.
-	 * @return A {@link MailMessage} containing the recipient, subject, and body of the recovery email.
-	 * @throws KnowyUserNotFoundException If no user is found with the provided email.
-	 * @throws KnowyTokenException        If there is an error generating the recovery token.
+	 * @param email           The user's email address to send the recovery link to.
+	 * @param recoveryBaseUrl The base URL used to build the recovery link.
+	 * @throws KnowyUserNotFoundException If no user exists with the provided email.
+	 * @throws KnowyTokenException        If an error occurs while generating the recovery token.
+	 * @throws KnowyMailDispatchException If the recovery email fails to send.
 	 */
-	public MailMessage execute(Email email, String recoveryBaseUrl)
-		throws KnowyUserNotFoundException, KnowyTokenException {
+	public void execute(Email email, String recoveryBaseUrl)
+		throws KnowyUserNotFoundException, KnowyTokenException, KnowyMailDispatchException {
 
 		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
 		String token = tokenUserPrivateTool.createUserTokenByEmail(email);
 		String body = tokenBody(token, recoveryBaseUrl);
-		return new MailMessage(email.value(), subject, body);
+
+		knowyEmailClientTool.sendEmail(email.value(), subject, body);
 	}
 
 	private String tokenBody(String token, String appUrl) {

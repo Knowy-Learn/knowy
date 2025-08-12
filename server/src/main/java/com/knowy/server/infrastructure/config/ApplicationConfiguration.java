@@ -3,6 +3,7 @@ package com.knowy.server.infrastructure.config;
 import com.knowy.server.application.*;
 import com.knowy.server.application.ports.*;
 import com.knowy.server.application.usecase.manage.DeactivateAccountUseCase;
+import com.knowy.server.application.usecase.manage.SendRecoveryPasswordUseCase;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailUseCase;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordUseCase;
@@ -34,24 +35,24 @@ public class ApplicationConfiguration {
 
 	@Bean
 	public UserFacadeService userFacadeService(
-		KnowyEmailClientTool knowyEmailClientTool,
 		UserPrivateService userPrivateService,
 		UserService userService,
 		UserSignUpUseCase userSignUpUseCase,
 		UserUpdateEmailUseCase userUpdateEmailUseCase,
 		UserUpdatePasswordUseCase userUpdatePasswordUseCase,
 		DeactivateAccountUseCase deactivateAccountUseCase,
-		TokenUserPrivateTool tokenUserPrivateTool
+		TokenUserPrivateTool tokenUserPrivateTool,
+		SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase
 	) {
 		return new UserFacadeService(
-			knowyEmailClientTool,
 			userPrivateService,
 			userService,
 			tokenUserPrivateTool,
 			userSignUpUseCase,
 			userUpdateEmailUseCase,
 			userUpdatePasswordUseCase,
-			deactivateAccountUseCase
+			deactivateAccountUseCase,
+			sendRecoveryPasswordUseCase
 		);
 	}
 
