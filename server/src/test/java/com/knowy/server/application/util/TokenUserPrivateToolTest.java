@@ -36,6 +36,7 @@ class TokenUserPrivateToolTest {
 	@InjectMocks
 	private TokenUserPrivateTool tokenUserPrivateTool;
 
+	// method verificationToken
 	@Test
 	void given_validToken_when_validateToken_then_returnTrue() throws KnowyTokenException {
 		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(11, "user@mail.com");
@@ -84,5 +85,68 @@ class TokenUserPrivateToolTest {
 
 		boolean result = tokenUserPrivateTool.isValidToken("invalid-token");
 		assertFalse(result);
+	}
+
+	// method createUserTokenByEmail
+	@Test
+	void given_email_when_createUserToken_then_returnToken() throws KnowyTokenException {
+		Email userEmail = new Email("test@email.com");
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			userEmail,
+			new Password("ValidOldPass123@"),
+			true
+		);
+
+		Mockito.when(userPrivateRepository.findByEmail(userEmail.value()))
+			.thenReturn(Optional.of(userPrivate));
+
+		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(userPrivate.id(), userPrivate.email().value());
+
+		assertDoesNotThrow(() -> tokenUserPrivateTool.createUserTokenByEmail(userEmail));
+		Mockito.verify(tokenTools).encode(passwordResetInfo, userPrivate.password().value(), 600_000);
+	}
+
+	@Test
+	void given_email_when_createUserToken_then_throwKnowyUserNotFound() {
+		Email userEmail = new Email("test@email.com");
+
+		Mockito.when(userPrivateRepository.findByEmail(userEmail.value()))
+			.thenReturn(Optional.empty());
+
+		assertThrows(
+			KnowyUserNotFoundException.class,
+			() -> tokenUserPrivateTool.createUserTokenByEmail(userEmail)
+		);
+	}
+
+	@Test
+	void given_email_when_createUserToken_then_throwKnowyTokenException() throws KnowyTokenException {
+		Email userEmail = new Email("test@email.com");
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			userEmail,
+			new Password("ValidOldPass123@"),
+			true
+		);
+		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(userPrivate.id(), userPrivate.email().value());
+
+		Mockito.when(userPrivateRepository.findByEmail(userEmail.value()))
+			.thenReturn(Optional.of(userPrivate));
+		Mockito.doThrow(KnowyTokenException.class)
+			.when(tokenTools)
+			.encode(Mockito.eq(passwordResetInfo), Mockito.eq(userPrivate.password().value()), Mockito.anyLong());
+
+		assertThrows(
+			KnowyTokenException.class,
+			() -> tokenUserPrivateTool.createUserTokenByEmail(userEmail)
+		);
+		Mockito.verify(tokenTools).encode(passwordResetInfo, userPrivate.password().value(), 600_000);
 	}
 }

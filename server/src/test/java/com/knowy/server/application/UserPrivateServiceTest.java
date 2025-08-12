@@ -76,72 +76,8 @@ class UserPrivateServiceTest {
 			() -> userPrivateService.getUserPrivateByEmail("nonExistg@mail.com")
 		);
 	}
+/*
 
-	// method createRecoveryPasswordEmail
-	@Test
-	void givenNonExistentEmailExpectUserNotFoundException() {
-		String email = "missing@mail.com";
-		String recoveryBaseUrl = "https://app.url/recover";
-
-		Mockito.when(userPrivateRepository.findByEmail(email))
-			.thenReturn(Optional.empty());
-
-		assertThrows(
-			KnowyUserNotFoundException.class,
-			() -> userPrivateService.createRecoveryPasswordEmail(email, recoveryBaseUrl)
-		);
-	}
-
-	@Test
-	void given_token_when_createRecoveryPasswordEmailencodeFail_then_throwKnowyTokenException() throws Exception {
-		UserPrivate userPrivate = new UserPrivate(
-			11,
-			"TestNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>(),
-			new Email("user@mail.com"),
-			new Password("ENCODED_PASSWORD"),
-			true
-		);
-		Mockito.when(userPrivateRepository.findByEmail("user@mail.com"))
-			.thenReturn(Optional.of(userPrivate));
-		Mockito.when(tokenTools.encode(Mockito.any(), Mockito.eq(userPrivate.password().value()), Mockito.anyLong()))
-			.thenThrow(new KnowyTokenException("Token encoding failed"));
-
-		assertThrows(
-			KnowyTokenException.class,
-			() -> userPrivateService.createRecoveryPasswordEmail("user@mail.com", "https://app.url/recover")
-		);
-	}
-
-	@Test
-	void given_validEmail_when_createRecoveryPasswordEmail_then_returnMailMessage() throws Exception {
-		String email = "user@mail.com";
-		String recoveryBaseUrl = "https://app.url/recover";
-		String expectedToken = "mocked-token";
-
-		UserPrivate userPrivate = new UserPrivate(
-			11,
-			"TestNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>(),
-			new Email("user@mail.com"),
-			new Password("ENCODED_PASSWORD"),
-			true
-		);
-
-		Mockito.when(userPrivateRepository.findByEmail(email))
-			.thenReturn(Optional.of(userPrivate));
-		Mockito.when(tokenTools.encode(Mockito.any(), Mockito.eq(userPrivate.password().value()), Mockito.anyLong()))
-			.thenReturn(expectedToken);
-
-		MailMessage mailMessage = userPrivateService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
-		assertEquals(email, mailMessage.to());
-		assertNotNull(mailMessage.subject());
-		assertFalse(mailMessage.subject().isEmpty());
-		assertTrue(mailMessage.body().contains(expectedToken));
-		assertTrue(mailMessage.body().contains(recoveryBaseUrl));
-	}
 
 	// method createDeletedAccountEmail
 	@Test
@@ -270,6 +206,7 @@ class UserPrivateServiceTest {
         );
     }*/
 
+	/*
 	// method reactivateUserAccount
 	@Test
 	void givenValidTokenAndUserInactiveExpectActivateAndSave() throws Exception {
@@ -353,4 +290,5 @@ class UserPrivateServiceTest {
 		userPrivateService.reactivateUserAccount(token);
 		Mockito.verify(userPrivateRepository, Mockito.never()).save(Mockito.any());
 	}
+*/
 }

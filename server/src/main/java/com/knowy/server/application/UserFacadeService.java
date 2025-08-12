@@ -15,6 +15,7 @@ import com.knowy.server.application.usecase.update.email.UserUpdateEmailUseCase;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordCommand;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordUseCase;
 import com.knowy.server.application.util.TokenUserPrivateTool;
+import com.knowy.server.domain.Email;
 import com.knowy.server.domain.UserPrivate;
 
 public class UserFacadeService {
@@ -146,7 +147,7 @@ public class UserFacadeService {
      * @throws KnowyTokenException        if there is a problem generating the recovery token
      * @throws KnowyMailDispatchException if the email could not be sent
      */
-    public void sendRecoveryPasswordEmail(String email, String recoveryBaseUrl)
+    public void sendRecoveryPasswordEmail(Email email, String recoveryBaseUrl)
             throws KnowyTokenException, KnowyMailDispatchException, KnowyUserNotFoundException {
         MailMessage mailMessage = userPrivateService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
         knowyEmailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
@@ -168,7 +169,7 @@ public class UserFacadeService {
     public void desactivateUserAccount(
             String password,
             String confirmPassword,
-            String email,
+            Email email,
             String recoveryBaseUrl
     ) throws KnowyTokenException, KnowyMailDispatchException, KnowyWrongPasswordException, KnowyUserNotFoundException {
         userPrivateService.desactivateUserAccount(email, password, confirmPassword);

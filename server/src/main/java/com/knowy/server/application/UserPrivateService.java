@@ -58,31 +58,6 @@ public class UserPrivateService {
     }
 
     /**
-     * Retrieves a private user entity by its ID if it exists.
-     *
-     * @param id the unique identifier of the private user
-     * @return an {@code Optional} containing the user if found, or empty if not
-     */
-    public Optional<UserPrivate> findPrivateUserById(Integer id) {
-        return privateUserRepository.findById(id);
-    }
-
-    /**
-     * Retrieves a private user entity by its ID or throws an exception if not found.
-     *
-     * <p>This is a convenience method that wraps {@link #findPrivateUserById(Integer)}
-     * and ensures the result is non-null.</p>
-     *
-     * @param id the unique identifier of the private user
-     * @return the {@code PrivateUserEntity} if found
-     * @throws KnowyUserNotFoundException if no user exists with the given ID
-     */
-    public UserPrivate getPrivateUserById(Integer id) throws KnowyUserNotFoundException {
-        return findPrivateUserById(id)
-                .orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + id));
-    }
-
-    /**
      * Retrieves a private user entity by email if it exists.
      *
      * @param email the email address of the private user
@@ -119,13 +94,13 @@ public class UserPrivateService {
      * @throws KnowyUserNotFoundException if no user exists with the given email
      * @throws KnowyTokenException        if token generation fails
      */
-    public MailMessage createRecoveryPasswordEmail(String email, String recoveryBaseUrl)
+    public MailMessage createRecoveryPasswordEmail(Email email, String recoveryBaseUrl)
             throws KnowyUserNotFoundException, KnowyTokenException {
 
         String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
-        String token = createUserTokenByEmail(email);
+        String token = tokenUserPrivateTool.createUserTokenByEmail(email);
         String body = tokenBody(token, recoveryBaseUrl);
-        return new MailMessage(email, subject, body);
+        return new MailMessage(email.value(), subject, body);
     }
 
     private String tokenBody(String token, String appUrl) {
@@ -158,28 +133,15 @@ public class UserPrivateService {
      * @throws KnowyTokenException        if an error occurs while encoding the JWT token
      * @throws KnowyUserNotFoundException if no user is found for the given email
      */
-    public MailMessage createDeletedAccountEmail(String email, String recoveryBaseUrl)
+    public MailMessage createDeletedAccountEmail(Email email, String recoveryBaseUrl)
             throws KnowyTokenException, KnowyUserNotFoundException {
 
         final long THIRTY_DAYS_IN_MILLIS = 30L * 24 * 60 * 60 * 1000;
 
         String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
-        String token = createUserTokenByEmail(email, THIRTY_DAYS_IN_MILLIS);
+        String token = tokenUserPrivateTool.createUserTokenByEmail(email, THIRTY_DAYS_IN_MILLIS);
         String body = reactivationTokenBody(token, recoveryBaseUrl);
-        return new MailMessage(email, subject, body);
-    }
-
-    private String createUserTokenByEmail(String email, long tokenExpirationTime)
-            throws KnowyUserNotFoundException, KnowyTokenException {
-        UserPrivate userPrivate = findPrivateUserByEmail(email)
-                .orElseThrow(() -> new KnowyUserNotFoundException(String.format("The user with email %s was not found", email)));
-
-        PasswordResetInfo passwordResetInfo = new PasswordResetInfo(userPrivate.id(), userPrivate.email().value());
-        return tokenTools.encode(passwordResetInfo, userPrivate.password().value(), tokenExpirationTime);
-    }
-
-    private String createUserTokenByEmail(String email) throws KnowyUserNotFoundException, KnowyTokenException {
-        return createUserTokenByEmail(email, 600_000);
+        return new MailMessage(email.value(), subject, body);
     }
 
     private String reactivationTokenBody(String token, String appUrl) {
@@ -211,7 +173,7 @@ public class UserPrivateService {
      * @throws KnowyUserNotFoundException  if no user is found for the given email
      */
     public void desactivateUserAccount(
-            String email,
+            Email email,
             String password,
             String confirmPassword
     ) throws KnowyWrongPasswordException, KnowyUserNotFoundException {
@@ -219,7 +181,7 @@ public class UserPrivateService {
             throw new KnowyWrongPasswordException("Passwords do not match");
         }
 
-        UserPrivate userPrivate = findPrivateUserByEmail(email)
+        UserPrivate userPrivate = findPrivateUserByEmail(email.value())
                 .orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
 
         passwordEncoder.assertHasPassword(userPrivate, password);

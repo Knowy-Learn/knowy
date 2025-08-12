@@ -6,6 +6,7 @@ import com.knowy.server.application.exception.validation.user.*;
 import com.knowy.server.application.CategoryService;
 import com.knowy.server.application.UserFacadeService;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
+import com.knowy.server.domain.Email;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserProfileDTO;
@@ -156,7 +157,7 @@ public class UserConfigController {
 		String recoveryBaseUrl = domainUrl + "/reactivate-account";
 
 		try {
-			userFacadeService.desactivateUserAccount(password, confirmPassword, email, recoveryBaseUrl);
+			userFacadeService.desactivateUserAccount(password, confirmPassword, new Email(email), recoveryBaseUrl);
 			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
 			return "redirect:delete-advise";
 

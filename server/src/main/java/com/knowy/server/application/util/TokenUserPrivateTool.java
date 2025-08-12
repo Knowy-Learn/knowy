@@ -5,6 +5,7 @@ import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUs
 import com.knowy.server.application.model.PasswordResetInfo;
 import com.knowy.server.application.ports.KnowyTokenTools;
 import com.knowy.server.application.ports.UserPrivateRepository;
+import com.knowy.server.domain.Email;
 import com.knowy.server.domain.UserPrivate;
 
 import java.util.Objects;
@@ -17,7 +18,6 @@ public class TokenUserPrivateTool {
 	private final KnowyTokenTools tokenTools;
 	private final UserPrivateRepository userPrivateRepository;
 
-
 	/**
 	 * Constructs a new {@code TokenUserPrivateTool} with the specified dependencies.
 	 *
@@ -27,21 +27,6 @@ public class TokenUserPrivateTool {
 	public TokenUserPrivateTool(KnowyTokenTools tokenTools, UserPrivateRepository userPrivateRepository) {
 		this.tokenTools = tokenTools;
 		this.userPrivateRepository = userPrivateRepository;
-	}
-
-	/**
-	 * Validates the provided password reset token.
-	 *
-	 * @param token the token to validate; must not be {@code null}
-	 * @return {@code true} if the token is valid and linked to a user; {@code false} otherwise
-	 */
-	public boolean isValidToken(String token) {
-		try {
-			verifyPasswordToken(token);
-			return true;
-		} catch (KnowyTokenException | KnowyUserNotFoundException e) {
-			return false;
-		}
 	}
 
 	/**
@@ -65,8 +50,58 @@ public class TokenUserPrivateTool {
 		return userPrivate;
 	}
 
+	/**
+	 * Validates the provided password reset token.
+	 *
+	 * @param token the token to validate; must not be {@code null}
+	 * @return {@code true} if the token is valid and linked to a user; {@code false} otherwise
+	 */
+	public boolean isValidToken(String token) {
+		try {
+			verifyPasswordToken(token);
+			return true;
+		} catch (KnowyTokenException | KnowyUserNotFoundException e) {
+			return false;
+		}
+	}
+
 	private UserPrivate getUserPrivateByIdOrThrow(int userId) throws KnowyUserNotFoundException {
 		return userPrivateRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
+	}
+
+	/**
+	 * Creates a password reset token for the user identified by the given email, with a specified expiration time.
+	 *
+	 * @param email               the user's email address
+	 * @param tokenExpirationTime the token expiration time in milliseconds
+	 * @return the encoded password reset token
+	 * @throws KnowyUserNotFoundException if no user is found with the given email
+	 * @throws KnowyTokenException        if token creation fails
+	 */
+	public String createUserTokenByEmail(Email email, long tokenExpirationTime)
+		throws KnowyUserNotFoundException, KnowyTokenException {
+		UserPrivate userPrivate = getUserPrivateByEmailOrThrow(email);
+
+		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(userPrivate.id(), userPrivate.email().value());
+		return tokenTools.encode(passwordResetInfo, userPrivate.password().value(), tokenExpirationTime);
+	}
+
+	/**
+	 * Creates a password reset token for the user identified by the given email, with a default expiration time of 10
+	 * minutes (600,000 milliseconds).
+	 *
+	 * @param email the user's email address
+	 * @return the encoded password reset token
+	 * @throws KnowyUserNotFoundException if no user is found with the given email
+	 * @throws KnowyTokenException        if token creation fails
+	 */
+	public String createUserTokenByEmail(Email email) throws KnowyUserNotFoundException, KnowyTokenException {
+		return createUserTokenByEmail(email, 600_000);
+	}
+
+	private UserPrivate getUserPrivateByEmailOrThrow(Email email) throws KnowyUserNotFoundException {
+		return userPrivateRepository.findByEmail(email.value())
+			.orElseThrow(() -> new KnowyUserNotFoundException(String.format("The user with email %s was not found", email)));
 	}
 }

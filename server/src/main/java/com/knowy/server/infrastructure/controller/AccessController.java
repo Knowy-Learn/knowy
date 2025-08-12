@@ -8,6 +8,7 @@ import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUs
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserException;
 import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
+import com.knowy.server.domain.Email;
 import com.knowy.server.domain.UserPrivate;
 import com.knowy.server.infrastructure.controller.dto.LoginFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserEmailFormDto;
@@ -123,19 +124,20 @@ public class AccessController {
     /**
      * Handles the POST request to initiate a password change by sending a recovery email.
      *
-     * @param email              the form object containing the user's email address
+     * @param userEmailFormDto              the form object containing the user's email address
      * @param redirectAttributes attributes used to pass flash messages during redirect
      * @param httpServletRequest the HTTP servlet request object, used to build the password change URL
      * @return a redirect string to either the login page on success or back to the email form on failure
      */
     @PostMapping("/password-change/email")
     public String passwordChangeEmail(
-            @ModelAttribute("emailForm") UserEmailFormDto email,
+            @ModelAttribute("emailForm") UserEmailFormDto userEmailFormDto,
             RedirectAttributes redirectAttributes,
             HttpServletRequest httpServletRequest
     ) {
         try {
-            userFacadeService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
+            userFacadeService.sendRecoveryPasswordEmail(new Email(userEmailFormDto.getEmail()),
+				getPasswordChangeUrl(httpServletRequest));
             return LOGIN_REDIRECT_URL;
         } catch (KnowyUserNotFoundException | KnowyTokenException | KnowyMailDispatchException e) {
             redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Se ha producido un error al enviar el email. Intente lo más tarde");
