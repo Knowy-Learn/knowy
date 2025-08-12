@@ -79,49 +79,6 @@ class UserPrivateServiceTest {
 /*
 
 
-	// method createDeletedAccountEmail
-	@Test
-	void given_nonExistingEmail_when_createDeletedAccountEmail_then_throwsKnowyUserNotFoundException() {
-		Mockito.when(userPrivateRepository.findByEmail("notfound@example.com"))
-			.thenReturn(Optional.empty());
-
-		assertThrows(
-			KnowyUserNotFoundException.class,
-			() -> userPrivateService.createDeletedAccountEmail("notfound@example.com", "http://app.url")
-		);
-	}
-
-	@Test
-	void given_validEmail_when_createDeletedAccountEmail_thenReturnMailMessage() throws Exception {
-		UserPrivate userPrivate = new UserPrivate(
-			11,
-			"TestNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>(),
-			new Email("user@mail.com"),
-			new Password("ENCODED_PASSWORD"),
-			true
-		);
-
-		Mockito.when(userPrivateRepository.findByEmail("email@example.com"))
-			.thenReturn(Optional.of(userPrivate));
-		Mockito.when(tokenTools.encode(
-				Mockito.any(PasswordResetInfo.class),
-				Mockito.eq("ENCODED_PASSWORD"),
-				Mockito.anyLong())
-			)
-			.thenReturn("mocked-token");
-
-		MailMessage mailMessage = userPrivateService.createDeletedAccountEmail("email@example.com", "http://app.url");
-
-		assertEquals("email@example.com", mailMessage.to());
-		assertNotNull(mailMessage.subject());
-		assertFalse(mailMessage.subject().isEmpty());
-		assertTrue(mailMessage.body().contains("mocked-token"));
-		assertTrue(mailMessage.body().contains("http://app.url"));
-		Mockito.verify(tokenTools, Mockito.times(1))
-			.encode(Mockito.any(PasswordResetInfo.class), Mockito.eq("ENCODED_PASSWORD"), Mockito.anyLong());
-	}
 
 	// method desactivateUserAccount
 	@Test
@@ -209,7 +166,7 @@ class UserPrivateServiceTest {
 	/*
 	// method reactivateUserAccount
 	@Test
-	void givenValidTokenAndUserInactiveExpectActivateAndSave() throws Exception {
+	void given_validTokenAndUserInactiveExpectActivateAndSave() throws Exception {
 		String token = "valid-token";
 
 		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(11, "user@mail.com");
@@ -227,14 +184,14 @@ class UserPrivateServiceTest {
 			new Email("user@mail.com"), new Password("ENCODED_PASSWORD"),
 			true
 		);
-		Mockito.when(tokenTools.decodeUnverified(token, PasswordResetInfo.class))
+		Mockito.when(tokenUserPrivateTool.decodeUnverified(token, PasswordResetInfo.class))
 			.thenReturn(passwordResetInfo);
 		Mockito.when(userPrivateRepository.findById(11))
 			.thenReturn(Optional.of(userPrivate));
-		Mockito.when(tokenTools.decode(Mockito.anyString(), Mockito.eq(token), Mockito.eq(PasswordResetInfo.class)))
+		Mockito.when(tokenUserPrivateTool.decode(Mockito.anyString(), Mockito.eq(token), Mockito.eq(PasswordResetInfo.class)))
 			.thenReturn(passwordResetInfo);
 
-		userPrivateService.reactivateUserAccount(token);
+		userRecoveryPasswordUseCase.reactivateUserAccount(token);
 		Mockito.verify(userPrivateRepository).save(newUserPrivate);
 	}
 

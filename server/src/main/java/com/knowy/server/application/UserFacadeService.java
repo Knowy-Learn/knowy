@@ -8,6 +8,7 @@ import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUs
 import com.knowy.server.application.exception.validation.user.*;
 import com.knowy.server.application.model.MailMessage;
 import com.knowy.server.application.ports.KnowyEmailClientTool;
+import com.knowy.server.application.usecase.recovery.UserRecoveryAccountUseCase;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.register.UserSingUpCommand;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailCommand;
@@ -27,6 +28,7 @@ public class UserFacadeService {
     private final UserSignUpUseCase userSignUpUseCase;
     private final UserUpdateEmailUseCase userUpdateEmailUseCase;
     private final UserUpdatePasswordUseCase userUpdatePasswordUseCase;
+	private final UserRecoveryAccountUseCase userRecoveryAccountUseCase;
 
     /**
      * The constructor
@@ -38,8 +40,8 @@ public class UserFacadeService {
     public UserFacadeService(
 		KnowyEmailClientTool knowyEmailClientTool,
 		UserPrivateService userPrivateService,
-		UserService publicUserService, TokenUserPrivateTool tokenUserPrivateTool, UserSignUpUseCase userSignUpUseCase, UserUpdateEmailUseCase userUpdateEmailUseCase, UserUpdatePasswordUseCase userUpdatePasswordUseCase
-    ) {
+		UserService publicUserService, TokenUserPrivateTool tokenUserPrivateTool, UserSignUpUseCase userSignUpUseCase, UserUpdateEmailUseCase userUpdateEmailUseCase, UserUpdatePasswordUseCase userUpdatePasswordUseCase, UserRecoveryAccountUseCase userRecoveryAccountUseCase
+	) {
         this.knowyEmailClientTool = knowyEmailClientTool;
         this.userPrivateService = userPrivateService;
         this.userService = publicUserService;
@@ -47,7 +49,8 @@ public class UserFacadeService {
 		this.userSignUpUseCase = userSignUpUseCase;
         this.userUpdateEmailUseCase = userUpdateEmailUseCase;
         this.userUpdatePasswordUseCase = userUpdatePasswordUseCase;
-    }
+		this.userRecoveryAccountUseCase = userRecoveryAccountUseCase;
+	}
 
     public UserPrivate registerNewUser(String nickname, String email, String password)
             throws KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException {
@@ -149,7 +152,7 @@ public class UserFacadeService {
      */
     public void sendRecoveryPasswordEmail(Email email, String recoveryBaseUrl)
             throws KnowyTokenException, KnowyMailDispatchException, KnowyUserNotFoundException {
-        MailMessage mailMessage = userPrivateService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
+        MailMessage mailMessage = userRecoveryAccountUseCase.execute(email, recoveryBaseUrl);
         knowyEmailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
     }
 
@@ -173,7 +176,7 @@ public class UserFacadeService {
             String recoveryBaseUrl
     ) throws KnowyTokenException, KnowyMailDispatchException, KnowyWrongPasswordException, KnowyUserNotFoundException {
         userPrivateService.desactivateUserAccount(email, password, confirmPassword);
-        MailMessage mailMessage = userPrivateService.createDeletedAccountEmail(email, recoveryBaseUrl);
+        MailMessage mailMessage = userRecoveryAccountUseCase.execute(email, recoveryBaseUrl);
         knowyEmailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
     }
 

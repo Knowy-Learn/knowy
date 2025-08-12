@@ -2,6 +2,7 @@ package com.knowy.server.infrastructure.config;
 
 import com.knowy.server.application.*;
 import com.knowy.server.application.ports.*;
+import com.knowy.server.application.usecase.recovery.UserRecoveryAccountUseCase;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailUseCase;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordUseCase;
@@ -39,6 +40,7 @@ public class ApplicationConfiguration {
 		UserSignUpUseCase userSignUpUseCase,
 		UserUpdateEmailUseCase userUpdateEmailUseCase,
 		UserUpdatePasswordUseCase userUpdatePasswordUseCase,
+		UserRecoveryAccountUseCase userRecoveryAccountUseCase,
 		TokenUserPrivateTool tokenUserPrivateTool
 	) {
 		return new UserFacadeService(
@@ -48,7 +50,8 @@ public class ApplicationConfiguration {
 			tokenUserPrivateTool,
 			userSignUpUseCase,
 			userUpdateEmailUseCase,
-			userUpdatePasswordUseCase
+			userUpdatePasswordUseCase,
+			userRecoveryAccountUseCase
 		);
 	}
 
@@ -86,6 +89,11 @@ public class ApplicationConfiguration {
 			passwordEncoderAdapter,
 			knowyTokenTools
 		);
+	}
+
+	@Bean
+	public UserRecoveryAccountUseCase userRecoveryAccountUseCase(TokenUserPrivateTool tokenUserPrivateTool) {
+		return new UserRecoveryAccountUseCase(tokenUserPrivateTool);
 	}
 
 	@Bean
