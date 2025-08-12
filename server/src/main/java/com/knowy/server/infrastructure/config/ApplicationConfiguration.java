@@ -3,6 +3,7 @@ package com.knowy.server.infrastructure.config;
 import com.knowy.server.application.*;
 import com.knowy.server.application.ports.*;
 import com.knowy.server.application.usecase.manage.DeactivateAccountUseCase;
+import com.knowy.server.application.usecase.manage.ReactivateAccountUseCase;
 import com.knowy.server.application.usecase.manage.SendRecoveryPasswordUseCase;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailUseCase;
@@ -42,7 +43,8 @@ public class ApplicationConfiguration {
 		UserUpdatePasswordUseCase userUpdatePasswordUseCase,
 		DeactivateAccountUseCase deactivateAccountUseCase,
 		TokenUserPrivateTool tokenUserPrivateTool,
-		SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase
+		SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase,
+		ReactivateAccountUseCase reactivateAccountUseCase
 	) {
 		return new UserFacadeService(
 			userPrivateService,
@@ -52,7 +54,8 @@ public class ApplicationConfiguration {
 			userUpdateEmailUseCase,
 			userUpdatePasswordUseCase,
 			deactivateAccountUseCase,
-			sendRecoveryPasswordUseCase
+			sendRecoveryPasswordUseCase,
+			reactivateAccountUseCase
 		);
 	}
 

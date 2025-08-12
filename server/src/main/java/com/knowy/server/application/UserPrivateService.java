@@ -79,24 +79,4 @@ public class UserPrivateService {
     }
 
 
-    /**
-     * Reactivates a user account based on a valid token.
-     *
-     * @param token the JWT token used to verify the reactivation request
-     * @throws KnowyTokenException        if the token is invalid or cannot be processed
-     * @throws KnowyUserNotFoundException if no user is associated with the token
-     */
-    public void reactivateUserAccount(String token) throws KnowyTokenException, KnowyUserNotFoundException {
-        UserPrivate userPrivate = tokenUserPrivateTool.verifyPasswordToken(token);
-
-        if (!userPrivate.active()) {
-            UserPrivate newUserPrivate = new UserPrivate(
-                    userPrivate.cropToUser(),
-                    userPrivate.email(),
-                    userPrivate.password(),
-                    true
-            );
-            privateUserRepository.save(newUserPrivate);
-        }
-    }
 }

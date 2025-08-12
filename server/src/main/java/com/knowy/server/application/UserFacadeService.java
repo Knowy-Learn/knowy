@@ -8,6 +8,7 @@ import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUs
 import com.knowy.server.application.exception.validation.user.*;
 import com.knowy.server.application.usecase.manage.DeactivateAccountCommand;
 import com.knowy.server.application.usecase.manage.DeactivateAccountUseCase;
+import com.knowy.server.application.usecase.manage.ReactivateAccountUseCase;
 import com.knowy.server.application.usecase.manage.SendRecoveryPasswordUseCase;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.register.UserSingUpCommand;
@@ -30,6 +31,7 @@ public class UserFacadeService {
 	private final UserUpdatePasswordUseCase userUpdatePasswordUseCase;
 	private final DeactivateAccountUseCase deactivateAccountUseCase;
 	private final SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase;
+	private final ReactivateAccountUseCase reactivateAccountUseCase;
 
 	/**
 	 * The constructor
@@ -44,7 +46,7 @@ public class UserFacadeService {
 		UserSignUpUseCase userSignUpUseCase,
 		UserUpdateEmailUseCase userUpdateEmailUseCase,
 		UserUpdatePasswordUseCase userUpdatePasswordUseCase,
-		DeactivateAccountUseCase deactivateAccountUseCase, SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase
+		DeactivateAccountUseCase deactivateAccountUseCase, SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase, ReactivateAccountUseCase reactivateAccountUseCase
 	) {
 		this.userPrivateService = userPrivateService;
 		this.userService = publicUserService;
@@ -54,6 +56,7 @@ public class UserFacadeService {
 		this.userUpdatePasswordUseCase = userUpdatePasswordUseCase;
 		this.deactivateAccountUseCase = deactivateAccountUseCase;
 		this.sendRecoveryPasswordUseCase = sendRecoveryPasswordUseCase;
+		this.reactivateAccountUseCase = reactivateAccountUseCase;
 	}
 
 	public UserPrivate registerNewUser(String nickname, String email, String password)
@@ -191,6 +194,6 @@ public class UserFacadeService {
 	 * @throws KnowyTokenException        if the token is invalid or expired
 	 */
 	public void reactivateUserAccount(String token) throws KnowyTokenException, KnowyUserNotFoundException {
-		userPrivateService.reactivateUserAccount(token);
+		reactivateAccountUseCase.execute(token);
 	}
 }
