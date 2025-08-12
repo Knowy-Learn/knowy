@@ -1,4 +1,4 @@
-package com.knowy.server.application.usecase.recovery;
+package com.knowy.server.application.usecase.manage;
 
 import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;

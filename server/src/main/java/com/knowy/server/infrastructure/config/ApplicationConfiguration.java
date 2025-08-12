@@ -2,7 +2,7 @@ package com.knowy.server.infrastructure.config;
 
 import com.knowy.server.application.*;
 import com.knowy.server.application.ports.*;
-import com.knowy.server.application.usecase.recovery.UserRecoveryAccountUseCase;
+import com.knowy.server.application.usecase.manage.DeactivateAccountUseCase;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailUseCase;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordUseCase;
@@ -40,7 +40,7 @@ public class ApplicationConfiguration {
 		UserSignUpUseCase userSignUpUseCase,
 		UserUpdateEmailUseCase userUpdateEmailUseCase,
 		UserUpdatePasswordUseCase userUpdatePasswordUseCase,
-		UserRecoveryAccountUseCase userRecoveryAccountUseCase,
+		DeactivateAccountUseCase deactivateAccountUseCase,
 		TokenUserPrivateTool tokenUserPrivateTool
 	) {
 		return new UserFacadeService(
@@ -51,7 +51,7 @@ public class ApplicationConfiguration {
 			userSignUpUseCase,
 			userUpdateEmailUseCase,
 			userUpdatePasswordUseCase,
-			userRecoveryAccountUseCase
+			deactivateAccountUseCase
 		);
 	}
 
@@ -92,8 +92,15 @@ public class ApplicationConfiguration {
 	}
 
 	@Bean
-	public UserRecoveryAccountUseCase userRecoveryAccountUseCase(TokenUserPrivateTool tokenUserPrivateTool) {
-		return new UserRecoveryAccountUseCase(tokenUserPrivateTool);
+	public DeactivateAccountUseCase userRecoveryAccountUseCase(
+		TokenUserPrivateTool tokenUserPrivateTool,
+		KnowyEmailClientTool knowyEmailClientTool,
+		PasswordEncoderAdapter passwordEncoderAdapter,
+		UserPrivateRepository userPrivateRepository
+	) {
+		return new DeactivateAccountUseCase(
+			tokenUserPrivateTool, knowyEmailClientTool, passwordEncoderAdapter, userPrivateRepository
+		);
 	}
 
 	@Bean
