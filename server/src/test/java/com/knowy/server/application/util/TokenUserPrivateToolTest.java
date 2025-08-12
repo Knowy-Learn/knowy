@@ -1,0 +1,88 @@
+package com.knowy.server.application.util;
+
+import com.knowy.server.application.exception.KnowyTokenException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
+import com.knowy.server.application.model.PasswordResetInfo;
+import com.knowy.server.application.ports.KnowyTokenTools;
+import com.knowy.server.application.ports.UserPrivateRepository;
+import com.knowy.server.domain.Email;
+import com.knowy.server.domain.Password;
+import com.knowy.server.domain.ProfileImage;
+import com.knowy.server.domain.UserPrivate;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+@ExtendWith(MockitoExtension.class)
+class TokenUserPrivateToolTest {
+
+	@Mock
+	private KnowyTokenTools tokenTools;
+
+	@Mock
+	private UserPrivateRepository userPrivateRepository;
+
+	@Spy
+	@InjectMocks
+	private TokenUserPrivateTool tokenUserPrivateTool;
+
+	@Test
+	void given_validToken_when_validateToken_then_returnTrue() throws KnowyTokenException {
+		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(11, "user@mail.com");
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			new Email("test@email.com"),
+			new Password("ValidOldPass123@"),
+			true
+		);
+
+		Mockito.when(tokenTools.decodeUnverified("valid-token", PasswordResetInfo.class))
+			.thenReturn(passwordResetInfo);
+		Mockito.when(userPrivateRepository.findById(userPrivate.id()))
+			.thenReturn(Optional.of(userPrivate));
+		Mockito.when(tokenTools.decode(userPrivate.password().value(), "valid-token", PasswordResetInfo.class))
+			.thenReturn(passwordResetInfo);
+
+		assertTrue(tokenUserPrivateTool.isValidToken("valid-token"));
+	}
+
+	@Test
+	void given_nullToken_when_validateToke_then_throwNullPointerException() {
+		assertThrows(NullPointerException.class, () -> tokenUserPrivateTool.isValidToken(null));
+	}
+
+
+	@Test
+	void given_invalidToken_when_validateToken_then_returnsFalse() throws KnowyTokenException, KnowyUserNotFoundException {
+		Mockito.doThrow(new KnowyTokenException("Invalid Token"))
+			.when(tokenUserPrivateTool)
+			.verifyPasswordToken("invalid-token");
+
+		boolean result = tokenUserPrivateTool.isValidToken("invalid-token");
+		assertFalse(result);
+	}
+
+	@Test
+	void given_invalidTokenByUserNotFound_when_validateToken_then_returnsFalse()
+		throws KnowyTokenException, KnowyUserNotFoundException {
+		Mockito.doThrow(new KnowyUserNotFoundException("Invalid Token"))
+			.when(tokenUserPrivateTool)
+			.verifyPasswordToken("invalid-token");
+
+		boolean result = tokenUserPrivateTool.isValidToken("invalid-token");
+		assertFalse(result);
+	}
+}

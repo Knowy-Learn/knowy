@@ -14,6 +14,7 @@ import com.knowy.server.application.usecase.update.email.UserUpdateEmailCommand;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailUseCase;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordCommand;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordUseCase;
+import com.knowy.server.application.util.TokenUserPrivateTool;
 import com.knowy.server.domain.UserPrivate;
 
 public class UserFacadeService {
@@ -21,6 +22,7 @@ public class UserFacadeService {
     private final KnowyEmailClientTool knowyEmailClientTool;
     private final UserPrivateService userPrivateService;
     private final UserService userService;
+	private final TokenUserPrivateTool tokenUserPrivateTool;
     private final UserSignUpUseCase userSignUpUseCase;
     private final UserUpdateEmailUseCase userUpdateEmailUseCase;
     private final UserUpdatePasswordUseCase userUpdatePasswordUseCase;
@@ -33,14 +35,15 @@ public class UserFacadeService {
      * @param publicUserService    the publicUserService
      */
     public UserFacadeService(
-            KnowyEmailClientTool knowyEmailClientTool,
-            UserPrivateService userPrivateService,
-            UserService publicUserService, UserSignUpUseCase userSignUpUseCase, UserUpdateEmailUseCase userUpdateEmailUseCase, UserUpdatePasswordUseCase userUpdatePasswordUseCase
+		KnowyEmailClientTool knowyEmailClientTool,
+		UserPrivateService userPrivateService,
+		UserService publicUserService, TokenUserPrivateTool tokenUserPrivateTool, UserSignUpUseCase userSignUpUseCase, UserUpdateEmailUseCase userUpdateEmailUseCase, UserUpdatePasswordUseCase userUpdatePasswordUseCase
     ) {
         this.knowyEmailClientTool = knowyEmailClientTool;
         this.userPrivateService = userPrivateService;
         this.userService = publicUserService;
-        this.userSignUpUseCase = userSignUpUseCase;
+		this.tokenUserPrivateTool = tokenUserPrivateTool;
+		this.userSignUpUseCase = userSignUpUseCase;
         this.userUpdateEmailUseCase = userUpdateEmailUseCase;
         this.userUpdatePasswordUseCase = userUpdatePasswordUseCase;
     }
@@ -129,7 +132,7 @@ public class UserFacadeService {
      * @return {@code true} if the token is valid; {@code false} otherwise
      */
     public boolean isValidToken(String token) {
-        return userPrivateService.isValidToken(token);
+        return tokenUserPrivateTool.isValidToken(token);
     }
 
     /**

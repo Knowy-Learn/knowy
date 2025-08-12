@@ -11,16 +11,19 @@ import com.knowy.server.application.model.PasswordResetInfo;
 import com.knowy.server.application.ports.KnowyPasswordEncoder;
 import com.knowy.server.application.ports.KnowyTokenTools;
 import com.knowy.server.application.ports.UserPrivateRepository;
+import com.knowy.server.application.util.TokenUserPrivateTool;
 import com.knowy.server.domain.Email;
 import com.knowy.server.domain.Password;
 import com.knowy.server.domain.UserPrivate;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
 public class UserPrivateService {
 
     private final UserPrivateRepository privateUserRepository;
+	private final TokenUserPrivateTool tokenUserPrivateTool;
     private final KnowyPasswordEncoder passwordEncoder;
     private final KnowyTokenTools tokenTools;
 
@@ -32,75 +35,15 @@ public class UserPrivateService {
      * @param tokenTools            the tokenTools
      */
     public UserPrivateService(
-            UserPrivateRepository privateUserRepository,
-            KnowyPasswordEncoder passwordEncoder,
-            KnowyTokenTools tokenTools
-    ) {
+		UserPrivateRepository privateUserRepository,
+		KnowyPasswordEncoder passwordEncoder,
+		KnowyTokenTools tokenTools, TokenUserPrivateTool tokenUserPrivateTool
+	) {
         this.privateUserRepository = privateUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenTools = tokenTools;
-    }
-
-    /**
-     * Resets the password of a private user using a valid recovery token.
-     *
-     * <p>Validates the password format and confirms that both provided passwords match.
-     * Then verifies the token, retrieves the associated user, and updates the password after encoding it securely.</p>
-     *
-     * @param token           the JWT token used for password reset
-     * @param password        the new password to set
-     * @param confirmPassword confirmation of the new password
-     * @throws KnowyPasswordFormatException if the password does not meet the required format
-     * @throws KnowyTokenException          if the token is invalid or the passwords do not match
-     * @throws KnowyUserNotFoundException   if the user associated with the token does not exist
-     */
-    public void resetPassword(String token, String password, String confirmPassword)
-            throws KnowyPasswordFormatException, KnowyTokenException, KnowyUserNotFoundException, KnowyWrongPasswordException {
-
-        Objects.requireNonNull(password, "A password should be specified");
-
-        Password.assertPasswordFormatIsRight(password);
-        if (!password.equals(confirmPassword)) {
-            throw new KnowyWrongPasswordException("Passwords do not match");
-        }
-
-        UserPrivate userPrivate = verifyPasswordToken(token);
-
-        String encodedPassword = passwordEncoder.encode(password);
-        UserPrivate newUserPrivate = new UserPrivate(
-                userPrivate.cropToUser(),
-                userPrivate.email(),
-                new Password(encodedPassword)
-        );
-
-        save(newUserPrivate);
-    }
-
-    /**
-     * Validates a password reset JWT token by decoding and verifying its signature.
-     *
-     * <p>The method performs the following steps:
-     * <ul>
-     *     <li>Decodes the token without verifying the signature to extract the user ID.</li>
-     *     <li>Fetches the corresponding user from the database using the extracted ID.</li>
-     *     <li>Verifies the token's signature using the user's current password as the secret key.</li>
-     * </ul>
-     *
-     * <p>If all steps succeed, the token is considered valid. Otherwise, the method returns {@code false}.</p>
-     *
-     * @param token the JWT token to validate
-     * @return {@code true} if the token is well-formed, matches a known user, and its signature is valid; {@code false}
-     * otherwise
-     */
-    public boolean isValidToken(String token) {
-        try {
-            Objects.requireNonNull(token, "A not null token is required");
-            verifyPasswordToken(token);
-            return true;
-        } catch (KnowyTokenException | KnowyUserNotFoundException e) {
-            return false;
-        }
-    }
+		this.tokenUserPrivateTool = tokenUserPrivateTool;
+	}
 
     /**
      * Persists the given private user entity in the database.
@@ -297,7 +240,7 @@ public class UserPrivateService {
      * @throws KnowyUserNotFoundException if no user is associated with the token
      */
     public void reactivateUserAccount(String token) throws KnowyTokenException, KnowyUserNotFoundException {
-        UserPrivate userPrivate = verifyPasswordToken(token);
+        UserPrivate userPrivate = tokenUserPrivateTool.verifyPasswordToken(token);
 
         if (!userPrivate.active()) {
             UserPrivate newUserPrivate = new UserPrivate(
@@ -308,27 +251,5 @@ public class UserPrivateService {
             );
             privateUserRepository.save(newUserPrivate);
         }
-    }
-
-    /**
-     * Verifies the authenticity and validity of a password reset token and retrieves the associated user.
-     *
-     * <p>This method performs two decoding steps:
-     * <ol>
-     *   <li>Unverified decoding to extract the user ID from the token payload.</li>
-     *   <li>Verified decoding using the user's password as the secret key to validate the token's integrity and expiration.</li>
-     * </ol>
-     * If both steps succeed, the method returns the corresponding {@code PrivateUserEntity}.</p>
-     *
-     * @param token the JWT token to verify
-     * @return the {@code PrivateUserEntity} linked to the token
-     * @throws KnowyTokenException        if the token is invalid, expired, or has been tampered with
-     * @throws KnowyUserNotFoundException if no user exists for the extracted user ID
-     */
-    public UserPrivate verifyPasswordToken(String token) throws KnowyTokenException, KnowyUserNotFoundException {
-        PasswordResetInfo passwordResetInfo = tokenTools.decodeUnverified(token, PasswordResetInfo.class);
-        UserPrivate userPrivate = getPrivateUserById(passwordResetInfo.userId());
-        tokenTools.decode(userPrivate.password().value(), token, PasswordResetInfo.class);
-        return userPrivate;
     }
 }
