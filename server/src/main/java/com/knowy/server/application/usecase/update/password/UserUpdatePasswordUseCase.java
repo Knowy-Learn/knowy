@@ -2,7 +2,7 @@ package com.knowy.server.application.usecase.update.password;
 
 import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
-import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
+import com.knowy.server.domain.exception.KnowyPasswordFormatException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
 import com.knowy.server.application.model.PasswordResetInfo;
 import com.knowy.server.application.ports.KnowyPasswordEncoder;

@@ -1,4 +1,4 @@
-package com.knowy.server.application.exception.validation.user;
+package com.knowy.server.domain.exception;
 
 import com.knowy.server.application.exception.validation.KnowyValidationException;
 

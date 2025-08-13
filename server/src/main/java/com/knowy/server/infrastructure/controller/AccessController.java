@@ -7,7 +7,7 @@ import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserException;
-import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
+import com.knowy.server.domain.exception.KnowyPasswordFormatException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
 import com.knowy.server.application.usecase.register.UserSingUpCommand;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordCommand;

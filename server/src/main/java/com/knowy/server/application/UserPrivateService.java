@@ -19,6 +19,8 @@ import com.knowy.server.application.usecase.update.password.UserUpdatePasswordUs
 import com.knowy.server.application.util.TokenUserPrivateTool;
 import com.knowy.server.domain.Email;
 import com.knowy.server.domain.UserPrivate;
+import com.knowy.server.domain.exception.KnowyPasswordFormatException;
+import com.knowy.server.domain.exception.KnowyUserEmailFormatException;
 
 /**
  * Service layer for handling user account private operations.
@@ -128,11 +130,11 @@ public class UserPrivateService {
      *                current password for verification.
      * @throws KnowyUnchangedEmailException   If the new email is the same as the current one.
      * @throws KnowyWrongPasswordException    If the provided password is incorrect.
-     * @throws KnowyInvalidUserEmailException If the email is invalid or already in use.
+     * @throws KnowyUserEmailFormatException If the email is invalid or already in use.
      * @throws KnowyUserNotFoundException     If no user is found with the given ID.
      */
     public void updateEmail(UserUpdateEmailCommand command)
-            throws KnowyUnchangedEmailException, KnowyWrongPasswordException, KnowyInvalidUserEmailException, KnowyUserNotFoundException {
+            throws KnowyUnchangedEmailException, KnowyWrongPasswordException, KnowyUserEmailFormatException, KnowyUserNotFoundException {
         userUpdateEmailUseCase.execute(command);
     }
 

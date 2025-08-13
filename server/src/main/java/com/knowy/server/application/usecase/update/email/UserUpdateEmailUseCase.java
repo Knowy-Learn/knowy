@@ -1,7 +1,7 @@
 package com.knowy.server.application.usecase.update.email;
 
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
-import com.knowy.server.application.exception.validation.user.KnowyInvalidUserEmailException;
+import com.knowy.server.domain.exception.KnowyUserEmailFormatException;
 import com.knowy.server.application.exception.validation.user.KnowyUnchangedEmailException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
 import com.knowy.server.application.ports.KnowyPasswordEncoder;
@@ -9,7 +9,6 @@ import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.usecase.KnowyUseCase;
 import com.knowy.server.domain.Email;
 import com.knowy.server.domain.UserPrivate;
-import com.knowy.server.infrastructure.adapters.security.PasswordEncoderAdapter;
 
 import java.util.Objects;
 
@@ -43,13 +42,13 @@ public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailComma
 	 * @param command Command containing the user ID, new email, and password for verification.
 	 * @return The updated {@link UserPrivate} entity.
 	 * @throws KnowyUnchangedEmailException    If the new email is the same as the current one.
-	 * @throws KnowyInvalidUserEmailException  If the new email is already in use by another user.
+	 * @throws KnowyUserEmailFormatException  If the new email is already in use by another user.
 	 * @throws KnowyWrongPasswordException     If the provided password does not match the user's current password.
 	 * @throws KnowyUserNotFoundException      If no user is found with the provided ID.
 	 */
 	@Override
 	public UserPrivate execute(UserUpdateEmailCommand command)
-		throws KnowyUnchangedEmailException, KnowyInvalidUserEmailException, KnowyWrongPasswordException, KnowyUserNotFoundException {
+		throws KnowyUnchangedEmailException, KnowyUserEmailFormatException, KnowyWrongPasswordException, KnowyUserNotFoundException {
 
 		UserPrivate userPrivate = getByIdOrThrow(command.userId());
 
@@ -74,9 +73,9 @@ public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailComma
 		}
 	}
 
-	private void validateEmailIsNotTaken(String email) throws KnowyInvalidUserEmailException {
+	private void validateEmailIsNotTaken(String email) throws KnowyUserEmailFormatException {
 		if (userPrivateRepository.findByEmail(email).isPresent()) {
-			throw new KnowyInvalidUserEmailException(
+			throw new KnowyUserEmailFormatException(
 				"The provided email is already associated with an existing account."
 			);
 		}

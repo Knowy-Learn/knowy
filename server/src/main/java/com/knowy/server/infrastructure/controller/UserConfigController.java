@@ -13,6 +13,7 @@ import com.knowy.server.application.usecase.manage.DeactivateAccountCommand;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailCommand;
 import com.knowy.server.domain.Email;
 import com.knowy.server.domain.Password;
+import com.knowy.server.domain.exception.KnowyUserEmailFormatException;
 import com.knowy.server.infrastructure.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserProfileDTO;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
@@ -110,7 +111,7 @@ public class UserConfigController {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo correo debe ser diferente al actual.");
 		} catch (KnowyWrongPasswordException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La contraseña es incorrecta.");
-		} catch (KnowyInvalidUserEmailException e) {
+		} catch (KnowyUserEmailFormatException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El correo ingresado ya está asociado a una cuenta existente.");
 		}
 		return "redirect:/user-account";

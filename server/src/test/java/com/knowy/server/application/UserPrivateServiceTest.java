@@ -13,6 +13,8 @@ import com.knowy.server.application.usecase.update.email.UserUpdateEmailCommand;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordCommand;
 import com.knowy.server.application.util.TokenUserPrivateTool;
 import com.knowy.server.domain.*;
+import com.knowy.server.domain.exception.KnowyPasswordFormatException;
+import com.knowy.server.domain.exception.KnowyUserEmailFormatException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,14 +70,14 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("test@email.com"),
-                    new Password("ENCODED_PASS"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
             Mockito.when(userPrivateRepository.findByEmail(userSingUpCommand.email()))
                     .thenReturn(Optional.empty());
             Mockito.when(knowyPasswordEncoder.encode(userSingUpCommand.password()))
-                    .thenReturn("ENCODED_PASS");
+                    .thenReturn("Encoded.Password.123");
             Mockito.when(profileImageRepository.findById(1))
                     .thenReturn(Optional.of(new ProfileImage(1, "https://knowy/image.png")));
             Mockito.when(userPrivateRepository.save(any(UserPrivate.class)))
@@ -109,7 +111,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("test@email.com"),
-                    new Password("ENCODED_PASS"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
@@ -135,7 +137,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email(existMail),
-                    new Password("ValidPass123"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
@@ -143,7 +145,7 @@ class UserPrivateServiceTest {
                     .thenReturn(Optional.of(userPrivate));
 
             assertThrows(
-                    KnowyInvalidUserEmailException.class,
+                    KnowyUserEmailFormatException.class,
                     () -> userPrivateService.registerNewUser(userSingUpCommand)
             );
         }
@@ -189,7 +191,7 @@ class UserPrivateServiceTest {
             UserPrivate newUserPrivate = new UserPrivate(
                     user,
                     new Email("test@email.com"),
-                    new Password("ENCODED_NEW_PASSWORD"),
+                    new Password("Encoded.New.Password.123"),
                     true
             );
             PasswordResetInfo passwordResetInfo = new PasswordResetInfo(11, "user@mail.com");
@@ -201,7 +203,7 @@ class UserPrivateServiceTest {
             Mockito.when(knowyTokenTools.decode(userPrivate.password().value(), "valid-token", PasswordResetInfo.class))
                     .thenReturn(passwordResetInfo);
             Mockito.when(knowyPasswordEncoder.encode("ValidNewPass123@"))
-                    .thenReturn("ENCODED_NEW_PASSWORD");
+                    .thenReturn("Encoded.New.Password.123");
             Mockito.when(userPrivateRepository.save(newUserPrivate))
                     .thenReturn(newUserPrivate);
 
@@ -304,7 +306,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("old@email.com"),
-                    new Password("ENCODED_PASS"),
+                    new Password("Encoded.Password.123"),
                     true
             );
             UserPrivate newUserPrivate = new UserPrivate(
@@ -339,7 +341,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email(sameEmail),
-                    new Password("ENCODED_PASS"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
@@ -369,7 +371,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("old@mail.com"),
-                    new Password("ENCODED_PASS"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
@@ -379,7 +381,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("other@email.com"),
-                    new Password("ENCODED_PASS"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
@@ -389,7 +391,7 @@ class UserPrivateServiceTest {
                     .thenReturn(Optional.of(otherUserPrivate));
 
             assertThrows(
-                    KnowyInvalidUserEmailException.class,
+                    KnowyUserEmailFormatException.class,
                     () -> userPrivateService.updateEmail(userUpdateEmailCommand)
             );
         }
@@ -410,7 +412,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("old@email.com"),
-                    new Password("ENCODED_PASS"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
@@ -506,7 +508,7 @@ class UserPrivateServiceTest {
                 throws KnowyWrongPasswordException, KnowyUserNotFoundException, KnowyTokenException, KnowyMailDispatchException {
 
             Email email = new Email("nonExistMail@mail.com");
-            Password password = new Password("validPasword");
+            Password password = new Password("valid.Password123");
             String baseUrl = "http://app.url";
 
             DeactivateAccountCommand command = new DeactivateAccountCommand(
@@ -519,7 +521,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("user@mail.com"),
-                    new Password("ENCODED_PASSWORD"),
+                    new Password("Encoded.Password.123"),
                     true
             );
             UserPrivate newUserPrivate = new UserPrivate(
@@ -538,7 +540,7 @@ class UserPrivateServiceTest {
         @Test
         void given_nonexistentUser_when_desactivateUserAccount_then_throwKnowyUserNotFoundException() {
             Email email = new Email("nonExistMail@mail.com");
-            Password password = new Password("validPasword");
+            Password password = new Password("valid.Pasword123");
             String baseUrl = "http://app.url";
 
             DeactivateAccountCommand command = new DeactivateAccountCommand(
@@ -578,7 +580,7 @@ class UserPrivateServiceTest {
                 throws KnowyWrongPasswordException {
 
             Email email = new Email("user@mail.com");
-            Password wrongPassword = new Password("wrongPassword");
+            Password wrongPassword = new Password("wrong.Password.123");
             String baseUrl = "http://app.url";
 
             DeactivateAccountCommand command = new DeactivateAccountCommand(
@@ -591,7 +593,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     email,
-                    new Password("ENCODED_PASSWORD"),
+                    new Password("Encoded.Password.123"),
                     true
             );
             Mockito.when(userPrivateRepository.findByEmail("user@mail.com"))
@@ -611,7 +613,7 @@ class UserPrivateServiceTest {
                 throws KnowyTokenException, KnowyUserNotFoundException {
 
             Email email = new Email("nonExistMail@mail.com");
-            Password password = new Password("validPasword");
+            Password password = new Password("valid.Pasword123");
             String baseUrl = "http://app.url";
 
             DeactivateAccountCommand command = new DeactivateAccountCommand(
@@ -624,7 +626,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("user@mail.com"),
-                    new Password("ENCODED_PASSWORD"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
@@ -645,7 +647,7 @@ class UserPrivateServiceTest {
                 throws KnowyTokenException, KnowyUserNotFoundException {
 
             Email email = new Email("nonExistMail@mail.com");
-            Password password = new Password("validPasword");
+            Password password = new Password("valid.Pasword123");
             String baseUrl = "http://app.url";
 
             DeactivateAccountCommand command = new DeactivateAccountCommand(
@@ -658,7 +660,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("user@mail.com"),
-                    new Password("ENCODED_PASSWORD"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
@@ -678,7 +680,7 @@ class UserPrivateServiceTest {
         void given_validEmailAndCorrectPassword_when_desactivateUserAccount_then_throw() throws KnowyMailDispatchException {
 
             Email email = new Email("nonExistMail@mail.com");
-            Password password = new Password("validPasword");
+            Password password = new Password("valid.Pasword123");
             String baseUrl = "http://app.url";
 
             DeactivateAccountCommand command = new DeactivateAccountCommand(
@@ -691,7 +693,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("user@mail.com"),
-                    new Password("ENCODED_PASSWORD"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 
@@ -720,12 +722,12 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("user@mail.com"),
-                    new Password("ENCODED_PASSWORD"),
+                    new Password("Encoded.Password.123"),
                     false
             );
             UserPrivate newUserPrivate = new UserPrivate(
                     userPrivate.cropToUser(),
-                    new Email("user@mail.com"), new Password("ENCODED_PASSWORD"),
+                    new Email("user@mail.com"), new Password("Encoded.Password.123"),
                     true
             );
 
@@ -775,7 +777,7 @@ class UserPrivateServiceTest {
                     new ProfileImage(1, "https://knowy/image.png"),
                     new HashSet<>(),
                     new Email("user@mail.com"),
-                    new Password("ENCODED_PASSWORD"),
+                    new Password("Encoded.Password.123"),
                     true
             );
 

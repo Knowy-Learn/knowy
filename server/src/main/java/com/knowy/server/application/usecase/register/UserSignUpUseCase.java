@@ -1,10 +1,10 @@
 package com.knowy.server.application.usecase.register;
 
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
-import com.knowy.server.application.exception.validation.user.KnowyInvalidUserEmailException;
+import com.knowy.server.domain.exception.KnowyUserEmailFormatException;
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserException;
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserNicknameException;
-import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
+import com.knowy.server.domain.exception.KnowyPasswordFormatException;
 import com.knowy.server.application.ports.KnowyPasswordEncoder;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserPrivateRepository;
@@ -88,10 +88,10 @@ public class UserSignUpUseCase  implements KnowyUseCase<UserSingUpCommand, UserP
         }
     }
 
-    private void validateEmail(String email) throws KnowyInvalidUserEmailException {
+    private void validateEmail(String email) throws KnowyUserEmailFormatException {
         Email.assertValid(email);
         if (userPrivateRepository.findByEmail(email).isPresent()) {
-            throw new KnowyInvalidUserEmailException("Email already exists");
+            throw new KnowyUserEmailFormatException("Email already exists");
         }
     }
 }
