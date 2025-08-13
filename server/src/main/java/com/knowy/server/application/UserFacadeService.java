@@ -23,7 +23,6 @@ import com.knowy.server.domain.UserPrivate;
 
 public class UserFacadeService {
 
-	private final UserPrivateService userPrivateService;
 	private final UserService userService;
 	private final TokenUserPrivateTool tokenUserPrivateTool;
 	private final UserSignUpUseCase userSignUpUseCase;
@@ -36,11 +35,9 @@ public class UserFacadeService {
 	/**
 	 * The constructor
 	 *
-	 * @param userPrivateService the privateUserService
-	 * @param publicUserService  the publicUserService
+	 * @param publicUserService the publicUserService
 	 */
 	public UserFacadeService(
-		UserPrivateService userPrivateService,
 		UserService publicUserService,
 		TokenUserPrivateTool tokenUserPrivateTool,
 		UserSignUpUseCase userSignUpUseCase,
@@ -48,7 +45,6 @@ public class UserFacadeService {
 		UserUpdatePasswordUseCase userUpdatePasswordUseCase,
 		DeactivateAccountUseCase deactivateAccountUseCase, SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase, ReactivateAccountUseCase reactivateAccountUseCase
 	) {
-		this.userPrivateService = userPrivateService;
 		this.userService = publicUserService;
 		this.tokenUserPrivateTool = tokenUserPrivateTool;
 		this.userSignUpUseCase = userSignUpUseCase;

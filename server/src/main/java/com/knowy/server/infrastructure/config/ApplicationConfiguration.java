@@ -23,20 +23,7 @@ public class ApplicationConfiguration {
 	}
 
 	@Bean
-	public UserPrivateService privateUserService(
-		UserPrivateRepository privateUserRepository,
-		TokenUserPrivateTool tokenUserPrivateTool,
-		KnowyPasswordEncoder knowyPasswordEncoder,
-		KnowyTokenTools knowyTokenTools
-	) {
-		return new UserPrivateService(
-			privateUserRepository, knowyPasswordEncoder, knowyTokenTools, tokenUserPrivateTool
-		);
-	}
-
-	@Bean
 	public UserFacadeService userFacadeService(
-		UserPrivateService userPrivateService,
 		UserService userService,
 		UserSignUpUseCase userSignUpUseCase,
 		UserUpdateEmailUseCase userUpdateEmailUseCase,
@@ -47,7 +34,6 @@ public class ApplicationConfiguration {
 		ReactivateAccountUseCase reactivateAccountUseCase
 	) {
 		return new UserFacadeService(
-			userPrivateService,
 			userService,
 			tokenUserPrivateTool,
 			userSignUpUseCase,
