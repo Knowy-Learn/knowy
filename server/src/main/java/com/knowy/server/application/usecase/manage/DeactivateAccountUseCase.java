@@ -6,12 +6,12 @@ import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUs
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
 import com.knowy.server.application.model.MailMessage;
 import com.knowy.server.application.ports.KnowyEmailClientTool;
+import com.knowy.server.application.ports.KnowyPasswordEncoder;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.util.TokenUserPrivateTool;
 import com.knowy.server.domain.Email;
 import com.knowy.server.domain.Password;
 import com.knowy.server.domain.UserPrivate;
-import com.knowy.server.infrastructure.adapters.security.PasswordEncoderAdapter;
 
 /**
  * Use case responsible for deactivating a user's account.
@@ -24,21 +24,26 @@ public class DeactivateAccountUseCase {
 
 	private final TokenUserPrivateTool tokenUserPrivateTool;
 	private final KnowyEmailClientTool knowyEmailClientTool;
-	private final PasswordEncoderAdapter passwordEncoderAdapter;
+	private final KnowyPasswordEncoder knowyPasswordEncoder;
 	private final UserPrivateRepository userPrivateRepository;
 
 	/**
 	 * Constructs a new {@code DeactivateAccountUseCase} with the required dependencies.
 	 *
-	 * @param tokenUserPrivateTool   Utility for generating and verifying user tokens.
-	 * @param knowyEmailClientTool   Email client for sending recovery messages.
-	 * @param passwordEncoderAdapter Adapter for verifying user passwords.
-	 * @param userPrivateRepository  Repository for accessing and persisting private user data.
+	 * @param tokenUserPrivateTool  Utility for generating and verifying user tokens.
+	 * @param knowyEmailClientTool  Email client for sending recovery messages.
+	 * @param knowyPasswordEncoder  Adapter for verifying user passwords.
+	 * @param userPrivateRepository Repository for accessing and persisting private user data.
 	 */
-	public DeactivateAccountUseCase(TokenUserPrivateTool tokenUserPrivateTool, KnowyEmailClientTool knowyEmailClientTool, PasswordEncoderAdapter passwordEncoderAdapter, UserPrivateRepository userPrivateRepository) {
+	public DeactivateAccountUseCase(
+		TokenUserPrivateTool tokenUserPrivateTool,
+		KnowyEmailClientTool knowyEmailClientTool,
+		KnowyPasswordEncoder knowyPasswordEncoder,
+		UserPrivateRepository userPrivateRepository
+	) {
 		this.tokenUserPrivateTool = tokenUserPrivateTool;
 		this.knowyEmailClientTool = knowyEmailClientTool;
-		this.passwordEncoderAdapter = passwordEncoderAdapter;
+		this.knowyPasswordEncoder = knowyPasswordEncoder;
 		this.userPrivateRepository = userPrivateRepository;
 	}
 
@@ -71,7 +76,7 @@ public class DeactivateAccountUseCase {
 		}
 		UserPrivate userPrivate = userPrivateRepository.findByEmail(email.value())
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
-		passwordEncoderAdapter.assertHasPassword(userPrivate, password.value());
+		knowyPasswordEncoder.assertHasPassword(userPrivate, password.value());
 
 		UserPrivate newUserPrivate = new UserPrivate(
 			userPrivate.cropToUser(),

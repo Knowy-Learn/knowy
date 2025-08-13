@@ -2,12 +2,15 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.CategoryService;
 import com.knowy.server.application.UserFacadeService;
+import com.knowy.server.application.UserPrivateService;
 import com.knowy.server.application.exception.KnowyException;
 import com.knowy.server.application.exception.KnowyMailDispatchException;
 import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.exception.validation.user.*;
+import com.knowy.server.application.usecase.manage.DeactivateAccountCommand;
+import com.knowy.server.application.usecase.update.email.UserUpdateEmailCommand;
 import com.knowy.server.domain.Email;
 import com.knowy.server.domain.Password;
 import com.knowy.server.infrastructure.controller.dto.UserConfigChangeEmailFormDto;
@@ -38,6 +41,7 @@ public class UserConfigController {
 	private static final String USER_NOT_FOUND_ERROR_MESSAGE = "Usuario no encontrado";
 
 	private final UserFacadeService userFacadeService;
+	private final UserPrivateService userPrivateService;
 	private final CategoryService categoryService;
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 
@@ -48,8 +52,9 @@ public class UserConfigController {
 	 * @param categoryService           the languageService
 	 * @param userSecurityDetailsHelper the userSecurityDetailsHelper
 	 */
-	public UserConfigController(UserFacadeService userFacadeService, CategoryService categoryService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
+	public UserConfigController(UserFacadeService userFacadeService, UserPrivateService userPrivateService, CategoryService categoryService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.userFacadeService = userFacadeService;
+		this.userPrivateService = userPrivateService;
 		this.categoryService = categoryService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
@@ -90,9 +95,12 @@ public class UserConfigController {
 		RedirectAttributes redirectAttributes
 	) {
 		try {
-			userFacadeService.updateEmail(
-				userConfigChangeEmailFormDto.getEmail(), userDetails.getUser().id(),
-				userConfigChangeEmailFormDto.getPassword());
+			userPrivateService.updateEmail(new UserUpdateEmailCommand(
+					userDetails.getUser().id(),
+					userConfigChangeEmailFormDto.getEmail(),
+					userConfigChangeEmailFormDto.getPassword()
+				)
+			);
 
 			userSecurityDetailsHelper.refreshUserAuthenticationById();
 			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Email actualizado con éxito.");
@@ -160,8 +168,9 @@ public class UserConfigController {
 		String recoveryBaseUrl = domainUrl + "/reactivate-account";
 
 		try {
-			userFacadeService.desactivateUserAccount(
-				new Password(password), new Password(confirmPassword), new Email(email), recoveryBaseUrl
+			userPrivateService.desactivateUserAccount(new DeactivateAccountCommand(
+					new Email(email), new Password(password), new Password(confirmPassword), recoveryBaseUrl
+				)
 			);
 			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
 			return "redirect:delete-advise";
@@ -202,7 +211,7 @@ public class UserConfigController {
 	public String reactivateAccount(@RequestParam("token") String token, Model model) {
 
 		try {
-			userFacadeService.reactivateUserAccount(token);
+			userPrivateService.reactivateUserAccount(token);
 			model.addAttribute(SUCCESS_MODEL_ATTRIBUTE, "Tu cuenta ha sido reactivada correctamente.");
 			return "pages/user-management/account-reactivation";
 

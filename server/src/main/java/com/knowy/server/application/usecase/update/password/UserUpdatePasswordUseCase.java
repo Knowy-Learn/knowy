@@ -5,12 +5,12 @@ import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUs
 import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
 import com.knowy.server.application.model.PasswordResetInfo;
+import com.knowy.server.application.ports.KnowyPasswordEncoder;
 import com.knowy.server.application.ports.KnowyTokenTools;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.usecase.KnowyUseCase;
 import com.knowy.server.domain.Password;
 import com.knowy.server.domain.UserPrivate;
-import com.knowy.server.infrastructure.adapters.security.PasswordEncoderAdapter;
 
 import java.util.Objects;
 
@@ -20,27 +20,31 @@ import java.util.Objects;
 public class UserUpdatePasswordUseCase implements KnowyUseCase<UserUpdatePasswordCommand, UserPrivate> {
 
 	private final UserPrivateRepository userPrivateRepository;
-	private final PasswordEncoderAdapter passwordEncoderAdapter;
+	private final KnowyPasswordEncoder knowyPasswordEncoder;
 	private final KnowyTokenTools tokenTools;
 
 	/**
 	 * Constructs a new {@code UserUpdatePasswordUseCase} with the required dependencies.
 	 *
-	 * @param userPrivateRepository   Repository for accessing and persisting private user data.
-	 * @param passwordEncoderAdapter  Adapter for encoding passwords.
-	 * @param tokenTools              Utility for decoding and verifying password reset tokens.
+	 * @param userPrivateRepository Repository for accessing and persisting private user data.
+	 * @param knowyPasswordEncoder  Adapter for encoding passwords.
+	 * @param tokenTools            Utility for decoding and verifying password reset tokens.
 	 */
-	public UserUpdatePasswordUseCase(UserPrivateRepository userPrivateRepository, PasswordEncoderAdapter passwordEncoderAdapter, KnowyTokenTools tokenTools) {
+	public UserUpdatePasswordUseCase(
+		UserPrivateRepository userPrivateRepository,
+		KnowyPasswordEncoder knowyPasswordEncoder,
+		KnowyTokenTools tokenTools
+	) {
 		this.userPrivateRepository = userPrivateRepository;
-		this.passwordEncoderAdapter = passwordEncoderAdapter;
+		this.knowyPasswordEncoder = knowyPasswordEncoder;
 		this.tokenTools = tokenTools;
 	}
 
 	/**
 	 * Executes the password update process.
 	 * <p>
-	 * Validates that the new password matches the confirmation password and meets format requirements.
-	 * Verifies the password reset token and updates the user's password with the encoded value in the database.
+	 * Validates that the new password matches the confirmation password and meets format requirements. Verifies the
+	 * password reset token and updates the user's password with the encoded value in the database.
 	 *
 	 * @param command Command containing the password reset token, new password, and confirmation password.
 	 * @return The updated {@link UserPrivate} entity.
@@ -58,7 +62,7 @@ public class UserUpdatePasswordUseCase implements KnowyUseCase<UserUpdatePasswor
 		validateRawPasswordsMatch(command.password(), command.confirmPassword());
 
 		UserPrivate userPrivate = verifyPasswordToken(command.token());
-		String encodedPassword = passwordEncoderAdapter.encode(command.password());
+		String encodedPassword = knowyPasswordEncoder.encode(command.password());
 		UserPrivate newUserPrivate = new UserPrivate(
 			userPrivate.cropToUser(),
 			userPrivate.email(),

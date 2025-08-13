@@ -55,11 +55,6 @@ public class UserFacadeService {
 		this.reactivateAccountUseCase = reactivateAccountUseCase;
 	}
 
-	public UserPrivate registerNewUser(String nickname, String email, String password)
-		throws KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException {
-		return userSignUpUseCase.execute(new UserSingUpCommand(nickname, email, password));
-	}
-
 	/**
 	 * Updates the nickname of a public user.
 	 *
@@ -105,91 +100,5 @@ public class UserFacadeService {
 	public void updateLanguages(int userId, String[] languages)
 		throws KnowyInconsistentDataException {
 		userService.updateCategories(userId, languages);
-	}
-
-	/**
-	 * Updates a user's password using a password recovery token.
-	 *
-	 * <p>Validates the token, checks the password format and that both provided passwords match.
-	 * If all checks pass, the user's password is updated.</p>
-	 *
-	 * @param token           the JWT token used to identify and authorize the password reset
-	 * @param password        the new password
-	 * @param confirmPassword confirmation of the new password
-	 * @throws KnowyTokenException          if the token is invalid or expired
-	 * @throws KnowyPasswordFormatException if the password format is invalid or passwords do not match
-	 */
-	public void updatePassword(String token, String password, String confirmPassword)
-		throws KnowyTokenException, KnowyPasswordFormatException, KnowyWrongPasswordException, KnowyUserNotFoundException {
-		userUpdatePasswordUseCase.execute(new UserUpdatePasswordCommand(token, password, confirmPassword));
-	}
-
-	public void updateEmail(String email, int userId, String password)
-		throws KnowyUnchangedEmailException, KnowyWrongPasswordException, KnowyInvalidUserEmailException, KnowyUserNotFoundException {
-		userUpdateEmailUseCase.execute(new UserUpdateEmailCommand(userId, email, password));
-	}
-
-	/**
-	 * Verifies whether the given password recovery token is valid.
-	 *
-	 * <p>Delegates the validation to the {@code PrivateUserService}, which checks
-	 * the integrity, expiration, and user association of the token.</p>
-	 *
-	 * @param token the JWT token to validate
-	 * @return {@code true} if the token is valid; {@code false} otherwise
-	 */
-	public boolean isValidToken(String token) {
-		return tokenUserPrivateTool.isValidToken(token);
-	}
-
-	/**
-	 * Sends a password recovery email to the user associated with the given email address.
-	 *
-	 * <p>Generates a recovery link using the provided base URL and user-specific token,
-	 * composes an email, and sends it using the configured email client.</p>
-	 *
-	 * @param email           the email address of the user requesting password recovery
-	 * @param recoveryBaseUrl the base URL to be used in the recovery link (e.g., frontend reset page)
-	 * @throws KnowyTokenException        if there is a problem generating the recovery token
-	 * @throws KnowyMailDispatchException if the email could not be sent
-	 */
-	public void sendRecoveryPasswordEmail(Email email, String recoveryBaseUrl)
-		throws KnowyTokenException, KnowyMailDispatchException, KnowyUserNotFoundException {
-		sendRecoveryPasswordUseCase.execute(email, recoveryBaseUrl);
-	}
-
-	/**
-	 * Deactivates the user account after validating the password and confirmation. Sends an email with the account
-	 * recovery link using the provided recovery base URL.
-	 *
-	 * @param password        the user's current password for validation
-	 * @param confirmPassword the confirmation of the password
-	 * @param email           the email of the user whose account will be deactivated
-	 * @param recoveryBaseUrl the base URL to be used for account reactivation link
-	 * @throws KnowyUserNotFoundException  if the user with the given email does not exist
-	 * @throws KnowyTokenException         if there is an error generating the JWT token
-	 * @throws KnowyMailDispatchException  if sending the recovery email fails
-	 * @throws KnowyWrongPasswordException if the password and confirmation do not match or are incorrect
-	 */
-	public void desactivateUserAccount(
-		Password password,
-		Password confirmPassword,
-		Email email,
-		String recoveryBaseUrl
-	) throws KnowyTokenException, KnowyMailDispatchException, KnowyWrongPasswordException, KnowyUserNotFoundException {
-		deactivateAccountUseCase.execute(new DeactivateAccountCommand(
-			email, password, confirmPassword, recoveryBaseUrl
-		));
-	}
-
-	/**
-	 * Reactivates a previously deactivated user account using a valid reactivation token.
-	 *
-	 * @param token the JWT token used to verify and reactivate the user account
-	 * @throws KnowyUserNotFoundException if the user associated with the token does not exist
-	 * @throws KnowyTokenException        if the token is invalid or expired
-	 */
-	public void reactivateUserAccount(String token) throws KnowyTokenException, KnowyUserNotFoundException {
-		reactivateAccountUseCase.execute(token);
 	}
 }

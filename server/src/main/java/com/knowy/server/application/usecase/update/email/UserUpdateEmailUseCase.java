@@ -4,6 +4,7 @@ import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUs
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserEmailException;
 import com.knowy.server.application.exception.validation.user.KnowyUnchangedEmailException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
+import com.knowy.server.application.ports.KnowyPasswordEncoder;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.usecase.KnowyUseCase;
 import com.knowy.server.domain.Email;
@@ -18,17 +19,17 @@ import java.util.Objects;
 public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailCommand, UserPrivate> {
 
 	private final UserPrivateRepository userPrivateRepository;
-	private final PasswordEncoderAdapter passwordEncoderAdapter;
+	private final KnowyPasswordEncoder knowyPasswordEncoder;
 
 	/**
 	 * Constructs a new instance of {@code UserUpdateEmailUseCase}.
 	 *
 	 * @param userPrivateRepository   Repository for accessing and persisting private user data.
-	 * @param passwordEncoderAdapter  Adapter for verifying user passwords.
+	 * @param knowyPasswordEncoder  Adapter for verifying user passwords.
 	 */
-	public UserUpdateEmailUseCase(UserPrivateRepository userPrivateRepository, PasswordEncoderAdapter passwordEncoderAdapter) {
+	public UserUpdateEmailUseCase(UserPrivateRepository userPrivateRepository, KnowyPasswordEncoder knowyPasswordEncoder) {
 		this.userPrivateRepository = userPrivateRepository;
-		this.passwordEncoderAdapter = passwordEncoderAdapter;
+		this.knowyPasswordEncoder = knowyPasswordEncoder;
 	}
 
 
@@ -54,7 +55,7 @@ public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailComma
 
 		validateEmailIsDifferent(command.email(), userPrivate.email().value());
 		validateEmailIsNotTaken(command.email());
-		passwordEncoderAdapter.assertHasPassword(userPrivate, command.password());
+		knowyPasswordEncoder.assertHasPassword(userPrivate, command.password());
 
 		UserPrivate newUserPrivate = buildUpdateUser(userPrivate, command.email());
 		return userPrivateRepository.save(newUserPrivate);
