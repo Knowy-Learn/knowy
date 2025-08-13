@@ -1,18 +1,17 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.UserFacadeService;
 import com.knowy.server.application.UserPrivateService;
 import com.knowy.server.application.exception.KnowyMailDispatchException;
 import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserException;
-import com.knowy.server.domain.exception.KnowyPasswordFormatException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
 import com.knowy.server.application.usecase.register.UserSingUpCommand;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordCommand;
 import com.knowy.server.domain.Email;
 import com.knowy.server.domain.UserPrivate;
+import com.knowy.server.domain.exception.KnowyPasswordFormatException;
 import com.knowy.server.infrastructure.controller.dto.LoginFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserPasswordFormDto;
@@ -36,17 +35,14 @@ public class AccessController {
 	private static final String LOGIN_REDIRECT_URL = "redirect:/login";
 
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
-	private final UserFacadeService userFacadeService;
 	private final UserPrivateService userPrivateService;
 
 	/**
 	 * The constructor
 	 *
-	 * @param userFacadeService         the accessService
 	 * @param userSecurityDetailsHelper the userSecurityDetailsService
 	 */
-	public AccessController(UserFacadeService userFacadeService, UserSecurityDetailsHelper userSecurityDetailsHelper, UserPrivateService userPrivateService) {
-		this.userFacadeService = userFacadeService;
+	public AccessController(UserSecurityDetailsHelper userSecurityDetailsHelper, UserPrivateService userPrivateService) {
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 		this.userPrivateService = userPrivateService;
 	}
@@ -171,7 +167,7 @@ public class AccessController {
 	 * @return the name of the password change view if the token is registered, otherwise redirects to the home page
 	 */
 	@GetMapping("/password-change")
-	public String passwordChange(@RequestParam("token") String token, Model model) throws KnowyUserNotFoundException {
+	public String passwordChange(@RequestParam("token") String token, Model model) {
 		if (!userPrivateService.isValidUserToken(token)) {
 			return "redirect:/";
 		}

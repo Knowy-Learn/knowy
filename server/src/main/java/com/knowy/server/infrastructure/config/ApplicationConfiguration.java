@@ -3,8 +3,6 @@ package com.knowy.server.infrastructure.config;
 import com.knowy.server.application.*;
 import com.knowy.server.application.ports.*;
 import com.knowy.server.application.usecase.manage.DeactivateAccountUseCase;
-import com.knowy.server.application.usecase.manage.ReactivateAccountUseCase;
-import com.knowy.server.application.usecase.manage.SendRecoveryPasswordUseCase;
 import com.knowy.server.application.usecase.register.UserSignUpUseCase;
 import com.knowy.server.application.usecase.update.email.UserUpdateEmailUseCase;
 import com.knowy.server.application.usecase.update.password.UserUpdatePasswordUseCase;
@@ -20,29 +18,6 @@ public class ApplicationConfiguration {
 	@Bean
 	public KnowyPasswordEncoder knowyPasswordEncoder(PasswordEncoder passwordEncoder) {
 		return new PasswordEncoderAdapter(passwordEncoder);
-	}
-
-	@Bean
-	public UserFacadeService userFacadeService(
-		UserService userService,
-		UserSignUpUseCase userSignUpUseCase,
-		UserUpdateEmailUseCase userUpdateEmailUseCase,
-		UserUpdatePasswordUseCase userUpdatePasswordUseCase,
-		DeactivateAccountUseCase deactivateAccountUseCase,
-		TokenUserPrivateTool tokenUserPrivateTool,
-		SendRecoveryPasswordUseCase sendRecoveryPasswordUseCase,
-		ReactivateAccountUseCase reactivateAccountUseCase
-	) {
-		return new UserFacadeService(
-			userService,
-			tokenUserPrivateTool,
-			userSignUpUseCase,
-			userUpdateEmailUseCase,
-			userUpdatePasswordUseCase,
-			deactivateAccountUseCase,
-			sendRecoveryPasswordUseCase,
-			reactivateAccountUseCase
-		);
 	}
 
 	@Bean

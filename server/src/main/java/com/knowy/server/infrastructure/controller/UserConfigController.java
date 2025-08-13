@@ -1,8 +1,8 @@
 package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.CategoryService;
-import com.knowy.server.application.UserFacadeService;
 import com.knowy.server.application.UserPrivateService;
+import com.knowy.server.application.UserService;
 import com.knowy.server.application.exception.KnowyException;
 import com.knowy.server.application.exception.KnowyMailDispatchException;
 import com.knowy.server.application.exception.KnowyTokenException;
@@ -41,7 +41,7 @@ public class UserConfigController {
 	private static final String DELETE_ACCOUNT_CONFIRM_REDIRECT_URL = "redirect:delete-account-confirm";
 	private static final String USER_NOT_FOUND_ERROR_MESSAGE = "Usuario no encontrado";
 
-	private final UserFacadeService userFacadeService;
+	private final UserService userService;
 	private final UserPrivateService userPrivateService;
 	private final CategoryService categoryService;
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
@@ -49,12 +49,16 @@ public class UserConfigController {
 	/**
 	 * The constructor
 	 *
-	 * @param userFacadeService         the userFacadeService
 	 * @param categoryService           the languageService
 	 * @param userSecurityDetailsHelper the userSecurityDetailsHelper
 	 */
-	public UserConfigController(UserFacadeService userFacadeService, UserPrivateService userPrivateService, CategoryService categoryService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
-		this.userFacadeService = userFacadeService;
+	public UserConfigController(
+		UserService userService,
+		UserPrivateService userPrivateService,
+		CategoryService categoryService,
+		UserSecurityDetailsHelper userSecurityDetailsHelper
+	) {
+		this.userService = userService;
 		this.userPrivateService = userPrivateService;
 		this.categoryService = categoryService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
@@ -290,7 +294,7 @@ public class UserConfigController {
 	) {
 		if (newNickname != null && !newNickname.isBlank()) {
 			try {
-				userFacadeService.updateNickname(newNickname, userId);
+				userService.updateNickname(newNickname, userId);
 				redirectAttributes.addFlashAttribute(USERNAME_MODEL_ATTRIBUTE, newNickname);
 			} catch (KnowyUserNotFoundException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
@@ -311,7 +315,7 @@ public class UserConfigController {
 	) {
 		if (profilePictureId != null && profilePictureId > 0) {
 			try {
-				userFacadeService.updateProfileImage(profilePictureId, userId);
+				userService.updateProfileImage(profilePictureId, userId);
 				redirectAttributes.addFlashAttribute("profilePicture", profilePictureId);
 				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getUser().profileImage().url());
 			} catch (KnowyImageNotFoundException e) {
@@ -324,10 +328,10 @@ public class UserConfigController {
 		}
 	}
 
-	private void updateLanguages(String[] languages, int userId, RedirectAttributes redirectAttributes) {
-		String[] newLanguages = languages != null ? languages : new String[0];
+	private void updateLanguages(String[] categories, int userId, RedirectAttributes redirectAttributes) {
+		String[] newCategories = categories != null ? categories : new String[0];
 		try {
-			userFacadeService.updateLanguages(userId, newLanguages);
+			userService.updateCategories(userId, newCategories);
 		} catch (KnowyException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 		}
