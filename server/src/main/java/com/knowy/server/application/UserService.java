@@ -11,8 +11,8 @@ import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.usecase.update.nickname.UserUpdateNicknameUseCase;
+import com.knowy.server.application.usecase.update.profileimage.UserUpdateProfileImageUseCase;
 import com.knowy.server.domain.Category;
-import com.knowy.server.domain.ProfileImage;
 import com.knowy.server.domain.User;
 
 import java.util.Arrays;
@@ -27,6 +27,7 @@ public class UserService {
 	private final ProfileImageRepository profileImageRepository;
 	private final CategoryRepository categoryRepository;
 	private final UserUpdateNicknameUseCase userUpdateEmailUseCase;
+	private final UserUpdateProfileImageUseCase userUpdateProfileImageUseCase;
 
 	/**
 	 * The constructor
@@ -44,6 +45,7 @@ public class UserService {
 		this.categoryRepository = categoryRepository;
 		this.profileImageRepository = profileImageRepository;
 		this.userUpdateEmailUseCase = new UserUpdateNicknameUseCase(userRepository);
+		this.userUpdateProfileImageUseCase = new UserUpdateProfileImageUseCase(userRepository, profileImageRepository);
 	}
 
 	/**
@@ -89,20 +91,10 @@ public class UserService {
 	 * @throws KnowyImageNotFoundException  if no profile image exists with the given ID
 	 * @throws KnowyUnchangedImageException if the new image is the same as the current one
 	 */
-	public void updateProfileImage(Integer newProfileImageId, Integer userId) throws KnowyUnchangedImageException,
-		KnowyImageNotFoundException, KnowyUserNotFoundException {
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + userId));
+	public void updateProfileImage(Integer newProfileImageId, Integer userId)
+		throws KnowyUnchangedImageException, KnowyImageNotFoundException, KnowyUserNotFoundException {
 
-		ProfileImage img = profileImageRepository.findById(newProfileImageId)
-			.orElseThrow(() -> new KnowyImageNotFoundException("Profile image with this id not found"));
-
-		if (user.profileImage().id().equals(img.id())) {
-			throw new KnowyUnchangedImageException("Image must be different from the current one.");
-		}
-
-		User newUser = new User(user.id(), user.nickname(), img, user.categories());
-		userRepository.save(newUser);
+		userUpdateProfileImageUseCase.execute(newProfileImageId, userId);
 	}
 
 	/**
