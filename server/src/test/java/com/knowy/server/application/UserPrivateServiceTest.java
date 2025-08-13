@@ -4,7 +4,9 @@ import com.knowy.server.application.exception.KnowyException;
 import com.knowy.server.application.exception.KnowyMailDispatchException;
 import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
-import com.knowy.server.application.exception.validation.user.*;
+import com.knowy.server.application.exception.validation.user.KnowyInvalidUserNicknameException;
+import com.knowy.server.application.exception.validation.user.KnowyUnchangedEmailException;
+import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
 import com.knowy.server.application.model.PasswordResetInfo;
 import com.knowy.server.application.ports.*;
 import com.knowy.server.application.usecase.manage.DeactivateAccountCommand;
@@ -55,6 +57,18 @@ class UserPrivateServiceTest {
 
     @InjectMocks
     private UserPrivateService userPrivateService;
+
+    @Test
+    void given_validDependencies_when_createUserPrivateService_then_doesNotThrow() {
+        assertDoesNotThrow(() -> new UserPrivateService(
+                userRepository,
+                userPrivateRepository,
+                profileImageRepository,
+                knowyPasswordEncoder,
+                knowyTokenTools,
+                knowyEmailClientTool
+        ));
+    }
 
     @Nested
     class UserSingUpUseCaseTest {
@@ -428,6 +442,29 @@ class UserPrivateServiceTest {
                     KnowyWrongPasswordException.class,
                     () -> userPrivateService.updateEmail(userUpdateEmailCommand)
             );
+        }
+    }
+
+    @Nested
+    class UserPrivateTokenValidationTest {
+        @Test
+        void given_validToken_when_validateUserToken_then_returnTrue() {
+            String token = "valid-token";
+
+            Mockito.when(tokenUserPrivateTool.isValidToken(token))
+                    .thenReturn(true);
+
+            assertTrue(userPrivateService.isValidUserToken(token));
+        }
+
+        @Test
+        void given_invalidToken_when_validateUserToken_then_returnFalse() {
+            String token = "valid-token";
+
+            Mockito.when(tokenUserPrivateTool.isValidToken(token))
+                    .thenReturn(false);
+
+            assertFalse(userPrivateService.isValidUserToken(token));
         }
     }
 

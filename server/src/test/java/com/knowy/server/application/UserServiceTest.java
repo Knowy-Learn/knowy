@@ -14,6 +14,7 @@ import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.model.NewUserResult;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,6 +40,77 @@ class UserServiceTest {
 
 	@InjectMocks
 	private UserService userService;
+
+	@Nested
+	class UserUpdateNicknameUseCaseTest {
+		@Test
+		void given_validNewNickname_when_updateNickname_then_updateNicknameIsCalled() {
+			User oldUser = new User(
+				1,
+				"OldNickname",
+				new ProfileImage(1, "https://knowy/image.png"),
+				new HashSet<>()
+			);
+
+			Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(oldUser));
+			Mockito.when(userRepository.existsByNickname("NewNickname")).thenReturn(false);
+
+			assertDoesNotThrow(() -> userService.updateNickname("NewNickname", 1));
+			Mockito.verify(userRepository).findById(1);
+			Mockito.verify(userRepository).existsByNickname("NewNickname");
+			Mockito.verify(userRepository, Mockito.times(1))
+				.updateNickname("NewNickname", 1);
+		}
+
+		@Test
+		void given_sameNickname_when_updateNickname_then_throwKnowyUnchangedNicknameException() {
+			User otherUser = new User(
+				1,
+				"SameNickname",
+				new ProfileImage(1, "https://knowy/image.png"),
+				new HashSet<>()
+			);
+
+			Mockito.when(userRepository.findById(1))
+				.thenReturn(Optional.of(otherUser));
+
+			assertThrows(
+				KnowyUnchangedNicknameException.class, () -> userService.updateNickname("SameNickname", 1)
+			);
+		}
+
+		@Test
+		void given_existingNickname_when_updateUser_then_throwKnowyException() {
+			User user = new User(
+				1,
+				"ExistNickname",
+				new ProfileImage(1, "https://knowy/image.png"),
+				new HashSet<>()
+			);
+
+			Mockito.when(userRepository.findById(1))
+				.thenReturn(Optional.of(user));
+			Mockito.when(userRepository.existsByNickname("NewNicknameThatExistYet"))
+				.thenReturn(true);
+
+			assertThrows(
+				KnowyNicknameAlreadyTakenException.class,
+				() -> userService.updateNickname("NewNicknameThatExistYet", 1)
+			);
+		}
+
+		@Test
+		void given_blankNickname_when_updateUser_then_throwKnowyInvalidUserNicknameException() {
+			List<String> invalidNicknames = Arrays.asList(null, "", "   ");
+
+			for (String invalidNickname : invalidNicknames) {
+				assertThrows(
+					KnowyInvalidUserNicknameException.class,
+					() -> userService.updateNickname(invalidNickname, 1)
+				);
+			}
+		}
+	}
 
 /*	// method create
 	@Test
@@ -105,73 +177,7 @@ class UserServiceTest {
 	}
 
 	// method updateNickname
-	@Test
-	void given_validNewNickname_when_updateNickname_then_updateNicknameIsCalled() {
-		User oldUser = new User(
-			1,
-			"OldNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>()
-		);
 
-		Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(oldUser));
-		Mockito.when(userRepository.existsByNickname("NewNickname")).thenReturn(false);
-
-		assertDoesNotThrow(() -> userService.updateNickname("NewNickname", 1));
-		Mockito.verify(userRepository).findById(1);
-		Mockito.verify(userRepository).existsByNickname("NewNickname");
-		Mockito.verify(userRepository, Mockito.times(1))
-			.updateNickname("NewNickname", 1);
-	}
-
-	@Test
-	void given_sameNickname_when_updateNickname_then_throwKnowyUnchangedNicknameException() {
-		User otherUser = new User(
-			1,
-			"SameNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>()
-		);
-
-		Mockito.when(userRepository.findById(1))
-			.thenReturn(Optional.of(otherUser));
-
-		assertThrows(
-			KnowyUnchangedNicknameException.class, () -> userService.updateNickname("SameNickname", 1)
-		);
-	}
-
-	@Test
-	void given_existingNickname_when_updateUser_then_throwKnowyException() {
-		User user = new User(
-			1,
-			"ExistNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>()
-		);
-
-		Mockito.when(userRepository.findById(1))
-			.thenReturn(Optional.of(user));
-		Mockito.when(userRepository.existsByNickname("NewNicknameThatExistYet"))
-			.thenReturn(true);
-
-		assertThrows(
-			KnowyNicknameAlreadyTakenException.class,
-			() -> userService.updateNickname("NewNicknameThatExistYet", 1)
-		);
-	}
-
-	@Test
-	void given_blankNickname_when_updateUser_then_throwKnowyInvalidUserNicknameException() {
-		List<String> invalidNicknames = Arrays.asList(null, "", "   ");
-
-		for (String invalidNickname : invalidNicknames) {
-			assertThrows(
-				KnowyInvalidUserNicknameException.class,
-				() -> userService.updateNickname(invalidNickname, 1)
-			);
-		}
-	}
 
 	// method updateProfileImage
 	@Test
