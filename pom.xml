@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>server</module>
+		<module>client-angular</module>
 	</modules>
 
 	<dependencies>
