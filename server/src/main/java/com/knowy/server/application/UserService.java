@@ -10,67 +10,49 @@ import com.knowy.server.application.exception.validation.user.KnowyUnchangedNick
 import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
+import com.knowy.server.application.usecase.update.categories.UserUpdateCategoriesUseCase;
 import com.knowy.server.application.usecase.update.nickname.UserUpdateNicknameUseCase;
 import com.knowy.server.application.usecase.update.profileimage.UserUpdateProfileImageUseCase;
-import com.knowy.server.domain.Category;
-import com.knowy.server.domain.User;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
+/**
+ * Application service providing operations to update user data, including nickname, profile image, and categories.
+ */
 public class UserService {
 
-	private final UserRepository userRepository;
-	private final ProfileImageRepository profileImageRepository;
-	private final CategoryRepository categoryRepository;
 	private final UserUpdateNicknameUseCase userUpdateEmailUseCase;
 	private final UserUpdateProfileImageUseCase userUpdateProfileImageUseCase;
+	private final UserUpdateCategoriesUseCase userUpdateCategoriesUseCase;
 
 	/**
-	 * The constructor
+	 * Creates a new {@code UserService} with the required repositories.
 	 *
-	 * @param userRepository         the publicUserRepository
-	 * @param categoryRepository     the languageRepository
-	 * @param profileImageRepository the profileImageRepository
+	 * @param userRepository         Repository for accessing and saving user data.
+	 * @param categoryRepository     Repository for accessing and saving category data.
+	 * @param profileImageRepository Repository for accessing profile images.
 	 */
 	public UserService(
 		UserRepository userRepository,
 		CategoryRepository categoryRepository,
 		ProfileImageRepository profileImageRepository
 	) {
-		this.userRepository = userRepository;
-		this.categoryRepository = categoryRepository;
-		this.profileImageRepository = profileImageRepository;
 		this.userUpdateEmailUseCase = new UserUpdateNicknameUseCase(userRepository);
 		this.userUpdateProfileImageUseCase = new UserUpdateProfileImageUseCase(userRepository, profileImageRepository);
+		this.userUpdateCategoriesUseCase = new UserUpdateCategoriesUseCase(userRepository, categoryRepository);
 	}
 
 	/**
-	 * Persists the given {@code PublicUserEntity} in the database.
+	 * Updates the nickname of a user.
+	 * <p>
+	 * Validates that the new nickname is not blank, is different from the current one, and is not already in use by
+	 * another user.
 	 *
-	 * <p>If the entity already exists, it will be updated; otherwise, a new record will be created.</p>
-	 *
-	 * @param user the {@code PublicUserEntity} to persist
-	 * @return the saved entity with any database-generated fields (like ID) populated
-	 */
-	public User save(User user) {
-		return userRepository.save(user);
-	}
-
-	/**
-	 * Updates the nickname of a public user.
-	 *
-	 * <p>Ensures the new nickname is different from the current one and not already taken.
-	 * Performs the update in the repository if validations pass.</p>
-	 *
-	 * @param newNickname the new nickname to assign
-	 * @param userId      the ID of the user whose nickname should be updated
-	 * @throws KnowyUserNotFoundException         if the user with the given ID does not exist
-	 * @throws KnowyUnchangedNicknameException    if the new nickname is the same as the current one
-	 * @throws KnowyNicknameAlreadyTakenException if the new nickname is already in use by another user
+	 * @param newNickname The new nickname to assign.
+	 * @param userId      The ID of the user whose nickname will be updated.
+	 * @throws KnowyUserNotFoundException         If the user with the given ID does not exist.
+	 * @throws KnowyUnchangedNicknameException    If the new nickname is the same as the current one.
+	 * @throws KnowyNicknameAlreadyTakenException If the new nickname is already in use by another user.
+	 * @throws KnowyInvalidUserNicknameException  If the nickname is blank or otherwise invalid.
 	 */
 	public void updateNickname(String newNickname, Integer userId)
 		throws KnowyUserNotFoundException, KnowyUnchangedNicknameException, KnowyNicknameAlreadyTakenException,
@@ -80,16 +62,15 @@ public class UserService {
 	}
 
 	/**
-	 * Updates the profile image of a public user.
+	 * Updates the profile image of a user.
+	 * <p>
+	 * Validates that the new profile image exists and is different from the current one.
 	 *
-	 * <p>Validates that the new profile image exists and is different from the current one.
-	 * Throws exceptions if validations fail or if the user or image is not found.</p>
-	 *
-	 * @param newProfileImageId the ID of the new profile image to assign
-	 * @param userId            the ID of the user whose profile image should be updated
-	 * @throws KnowyUserNotFoundException   if no user exists with the given ID
-	 * @throws KnowyImageNotFoundException  if no profile image exists with the given ID
-	 * @throws KnowyUnchangedImageException if the new image is the same as the current one
+	 * @param newProfileImageId The ID of the new profile image to assign.
+	 * @param userId            The ID of the user whose profile image will be updated.
+	 * @throws KnowyUserNotFoundException   If no user exists with the given ID.
+	 * @throws KnowyImageNotFoundException  If no profile image exists with the given ID.
+	 * @throws KnowyUnchangedImageException If the new image is the same as the current one.
 	 */
 	public void updateProfileImage(Integer newProfileImageId, Integer userId)
 		throws KnowyUnchangedImageException, KnowyImageNotFoundException, KnowyUserNotFoundException {
@@ -98,46 +79,16 @@ public class UserService {
 	}
 
 	/**
-	 * Updates the set of categories associated with a public user.
+	 * Updates the set of categories associated with a user.
+	 * <p>
+	 * Validates that all specified categories exist in the system before applying the update.
 	 *
-	 * <p>Fetches language entities by their names (case-insensitive) and updates the user's categories.
-	 * Throws an exception if the user is not found.</p>
-	 *
-	 * @param userId     the ID of the user whose categories should be updated
-	 * @param categories an array of language names to assign to the user
-	 * @throws KnowyUserNotFoundException if no user exists with the given ID
+	 * @param userId     The ID of the user whose categories will be updated.
+	 * @param categories An array of category names to assign to the user. Must not be {@code null} (use an empty array
+	 *                   for no categories).
+	 * @throws KnowyInconsistentDataException If one or more of the specified categories do not exist.
 	 */
-	public void updateCategories(Integer userId, String[] categories) throws KnowyUserNotFoundException, KnowyInconsistentDataException {
-		Objects.requireNonNull(
-			categories,
-			"A not null categories array is required, if no categories are selected use an empty array instead of null"
-		);
-
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + userId));
-
-		Set<Category> persistedCategories = categoryRepository.findByNameInIgnoreCase(categories);
-		ensureCategoriesArePersisted(categories, persistedCategories);
-
-		User newUser = new User(user.id(), user.nickname(), user.profileImage(), persistedCategories);
-		userRepository.save(newUser);
-	}
-
-	private void ensureCategoriesArePersisted(String[] categories, Set<Category> persistedCategories)
-		throws KnowyInconsistentDataException {
-
-		Set<String> categoryNames = persistedCategories.stream()
-			.map(Category::name)
-			.collect(Collectors.toSet());
-
-		List<String> notFound = Arrays.stream(categories)
-			.filter(cat -> !categoryNames.contains(cat))
-			.toList();
-
-		if (!notFound.isEmpty()) {
-			throw new KnowyInconsistentDataException(
-				"The following categories do not exist: " + String.join(", ", notFound)
-			);
-		}
+	public void updateCategories(Integer userId, String[] categories) throws KnowyInconsistentDataException {
+		userUpdateCategoriesUseCase.execute(userId, categories);
 	}
 }

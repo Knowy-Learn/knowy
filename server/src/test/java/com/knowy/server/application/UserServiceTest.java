@@ -40,136 +40,74 @@ class UserServiceTest {
 	@InjectMocks
 	private UserService userService;
 
-	// method save
-	@Test
-	void given_user_when_saved_then_repositoryIsCalled_and_savedUserIsReturned() {
-		User userToSave = new User(
-			1,
-			"TestNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>()
-		);
-
-		Mockito.when(userRepository.save(userToSave))
-			.thenReturn(userToSave);
-
-		User result = userService.save(userToSave);
-		Mockito.verify(userRepository).save(userToSave);
-		assertEquals(userToSave, result);
-	}
-
-	// method updateCategories
-	@Test
-	void given_newCategories_when_updateCategories_saveNewUserWithNewCategories() {
-		User user = new User(
-			42,
-			"ExistNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>()
-		);
-
-		Set<Category> newCategories = Set.of(new Category(34, "Java"), new Category(12, "English"));
-		User newUser = new User(
-			42,
-			"ExistNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			newCategories
-		);
-
-		Mockito.when(userRepository.findById(42))
-			.thenReturn(Optional.of(user));
-		Mockito.when(categoryRepository.findByNameInIgnoreCase(new String[]{"Java", "English"}))
-			.thenReturn(newCategories);
-
-		assertDoesNotThrow(() -> userService.updateCategories(42, new String[]{"Java", "English"}));
-		Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.eq(newUser));
-	}
-
-/*	// method create
-	@Test
-	void given_validNickname_when_creatingUser_then_returnNewUserCommand() {
-
-		ProfileImage expectedProfileImage = new ProfileImage(1, "https://knowy/image.png");
-
-		Mockito.when(profileImageRepository.findById(1))
-			.thenReturn(Optional.of(expectedProfileImage));
-
-		NewUserResult result = assertDoesNotThrow(() -> userService.create("ValidNickname"));
-		assertEquals(
-			new NewUserResult("ValidNickname", expectedProfileImage, new HashSet<>()),
-			result
-		);
-	}
-
-	@Test
-	void given_existingNickname_when_creatingUser_then_throwKnowyException() {
-		Mockito.when(userRepository.findByNickname("ExistNickname"))
-			.thenReturn(Optional.of(new User(
-				1,
+	@Nested
+	class UserUpdateCategoriesUseCaseTest {
+		@Test
+		void given_newCategories_when_updateCategories_saveNewUserWithNewCategories() {
+			User user = new User(
+				42,
 				"ExistNickname",
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
-			)));
+			);
 
-		assertThrows(KnowyInvalidUserNicknameException.class, () -> userService.create("ExistNickname"));
-	}
+			Set<Category> newCategories = Set.of(new Category(34, "Java"), new Category(12, "English"));
+			User newUser = new User(
+				42,
+				"ExistNickname",
+				new ProfileImage(1, "https://knowy/image.png"),
+				newCategories
+			);
 
-	@Test
-	void given_blankNickname_when_creatingUser_then_throwKnowyInvalidUserNicknameException() {
-		List<String> invalidNicknames = Arrays.asList(null, "", "   ");
+			Mockito.when(userRepository.findById(42))
+				.thenReturn(Optional.of(user));
+			Mockito.when(categoryRepository.findByNameInIgnoreCase(new String[]{"Java", "English"}))
+				.thenReturn(newCategories);
 
-		for (String invalidNickname : invalidNicknames) {
-			assertThrows(KnowyInvalidUserNicknameException.class, () -> userService.create(invalidNickname));
+			assertDoesNotThrow(() -> userService.updateCategories(42, new String[]{"Java", "English"}));
+			Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.eq(newUser));
 		}
-	}
 
-	@Test
-	void given_noDefaultImage_when_creatingUser_then_throwNotFoundException() {
-		Mockito.when(profileImageRepository.findById(1))
-			.thenReturn(Optional.empty());
+		@Test
+		void given_nullNewCategories_when_updateCategories_then_throwNullPointerException() {
+			assertThrows(NullPointerException.class, () ->
+				userService.updateCategories(1, null)
+			);
+		}
 
-		assertThrows(KnowyImageNotFoundException.class, () -> userService.create("ValidNickname"));
-	}*/
+		@Test
+		void given_invalidUserId_when_updateCategories_then_throwKnowyUserNotFoundException() {
+			Mockito.when(userRepository.findById(232))
+				.thenReturn(Optional.empty());
 
-	@Test
-	void given_nullNewCategories_when_updateCategories_then_throwNullPointerException() {
-		assertThrows(NullPointerException.class, () ->
-			userService.updateCategories(1, null)
-		);
-	}
+			assertThrows(
+				KnowyUserNotFoundException.class,
+				() -> userService.updateCategories(232, new String[]{"English", "Java"})
+			);
+		}
 
-	@Test
-	void given_invalidUserId_when_updateCategories_then_throwKnowyUserNotFoundException() {
-		Mockito.when(userRepository.findById(232))
-			.thenReturn(Optional.empty());
+		@Test
+		void given_nonPersistedCategories_when_updateCategories_then_throwKnowyInconsistentDataException() {
+			User user = new User(
+				10,
+				"ExistNickname",
+				new ProfileImage(1, "https://knowy/image.png"),
+				new HashSet<>()
+			);
 
-		assertThrows(
-			KnowyUserNotFoundException.class,
-			() -> userService.updateCategories(232, new String[]{"English", "Java"})
-		);
-	}
+			String[] newCategoriesArray = new String[]{"Java", "English", "CategoryThatDoesNotExistInDB"};
+			Set<Category> newCategoriesSet = Set.of(new Category(34, "Java"), new Category(12, "English"));
 
-	@Test
-	void given_nonPersistedCategories_when_updateCategories_then_throwKnowyInconsistentDataException() {
-		User user = new User(
-			10,
-			"ExistNickname",
-			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<>()
-		);
+			Mockito.when(userRepository.findById(42))
+				.thenReturn(Optional.of(user));
+			Mockito.when(categoryRepository.findByNameInIgnoreCase(newCategoriesArray))
+				.thenReturn(newCategoriesSet);
 
-		String[] newCategoriesArray = new String[]{"Java", "English", "CategoryThatDoesNotExistInDB"};
-		Set<Category> newCategoriesSet = Set.of(new Category(34, "Java"), new Category(12, "English"));
-
-		Mockito.when(userRepository.findById(42))
-			.thenReturn(Optional.of(user));
-		Mockito.when(categoryRepository.findByNameInIgnoreCase(newCategoriesArray))
-			.thenReturn(newCategoriesSet);
-
-		assertThrows(
-			KnowyInconsistentDataException.class,
-			() -> userService.updateCategories(42, newCategoriesArray)
-		);
+			assertThrows(
+				KnowyInconsistentDataException.class,
+				() -> userService.updateCategories(42, newCategoriesArray)
+			);
+		}
 	}
 
 	@Nested
@@ -269,7 +207,7 @@ class UserServiceTest {
 
 			userService.updateProfileImage(4, 1);
 
-			Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.eq(newUser));
+			Mockito.verify(userRepository, Mockito.times(1)).save(newUser);
 		}
 
 		@Test
