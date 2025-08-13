@@ -12,7 +12,12 @@
 	<url>https://github.com/knowy-learn/knowy</url>
 
 	<licenses>
-		<license></license>
+		<license>
+			<name>GNU General Public License, Version 3 (GPL-3.0)</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+			<distribution>repo</distribution>
+			<comments>Project distributed under the GPL v3</comments>
+		</license>
 	</licenses>
 
 	<modules>
