@@ -1,0 +1,10 @@
+com\knowy\core\CategoryService.class
+com\knowy\core\domain\Category.class
+com\knowy\core\exception\KnowyException.class
+com\knowy\core\exception\KnowyInconsistentDataException.class
+com\knowy\core\exception\KnowyValidationException.class
+com\knowy\core\exception\KnowyDataAccessException.class
+com\knowy\core\port\KnowyEmailClientTool.class
+com\knowy\core\port\CategoryRepository.class
+com\knowy\core\exception\KnowyMailDispatchException.class
+com\knowy\core\util\StringUtils.class

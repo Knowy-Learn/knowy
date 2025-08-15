@@ -28,7 +28,7 @@ jobs:
                 run: java -version
 
             -   name: Build, Test & SonarQube Analysis
-                working-directory: ./server
+                working-directory: ./infrastructure/server
                 env:
                     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
                     SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}

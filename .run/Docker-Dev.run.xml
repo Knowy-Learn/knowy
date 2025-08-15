@@ -5,7 +5,7 @@
         <option name="envFilePath" value="" />
         <option name="removeVolumesOnComposeDown" value="true" />
         <option name="commandLineOptions" value="--build" />
-        <option name="sourceFilePath" value="compose-dev.yaml" />
+        <option name="sourceFilePath" value="infrastructure/compose-dev.yaml" />
       </settings>
     </deployment>
     <method v="2" />
