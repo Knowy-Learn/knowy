@@ -471,7 +471,7 @@ class UserPrivateServiceTest {
     @Nested
     class SendRecoveryPasswordUseCaseTest {
         @Test
-        void given_validEmail_when_createRecoveryPasswordEmail_then_sendRecoveryAccountEmail() throws Exception {
+        void given_validEmail_when_sendRecoveryPasswordEmail_then_sendRecoveryAccountEmail() throws Exception {
             Email email = new Email("user@mail.com");
             String recoveryBaseUrl = "https://app.url/recover";
             String expectedToken = "mocked-token";
@@ -488,7 +488,7 @@ class UserPrivateServiceTest {
         }
 
         @Test
-        void given_nonExistentEmail_when_createRecoveryPasswordMailMessage_then_throwKnowyUserNotFoundException()
+        void given_nonExistentEmail_when_sendRecoveryPasswordMailMessage_then_throwKnowyUserNotFoundException()
                 throws KnowyTokenException, KnowyUserNotFoundException {
 
             Email email = new Email("missing@mail.com");
@@ -505,7 +505,7 @@ class UserPrivateServiceTest {
         }
 
         @Test
-        void given_token_when_createRecoveryPasswordEmailEncodeFail_then_throwKnowyTokenException() throws KnowyTokenException, KnowyUserNotFoundException {
+        void given_token_when_sendRecoveryPasswordEmailEncodeFail_then_throwKnowyTokenException() throws KnowyTokenException, KnowyUserNotFoundException {
             Email email = new Email("test@mail.com");
             String recoveryBaseUrl = "https://app.url/recover";
 
@@ -520,8 +520,10 @@ class UserPrivateServiceTest {
         }
 
         @Test
-        void given_x_when_createRecoveryPasswordEmail_then_throw() throws Exception {
-            Email email = new Email("user@mail.com");
+        void given_validData_when_sendRecoveryPasswordEmail_then_throwKnowyMailDispatchException()
+			throws KnowyTokenException, KnowyUserNotFoundException, KnowyMailDispatchException {
+
+			Email email = new Email("user@mail.com");
             String recoveryBaseUrl = "https://app.url/recover";
             String expectedToken = "mocked-token";
 
