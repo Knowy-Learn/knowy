@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.adapters.persistence.mapper;
 
-import com.knowy.server.domain.Documentation;
+import com.knowy.core.domain.Documentation;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaLessonDao;
 import com.knowy.server.infrastructure.adapters.persistence.entity.DocumentationEntity;
 import org.springframework.stereotype.Component;

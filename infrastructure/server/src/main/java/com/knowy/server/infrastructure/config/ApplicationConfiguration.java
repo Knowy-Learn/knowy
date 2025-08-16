@@ -1,17 +1,17 @@
 package com.knowy.server.infrastructure.config;
 
 import com.knowy.core.CategoryService;
-import com.knowy.core.port.CategoryRepository;
-import com.knowy.core.port.KnowyEmailClientTool;
+import com.knowy.core.CourseService;
+import com.knowy.core.port.*;
 import com.knowy.core.user.UserService;
 import com.knowy.core.user.port.*;
-import com.knowy.server.application.*;
-import com.knowy.server.application.ports.*;
 import com.knowy.core.user.usercase.manage.DeactivateAccountUseCase;
 import com.knowy.core.user.usercase.register.UserSignUpUseCase;
 import com.knowy.core.user.usercase.update.email.UserUpdateEmailUseCase;
 import com.knowy.core.user.usercase.update.password.UserUpdatePasswordUseCase;
 import com.knowy.core.user.util.TokenUserPrivateTool;
+import com.knowy.core.UserExerciseService;
+import com.knowy.core.UserLessonService;
 import com.knowy.server.infrastructure.adapters.security.PasswordEncoderAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -79,7 +79,7 @@ public class ApplicationConfiguration {
 		UserRepository userRepository,
 		ExerciseRepository exerciseRepository
 	) {
-		return new UserExerciseService(userExerciseRepository, userRepository, exerciseRepository);
+		return new UserExerciseService(userExerciseRepository, exerciseRepository);
 	}
 
 	@Bean

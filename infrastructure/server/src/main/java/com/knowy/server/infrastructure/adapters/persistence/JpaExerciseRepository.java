@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.adapters.persistence;
 
-import com.knowy.server.domain.Exercise;
-import com.knowy.server.application.ports.ExerciseRepository;
+import com.knowy.core.domain.Exercise;
+import com.knowy.core.port.ExerciseRepository;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaExerciseDao;
 import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaExerciseMapper;
 import org.springframework.stereotype.Repository;

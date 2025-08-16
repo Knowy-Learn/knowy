@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.domain.Course;
+import com.knowy.core.domain.Course;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;

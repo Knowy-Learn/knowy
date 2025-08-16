@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.adapters.persistence.mapper;
 
-import com.knowy.server.domain.Lesson;
+import com.knowy.core.domain.Lesson;
 import com.knowy.server.infrastructure.adapters.persistence.entity.LessonEntity;
 import org.springframework.stereotype.Component;
 

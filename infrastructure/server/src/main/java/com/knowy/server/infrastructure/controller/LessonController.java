@@ -1,16 +1,16 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.domain.Documentation;
-import com.knowy.server.domain.UserLesson;
+import com.knowy.core.domain.Documentation;
+import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyInconsistentDataException;
-import com.knowy.server.application.CourseService;
-import com.knowy.server.application.UserLessonService;
+import com.knowy.core.CourseService;
+import com.knowy.core.UserLessonService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseDto;
 import com.knowy.server.infrastructure.controller.dto.LessonDto;
 import com.knowy.server.infrastructure.controller.dto.LinksLessonDto;
 import com.knowy.server.infrastructure.controller.dto.SolutionDto;
-import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyCurrentLessonNotFoundException;
+import com.knowy.core.exception.KnowyCurrentLessonNotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

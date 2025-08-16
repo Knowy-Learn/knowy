@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.adapters.persistence;
 
-import com.knowy.server.application.ports.LessonRepository;
-import com.knowy.server.domain.Lesson;
+import com.knowy.core.port.LessonRepository;
+import com.knowy.core.domain.Lesson;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaLessonDao;
 import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaLessonMapper;
 import org.springframework.stereotype.Repository;

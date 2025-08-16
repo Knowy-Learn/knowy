@@ -1,12 +1,11 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.core.CourseService;
+import com.knowy.core.exception.KnowyCourseSubscriptionException;
 import com.knowy.core.exception.KnowyInconsistentDataException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.server.application.CourseService;
-import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.dto.ToastDto;
-import com.knowy.server.application.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,9 +36,9 @@ public class CourseController {
 		RedirectAttributes attrs,
 		CourseService courseService,
 		String toastModelAttribute
-	) throws KnowyInconsistentDataException, KnowyUserNotFoundException {
+	) throws KnowyInconsistentDataException {
 		try {
-			courseService.subscribeUserToCourse(userDetails.getUser(), courseId);
+			courseService.subscribeUserToCourse(userDetails.getUser().id(), courseId);
 			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Éxito",
 				"¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
 		} catch (KnowyCourseSubscriptionException e) {
@@ -141,7 +140,7 @@ public class CourseController {
 		@RequestParam("courseId") Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
-	) throws KnowyInconsistentDataException, KnowyUserNotFoundException {
+	) throws KnowyInconsistentDataException {
 		handleCourseSubscription(courseId, userDetails, attrs, courseService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/my-courses";
 	}

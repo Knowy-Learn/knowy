@@ -1,10 +1,10 @@
 package com.knowy.server.infrastructure.adapters.persistence;
 
-import com.knowy.server.domain.UserExercise;
-import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyExerciseNotFoundException;
+import com.knowy.core.domain.UserExercise;
+import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.server.application.ports.UserExerciseRepository;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaExerciseDao;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaUserDao;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaUserExerciseDao;
@@ -80,7 +80,7 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 		@Override
 		public UserExercise toDomain(PublicUserExerciseEntity entity) {
 			return new UserExercise(
-				jpaUserMapper.toDomain(entity.getPublicUserEntity()),
+				entity.getPublicUserEntity().getId(),
 				jpaExerciseMapper.toDomain(entity.getExerciseEntity()),
 				entity.getRate(),
 				entity.getNextReview()
@@ -90,11 +90,11 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 		@Override
 		public PublicUserExerciseEntity toEntity(UserExercise domain) throws KnowyUserNotFoundException, KnowyExerciseNotFoundException {
 			return new PublicUserExerciseEntity(
-				new PublicUserExerciseId(domain.user().id(), domain.exercise().id()),
+				new PublicUserExerciseId(domain.userId(), domain.exercise().id()),
 				domain.rate(),
 				domain.nextReview(),
-				jpaUserDao.findById(domain.user().id())
-					.orElseThrow(() -> new KnowyUserNotFoundException("User with ID " + domain.user().id() + " not found")),
+				jpaUserDao.findById(domain.userId())
+					.orElseThrow(() -> new KnowyUserNotFoundException("User with ID " + domain.userId() + " not found")),
 				jpaExerciseDao.findById(domain.exercise().id())
 					.orElseThrow(() -> new KnowyExerciseNotFoundException("Exercise with ID: " + domain.exercise().id() +
 						" not found"))

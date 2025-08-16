@@ -18,6 +18,7 @@
 	<modules>
 		<module>application/base</module>
 		<module>application/user</module>
+		<module>application/course</module>
 		<module>infrastructure/server</module>
 	</modules>
 
@@ -31,6 +32,11 @@
 			<dependency>
 				<groupId>com.knowy</groupId>
 				<artifactId>user-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>course-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

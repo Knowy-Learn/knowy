@@ -1,23 +1,21 @@
 package com.knowy.server.infrastructure.adapters.persistence.mapper;
 
-import com.knowy.server.domain.UserLesson;
+import com.knowy.core.domain.UserLesson;
+import com.knowy.core.exception.KnowyLessonNotFoundException;
+import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaLessonDao;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaUserDao;
 import com.knowy.server.infrastructure.adapters.persistence.entity.PublicUserLessonEntity;
-import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyLessonNotFoundException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JpaUserLessonMapper implements EntityMapper<UserLesson, PublicUserLessonEntity> {
 
-	private final JpaUserMapper jpaUserMapper;
 	private final JpaLessonMapper jpaLessonMapper;
 	private final JpaUserDao jpaUserDao;
 	private final JpaLessonDao jpaLessonDao;
 
-	public JpaUserLessonMapper(JpaUserMapper jpaUserMapper, JpaLessonMapper jpaLessonMapper, JpaUserDao jpaUserDao, JpaLessonDao jpaLessonDao) {
-		this.jpaUserMapper = jpaUserMapper;
+	public JpaUserLessonMapper(JpaLessonMapper jpaLessonMapper, JpaUserDao jpaUserDao, JpaLessonDao jpaLessonDao) {
 		this.jpaLessonMapper = jpaLessonMapper;
 		this.jpaUserDao = jpaUserDao;
 		this.jpaLessonDao = jpaLessonDao;
@@ -26,7 +24,7 @@ public class JpaUserLessonMapper implements EntityMapper<UserLesson, PublicUserL
 	@Override
 	public UserLesson toDomain(PublicUserLessonEntity entity) {
 		return new UserLesson(
-			jpaUserMapper.toDomain(entity.getPublicUserEntity()),
+			entity.getPublicUserEntity().getId(),
 			jpaLessonMapper.toDomain(entity.getLessonEntity()),
 			entity.getStartDate(),
 			UserLesson.ProgressStatus
@@ -37,13 +35,12 @@ public class JpaUserLessonMapper implements EntityMapper<UserLesson, PublicUserL
 	@Override
 	public PublicUserLessonEntity toEntity(UserLesson domain) throws KnowyUserNotFoundException, KnowyLessonNotFoundException {
 		return new PublicUserLessonEntity(
-			domain.user().id(),
+			domain.userId(),
 			domain.lesson().id(),
 			domain.startDate(),
 			domain.status().name().toLowerCase(),
-			jpaUserDao.findById(domain.user().id())
-				.orElseThrow(() -> new KnowyUserNotFoundException("User with ID: " + domain.user().id() +
-					" not found")),
+			jpaUserDao.findById(domain.userId())
+				.orElseThrow(() -> new KnowyUserNotFoundException("User with ID: " + domain.userId() + " not found")),
 			jpaLessonDao.findById(domain.lesson().id())
 				.orElseThrow(() -> new KnowyLessonNotFoundException("Lesson with ID: " + domain.lesson().id() +
 					" not found"))

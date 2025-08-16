@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.adapters.persistence;
 
-import com.knowy.server.application.ports.BannedWordsRepository;
+import com.knowy.core.port.BannedWordsRepository;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaBannedWordsDao;
 import org.springframework.stereotype.Repository;
 

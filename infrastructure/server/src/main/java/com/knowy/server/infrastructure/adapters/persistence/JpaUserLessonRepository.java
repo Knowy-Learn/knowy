@@ -1,9 +1,9 @@
 package com.knowy.server.infrastructure.adapters.persistence;
 
-import com.knowy.server.domain.UserLesson;
+import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.server.application.ports.UserLessonRepository;
+import com.knowy.core.port.UserLessonRepository;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaUserLessonDao;
 import com.knowy.server.infrastructure.adapters.persistence.entity.PublicUserLessonEntity;
 import com.knowy.server.infrastructure.adapters.persistence.entity.PublicUserLessonIdEntity;

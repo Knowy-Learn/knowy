@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.adapters.persistence.mapper;
 
-import com.knowy.server.domain.Course;
+import com.knowy.core.domain.Course;
 import com.knowy.server.infrastructure.adapters.persistence.entity.CourseEntity;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;

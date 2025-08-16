@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.controller.dto;
 
 import com.knowy.core.domain.Category;
-import com.knowy.server.domain.Course;
+import com.knowy.core.domain.Course;
 
 import java.time.LocalDateTime;
 import java.util.List;

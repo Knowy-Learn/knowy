@@ -1,16 +1,16 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.domain.Course;
-import com.knowy.server.domain.UserExercise;
-import com.knowy.server.domain.UserLesson;
+import com.knowy.core.domain.Course;
+import com.knowy.core.domain.UserExercise;
+import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyDataAccessException;
-import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyExerciseNotFoundException;
-import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserLessonNotFoundException;
+import com.knowy.core.exception.KnowyExerciseNotFoundException;
+import com.knowy.core.exception.KnowyUserLessonNotFoundException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.server.application.CourseService;
-import com.knowy.server.application.UserExerciseService;
-import com.knowy.server.application.UserLessonService;
-import com.knowy.server.domain.ExerciseDifficult;
+import com.knowy.core.CourseService;
+import com.knowy.core.UserExerciseService;
+import com.knowy.core.UserLessonService;
+import com.knowy.core.domain.ExerciseDifficult;
 import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
 import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
@@ -160,7 +160,7 @@ public class ExerciseController {
 
 		double average = userExerciseService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
-			userLessonService.updateLessonStatusToCompleted(userDetails.getUser(), userLesson.lesson());
+			userLessonService.updateLessonStatusToCompleted(userDetails.getUser().id(), userLesson.lesson());
 			return "redirect:/course/%d".formatted(courseId);
 		}
 		return "redirect:/course/%d/exercise/review".formatted(lessonId);

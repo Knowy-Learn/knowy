@@ -1,9 +1,9 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.domain.Course;
+import com.knowy.core.domain.Course;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.server.application.CourseService;
+import com.knowy.core.CourseService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.adapters.persistence;
 
-import com.knowy.server.domain.Course;
-import com.knowy.server.application.ports.CourseRepository;
+import com.knowy.core.domain.Course;
+import com.knowy.core.port.CourseRepository;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaCourseDao;
 import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaCourseMapper;
 import org.springframework.stereotype.Repository;
