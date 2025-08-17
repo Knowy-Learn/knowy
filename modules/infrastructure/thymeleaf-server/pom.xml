@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.knowy</groupId>
-		<artifactId>bom</artifactId>
+		<artifactId>parent</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../../../pom.xml</relativePath>
 	</parent>
-	<artifactId>server</artifactId>
+	<artifactId>thymeleaf-server</artifactId>
 
 	<name>knowy-server</name>
 	<description>the knowy platform server</description>
@@ -27,6 +27,7 @@
 	</scm>
 
 	<properties>
+
 		<maven.compiler.release>21</maven.compiler.release>
 		<sass.source.in>src/main/resources/static/styles</sass.source.in>
 		<sass.source.out>generated-resources/main/static/styles</sass.source.out>

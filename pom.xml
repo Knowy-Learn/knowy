@@ -3,10 +3,10 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.knowy</groupId>
-	<artifactId>bom</artifactId>
+	<artifactId>parent</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>knowy-bom</name>
+	<name>knowy-parent</name>
 	<description>the knowy platform server</description>
 
 	<url>https://github.com/knowy-learn/knowy</url>
@@ -15,11 +15,16 @@
 		<license></license>
 	</licenses>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<modules>
-		<module>application/base</module>
-		<module>application/user</module>
-		<module>application/course</module>
-		<module>infrastructure/server</module>
+		<module>modules/application/base</module>
+		<module>modules/application/user</module>
+		<module>modules/application/course</module>
+		<module>modules/infrastructure/thymeleaf-server</module>
+		<module>builds/docker-thymeleaf-server</module>
 	</modules>
 
 	<dependencyManagement>
@@ -41,7 +46,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
-				<artifactId>core</artifactId>
+				<artifactId>thymeleaf-server</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<!-- testing -->
