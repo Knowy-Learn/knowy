@@ -25,6 +25,7 @@
 		<module>modules/application/course</module>
 		<module>modules/infrastructure/thymeleaf-server</module>
 		<module>builds/docker-thymeleaf-server</module>
+		<module>modules/infrastructure/angular-front-server</module>
 	</modules>
 
 	<dependencyManagement>
