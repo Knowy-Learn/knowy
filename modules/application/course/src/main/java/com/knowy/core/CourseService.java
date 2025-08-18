@@ -12,13 +12,13 @@ import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.usecase.GetAllCoursesRandomized;
+import com.knowy.core.usecase.GetRecommendedCoursesByCategoriesUseCase;
 import com.knowy.core.usecase.GetUserCoursesUseCase;
 
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CourseService {
 
@@ -28,6 +28,7 @@ public class CourseService {
 	private final CategoryRepository categoryRepository;
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
+	private final GetRecommendedCoursesByCategoriesUseCase getRecommendedCoursesByCategoriesUseCase;
 
 	public CourseService(
 		CourseRepository courseRepository,
@@ -41,6 +42,7 @@ public class CourseService {
 		this.categoryRepository = categoryRepository;
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
+		this.getRecommendedCoursesByCategoriesUseCase = new GetRecommendedCoursesByCategoriesUseCase(courseRepository);
 	}
 
 	/**
@@ -61,8 +63,8 @@ public class CourseService {
 	 * Retrieves all courses in a randomized order.
 	 *
 	 * <p>This method delegates to the {@link GetAllCoursesRandomized} use case,
-	 * which fetches all courses from the repository and returns them shuffled.
-	 * Useful for providing variety in course recommendations or avoiding fixed ordering.</p>
+	 * which fetches all courses from the repository and returns them shuffled. Useful for providing variety in course
+	 * recommendations or avoiding fixed ordering.</p>
 	 *
 	 * @return a randomized list of {@link Course} entities
 	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
@@ -71,46 +73,20 @@ public class CourseService {
 		return getAllCoursesRandomized.execute();
 	}
 
-	public List<Course> getRecommendedCourses(Integer userId) throws KnowyInconsistentDataException {
-		List<Course> userCourses = findAllByUserId(userId);
-
-		List<Integer> userCourseIds = userCourses.stream()
-			.map(Course::id)
-			.toList();
-
-		Set<String> userLanguages = userCourses.stream()
-			.flatMap(course -> findLanguagesForCourse(course).stream())
-			.collect(Collectors.toSet());
-
-		List<Course> allCourses = findAllCourses()
-			.stream()
-			.filter(course -> !userCourseIds.contains(course.id()))
-			.toList();
-
-		List<Course> langMatching = allCourses.stream()
-			.filter(course -> {
-				List<String> courseLanguages = findLanguagesForCourse(course);
-				return courseLanguages.stream().anyMatch(userLanguages::contains);
-			}).toList();
-
-		List<Course> recommendations = langMatching
-			.stream()
-			.limit(3)
-			.collect(Collectors.toList());
-
-		if (recommendations.size() < 3) {
-			List<Course> remaining = allCourses.stream()
-				.filter(course -> !langMatching.contains(course))
-				.toList();
-
-			for (Course course : remaining) {
-				if (recommendations.size() >= 3) {
-					break;
-				}
-				recommendations.add(course);
-			}
-		}
-		return recommendations;
+	/**
+	 * Retrieves a list of recommended courses for a specific user based on the provided categories.
+	 *
+	 * <p>This method delegates to the use case {@link GetRecommendedCoursesByCategoriesUseCase} to
+	 * fetch and prioritize courses relevant to the given categories. The result is tailored for the specific user and
+	 * limited to the most relevant courses.</p>
+	 *
+	 * @param userId     the ID of the user for whom the recommendations are generated
+	 * @param categories a set of {@link Category} entities to guide the course recommendations
+	 * @return a list of {@link Course} entities recommended for the user
+	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
+	 */
+	public List<Course> getRecommendedCourses(int userId, Set<Category> categories) throws KnowyInconsistentDataException {
+		return getRecommendedCoursesByCategoriesUseCase.execute(userId, categories);
 	}
 
 	public void subscribeUserToCourse(int userId, int courseId) throws KnowyCourseSubscriptionException,

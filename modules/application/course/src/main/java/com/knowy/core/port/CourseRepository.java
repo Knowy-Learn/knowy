@@ -14,4 +14,6 @@ public interface CourseRepository {
 	Optional<Course> findById(Integer id) throws KnowyInconsistentDataException;
 
 	List<Course> findAllRandom() throws KnowyInconsistentDataException;
+
+	List<Course> findAllRandomUserIsNotSubscribed(int userId) throws  KnowyInconsistentDataException;
 }

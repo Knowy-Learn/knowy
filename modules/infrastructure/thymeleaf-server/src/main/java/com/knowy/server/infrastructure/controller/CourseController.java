@@ -100,7 +100,7 @@ public class CourseController {
 		}
 
 		List<CourseCardDTO> recommendations = courseService
-			.getRecommendedCourses(userDetails.getUser().id())
+			.getRecommendedCourses(userDetails.getUser().id(), userDetails.getUser().categories())
 			.stream()
 			.map(course -> CourseCardDTO.fromDomain(
 				course,

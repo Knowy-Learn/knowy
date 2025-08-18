@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -46,4 +47,6 @@ public class LessonEntity {
 	@OneToMany(mappedBy = "lesson")
 	private List<ExerciseEntity> exercises = new ArrayList<>();
 
+	@OneToMany(mappedBy = "lessonEntity")
+	private Set<PublicUserLessonEntity> publicUserLessons;
 }

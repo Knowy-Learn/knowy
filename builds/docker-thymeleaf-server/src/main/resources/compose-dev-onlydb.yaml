@@ -12,7 +12,7 @@ services:
             - knowy_net
         volumes:
             - kn_db_data:/var/lib/postgresql/data
-            - ./sql/init:/docker-entrypoint-initdb.d
+            - ./sql:/docker-entrypoint-initdb.d
         healthcheck:
             test: [ "CMD-SHELL", "pg_isready -U knowy -d knowydb" ]
             interval: 10s

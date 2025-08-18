@@ -1,6 +1,7 @@
 package com.knowy.server.infrastructure.adapters.persistence;
 
 import com.knowy.core.domain.Course;
+import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaCourseDao;
 import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaCourseMapper;
@@ -44,6 +45,14 @@ public class JpaCourseRepository implements CourseRepository {
 	@Override
 	public List<Course> findAllRandom() {
 		return jpaCourseDao.findAllRandom()
+			.stream()
+			.map(jpaCourseMapper::toDomain)
+			.toList();
+	}
+
+	@Override
+	public List<Course> findAllRandomUserIsNotSubscribed(int userId) {
+		return jpaCourseDao.findAllRandomUserIsNotSubscribed(userId)
 			.stream()
 			.map(jpaCourseMapper::toDomain)
 			.toList();
