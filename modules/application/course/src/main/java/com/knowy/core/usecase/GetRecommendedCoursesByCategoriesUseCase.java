@@ -1,0 +1,47 @@
+package com.knowy.core.usecase;
+
+import com.knowy.core.domain.Category;
+import com.knowy.core.domain.Course;
+import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.port.CourseRepository;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Use case for retrieving a recommended list of courses based on a set of categories.
+ */
+public class GetRecommendedCoursesByCategoriesUseCase {
+
+	private final CourseRepository courseRepository;
+
+	/**
+	 * Constructs the use case with the given course repository.
+	 *
+	 * @param courseRepository the repository used to fetch course data
+	 */
+	public GetRecommendedCoursesByCategoriesUseCase(CourseRepository courseRepository) {
+		this.courseRepository = courseRepository;
+	}
+
+	/**
+	 * Retrieves a list of recommended courses for a user based on the provided categories.
+	 *
+	 * <p>This method fetches courses that the user is not already subscribed to, sorts them
+	 * by relevance to the given categories, and returns the top 3 recommended courses.</p>
+	 *
+	 * @param userId     the ID of the user for whom the recommendations are generated
+	 * @param categories a set of {@link Category} entities to guide the course recommendations
+	 * @return a list of {@link Course} entities recommended for the user
+	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
+	 */
+	public List<Course> execute(int userId, Set<Category> categories) throws KnowyInconsistentDataException {
+		return courseRepository.findAllRandomUserIsNotSubscribed(userId).stream()
+			.sorted(Comparator.comparing(course -> course.categories()
+				.stream()
+				.noneMatch(categories::contains))
+			).limit(3)
+			.toList();
+	}
+}

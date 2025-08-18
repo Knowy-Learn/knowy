@@ -41,7 +41,7 @@ public class CoursesStoreController {
 
 		List<Course> allCourses = courseService.findAllCourses();
 
-		List<Integer> myCourseIds = courseService.findCoursesByUserId(userDetails.getUser().id())
+		List<Integer> myCourseIds = courseService.findAllByUserId(userDetails.getUser().id())
 			.stream()
 			.map(Course::id)
 			.toList();
