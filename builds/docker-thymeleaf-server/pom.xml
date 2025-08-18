@@ -45,6 +45,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<formats>
 						<format>zip</format>
+						<format>dir</format>
 					</formats>
 					<descriptors>
 						<descriptor>src/assembly/package.xml</descriptor>

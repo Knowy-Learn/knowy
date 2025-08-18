@@ -1,6 +1,7 @@
 package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.CourseService;
+import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.server.infrastructure.controller.dto.NewsDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,7 +19,7 @@ public class PresentationController {
 	}
 
 	@GetMapping("/")
-	public String viewLandingPage(ModelMap interfaceScreen) {
+	public String viewLandingPage(ModelMap interfaceScreen) throws KnowyInconsistentDataException {
 
 		List<NewsDto> newsList = courseService.findAllCourses()
 			.stream()

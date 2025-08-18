@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-@Component
 public class PasswordEncoderAdapter implements KnowyPasswordEncoder {
 
 	private final PasswordEncoder passwordEncoder;

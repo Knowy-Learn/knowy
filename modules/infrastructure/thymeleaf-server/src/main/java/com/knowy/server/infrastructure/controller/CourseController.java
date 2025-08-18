@@ -54,7 +54,7 @@ public class CourseController {
 		@RequestParam(name = "page", defaultValue = "1") int page,
 		@AuthenticationPrincipal UserSecurityDetails userDetails
 	) throws KnowyInconsistentDataException {
-		List<CourseCardDTO> courses = courseService.getUserCourses(userDetails.getUser().id())
+		List<CourseCardDTO> courses = courseService.findAllByUserId(userDetails.getUser().id())
 			.stream()
 			.map(course -> CourseCardDTO.fromDomain(
 				course,

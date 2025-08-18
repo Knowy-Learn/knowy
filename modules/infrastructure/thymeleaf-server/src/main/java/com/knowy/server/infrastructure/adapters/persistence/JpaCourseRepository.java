@@ -21,8 +21,8 @@ public class JpaCourseRepository implements CourseRepository {
 	}
 
 	@Override
-	public List<Course> findByIdIn(List<Integer> ids) {
-		return jpaCourseDao.findByIdIn(ids)
+	public List<Course> findAllById(List<Integer> ids) {
+		return jpaCourseDao.findAllById(ids)
 			.stream()
 			.map(jpaCourseMapper::toDomain)
 			.toList();

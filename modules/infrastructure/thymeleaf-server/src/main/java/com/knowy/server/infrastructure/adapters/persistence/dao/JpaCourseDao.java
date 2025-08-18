@@ -13,8 +13,6 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 	@NonNull
 	List<CourseEntity> findAll();
 
-	List<CourseEntity> findByIdIn(List<Integer> ids);
-
 	@Query("SELECT c FROM CourseEntity c ORDER BY function('RANDOM')")
 	List<CourseEntity> findAllRandom();
 }
