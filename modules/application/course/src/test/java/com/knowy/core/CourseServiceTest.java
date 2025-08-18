@@ -99,11 +99,42 @@ class CourseServiceTest {
 			Mockito.when(userLessonRepository.findCourseIdsByUserId(userId))
 				.thenReturn(courseIds);
 			Mockito.when(courseRepository.findAllById(courseIds))
-					.thenThrow(new KnowyInconsistentDataException("Inconsistent Data of courses with ids: " + courseIds));
+				.thenThrow(new KnowyInconsistentDataException("Inconsistent Data of courses with ids: " + courseIds));
 
 			assertThrows(
 				KnowyInconsistentDataException.class,
 				() -> courseService.findAllByUserId(userId)
+			);
+		}
+	}
+
+	@Nested
+	class GetAllCoursesRandomized {
+
+		@Test
+		void given_courses_when_getAllCoursesRandomized_then_returnCourses() throws KnowyInconsistentDataException {
+			Course course1 = Mockito.mock(Course.class);
+			Course course2 = Mockito.mock(Course.class);
+			Course course3 = Mockito.mock(Course.class);
+			List<Course> courses = List.of(course1, course2, course3);
+
+			Mockito.when(courseRepository.findAllRandom())
+				.thenReturn(courses);
+
+			List<Course> result = assertDoesNotThrow(() -> courseService.findAllRandom());
+			assertNotNull(result);
+			assertEquals(courses.size(), result.size());
+			Mockito.verify(courseRepository, Mockito.times(1)).findAllRandom();
+		}
+
+		@Test
+		void given_inconsistentCoursesData_when_getAllCoursesRandomized_then_throwKnowyInconsistentDataException() throws KnowyInconsistentDataException {
+			Mockito.when(courseRepository.findAllRandom())
+				.thenThrow(new KnowyInconsistentDataException("Inconsistent Data of courses"));
+
+			assertThrows(
+				KnowyInconsistentDataException.class,
+				() -> courseService.findAllRandom()
 			);
 		}
 	}

@@ -11,6 +11,7 @@ import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
+import com.knowy.core.usecase.GetAllCoursesRandomized;
 import com.knowy.core.usecase.GetUserCoursesUseCase;
 
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ public class CourseService {
 	private final UserLessonRepository userLessonRepository;
 	private final CategoryRepository categoryRepository;
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
+	private final GetAllCoursesRandomized getAllCoursesRandomized;
 
 	public CourseService(
 		CourseRepository courseRepository,
@@ -38,6 +40,7 @@ public class CourseService {
 		this.userLessonRepository = userLessonRepository;
 		this.categoryRepository = categoryRepository;
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
+		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
 	}
 
 	/**
@@ -54,8 +57,18 @@ public class CourseService {
 		return getUserCoursesUseCase.execute(userId);
 	}
 
+	/**
+	 * Retrieves all courses in a randomized order.
+	 *
+	 * <p>This method delegates to the {@link GetAllCoursesRandomized} use case,
+	 * which fetches all courses from the repository and returns them shuffled.
+	 * Useful for providing variety in course recommendations or avoiding fixed ordering.</p>
+	 *
+	 * @return a randomized list of {@link Course} entities
+	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
+	 */
 	public List<Course> findAllRandom() throws KnowyInconsistentDataException {
-		return courseRepository.findAllRandom();
+		return getAllCoursesRandomized.execute();
 	}
 
 	public List<Course> getRecommendedCourses(Integer userId) throws KnowyInconsistentDataException {
