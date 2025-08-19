@@ -27,23 +27,10 @@
 	</scm>
 
 	<properties>
-
 		<maven.compiler.release>21</maven.compiler.release>
 		<sass.source.in>src/main/resources/static/styles</sass.source.in>
 		<sass.source.out>generated-resources/main/static/styles</sass.source.out>
 	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-parent</artifactId>
-				<version>3.4.5</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -53,6 +40,10 @@
 		<dependency>
 			<groupId>com.knowy</groupId>
 			<artifactId>course-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>persistence-spring-jpa</artifactId>
 		</dependency>
 
 		<dependency>

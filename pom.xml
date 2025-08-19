@@ -23,9 +23,11 @@
 		<module>modules/application/base</module>
 		<module>modules/application/user</module>
 		<module>modules/application/course</module>
+		<module>modules/infrastructure/persistence-spring-jpa</module>
 		<module>modules/infrastructure/thymeleaf-server</module>
+		<module>modules/infrastructure/frontend-web-angular</module>
 		<module>builds/docker-thymeleaf-server</module>
-		<module>modules/infrastructure/angular-front-server</module>
+		<module>modules/infrastructure/backend-api-spring</module>
 	</modules>
 
 	<dependencyManagement>
@@ -47,8 +49,26 @@
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
+				<artifactId>persistence-spring-jpa</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>frontend-web-angular</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
 				<artifactId>thymeleaf-server</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<!-- spring -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-parent</artifactId>
+				<version>3.4.5</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 			<!-- testing -->
 			<dependency>
