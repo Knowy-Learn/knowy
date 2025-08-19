@@ -15,9 +15,10 @@ public record Lesson(
 	public Lesson(
 		int id,
 		int courseId,
+		Integer nextLessonId,
 		String title,
 		String explanation
 	) {
-		this(id, courseId, null, title, explanation, new HashSet<>(), new HashSet<>());
+		this(id, courseId, nextLessonId, title, explanation, new HashSet<>(), new HashSet<>());
 	}
 }

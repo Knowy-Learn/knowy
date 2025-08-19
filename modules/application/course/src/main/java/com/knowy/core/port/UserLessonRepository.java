@@ -12,13 +12,16 @@ public interface UserLessonRepository {
 
 	List<Integer> findCourseIdsByUserId(Integer userId) throws KnowyInconsistentDataException;
 
+	Optional<UserLesson> findById(int userId, int lessonId) throws KnowyInconsistentDataException;
+
+	List<UserLesson> findAllByCourseId(int CourseId);
+
 	boolean existsById(int userId, int lessonId) throws KnowyInconsistentDataException;
 
 	UserLesson save(UserLesson userLesson) throws KnowyInconsistentDataException;
 
+	List<UserLesson> saveAll(List<UserLesson> lessons) throws KnowyInconsistentDataException;
+
 	int countByUserIdAndCourseIdAndStatus(Integer userId, Integer courseId, UserLesson.ProgressStatus status) throws KnowyInconsistentDataException;
 
-	Optional<UserLesson> findById(int userId, int lessonId) throws KnowyInconsistentDataException;
-
-	List<UserLesson> findAllByCourseId(int userId, int courseId) throws KnowyInconsistentDataException;
 }

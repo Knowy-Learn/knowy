@@ -30,5 +30,16 @@ public interface JpaLessonDao extends JpaRepository<LessonEntity, Integer> {
 		""", nativeQuery = true)
 	List<LessonEntity> findAllByDocumentationId(@Param("id") int documentationId);
 
+	@Query("""
+		SELECT l
+		FROM LessonEntity l
+		    INNER JOIN l.publicUserLessons pul
+		WHERE l.course.id = :courseId AND pul.userId = :userId
+		""")
+	List<LessonEntity> findAllByCourseIdAndUserUnsubscribed(
+		@Param("userId") int userId,
+		@Param("courseId") int courseId
+	);
+
 	int countByCourseId(Integer courseId);
 }

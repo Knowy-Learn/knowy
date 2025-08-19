@@ -42,12 +42,11 @@ public class UserLessonService {
 	 *
 	 * <p>This method returns the user's progress across all lessons within the specified course.</p>
 	 *
-	 * @param userId   The ID of the user.
 	 * @param courseId The ID, of course.
 	 * @return A list of representing the user's lesson data for the course.
 	 */
-	public List<UserLesson> findAllByCourseId(int userId, int courseId) throws KnowyInconsistentDataException {
-		return userLessonRepository.findAllByCourseId(userId, courseId);
+	public List<UserLesson> findAllByCourseId(int courseId) throws KnowyInconsistentDataException {
+		return userLessonRepository.findAllByCourseId(courseId);
 	}
 
 	/**

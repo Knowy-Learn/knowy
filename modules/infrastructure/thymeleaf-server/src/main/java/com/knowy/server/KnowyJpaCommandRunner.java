@@ -1,13 +1,14 @@
 package com.knowy.server;
 
-import com.knowy.server.infrastructure.adapters.persistence.entity.CourseEntity;
+import com.knowy.server.infrastructure.adapters.persistence.entity.LessonEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-// @Component
+@Component
 @SuppressWarnings("java:S106")
 public class KnowyJpaCommandRunner implements CommandLineRunner {
 
@@ -19,15 +20,13 @@ public class KnowyJpaCommandRunner implements CommandLineRunner {
 		System.out.println("=== Probando JPQL ===");
 
 		// Tu consulta JPQL
-		List<CourseEntity> entities = em.createQuery(
+		List<LessonEntity> entities = em.createQuery(
 				"""
-					SELECT distinct c
-					FROM CourseEntity c
-					    LEFT JOIN c.lessons l
-					    LEFT JOIN l.publicUserLessons pul with pul.userId = 1
-					WHERE pul.id IS null
-					ORDER by c.id
-					""", CourseEntity.class)
+					SELECT l
+					FROM LessonEntity l
+					    INNER JOIN l.publicUserLessons pul
+					WHERE l.course.id = 1 AND pul.userId = 1
+					""", LessonEntity.class)
 			.getResultList();
 
 		// Imprime los resultados

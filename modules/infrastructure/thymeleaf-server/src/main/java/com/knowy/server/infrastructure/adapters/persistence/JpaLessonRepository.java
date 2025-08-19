@@ -26,7 +26,14 @@ public class JpaLessonRepository implements LessonRepository {
 	}
 
 	@Override
-	public List<Lesson> findByCourseId(Integer courseId) {
+	public List<Lesson> findAllByCourseIdAndUserUnsubscribed(int userId, int courseId) {
+		return jpaLessonDao.findAllByCourseIdAndUserUnsubscribed(userId, courseId).stream()
+			.map(jpaLessonMapper::toDomain)
+			.toList();
+	}
+
+	@Override
+	public List<Lesson> findAllByCourseId(Integer courseId) {
 		return jpaLessonDao.findByCourseId(courseId).stream()
 			.map(jpaLessonMapper::toDomain)
 			.toList();

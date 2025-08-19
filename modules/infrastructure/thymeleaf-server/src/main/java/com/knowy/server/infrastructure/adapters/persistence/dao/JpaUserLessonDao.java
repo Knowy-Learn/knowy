@@ -45,13 +45,10 @@ public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, 
 	Optional<PublicUserLessonEntity> findById(@NonNull PublicUserLessonIdEntity publicUserLessonIdEntity);
 
 	@Query("""
-		    SELECT pl
-		    FROM PublicUserLessonEntity pl
-		        JOIN pl.lessonEntity l
-		        JOIN l.course c
-		    WHERE
-		        pl.publicUserEntity.id = :userId AND
-		        c.id = :courseId
+		SELECT pul
+		FROM PublicUserLessonEntity pul
+		    JOIN LessonEntity l ON pul.lessonId = l.id
+		WHERE l.course.id = :courseId
 		""")
-	List<PublicUserLessonEntity> findAllByCourseId(@Param("userId") int userId,@Param("courseId") int courseId);
+	List<PublicUserLessonEntity> findAllByCourseId(@Param("courseId") int courseId);
 }

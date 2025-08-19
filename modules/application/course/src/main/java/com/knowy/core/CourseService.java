@@ -14,6 +14,7 @@ import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.usecase.GetAllCoursesRandomized;
 import com.knowy.core.usecase.GetRecommendedCoursesByCategoriesUseCase;
 import com.knowy.core.usecase.GetUserCoursesUseCase;
+import com.knowy.core.usecase.SubscribeUserToCourseUseCase;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -29,6 +30,7 @@ public class CourseService {
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
 	private final GetRecommendedCoursesByCategoriesUseCase getRecommendedCoursesByCategoriesUseCase;
+	private final SubscribeUserToCourseUseCase subscribeUserToCourseUseCase;
 
 	public CourseService(
 		CourseRepository courseRepository,
@@ -43,6 +45,7 @@ public class CourseService {
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
 		this.getRecommendedCoursesByCategoriesUseCase = new GetRecommendedCoursesByCategoriesUseCase(courseRepository);
+		this.subscribeUserToCourseUseCase = new SubscribeUserToCourseUseCase(lessonRepository, userLessonRepository);
 	}
 
 	/**
@@ -89,55 +92,14 @@ public class CourseService {
 		return getRecommendedCoursesByCategoriesUseCase.execute(userId, categories);
 	}
 
-	public void subscribeUserToCourse(int userId, int courseId) throws KnowyCourseSubscriptionException,
-		KnowyInconsistentDataException {
-		List<Lesson> lessons = lessonRepository.findByCourseId(courseId);
-		if (lessons.isEmpty()) {
-			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
-		}
-
-		ensureAlreadySubscribed(lessons, userId);
-
-		lessons = lessons.stream()
-			.sorted(Comparator.comparing(Lesson::id))
-			.toList();
-
-		for (int index = 0; index < lessons.size(); index++) {
-			Lesson lesson = lessons.get(index);
-			if (!userLessonRepository.existsById(userId, lesson.id())) {
-				UserLesson userLesson = new UserLesson(
-					userId,
-					lesson,
-					LocalDate.now(),
-					index == 0 ? UserLesson.ProgressStatus.IN_PROGRESS : UserLesson.ProgressStatus.PENDING
-				);
-				userLessonRepository.save(userLesson);
-			}
-		}
-	}
-
-	private void ensureAlreadySubscribed(List<Lesson> lessons, Integer userId)
-		throws KnowyInconsistentDataException, KnowyCourseSubscriptionException {
-
-		for (Lesson lesson : lessons) {
-			if (userLessonRepository.existsByUserIdAndLessonId(userId, lesson.id())) {
-				throw new KnowyCourseSubscriptionException("Ya estás suscrito a este curso");
-			}
-		}
+	// TODO
+	public void subscribeUserToCourse(int userId, int courseId)
+		throws KnowyCourseSubscriptionException, KnowyInconsistentDataException {
+		subscribeUserToCourseUseCase.execute(userId, courseId);
 	}
 
 	public List<Course> findAllCourses() throws KnowyInconsistentDataException {
 		return courseRepository.findAll();
-	}
-
-	public String findCourseImage(Course course) {
-		return course.image() != null ? course.image() : "https://picsum.photos/seed/picsum/200/300";
-	}
-
-	public List<String> findLanguagesForCourse(Course course) {
-		return course.categories().stream()
-			.map(Category::name)
-			.toList();
 	}
 
 	public int getCourseProgress(Integer userId, Integer courseId) {

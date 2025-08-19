@@ -7,9 +7,11 @@ import java.util.Optional;
 
 
 public interface LessonRepository {
-	List<Lesson> findByCourseId(Integer courseId);
-
-	int countByCourseId(Integer courseId);
+	List<Lesson> findAllByCourseId(Integer courseId);
 
 	Optional<Lesson> findById(Integer id);
+
+	List<Lesson> findAllByCourseIdAndUserUnsubscribed(int userId, int courseId);
+
+	int countByCourseId(Integer courseId);
 }
