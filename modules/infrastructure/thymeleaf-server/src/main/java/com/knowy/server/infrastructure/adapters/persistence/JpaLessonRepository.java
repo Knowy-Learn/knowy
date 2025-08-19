@@ -3,20 +3,26 @@ package com.knowy.server.infrastructure.adapters.persistence;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.domain.Lesson;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaLessonDao;
+import com.knowy.server.infrastructure.adapters.persistence.dao.JpaUserLessonDao;
+import com.knowy.server.infrastructure.adapters.persistence.entity.PublicUserLessonEntity;
 import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaLessonMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 public class JpaLessonRepository implements LessonRepository {
 
 	private final JpaLessonDao jpaLessonDao;
+	private final JpaUserLessonDao jpaUserLessonDao;
 	private final JpaLessonMapper jpaLessonMapper;
 
-	public JpaLessonRepository(JpaLessonDao jpaLessonDao, JpaLessonMapper jpaLessonMapper) {
+	public JpaLessonRepository(JpaLessonDao jpaLessonDao, JpaUserLessonDao jpaUserLessonDao, JpaLessonMapper jpaLessonMapper) {
 		this.jpaLessonDao = jpaLessonDao;
+		this.jpaUserLessonDao = jpaUserLessonDao;
 		this.jpaLessonMapper = jpaLessonMapper;
 	}
 
@@ -26,10 +32,11 @@ public class JpaLessonRepository implements LessonRepository {
 	}
 
 	@Override
-	public List<Lesson> findAllByCourseIdAndUserUnsubscribed(int userId, int courseId) {
-		return jpaLessonDao.findAllByCourseIdAndUserUnsubscribed(userId, courseId).stream()
+	public Set<Lesson> findAllWhereUserIsSubscribedTo(int userId) {
+		return jpaUserLessonDao.findByUserId(userId).stream()
+			.map(PublicUserLessonEntity::getLessonEntity)
 			.map(jpaLessonMapper::toDomain)
-			.toList();
+			.collect(Collectors.toSet());
 	}
 
 	@Override

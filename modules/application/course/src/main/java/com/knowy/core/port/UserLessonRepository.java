@@ -4,6 +4,7 @@ package com.knowy.core.port;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,13 +15,13 @@ public interface UserLessonRepository {
 
 	Optional<UserLesson> findById(int userId, int lessonId) throws KnowyInconsistentDataException;
 
-	List<UserLesson> findAllByCourseId(int CourseId);
+	List<UserLesson> findAllByUserIdAndCourseId(int userId, int courseId);
 
 	boolean existsById(int userId, int lessonId) throws KnowyInconsistentDataException;
 
 	UserLesson save(UserLesson userLesson) throws KnowyInconsistentDataException;
 
-	List<UserLesson> saveAll(List<UserLesson> lessons) throws KnowyInconsistentDataException;
+	List<UserLesson> saveAll(Collection<UserLesson> userLessons) throws KnowyInconsistentDataException;
 
 	int countByUserIdAndCourseIdAndStatus(Integer userId, Integer courseId, UserLesson.ProgressStatus status) throws KnowyInconsistentDataException;
 

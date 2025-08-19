@@ -5,9 +5,10 @@ import com.knowy.core.domain.Course;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Use case for retrieving a recommended list of courses based on a set of categories.
@@ -37,11 +38,12 @@ public class GetRecommendedCoursesByCategoriesUseCase {
 	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
 	 */
 	public List<Course> execute(int userId, Set<Category> categories) throws KnowyInconsistentDataException {
-		return courseRepository.findAllRandomUserIsNotSubscribed(userId).stream()
-			.sorted(Comparator.comparing(course -> course.categories()
-				.stream()
-				.noneMatch(categories::contains))
-			).limit(3)
+		Stream<Course> coursesOfCategories = courseRepository.findByCategoriesStreamingInRandomOrder(categories);
+		Set<Course> coursesWhereUserIsSubscribed = courseRepository.findAllWhereUserIsSubscribed(userId);
+
+		return coursesOfCategories
+			.filter(Predicate.not(coursesWhereUserIsSubscribed::contains))
+			.limit(3)
 			.toList();
 	}
 }

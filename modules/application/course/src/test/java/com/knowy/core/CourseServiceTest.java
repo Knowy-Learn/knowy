@@ -126,25 +126,25 @@ class CourseServiceTest {
 			Course course3 = Mockito.mock(Course.class);
 			List<Course> courses = List.of(course1, course2, course3);
 
-			Mockito.when(courseRepository.findAllRandom())
+			Mockito.when(courseRepository.findAllRandomOrder())
 				.thenReturn(courses);
 
-			List<Course> result = assertDoesNotThrow(() -> courseService.findAllRandom());
+			List<Course> result = assertDoesNotThrow(() -> courseService.findAllInRandomOrder());
 			assertNotNull(result);
 			assertEquals(courses.size(), result.size());
-			Mockito.verify(courseRepository, Mockito.times(1)).findAllRandom();
+			Mockito.verify(courseRepository, Mockito.times(1)).findAllRandomOrder();
 		}
 
 		@Test
 		void given_inconsistentCoursesData_when_getAllCoursesRandomized_then_throwKnowyInconsistentDataException()
 			throws KnowyInconsistentDataException {
 
-			Mockito.when(courseRepository.findAllRandom())
+			Mockito.when(courseRepository.findAllRandomOrder())
 				.thenThrow(new KnowyInconsistentDataException("Inconsistent Data of courses"));
 
 			assertThrows(
 				KnowyInconsistentDataException.class,
-				() -> courseService.findAllRandom()
+				() -> courseService.findAllInRandomOrder()
 			);
 		}
 	}
@@ -184,8 +184,8 @@ class CourseServiceTest {
 				new HashSet<>()
 			);
 
-			Mockito.when(courseRepository.findAllRandomUserIsNotSubscribed(userId))
-				.thenReturn(List.of(course1, course2, course3, course4, course5));
+			Mockito.when(courseRepository.findAllWhereUserIsSubscribed(userId))
+				.thenReturn(Set.of(course1, course2, course3, course4, course5));
 
 			List<Course> result = assertDoesNotThrow(() -> courseService.getRecommendedCourses(userId, categories));
 			assertAll(
@@ -203,8 +203,8 @@ class CourseServiceTest {
 			Course course3 = Mockito.mock(Course.class);
 			Course course4 = Mockito.mock(Course.class);
 
-			Mockito.when(courseRepository.findAllRandomUserIsNotSubscribed(userId))
-				.thenReturn(List.of(course1, course2, course3, course4));
+			Mockito.when(courseRepository.findAllWhereUserIsSubscribed(userId))
+				.thenReturn(Set.of(course1, course2, course3, course4));
 
 			List<Course> result = assertDoesNotThrow(() -> courseService.getRecommendedCourses(userId, Set.of()));
 			assertAll(
@@ -220,7 +220,7 @@ class CourseServiceTest {
 			int userId = 1;
 			Set<Category> categories = Set.of(new Category(3, "Photography"));
 
-			Mockito.when(courseRepository.findAllRandomUserIsNotSubscribed(userId))
+			Mockito.when(courseRepository.findAllWhereUserIsSubscribed(userId))
 				.thenThrow(new KnowyInconsistentDataException("Inconsistent Data of courses"));
 
 			assertThrows(
@@ -241,7 +241,7 @@ class CourseServiceTest {
 			Lesson lesson2 = new Lesson(25, 5, 26, "Title 2", "Desc 2");
 			Lesson lesson3 = new Lesson(26, 5, 27, "Title 3", "Desc 3");
 			Lesson lesson4 = new Lesson(27, 5, null, "Title 4", "Desc 4");
-			List<Lesson> lessons = List.of(lesson1, lesson2, lesson3, lesson4);
+			Set<Lesson> lessons = Set.of(lesson1, lesson2, lesson3, lesson4);
 
 			UserLesson userLesson1 = new UserLesson(
 				2, lesson1, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
@@ -253,12 +253,12 @@ class CourseServiceTest {
 				2, lesson4, LocalDate.now(), UserLesson.ProgressStatus.PENDING);
 			List<UserLesson> userLessons = List.of(userLesson1, userLesson2, userLesson3, userLesson4);
 
-			Mockito.when(lessonRepository.findAllByCourseIdAndUserUnsubscribed(userId, courseId))
+			Mockito.when(lessonRepository.findAllWhereUserIsSubscribedTo(userId))
 				.thenReturn(lessons);
 
 			assertDoesNotThrow(() -> courseService.subscribeUserToCourse(userId, courseId));
 			Mockito.verify(lessonRepository, Mockito.times(1))
-				.findAllByCourseIdAndUserUnsubscribed(userId, courseId);
+				.findAllWhereUserIsSubscribedTo(userId);
 			Mockito.verify(userLessonRepository, Mockito.times(1))
 				.saveAll(userLessons);
 		}
@@ -268,8 +268,8 @@ class CourseServiceTest {
 			int userId = 2;
 			int courseId = 5;
 
-			Mockito.when(lessonRepository.findAllByCourseIdAndUserUnsubscribed(userId, courseId))
-				.thenReturn(List.of());
+			Mockito.when(lessonRepository.findAllWhereUserIsSubscribedTo(userId))
+				.thenReturn(Set.of());
 
 			assertThrows(
 				KnowyCourseSubscriptionException.class,
@@ -285,9 +285,9 @@ class CourseServiceTest {
 			Lesson lesson2 = new Lesson(25, 5, 26, "Title 2", "Desc 2");
 			Lesson lesson3 = new Lesson(26, 5, 27, "Title 3", "Desc 3");
 			Lesson lesson4 = new Lesson(27, 5, 24, "Title 4", "Desc 4");
-			List<Lesson> lessons = List.of(lesson1, lesson2, lesson3, lesson4);
+			Set<Lesson> lessons = Set.of(lesson1, lesson2, lesson3, lesson4);
 
-			Mockito.when(lessonRepository.findAllByCourseIdAndUserUnsubscribed(userId, courseId))
+			Mockito.when(lessonRepository.findAllWhereUserIsSubscribedTo(userId))
 				.thenReturn(lessons);
 
 			assertThrows(
@@ -304,9 +304,9 @@ class CourseServiceTest {
 			Lesson lesson2 = new Lesson(25, 5, null, "Title 2", "Desc 2");
 			Lesson lesson3 = new Lesson(26, 5, 27, "Title 3", "Desc 3");
 			Lesson lesson4 = new Lesson(27, 5, null, "Title 4", "Desc 4");
-			List<Lesson> lessons = List.of(lesson1, lesson2, lesson3, lesson4);
+			Set<Lesson> lessons = Set.of(lesson1, lesson2, lesson3, lesson4);
 
-			Mockito.when(lessonRepository.findAllByCourseIdAndUserUnsubscribed(userId, courseId))
+			Mockito.when(lessonRepository.findAllWhereUserIsSubscribedTo(userId))
 				.thenReturn(lessons);
 
 			assertThrows(

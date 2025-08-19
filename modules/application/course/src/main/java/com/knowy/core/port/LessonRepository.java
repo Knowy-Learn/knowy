@@ -4,6 +4,7 @@ import com.knowy.core.domain.Lesson;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 public interface LessonRepository {
@@ -11,7 +12,7 @@ public interface LessonRepository {
 
 	Optional<Lesson> findById(Integer id);
 
-	List<Lesson> findAllByCourseIdAndUserUnsubscribed(int userId, int courseId);
+	Set<Lesson> findAllWhereUserIsSubscribedTo(int userId);
 
 	int countByCourseId(Integer courseId);
 }

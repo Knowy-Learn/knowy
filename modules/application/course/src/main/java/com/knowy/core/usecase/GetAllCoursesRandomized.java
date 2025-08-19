@@ -5,6 +5,7 @@ import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Use case for retrieving all available courses in a randomized order.
@@ -29,6 +30,6 @@ public class GetAllCoursesRandomized {
 	 * @throws KnowyInconsistentDataException if inconsistencies occur when fetching course data
 	 */
 	public List<Course> execute() throws KnowyInconsistentDataException {
-		return courseRepository.findAllRandom();
+		return courseRepository.findAllRandomOrder();
 	}
 }

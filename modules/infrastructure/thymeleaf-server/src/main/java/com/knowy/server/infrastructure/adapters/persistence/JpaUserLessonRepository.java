@@ -4,14 +4,13 @@ import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaUserLessonDao;
-import com.knowy.server.infrastructure.adapters.persistence.entity.LessonEntity;
 import com.knowy.server.infrastructure.adapters.persistence.entity.PublicUserLessonEntity;
 import com.knowy.server.infrastructure.adapters.persistence.entity.PublicUserLessonIdEntity;
 import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaUserLessonMapper;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +47,7 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 	}
 
 	@Override
-	public List<UserLesson> saveAll(List<UserLesson> userLessons) throws KnowyInconsistentDataException {
+	public List<UserLesson> saveAll(Collection<UserLesson> userLessons) throws KnowyInconsistentDataException {
 		List<PublicUserLessonEntity> lessonEntities = new ArrayList<>();
 		for (UserLesson userLesson : userLessons) {
 			lessonEntities.add(jpaUserLessonMapper.toEntity(userLesson));
@@ -71,8 +70,8 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 	}
 
 	@Override
-	public List<UserLesson> findAllByCourseId(int courseId) {
-		return jpaUserLessonDao.findAllByCourseId(courseId).stream()
+	public List<UserLesson> findAllByUserIdAndCourseId(int userId, int courseId) {
+		return jpaUserLessonDao.findAllByUserIdAndCourseId(userId, courseId).stream()
 			.map(jpaUserLessonMapper::toDomain)
 			.toList();
 	}

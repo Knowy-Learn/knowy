@@ -1,23 +1,34 @@
 package com.knowy.server.infrastructure.adapters.persistence;
 
+import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaCourseDao;
+import com.knowy.server.infrastructure.adapters.persistence.dao.JpaUserLessonDao;
+import com.knowy.server.infrastructure.adapters.persistence.entity.LessonEntity;
+import com.knowy.server.infrastructure.adapters.persistence.entity.PublicUserLessonEntity;
+import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaCategoryMapper;
 import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaCourseMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 public class JpaCourseRepository implements CourseRepository {
 
 	private final JpaCourseDao jpaCourseDao;
+	private final JpaUserLessonDao jpaUserLessonDao;
 	private final JpaCourseMapper jpaCourseMapper;
 
-	public JpaCourseRepository(JpaCourseDao jpaCourseDao, JpaCourseMapper jpaCourseMapper) {
+	public JpaCourseRepository(JpaCourseDao jpaCourseDao, JpaUserLessonDao jpaUserLessonDao, JpaCourseMapper jpaCourseMapper) {
 		this.jpaCourseDao = jpaCourseDao;
+		this.jpaUserLessonDao = jpaUserLessonDao;
 		this.jpaCourseMapper = jpaCourseMapper;
 	}
 
@@ -43,18 +54,34 @@ public class JpaCourseRepository implements CourseRepository {
 	}
 
 	@Override
-	public List<Course> findAllRandom() {
+	public Set<Course> findInRandomOrder(int numOfRecords) {
 		return jpaCourseDao.findAllRandom()
-			.stream()
+			.limit(numOfRecords)
+			.map(jpaCourseMapper::toDomain)
+			.collect(Collectors.toSet());
+	}
+
+	@Override
+	public List<Course> findAllRandomOrder() {
+		return jpaCourseDao.findAllRandom()
 			.map(jpaCourseMapper::toDomain)
 			.toList();
 	}
 
 	@Override
-	public List<Course> findAllRandomUserIsNotSubscribed(int userId) {
-		return jpaCourseDao.findAllRandomUserIsNotSubscribed(userId)
-			.stream()
+	public Set<Course> findAllWhereUserIsSubscribed(int userId) {
+		return jpaUserLessonDao.findByUserId(userId).stream()
+			.map(PublicUserLessonEntity::getLessonEntity)
+			.map(LessonEntity::getCourse)
 			.map(jpaCourseMapper::toDomain)
+			.collect(Collectors.toSet());
+	}
+
+	@Override
+	public Stream<Course> findByCategoriesStreamingInRandomOrder(Collection<Category> categories) {
+		List<Integer> categoriesIds = categories.stream()
+			.map(Category::id)
 			.toList();
+		return jpaCourseDao.findByCategoryIdsInRandomOrder(categoriesIds);
 	}
 }

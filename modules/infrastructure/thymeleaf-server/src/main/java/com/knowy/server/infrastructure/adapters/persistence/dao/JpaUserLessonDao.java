@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, PublicUserLessonIdEntity> {
@@ -47,8 +48,11 @@ public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, 
 	@Query("""
 		SELECT pul
 		FROM PublicUserLessonEntity pul
-		    JOIN LessonEntity l ON pul.lessonId = l.id
-		WHERE l.course.id = :courseId
+		    JOIN pul.lessonEntity l
+		WHERE pul.userId = :userId
+			AND l.course.id = :courseId
 		""")
-	List<PublicUserLessonEntity> findAllByCourseId(@Param("courseId") int courseId);
+	List<PublicUserLessonEntity> findAllByUserIdAndCourseId(@Param("userId") int userId, @Param("courseId") int courseId);
+
+    Set<PublicUserLessonEntity> findByUserId(int userId);
 }

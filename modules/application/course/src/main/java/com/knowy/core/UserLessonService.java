@@ -45,8 +45,8 @@ public class UserLessonService {
 	 * @param courseId The ID, of course.
 	 * @return A list of representing the user's lesson data for the course.
 	 */
-	public List<UserLesson> findAllByCourseId(int courseId) throws KnowyInconsistentDataException {
-		return userLessonRepository.findAllByCourseId(courseId);
+	public List<UserLesson> findAllByCourseId(int userId, int courseId) throws KnowyInconsistentDataException {
+		return userLessonRepository.findAllByUserIdAndCourseId(userId, courseId);
 	}
 
 	/**

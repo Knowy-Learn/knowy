@@ -32,7 +32,7 @@ public class UserHomeController {
 		boolean hasCourses = totalCourses > 0;
 
 
-		List<CourseBannerDTO> banners = courseService.findAllRandom()
+		List<CourseBannerDTO> banners = courseService.findAllInRandomOrder()
 			.stream()
 			.limit(4)
 			.map(CourseBannerDTO::fromDomain)

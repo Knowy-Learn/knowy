@@ -2,7 +2,6 @@ package com.knowy.core;
 
 import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
-import com.knowy.core.domain.Lesson;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
@@ -16,8 +15,6 @@ import com.knowy.core.usecase.GetRecommendedCoursesByCategoriesUseCase;
 import com.knowy.core.usecase.GetUserCoursesUseCase;
 import com.knowy.core.usecase.SubscribeUserToCourseUseCase;
 
-import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -72,7 +69,7 @@ public class CourseService {
 	 * @return a randomized list of {@link Course} entities
 	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
 	 */
-	public List<Course> findAllRandom() throws KnowyInconsistentDataException {
+	public List<Course> findAllInRandomOrder() throws KnowyInconsistentDataException {
 		return getAllCoursesRandomized.execute();
 	}
 
