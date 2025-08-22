@@ -12,6 +12,7 @@ import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaCourseMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Repository
+@ConditionalOnMissingBean(CourseRepository.class)
 public class JpaCourseRepository implements CourseRepository {
 
 	private final JpaCourseDao jpaCourseDao;
