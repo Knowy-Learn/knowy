@@ -11,8 +11,10 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @AutoConfiguration
+@EnableJpaRepositories
 @ComponentScan({
 	"com.knowy.persistence.adapter.jpa.dao",
 	"com.knowy.persistence.adapter.jpa.mapper",
