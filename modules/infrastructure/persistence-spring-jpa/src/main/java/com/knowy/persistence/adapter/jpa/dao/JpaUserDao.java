@@ -1,7 +1,6 @@
 package com.knowy.persistence.adapter.jpa.dao;
 
 import com.knowy.persistence.adapter.jpa.entity.PublicUserEntity;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,10 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-@ConditionalOnMissingBean(
-	value = JpaRepository.class,
-	parameterizedContainer = {PublicUserEntity.class, Integer.class}
-)
 public interface JpaUserDao extends JpaRepository<PublicUserEntity, Integer> {
 
 	@NonNull

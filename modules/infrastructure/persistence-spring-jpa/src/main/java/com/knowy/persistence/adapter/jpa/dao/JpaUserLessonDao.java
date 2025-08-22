@@ -2,7 +2,6 @@ package com.knowy.persistence.adapter.jpa.dao;
 
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonIdEntity;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,10 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
-@ConditionalOnMissingBean(
-	value = JpaRepository.class,
-	parameterizedContainer = {PublicUserLessonEntity.class, Integer.class}
-)
 public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, PublicUserLessonIdEntity> {
 
 	boolean existsByUserIdAndLessonId(Integer userId, Integer lessonId);
