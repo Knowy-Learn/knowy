@@ -38,12 +38,17 @@ public class GetRecommendedCoursesByCategoriesUseCase {
 	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
 	 */
 	public List<Course> execute(int userId, Set<Category> categories) throws KnowyInconsistentDataException {
-		Stream<Course> coursesOfCategories = courseRepository.findByCategoriesStreamingInRandomOrder(categories);
 		Set<Course> coursesWhereUserIsSubscribed = courseRepository.findAllWhereUserIsSubscribed(userId);
+		Stream<Course> candidateCoursesStream = Stream.concat(
+			courseRepository.findByCategoriesStreamingInRandomOrder(categories),
+			courseRepository.findAllStreamingInRandomOrder()
+		);
 
-		return coursesOfCategories
+		return candidateCoursesStream
+			.distinct()
 			.filter(Predicate.not(coursesWhereUserIsSubscribed::contains))
 			.limit(3)
 			.toList();
 	}
+
 }

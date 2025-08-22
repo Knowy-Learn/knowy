@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -183,14 +184,20 @@ class CourseServiceTest {
 				Set.of(new Category(3, "Photography")),
 				new HashSet<>()
 			);
+			Stream<Course> courseStream = Stream.of(course5, course2, course1, course3, course4);
 
+			Mockito.when(courseRepository.findByCategoriesStreamingInRandomOrder(categories))
+				.thenReturn(courseStream);
 			Mockito.when(courseRepository.findAllWhereUserIsSubscribed(userId))
-				.thenReturn(Set.of(course1, course2, course3, course4, course5));
+				.thenReturn(Set.of(course3));
 
 			List<Course> result = assertDoesNotThrow(() -> courseService.getRecommendedCourses(userId, categories));
 			assertAll(
 				() -> assertEquals(3, result.size()),
-				() -> assertIterableEquals(List.of(course2, course5, course1), result)
+				() -> assertIterableEquals(List.of(course5, course2, course1), result),
+				() -> assertTrue(result.getFirst().categories().contains(new Category(3, "Photography"))),
+				() -> assertTrue(result.get(1).categories().contains(new Category(3, "Photography"))),
+				() -> assertFalse(result.get(2).categories().contains(new Category(3, "Photography")))
 			);
 		}
 
@@ -202,14 +209,19 @@ class CourseServiceTest {
 			Course course2 = Mockito.mock(Course.class);
 			Course course3 = Mockito.mock(Course.class);
 			Course course4 = Mockito.mock(Course.class);
+			Course course5 = Mockito.mock(Course.class);
 
+			Stream<Course> courseStream = Stream.of(course3, course1, course5, course2, course4);
+
+			Mockito.when(courseRepository.findByCategoriesStreamingInRandomOrder(Set.of()))
+				.thenReturn(courseStream);
 			Mockito.when(courseRepository.findAllWhereUserIsSubscribed(userId))
-				.thenReturn(Set.of(course1, course2, course3, course4));
+				.thenReturn(Set.of(course3));
 
 			List<Course> result = assertDoesNotThrow(() -> courseService.getRecommendedCourses(userId, Set.of()));
 			assertAll(
 				() -> assertEquals(3, result.size()),
-				() -> assertIterableEquals(List.of(course1, course2, course3), result)
+				() -> assertIterableEquals(List.of(course1, course5, course2), result)
 			);
 		}
 
@@ -253,8 +265,10 @@ class CourseServiceTest {
 				2, lesson4, LocalDate.now(), UserLesson.ProgressStatus.PENDING);
 			List<UserLesson> userLessons = List.of(userLesson1, userLesson2, userLesson3, userLesson4);
 
+			Mockito.when(lessonRepository.findAllByCourseId(courseId))
+					.thenReturn(lessons.stream().toList());
 			Mockito.when(lessonRepository.findAllWhereUserIsSubscribedTo(userId))
-				.thenReturn(lessons);
+				.thenReturn(Set.of());
 
 			assertDoesNotThrow(() -> courseService.subscribeUserToCourse(userId, courseId));
 			Mockito.verify(lessonRepository, Mockito.times(1))
@@ -287,8 +301,10 @@ class CourseServiceTest {
 			Lesson lesson4 = new Lesson(27, 5, 24, "Title 4", "Desc 4");
 			Set<Lesson> lessons = Set.of(lesson1, lesson2, lesson3, lesson4);
 
+			Mockito.when(lessonRepository.findAllByCourseId(courseId))
+				.thenReturn(lessons.stream().toList());
 			Mockito.when(lessonRepository.findAllWhereUserIsSubscribedTo(userId))
-				.thenReturn(lessons);
+				.thenReturn(Set.of());
 
 			assertThrows(
 				KnowyInconsistentDataException.class,
@@ -306,8 +322,10 @@ class CourseServiceTest {
 			Lesson lesson4 = new Lesson(27, 5, null, "Title 4", "Desc 4");
 			Set<Lesson> lessons = Set.of(lesson1, lesson2, lesson3, lesson4);
 
+			Mockito.when(lessonRepository.findAllByCourseId(courseId))
+				.thenReturn(lessons.stream().toList());
 			Mockito.when(lessonRepository.findAllWhereUserIsSubscribedTo(userId))
-				.thenReturn(lessons);
+				.thenReturn(Set.of());
 
 			assertThrows(
 				KnowyInconsistentDataException.class,

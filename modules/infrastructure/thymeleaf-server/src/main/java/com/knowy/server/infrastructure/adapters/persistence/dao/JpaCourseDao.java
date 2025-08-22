@@ -21,7 +21,7 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 	@Query("""
 		SELECT DISTINCT c
 		FROM CourseEntity c
-			JOIN c.languages lang
+		    JOIN c.languages lang
 		WHERE lang.id IN (:categoriesIds)
 		ORDER BY function('RANDOM')
 		""")

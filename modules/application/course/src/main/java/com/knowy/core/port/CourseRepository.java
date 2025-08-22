@@ -21,6 +21,8 @@ public interface CourseRepository {
 
 	List<Course> findAllRandomOrder() throws KnowyInconsistentDataException;
 
+	Stream<Course> findAllStreamingInRandomOrder();
+
 	Set<Course> findAllWhereUserIsSubscribed(int userId) throws  KnowyInconsistentDataException;;
 
 	Stream<Course> findByCategoriesStreamingInRandomOrder(Collection<Category> categories);

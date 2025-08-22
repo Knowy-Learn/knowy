@@ -13,16 +13,39 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Use case for subscribing a user to all the lessons of a course that they are not already subscribed to.
+ */
 public class SubscribeUserToCourseUseCase {
 
 	private final LessonRepository lessonRepository;
 	private final UserLessonRepository userLessonRepository;
 
+	/**
+	 * Constructs the use case with the required repositories.
+	 *
+	 * @param lessonRepository     repository for accessing course lessons
+	 * @param userLessonRepository repository for persisting user subscriptions to lessons
+	 */
 	public SubscribeUserToCourseUseCase(LessonRepository lessonRepository, UserLessonRepository userLessonRepository) {
 		this.lessonRepository = lessonRepository;
 		this.userLessonRepository = userLessonRepository;
 	}
 
+	/**
+	 * Executes the subscription process for a user in a given course.
+	 * <p>
+	 * It retrieves all lessons of the course that the user is not already subscribed to, validates the consistency of
+	 * the lesson sequence, and creates new {@link UserLesson} subscriptions. The first lesson is marked as
+	 * {@link UserLesson.ProgressStatus#IN_PROGRESS}, while subsequent lessons are marked as
+	 * {@link UserLesson.ProgressStatus#PENDING}.
+	 *
+	 * @param userId   the identifier of the user subscribing to the course
+	 * @param courseId the identifier of the course to subscribe to
+	 * @throws KnowyCourseSubscriptionException if the user is already subscribed to all lessons in the course, or if
+	 *                                          the course has no available lessons
+	 * @throws KnowyInconsistentDataException   if no starting lesson is found or if multiple starting lessons exist
+	 */
 	public void execute(int userId, int courseId)
 		throws KnowyCourseSubscriptionException, KnowyInconsistentDataException {
 
@@ -37,9 +60,11 @@ public class SubscribeUserToCourseUseCase {
 		Set<Lesson> courseLessons = new HashSet<>(lessonRepository.findAllByCourseId(courseId));
 		Set<Lesson> userLessons = lessonRepository.findAllWhereUserIsSubscribedTo(userId);
 		courseLessons.removeAll(userLessons);
-		if(courseLessons.isEmpty()) {
+		if (courseLessons.isEmpty()) {
 			throw new KnowyCourseSubscriptionException(String.format(
-				"No lessons were found for the course with id %d to which the user with id %d has not yet subscribed", courseId, userId
+				"No lessons were found for the course with id %d to which the user with id %d has not yet subscribed",
+				courseId,
+				userId
 			));
 		}
 		return courseLessons;
@@ -90,7 +115,14 @@ public class SubscribeUserToCourseUseCase {
 			.map(lesson ->
 				new UserLesson(userId, lesson, LocalDate.now(), statusResolver.apply(lesson))
 			)
+			.sorted(userLessonNextLessonIdComparator())
 			.toList();
 	}
 
+	private Comparator<UserLesson> userLessonNextLessonIdComparator() {
+		return Comparator.comparing(
+			(UserLesson ul) -> ul.lesson().nextLessonId(),
+			Comparator.nullsLast(Comparator.naturalOrder())
+		);
+	}
 }

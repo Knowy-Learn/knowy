@@ -2,13 +2,11 @@ package com.knowy.server.infrastructure.adapters.persistence;
 
 import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
-import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaCourseDao;
 import com.knowy.server.infrastructure.adapters.persistence.dao.JpaUserLessonDao;
 import com.knowy.server.infrastructure.adapters.persistence.entity.LessonEntity;
 import com.knowy.server.infrastructure.adapters.persistence.entity.PublicUserLessonEntity;
-import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaCategoryMapper;
 import com.knowy.server.infrastructure.adapters.persistence.mapper.JpaCourseMapper;
 import org.springframework.stereotype.Repository;
 
@@ -55,17 +53,21 @@ public class JpaCourseRepository implements CourseRepository {
 
 	@Override
 	public Set<Course> findInRandomOrder(int numOfRecords) {
-		return jpaCourseDao.findAllRandom()
+		return findAllStreamingInRandomOrder()
 			.limit(numOfRecords)
-			.map(jpaCourseMapper::toDomain)
 			.collect(Collectors.toSet());
 	}
 
 	@Override
 	public List<Course> findAllRandomOrder() {
-		return jpaCourseDao.findAllRandom()
-			.map(jpaCourseMapper::toDomain)
+		return findAllStreamingInRandomOrder()
 			.toList();
+	}
+
+	@Override
+	public Stream<Course> findAllStreamingInRandomOrder() {
+		return jpaCourseDao.findAllRandom()
+			.map(jpaCourseMapper::toDomain);
 	}
 
 	@Override
