@@ -2,12 +2,16 @@ package com.knowy.persistence.adapter.jpa;
 
 import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
+import com.knowy.core.domain.Pagination;
+import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCourseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaCourseMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -39,11 +43,25 @@ public class JpaCourseRepository implements CourseRepository {
 	}
 
 	@Override
-	public List<Course> findAll() {
-		return jpaCourseDao.findAll()
+	public List<Course> findAll(Pagination pagination) throws KnowyCourseNotFound {
+		List<Course> courses = fetchCourses(pagination);
+		validateCourses(courses, pagination.page());
+		return courses;
+	}
+
+	private List<Course> fetchCourses(Pagination pagination) {
+		Pageable pageRequest = PageRequest.of(pagination.page(), pagination.size());
+		return jpaCourseDao.findAll(pageRequest)
 			.stream()
 			.map(jpaCourseMapper::toDomain)
 			.toList();
+	}
+
+	private void validateCourses(List<Course> courses, int page) throws KnowyCourseNotFound {
+		if (courses.isEmpty()) {
+			String message = String.format("Courses not found for the page: %d", page);
+			throw new KnowyCourseNotFound(message);
+		}
 	}
 
 	@Override

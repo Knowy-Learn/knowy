@@ -1,9 +1,7 @@
 package com.knowy.core;
 
-import com.knowy.core.domain.Category;
-import com.knowy.core.domain.Course;
-import com.knowy.core.domain.Lesson;
-import com.knowy.core.domain.UserLesson;
+import com.knowy.core.domain.*;
+import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CategoryRepository;
@@ -330,6 +328,39 @@ class CourseServiceTest {
 			assertThrows(
 				KnowyInconsistentDataException.class,
 				() -> courseService.subscribeUserToCourse(userId, courseId)
+			);
+		}
+	}
+
+	@Nested
+	class GetAllCoursesUseCase {
+
+		@Test
+		void given_validPaginationData_when_getAllCourses_then_returnListOfCourses() throws KnowyInconsistentDataException {
+			Pagination pagination = new Pagination(1, 4);
+			Course course5 = Mockito.mock(Course.class);
+			Course course6 = Mockito.mock(Course.class);
+			Course course7 = Mockito.mock(Course.class);
+			Course course8 = Mockito.mock(Course.class);
+			List<Course> courses = List.of(course5, course6, course7, course8);
+
+			Mockito.when(courseRepository.findAll(pagination))
+				.thenReturn(courses);
+
+			List<Course> result = assertDoesNotThrow(() -> courseService.getAllCourses(pagination));
+			assertEquals(result.size(), pagination.size());
+		}
+
+		@Test
+		void given_invalidPaginationData_when_getAllCourses_then_throw() throws KnowyInconsistentDataException {
+			Pagination pagination = new Pagination(1, 4);
+
+			Mockito.when(courseRepository.findAll(pagination))
+				.thenThrow(KnowyCourseNotFound.class);
+
+			assertThrows(
+				KnowyCourseNotFound.class,
+				() -> courseService.getAllCourses(pagination)
 			);
 		}
 	}

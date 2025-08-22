@@ -2,6 +2,7 @@ package com.knowy.core;
 
 import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
+import com.knowy.core.domain.Pagination;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
@@ -10,10 +11,7 @@ import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
-import com.knowy.core.usecase.GetAllCoursesRandomized;
-import com.knowy.core.usecase.GetRecommendedCoursesByCategoriesUseCase;
-import com.knowy.core.usecase.GetUserCoursesUseCase;
-import com.knowy.core.usecase.SubscribeUserToCourseUseCase;
+import com.knowy.core.usecase.*;
 
 import java.util.List;
 import java.util.Set;
@@ -27,6 +25,7 @@ public class CourseService {
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
 	private final GetRecommendedCoursesByCategoriesUseCase getRecommendedCoursesByCategoriesUseCase;
+	private final GetAllCoursesUseCase getAllCoursesUseCase;
 	private final SubscribeUserToCourseUseCase subscribeUserToCourseUseCase;
 
 	public CourseService(
@@ -42,6 +41,7 @@ public class CourseService {
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
 		this.getRecommendedCoursesByCategoriesUseCase = new GetRecommendedCoursesByCategoriesUseCase(courseRepository);
+		this.getAllCoursesUseCase = new GetAllCoursesUseCase(courseRepository);
 		this.subscribeUserToCourseUseCase = new SubscribeUserToCourseUseCase(lessonRepository, userLessonRepository);
 	}
 
@@ -89,14 +89,32 @@ public class CourseService {
 		return getRecommendedCoursesByCategoriesUseCase.execute(userId, categories);
 	}
 
-	// TODO
+	/**
+	 * Subscribes a user to all available lessons of a given course.
+	 * <p>
+	 * This method delegates the subscription process to the {@link SubscribeUserToCourseUseCase}. It ensures that the
+	 * user is subscribed to all lessons they are not yet enrolled in.
+	 *
+	 * @param userId   the identifier of the user subscribing to the course
+	 * @param courseId the identifier of the course to subscribe to
+	 * @throws KnowyCourseSubscriptionException if the user is already subscribed to all lessons in the course, or if
+	 *                                          the course has no available lessons
+	 * @throws KnowyInconsistentDataException   if the course lesson sequence is inconsistent
+	 */
 	public void subscribeUserToCourse(int userId, int courseId)
 		throws KnowyCourseSubscriptionException, KnowyInconsistentDataException {
 		subscribeUserToCourseUseCase.execute(userId, courseId);
 	}
 
-	public List<Course> findAllCourses() throws KnowyInconsistentDataException {
-		return courseRepository.findAll();
+	/**
+	 * Retrieves a list of all courses according to the given pagination.
+	 *
+	 * @param pagination the pagination parameters
+	 * @return a list of courses
+	 * @throws KnowyCourseNotFound if no courses are found
+	 */
+	public List<Course> getAllCourses(Pagination pagination) throws KnowyCourseNotFound {
+		return getAllCoursesUseCase.execute(pagination);
 	}
 
 	public int getCourseProgress(Integer userId, Integer courseId) {

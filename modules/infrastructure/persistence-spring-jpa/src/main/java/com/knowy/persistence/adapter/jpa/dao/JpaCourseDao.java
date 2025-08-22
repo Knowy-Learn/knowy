@@ -26,5 +26,7 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 		ORDER BY function('RANDOM')
 		""")
 	Stream<Course> findByCategoryIdsInRandomOrder(List<Integer> categoriesIds);
+
+
 }
 

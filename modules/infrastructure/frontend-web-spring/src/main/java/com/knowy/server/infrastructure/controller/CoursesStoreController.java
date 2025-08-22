@@ -1,6 +1,7 @@
 package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.domain.Course;
+import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.core.CourseService;
@@ -39,7 +40,7 @@ public class CoursesStoreController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails
 	) throws KnowyInconsistentDataException {
 
-		List<Course> allCourses = courseService.findAllCourses();
+		List<Course> allCourses = courseService.getAllCourses(new Pagination(page, 8));
 
 		List<Integer> myCourseIds = courseService.findAllByUserId(userDetails.getUser().id())
 			.stream()
