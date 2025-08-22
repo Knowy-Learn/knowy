@@ -25,11 +25,11 @@
 		<module>modules/application/course</module>
 		<module>modules/infrastructure/persistence-spring-jpa</module>
 		<module>modules/infrastructure/security-spring-jwt</module>
+		<module>modules/infrastructure/notification-spring-mail</module>
 		<module>modules/infrastructure/frontend-web-spring</module>
 		<module>modules/infrastructure/backend-api-spring</module>
 		<module>modules/infrastructure/frontend-web-angular</module>
-		<module>builds/docker-thymeleaf-server</module>
-		<module>modules/infrastructure/notification-spring-mail</module>
+		<module>builds/knowy-thymeleaf-compose</module>
 	</modules>
 
 	<dependencyManagement>
