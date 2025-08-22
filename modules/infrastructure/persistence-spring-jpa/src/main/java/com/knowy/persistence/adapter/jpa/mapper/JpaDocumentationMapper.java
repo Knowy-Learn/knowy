@@ -3,9 +3,14 @@ package com.knowy.persistence.adapter.jpa.mapper;
 import com.knowy.core.domain.Documentation;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.DocumentationEntity;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnMissingBean(
+	value = EntityMapper.class,
+	parameterizedContainer = {Documentation.class, DocumentationEntity.class}
+)
 public class JpaDocumentationMapper implements EntityMapper<Documentation, DocumentationEntity> {
 
 	private final JpaLessonDao jpaLessonDao;

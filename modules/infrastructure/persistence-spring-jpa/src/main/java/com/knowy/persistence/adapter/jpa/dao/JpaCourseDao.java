@@ -2,6 +2,7 @@ package com.knowy.persistence.adapter.jpa.dao;
 
 import com.knowy.core.domain.Course;
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
@@ -11,6 +12,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Repository
+@ConditionalOnMissingBean(
+	value = JpaRepository.class,
+	parameterizedContainer = {CourseEntity.class, Integer.class}
+)
 public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 	@NonNull
 	List<CourseEntity> findAll();

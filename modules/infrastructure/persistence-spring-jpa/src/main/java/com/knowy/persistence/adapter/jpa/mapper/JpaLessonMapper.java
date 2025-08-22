@@ -2,12 +2,17 @@ package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.domain.Lesson;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@ConditionalOnMissingBean(
+	value = EntityMapper.class,
+	parameterizedContainer = {Lesson.class, LessonEntity.class}
+)
 public class JpaLessonMapper implements EntityMapper<Lesson, LessonEntity> {
 
 	private final JpaDocumentationMapper jpaDocumentationMapper;

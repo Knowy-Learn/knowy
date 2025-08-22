@@ -2,6 +2,7 @@ package com.knowy.persistence.adapter.jpa.dao;
 
 import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseId;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@ConditionalOnMissingBean(
+	value = JpaRepository.class,
+	parameterizedContainer = {PublicUserExerciseEntity.class, Integer.class}
+)
 public interface JpaUserExerciseDao extends JpaRepository<PublicUserExerciseEntity, PublicUserExerciseId> {
 
 	@NonNull

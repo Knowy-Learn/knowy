@@ -2,9 +2,14 @@ package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.domain.Exercise;
 import com.knowy.persistence.adapter.jpa.entity.ExerciseEntity;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnMissingBean(
+	value = EntityMapper.class,
+	parameterizedContainer = {Exercise.class, ExerciseEntity.class}
+)
 public class JpaExerciseMapper implements EntityMapper<Exercise, ExerciseEntity> {
 
 	private final JpaOptionMapper jpaOptionMapper;

@@ -8,6 +8,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@ConditionalOnMissingBean(
+	value = JpaRepository.class,
+	parameterizedContainer = {BannedWordsEntity.class, Integer.class}
+)
 public interface JpaBannedWordsDao extends JpaRepository<BannedWordsEntity, Integer> {
 
 	@Query(value = """
