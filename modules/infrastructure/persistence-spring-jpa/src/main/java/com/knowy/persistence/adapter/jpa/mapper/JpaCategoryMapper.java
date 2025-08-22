@@ -2,14 +2,9 @@ package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.domain.Category;
 import com.knowy.persistence.adapter.jpa.entity.CategoryEntity;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnMissingBean(
-	value = EntityMapper.class,
-	parameterizedContainer = {Category.class, CategoryEntity.class}
-)
 public class JpaCategoryMapper implements EntityMapper<Category, CategoryEntity> {
 
 	@Override

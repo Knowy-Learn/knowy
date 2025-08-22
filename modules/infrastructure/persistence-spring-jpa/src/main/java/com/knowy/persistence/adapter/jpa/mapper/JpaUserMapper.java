@@ -2,16 +2,11 @@ package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.user.domain.User;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserEntity;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
-@ConditionalOnMissingBean(
-	value = EntityMapper.class,
-	parameterizedContainer = {User.class, PublicUserEntity.class}
-)
 public class JpaUserMapper implements EntityMapper<User, PublicUserEntity> {
 
 	private final JpaCategoryMapper jpaCategoryMapper;
