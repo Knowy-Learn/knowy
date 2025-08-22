@@ -22,11 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfiguration {
 
 	@Bean
-	public KnowyPasswordEncoder knowyPasswordEncoder(PasswordEncoder passwordEncoder) {
-		return new PasswordEncoderAdapter(passwordEncoder);
-	}
-
-	@Bean
 	public UserSignUpUseCase userSignUpUseCase(
 		UserRepository userRepository,
 		UserPrivateRepository privateUserRepository,

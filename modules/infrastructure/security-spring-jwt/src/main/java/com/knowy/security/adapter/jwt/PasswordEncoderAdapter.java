@@ -4,9 +4,11 @@ import com.knowy.core.user.exception.KnowyWrongPasswordException;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.domain.UserPrivate;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+@Component
 public class PasswordEncoderAdapter implements KnowyPasswordEncoder {
 
 	private final PasswordEncoder passwordEncoder;
