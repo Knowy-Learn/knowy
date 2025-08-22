@@ -4,11 +4,13 @@ import com.knowy.core.user.domain.ProfileImage;
 import com.knowy.core.user.port.ProfileImageRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaProfileImageDao;
 import com.knowy.persistence.adapter.jpa.mapper.JpaProfileImageMapper;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
+@ConditionalOnMissingBean(ProfileImageRepository.class)
 public class JpaProfileImageRepository implements ProfileImageRepository {
 
 	private final JpaProfileImageDao jpaProfileImageDao;

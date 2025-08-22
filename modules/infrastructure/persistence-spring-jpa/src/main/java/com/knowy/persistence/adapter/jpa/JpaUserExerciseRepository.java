@@ -13,12 +13,14 @@ import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseId;
 import com.knowy.persistence.adapter.jpa.mapper.EntityMapper;
 import com.knowy.persistence.adapter.jpa.mapper.JpaExerciseMapper;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserMapper;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@ConditionalOnMissingBean(UserExerciseRepository.class)
 public class JpaUserExerciseRepository implements UserExerciseRepository {
 
 	private final JpaUserDao jpaUserDao;
