@@ -1,23 +1,17 @@
 package com.knowy.core.user;
 
 import com.knowy.core.exception.KnowyException;
-import com.knowy.core.port.KnowyNotificationDispatcher;
-import com.knowy.core.user.domain.*;
 import com.knowy.core.exception.KnowyMailDispatchException;
+import com.knowy.core.port.ExternalNotificationDispatcher;
+import com.knowy.core.user.domain.*;
+import com.knowy.core.user.exception.*;
 import com.knowy.core.user.port.*;
-import com.knowy.core.user.exception.KnowyTokenException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.KnowyInvalidUserNicknameException;
-import com.knowy.core.user.exception.KnowyUnchangedEmailException;
-import com.knowy.core.user.exception.KnowyWrongPasswordException;
-import com.knowy.core.user.util.PasswordResetInfo;
 import com.knowy.core.user.usercase.manage.DeactivateAccountCommand;
 import com.knowy.core.user.usercase.register.UserSingUpCommand;
 import com.knowy.core.user.usercase.update.email.UserUpdateEmailCommand;
 import com.knowy.core.user.usercase.update.password.UserUpdatePasswordCommand;
+import com.knowy.core.user.util.PasswordResetInfo;
 import com.knowy.core.user.util.TokenUserPrivateTool;
-import com.knowy.core.user.exception.KnowyPasswordFormatException;
-import com.knowy.core.user.exception.KnowyUserEmailFormatException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,7 +46,7 @@ class UserPrivateServiceTest {
     private KnowyTokenTools knowyTokenTools;
 
     @Mock
-    private KnowyNotificationDispatcher knowyNotificationDispatcher;
+    private ExternalNotificationDispatcher externalNotificationDispatcher;
 
     @Mock
     private TokenUserPrivateTool tokenUserPrivateTool;
@@ -67,7 +62,7 @@ class UserPrivateServiceTest {
                 profileImageRepository,
                 knowyPasswordEncoder,
                 knowyTokenTools,
-			knowyNotificationDispatcher
+			externalNotificationDispatcher
         ));
     }
 
@@ -481,10 +476,13 @@ class UserPrivateServiceTest {
                     .thenReturn(expectedToken);
 
             assertDoesNotThrow(() -> userPrivateService.sendRecoveryPasswordEmail(email, recoveryBaseUrl));
-            Mockito.verify(knowyNotificationDispatcher).dispatch(
-                    Mockito.eq(email.value()),
-                    Mockito.argThat(subject -> subject != null && !subject.isEmpty()),
-                    Mockito.argThat(body -> body.contains(expectedToken) && body.contains(recoveryBaseUrl))
+            Mockito.verify(externalNotificationDispatcher).dispatch(
+				Mockito.argThat(notification ->
+					Objects.equals(notification.to(), email.value())
+						&& notification.subject() != null && !notification.subject().isEmpty()
+						&& notification.message() != null && notification.message().contains(expectedToken)
+						&& notification.message().contains(recoveryBaseUrl)
+				)
             );
         }
 
@@ -531,8 +529,8 @@ class UserPrivateServiceTest {
             Mockito.when(tokenUserPrivateTool.createUserTokenByEmail(email))
                     .thenReturn(expectedToken);
             Mockito.doThrow(KnowyMailDispatchException.class)
-                    .when(knowyNotificationDispatcher)
-                    .dispatch(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+                    .when(externalNotificationDispatcher)
+                    .dispatch(Mockito.any());
 
             assertThrows(
                     KnowyMailDispatchException.class,
@@ -740,8 +738,8 @@ class UserPrivateServiceTest {
             Mockito.when(userPrivateRepository.findByEmail(email.value()))
                     .thenReturn(Optional.of(userPrivate));
             Mockito.doThrow(KnowyMailDispatchException.class)
-                    .when(knowyNotificationDispatcher)
-                    .dispatch(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+                    .when(externalNotificationDispatcher)
+                    .dispatch(Mockito.any());
 
             assertThrows(
                     KnowyMailDispatchException.class,

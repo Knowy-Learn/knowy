@@ -1,14 +1,14 @@
 package com.knowy.notification.adapter.mail;
 
 import com.knowy.core.exception.KnowyMailDispatchException;
-import com.knowy.core.port.KnowyNotificationDispatcher;
+import com.knowy.core.port.ExternalNotificationDispatcher;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmailDispatcher implements KnowyNotificationDispatcher {
+public class EmailDispatcher implements ExternalNotificationDispatcher {
 
 	private final JavaMailSender mailSender;
 
@@ -17,17 +17,17 @@ public class EmailDispatcher implements KnowyNotificationDispatcher {
 	}
 
 	@Override
-	public void dispatch(String to, String subject, String body) throws KnowyMailDispatchException {
+	public void dispatch(ExternalNotification notification) throws KnowyMailDispatchException {
 		try {
 			SimpleMailMessage message = new SimpleMailMessage();
 			message.setFrom("knowy-learn@knowy.com");
-			message.setTo(to);
-			message.setSubject(subject);
-			message.setText(body);
+			message.setTo(notification.to());
+			message.setSubject(notification.subject());
+			message.setText(notification.message());
 
 			mailSender.send(message);
 		} catch (MailException e) {
-			throw new KnowyMailDispatchException("Fail to send email to " + to, e);
+			throw new KnowyMailDispatchException("Fail to send email to " + notification.to(), e);
 		}
 	}
 }
