@@ -3,12 +3,14 @@ package com.knowy.security.adapter.jwt;
 import com.knowy.core.user.exception.KnowyWrongPasswordException;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.domain.UserPrivate;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @Component
+@ConditionalOnMissingBean(KnowyPasswordEncoder.class)
 public class PasswordEncoderAdapter implements KnowyPasswordEncoder {
 
 	private final PasswordEncoder passwordEncoder;
