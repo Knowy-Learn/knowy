@@ -4,7 +4,7 @@ import com.knowy.core.exception.KnowyMailDispatchException;
 import com.knowy.core.user.exception.KnowyTokenException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.KnowyWrongPasswordException;
-import com.knowy.core.port.KnowyEmailClientTool;
+import com.knowy.core.port.KnowyNotificationDispatcher;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.core.user.util.TokenUserPrivateTool;
@@ -22,7 +22,7 @@ import com.knowy.core.user.domain.UserPrivate;
 public class DeactivateAccountUseCase {
 
 	private final TokenUserPrivateTool tokenUserPrivateTool;
-	private final KnowyEmailClientTool knowyEmailClientTool;
+	private final KnowyNotificationDispatcher knowyNotificationDispatcher;
 	private final KnowyPasswordEncoder knowyPasswordEncoder;
 	private final UserPrivateRepository userPrivateRepository;
 
@@ -30,18 +30,18 @@ public class DeactivateAccountUseCase {
 	 * Constructs a new {@code DeactivateAccountUseCase} with the required dependencies.
 	 *
 	 * @param tokenUserPrivateTool  Utility for generating and verifying user tokens.
-	 * @param knowyEmailClientTool  Email client for sending recovery messages.
+	 * @param knowyNotificationDispatcher  Email client for sending recovery messages.
 	 * @param knowyPasswordEncoder  Adapter for verifying user passwords.
 	 * @param userPrivateRepository Repository for accessing and persisting private user data.
 	 */
 	public DeactivateAccountUseCase(
 		TokenUserPrivateTool tokenUserPrivateTool,
-		KnowyEmailClientTool knowyEmailClientTool,
+		KnowyNotificationDispatcher knowyNotificationDispatcher,
 		KnowyPasswordEncoder knowyPasswordEncoder,
 		UserPrivateRepository userPrivateRepository
 	) {
 		this.tokenUserPrivateTool = tokenUserPrivateTool;
-		this.knowyEmailClientTool = knowyEmailClientTool;
+		this.knowyNotificationDispatcher = knowyNotificationDispatcher;
 		this.knowyPasswordEncoder = knowyPasswordEncoder;
 		this.userPrivateRepository = userPrivateRepository;
 	}
@@ -64,7 +64,7 @@ public class DeactivateAccountUseCase {
 
 		desactivateUserAccount(command.email(), command.password(), command.confirmPassword());
 		MailMessage mailMessage = createAccountRecoveryMailMessage(command.email(), command.recoveryBaseUrl());
-		knowyEmailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
+		knowyNotificationDispatcher.dispatch(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
 
 	private void desactivateUserAccount(Email email, Password password, Password confirmPassword)

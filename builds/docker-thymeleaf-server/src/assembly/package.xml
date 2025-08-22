@@ -6,7 +6,7 @@
 	<dependencySets>
 		<dependencySet>
 			<includes>
-				<include>com.knowy:thymeleaf-server:jar:*</include>
+				<include>com.knowy:frontend-web-spring:jar:*</include>
 			</includes>
 			<outputFileNameMapping>server.jar</outputFileNameMapping>
 			<outputDirectory>server</outputDirectory>

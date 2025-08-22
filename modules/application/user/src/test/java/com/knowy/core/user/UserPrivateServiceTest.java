@@ -1,7 +1,7 @@
 package com.knowy.core.user;
 
 import com.knowy.core.exception.KnowyException;
-import com.knowy.core.port.KnowyEmailClientTool;
+import com.knowy.core.port.KnowyNotificationDispatcher;
 import com.knowy.core.user.domain.*;
 import com.knowy.core.exception.KnowyMailDispatchException;
 import com.knowy.core.user.port.*;
@@ -51,7 +51,7 @@ class UserPrivateServiceTest {
     private KnowyTokenTools knowyTokenTools;
 
     @Mock
-    private KnowyEmailClientTool knowyEmailClientTool;
+    private KnowyNotificationDispatcher knowyNotificationDispatcher;
 
     @Mock
     private TokenUserPrivateTool tokenUserPrivateTool;
@@ -67,7 +67,7 @@ class UserPrivateServiceTest {
                 profileImageRepository,
                 knowyPasswordEncoder,
                 knowyTokenTools,
-                knowyEmailClientTool
+			knowyNotificationDispatcher
         ));
     }
 
@@ -481,7 +481,7 @@ class UserPrivateServiceTest {
                     .thenReturn(expectedToken);
 
             assertDoesNotThrow(() -> userPrivateService.sendRecoveryPasswordEmail(email, recoveryBaseUrl));
-            Mockito.verify(knowyEmailClientTool).sendEmail(
+            Mockito.verify(knowyNotificationDispatcher).dispatch(
                     Mockito.eq(email.value()),
                     Mockito.argThat(subject -> subject != null && !subject.isEmpty()),
                     Mockito.argThat(body -> body.contains(expectedToken) && body.contains(recoveryBaseUrl))
@@ -531,8 +531,8 @@ class UserPrivateServiceTest {
             Mockito.when(tokenUserPrivateTool.createUserTokenByEmail(email))
                     .thenReturn(expectedToken);
             Mockito.doThrow(KnowyMailDispatchException.class)
-                    .when(knowyEmailClientTool)
-                    .sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+                    .when(knowyNotificationDispatcher)
+                    .dispatch(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
 
             assertThrows(
                     KnowyMailDispatchException.class,
@@ -740,8 +740,8 @@ class UserPrivateServiceTest {
             Mockito.when(userPrivateRepository.findByEmail(email.value()))
                     .thenReturn(Optional.of(userPrivate));
             Mockito.doThrow(KnowyMailDispatchException.class)
-                    .when(knowyEmailClientTool)
-                    .sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+                    .when(knowyNotificationDispatcher)
+                    .dispatch(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
 
             assertThrows(
                     KnowyMailDispatchException.class,

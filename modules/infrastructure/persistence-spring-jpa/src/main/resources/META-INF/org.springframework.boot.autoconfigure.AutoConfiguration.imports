@@ -1,1 +1,1 @@
-com.knowy.adapter.persistence.jpa.KnowyJpaAutoConfiguration
+com.knowy.persistence.KnowyJpaAutoConfiguration

@@ -21,7 +21,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.knowy</groupId>
-			<artifactId>thymeleaf-server</artifactId>
+			<artifactId>frontend-web-spring</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>

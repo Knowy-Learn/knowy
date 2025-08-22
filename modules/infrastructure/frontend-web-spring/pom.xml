@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.knowy</groupId>
+		<artifactId>parent</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+		<relativePath>../../../pom.xml</relativePath>
+	</parent>
+	<artifactId>frontend-web-spring</artifactId>
+
+	<name>knowy-server</name>
+	<description>the knowy platform server</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+
+	<properties>
+		<maven.compiler.release>21</maven.compiler.release>
+		<sass.source.in>src/main/resources/static/styles</sass.source.in>
+		<sass.source.out>generated-resources/main/static/styles</sass.source.out>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>user-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>course-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>persistence-spring-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>security-spring-jwt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>notification-spring-mail</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf-spring6</artifactId>
+			<version>3.1.3.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>nz.net.ultraq.thymeleaf</groupId>
+			<artifactId>thymeleaf-layout-dialect</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.4.5</version>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.13</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
+							<formats>
+								<format>XML</format>
+							</formats>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Sass plugin -->
+			<plugin>
+				<groupId>us.hebi.sass</groupId>
+				<artifactId>sass-cli-maven-plugin</artifactId>
+				<version>1.0.4</version>
+				<configuration>
+					<sassVersion>1.87.0</sassVersion>
+					<args>
+						<arg>
+							${project.basedir}/${sass.source.in}:${project.build.directory}/${sass.source.out}
+						</arg>
+					</args>
+				</configuration>
+				<executions>
+					<execution>
+						<id>sass-exec</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>target/generated-resources/main</directory>
+			</resource>
+		</resources>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+	</repositories>
+</project>

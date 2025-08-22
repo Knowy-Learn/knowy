@@ -24,10 +24,12 @@
 		<module>modules/application/user</module>
 		<module>modules/application/course</module>
 		<module>modules/infrastructure/persistence-spring-jpa</module>
-		<module>modules/infrastructure/thymeleaf-server</module>
+		<module>modules/infrastructure/security-spring-jwt</module>
+		<module>modules/infrastructure/frontend-web-spring</module>
+		<module>modules/infrastructure/backend-api-spring</module>
 		<module>modules/infrastructure/frontend-web-angular</module>
 		<module>builds/docker-thymeleaf-server</module>
-		<module>modules/infrastructure/backend-api-spring</module>
+		<module>modules/infrastructure/notification-spring-mail</module>
 	</modules>
 
 	<dependencyManagement>
@@ -54,12 +56,22 @@
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
-				<artifactId>frontend-web-angular</artifactId>
+				<artifactId>security-spring-jwt</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
-				<artifactId>thymeleaf-server</artifactId>
+				<artifactId>notification-spring-mail</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>frontend-web-spring</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>frontend-web-angular</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<!-- spring -->
@@ -91,8 +103,33 @@
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.4.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.3.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.13.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.4.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.5.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.7.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>

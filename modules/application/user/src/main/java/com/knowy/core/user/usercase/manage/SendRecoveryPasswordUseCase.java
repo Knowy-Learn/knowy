@@ -3,7 +3,7 @@ package com.knowy.core.user.usercase.manage;
 import com.knowy.core.exception.KnowyMailDispatchException;
 import com.knowy.core.user.exception.KnowyTokenException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.core.port.KnowyEmailClientTool;
+import com.knowy.core.port.KnowyNotificationDispatcher;
 import com.knowy.core.user.util.TokenUserPrivateTool;
 import com.knowy.core.user.domain.Email;
 
@@ -16,17 +16,17 @@ import com.knowy.core.user.domain.Email;
 public class SendRecoveryPasswordUseCase {
 
 	private final TokenUserPrivateTool tokenUserPrivateTool;
-	private final KnowyEmailClientTool knowyEmailClientTool;
+	private final KnowyNotificationDispatcher knowyNotificationDispatcher;
 
 	/**
 	 * Constructs a new {@code SendRecoveryPasswordUseCase} with the specified dependencies.
 	 *
 	 * @param tokenUserPrivateTool Utility for generating and verifying user tokens.
-	 * @param knowyEmailClientTool Email client used to send recovery messages.
+	 * @param knowyNotificationDispatcher Email client used to send recovery messages.
 	 */
-	public SendRecoveryPasswordUseCase(TokenUserPrivateTool tokenUserPrivateTool, KnowyEmailClientTool knowyEmailClientTool) {
+	public SendRecoveryPasswordUseCase(TokenUserPrivateTool tokenUserPrivateTool, KnowyNotificationDispatcher knowyNotificationDispatcher) {
 		this.tokenUserPrivateTool = tokenUserPrivateTool;
-		this.knowyEmailClientTool = knowyEmailClientTool;
+		this.knowyNotificationDispatcher = knowyNotificationDispatcher;
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class SendRecoveryPasswordUseCase {
 		String token = tokenUserPrivateTool.createUserTokenByEmail(email);
 		String body = tokenBody(token, recoveryBaseUrl);
 
-		knowyEmailClientTool.sendEmail(email.value(), subject, body);
+		knowyNotificationDispatcher.dispatch(email.value(), subject, body);
 	}
 
 	private String tokenBody(String token, String appUrl) {
