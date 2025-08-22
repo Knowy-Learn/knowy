@@ -9,16 +9,15 @@ import com.knowy.persistence.adapter.jpa.dao.*;
 import com.knowy.persistence.adapter.jpa.mapper.*;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @AutoConfiguration
-@EnableJpaRepositories
-@ComponentScan({
-	"com.knowy.persistence.adapter.jpa.dao",
-	"com.knowy.persistence.adapter.jpa.mapper",
-})
+@ComponentScan("com.knowy.persistence.adapter.jpa.mapper")
+@EntityScan("com.knowy.persistence.adapter.jpa.entity")
+@EnableJpaRepositories("com.knowy.persistence.adapter.jpa.dao")
 public class KnowyJpaAutoConfiguration {
 
 	@Bean

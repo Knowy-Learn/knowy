@@ -9,9 +9,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -22,14 +19,12 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
 
-@Component
-@ConditionalOnMissingBean(KnowyTokenTools.class)
 public class JwtTools implements KnowyTokenTools {
 
 	private final SecretKey key;
 	private final ObjectMapper objectMapper;
 
-	public JwtTools(@Value("${spring.jwt.key}") String secretKey, ObjectMapper objectMapper) {
+	public JwtTools(String secretKey, ObjectMapper objectMapper) {
 		this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 		this.objectMapper = objectMapper;
 	}
