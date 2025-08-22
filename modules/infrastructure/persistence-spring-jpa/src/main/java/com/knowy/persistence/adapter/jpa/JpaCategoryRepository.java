@@ -4,15 +4,11 @@ import com.knowy.core.domain.Category;
 import com.knowy.core.port.CategoryRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.mapper.JpaCategoryMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Repository
-@ConditionalOnMissingBean(CategoryRepository.class)
 public class JpaCategoryRepository implements CategoryRepository {
 
 	private final JpaCategoryDao jpaCategoryDao;

@@ -1,21 +1,17 @@
 package com.knowy.persistence.adapter.jpa;
 
-import com.knowy.core.port.LessonRepository;
 import com.knowy.core.domain.Lesson;
+import com.knowy.core.port.LessonRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaLessonMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Repository
-@ConditionalOnMissingBean(LessonRepository.class)
 public class JpaLessonRepository implements LessonRepository {
 
 	private final JpaLessonDao jpaLessonDao;

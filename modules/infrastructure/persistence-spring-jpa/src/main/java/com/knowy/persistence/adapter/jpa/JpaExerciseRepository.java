@@ -4,13 +4,9 @@ import com.knowy.core.domain.Exercise;
 import com.knowy.core.port.ExerciseRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.mapper.JpaExerciseMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
-@ConditionalOnMissingBean(ExerciseRepository.class)
 public class JpaExerciseRepository implements ExerciseRepository {
 
 	private final JpaExerciseDao jpaExerciseDao;

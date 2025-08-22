@@ -4,13 +4,9 @@ import com.knowy.core.user.domain.User;
 import com.knowy.core.user.port.UserRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserDao;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
-@ConditionalOnMissingBean(UserRepository.class)
 public class JpaUserRepository implements UserRepository {
 
 	private final JpaUserDao jpaUserDao;

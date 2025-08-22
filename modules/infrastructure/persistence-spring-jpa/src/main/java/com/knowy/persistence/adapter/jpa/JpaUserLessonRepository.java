@@ -7,16 +7,12 @@ import com.knowy.persistence.adapter.jpa.dao.JpaUserLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonIdEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserLessonMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-@ConditionalOnMissingBean(UserLessonRepository.class)
 public class JpaUserLessonRepository implements UserLessonRepository {
 
 	private final JpaUserLessonDao jpaUserLessonDao;
