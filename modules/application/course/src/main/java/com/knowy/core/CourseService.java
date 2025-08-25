@@ -3,7 +3,6 @@ package com.knowy.core;
 import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
 import com.knowy.core.domain.Pagination;
-import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
 import com.knowy.core.exception.KnowyInconsistentDataException;
@@ -19,13 +18,12 @@ import java.util.Set;
 public class CourseService {
 
 	private final CourseRepository courseRepository;
-	private final LessonRepository lessonRepository;
-	private final UserLessonRepository userLessonRepository;
 	private final CategoryRepository categoryRepository;
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
 	private final GetRecommendedCoursesByCategoriesUseCase getRecommendedCoursesByCategoriesUseCase;
 	private final GetAllCoursesUseCase getAllCoursesUseCase;
+	private final GetCourseWithProgressUseCase getCourseWithProgressUseCase;
 	private final SubscribeUserToCourseUseCase subscribeUserToCourseUseCase;
 
 	public CourseService(
@@ -35,13 +33,14 @@ public class CourseService {
 		CategoryRepository categoryRepository
 	) {
 		this.courseRepository = courseRepository;
-		this.lessonRepository = lessonRepository;
-		this.userLessonRepository = userLessonRepository;
 		this.categoryRepository = categoryRepository;
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
 		this.getRecommendedCoursesByCategoriesUseCase = new GetRecommendedCoursesByCategoriesUseCase(courseRepository);
 		this.getAllCoursesUseCase = new GetAllCoursesUseCase(courseRepository);
+		this.getCourseWithProgressUseCase = new GetCourseWithProgressUseCase(
+			courseRepository, userLessonRepository
+		);
 		this.subscribeUserToCourseUseCase = new SubscribeUserToCourseUseCase(lessonRepository, userLessonRepository);
 	}
 
@@ -117,20 +116,21 @@ public class CourseService {
 		return getAllCoursesUseCase.execute(pagination);
 	}
 
-	public int getCourseProgress(Integer userId, Integer courseId) {
-		int totalLessons = lessonRepository.countByCourseId(courseId);
-		if (totalLessons == 0) return 0;
-		int completedLessons;
-		try {
-			completedLessons = userLessonRepository.countByUserIdAndCourseIdAndStatus(
-				userId,
-				courseId,
-				UserLesson.ProgressStatus.COMPLETED
-			);
-		} catch (KnowyInconsistentDataException e) {
-			return -1;
-		}
-		return (int) Math.round((completedLessons * 100.0 / totalLessons));
+	/**
+	 * Retrieves a course along with the progress of a specific user in that course.
+	 *
+	 * <p>Delegates the operation to {@link GetCourseWithProgressUseCase#execute(int, int)} to fetch
+	 * all lessons of the course the user is enrolled in and calculate overall progress.</p>
+	 *
+	 * @param userId   the ID of the user
+	 * @param courseId the ID of the course
+	 * @return a {@link GetUserLessonByCourseIdWithProgressResult} containing the course and the user's progress
+	 * @throws KnowyInconsistentDataException if no lessons are found for the user in the given course
+	 */
+	public GetUserLessonByCourseIdWithProgressResult getCourseProgress(Integer userId, Integer courseId)
+		throws KnowyInconsistentDataException {
+
+		return getCourseWithProgressUseCase.execute(userId, courseId);
 	}
 
 	public List<String> findAllLanguages() {
@@ -149,16 +149,18 @@ public class CourseService {
 		List<Course> userCourses = findAllByUserId(userId);
 		return userCourses
 			.stream()
-			.filter(course -> getCourseProgress(userId, course.id()) == 100)
+			.filter(course -> {
+				try {
+					return getCourseProgress(userId, course.id()).progress() == 100f;
+				} catch (KnowyInconsistentDataException e) {
+					throw new RuntimeException(e);
+				}
+			})
 			.count();
 	}
 
-	public long getTotalCourses(int userId) throws KnowyInconsistentDataException {
-		return findAllByUserId(userId).size();
-	}
-
 	public long getCoursesPercentage(int userId) throws KnowyInconsistentDataException {
-		long totalCourses = getTotalCourses(userId);
+		long totalCourses = courseRepository.findAllWhereUserIsSubscribed(userId).size();
 		long coursesCompleted = getCoursesCompleted(userId);
 		return (totalCourses == 0)
 			? 0

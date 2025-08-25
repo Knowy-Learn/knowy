@@ -4,6 +4,7 @@ import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyCourseNotFound;
+import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCourseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserLessonDao;
@@ -63,11 +64,6 @@ public class JpaCourseRepository implements CourseRepository {
 	}
 
 	@Override
-	public Optional<Course> findById(Integer id) {
-		return jpaCourseDao.findById(id).map(jpaCourseMapper::toDomain);
-	}
-
-	@Override
 	public Set<Course> findInRandomOrder(int numOfRecords) {
 		return findAllStreamingInRandomOrder()
 			.limit(numOfRecords)
@@ -101,5 +97,10 @@ public class JpaCourseRepository implements CourseRepository {
 			.map(Category::id)
 			.toList();
 		return jpaCourseDao.findByCategoryIdsInRandomOrder(categoriesIds);
+	}
+
+	@Override
+	public Optional<Course> findById(Integer id) {
+		return jpaCourseDao.findById(id).map(jpaCourseMapper::toDomain);
 	}
 }

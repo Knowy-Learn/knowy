@@ -8,6 +8,7 @@ import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
+import com.knowy.core.usecase.GetUserLessonByCourseIdWithProgressResult;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -264,7 +266,7 @@ class CourseServiceTest {
 			List<UserLesson> userLessons = List.of(userLesson1, userLesson2, userLesson3, userLesson4);
 
 			Mockito.when(lessonRepository.findAllByCourseId(courseId))
-					.thenReturn(lessons.stream().toList());
+				.thenReturn(lessons.stream().toList());
 			Mockito.when(lessonRepository.findAllWhereUserIsSubscribedTo(userId))
 				.thenReturn(Set.of());
 
@@ -361,6 +363,82 @@ class CourseServiceTest {
 			assertThrows(
 				KnowyCourseNotFound.class,
 				() -> courseService.getAllCourses(pagination)
+			);
+		}
+	}
+
+	@Nested
+	class GetUSerLessonByCourseIdWithProgressUseCase {
+
+		@Test
+		void given_validCommand_when_getCourseProgress_then_returnCourseWithProgress()
+			throws KnowyInconsistentDataException {
+
+			int userId = 3;
+			int courseId = 20;
+
+			UserLesson userLesson1 = new UserLesson(
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED);
+			UserLesson userLesson2 = new UserLesson(
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED);
+			UserLesson userLesson3 = new UserLesson(
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+			UserLesson userLesson4 = new UserLesson(
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.PENDING);
+			List<UserLesson> userLessons = List.of(userLesson1, userLesson2, userLesson3, userLesson4);
+
+			Course course = Mockito.mock(Course.class);
+
+			Mockito.when(userLessonRepository.findAllByUserIdAndCourseId(userId, courseId))
+				.thenReturn(userLessons);
+			Mockito.when(courseRepository.findById(courseId))
+				.thenReturn(Optional.ofNullable(course));
+
+			GetUserLessonByCourseIdWithProgressResult result = assertDoesNotThrow(() ->
+				courseService.getCourseProgress(userId, courseId)
+			);
+			assertEquals(0.625f, result.progress());
+		}
+
+		@Test
+		void given_courseWithoutLesson_when_getCourseProgress_then_throwKnowyCourseNotFound() {
+			int userId = 3;
+			int courseId = 20;
+
+			Mockito.when(userLessonRepository.findAllByUserIdAndCourseId(userId, courseId))
+				.thenReturn(List.of());
+
+			assertThrows(
+				KnowyInconsistentDataException.class,
+				() -> courseService.getCourseProgress(userId, courseId)
+			);
+		}
+
+		@Test
+		void given_inconsistentData_when_getCourseProgress_then_returnCourseWithProgress()
+			throws KnowyInconsistentDataException {
+
+			int userId = 3;
+			int courseId = 20;
+
+			UserLesson userLesson1 = new UserLesson(
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED);
+			UserLesson userLesson2 = new UserLesson(
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED);
+			UserLesson userLesson3 = new UserLesson(
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+			UserLesson userLesson4 = new UserLesson(
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.PENDING);
+			List<UserLesson> userLessons = List.of(userLesson1, userLesson2, userLesson3, userLesson4);
+
+			Mockito.when(userLessonRepository.findAllByUserIdAndCourseId(userId, courseId))
+				.thenReturn(userLessons);
+			Mockito.when(courseRepository.findById(courseId))
+				.thenThrow(new KnowyInconsistentDataException("Inconsistent Data"));
+
+			assertThrows(
+				KnowyInconsistentDataException.class,
+				() -> courseService.getCourseProgress(userId, courseId)
 			);
 		}
 	}

@@ -17,8 +17,6 @@ public interface CourseRepository {
 
 	List<Course> findAll(Pagination pagination) throws KnowyCourseNotFound;
 
-	Optional<Course> findById(Integer id) throws KnowyInconsistentDataException;
-
 	Set<Course> findInRandomOrder(int numOfRecords) throws KnowyInconsistentDataException;
 
 	List<Course> findAllRandomOrder() throws KnowyInconsistentDataException;
@@ -28,4 +26,6 @@ public interface CourseRepository {
 	Set<Course> findAllWhereUserIsSubscribed(int userId) throws  KnowyInconsistentDataException;
 
 	Stream<Course> findByCategoriesStreamingInRandomOrder(Collection<Category> categories);
+
+	Optional<Course> findById(Integer id) throws KnowyInconsistentDataException;
 }
