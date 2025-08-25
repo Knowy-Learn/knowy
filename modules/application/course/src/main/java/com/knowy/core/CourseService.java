@@ -6,7 +6,6 @@ import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
 import com.knowy.core.exception.KnowyInconsistentDataException;
-import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
@@ -18,7 +17,6 @@ import java.util.Set;
 public class CourseService {
 
 	private final CourseRepository courseRepository;
-	private final CategoryRepository categoryRepository;
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
 	private final GetRecommendedCoursesByCategoriesUseCase getRecommendedCoursesByCategoriesUseCase;
@@ -29,11 +27,9 @@ public class CourseService {
 	public CourseService(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
-		UserLessonRepository userLessonRepository,
-		CategoryRepository categoryRepository
+		UserLessonRepository userLessonRepository
 	) {
 		this.courseRepository = courseRepository;
-		this.categoryRepository = categoryRepository;
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
 		this.getRecommendedCoursesByCategoriesUseCase = new GetRecommendedCoursesByCategoriesUseCase(courseRepository);
