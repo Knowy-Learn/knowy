@@ -3,7 +3,8 @@ package com.knowy.core.user.usercase.manage;
 import com.knowy.core.exception.KnowyMailDispatchException;
 import com.knowy.core.user.exception.KnowyTokenException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.core.port.KnowyNotificationDispatcher;
+import com.knowy.core.port.ExternalNotificationDispatcher;
+import com.knowy.core.port.ExternalNotificationDispatcher.ExternalNotification;
 import com.knowy.core.user.util.TokenUserPrivateTool;
 import com.knowy.core.user.domain.Email;
 
@@ -16,17 +17,17 @@ import com.knowy.core.user.domain.Email;
 public class SendRecoveryPasswordUseCase {
 
 	private final TokenUserPrivateTool tokenUserPrivateTool;
-	private final KnowyNotificationDispatcher knowyNotificationDispatcher;
+	private final ExternalNotificationDispatcher externalNotificationDispatcher;
 
 	/**
 	 * Constructs a new {@code SendRecoveryPasswordUseCase} with the specified dependencies.
 	 *
 	 * @param tokenUserPrivateTool Utility for generating and verifying user tokens.
-	 * @param knowyNotificationDispatcher Email client used to send recovery messages.
+	 * @param externalNotificationDispatcher Email client used to send recovery messages.
 	 */
-	public SendRecoveryPasswordUseCase(TokenUserPrivateTool tokenUserPrivateTool, KnowyNotificationDispatcher knowyNotificationDispatcher) {
+	public SendRecoveryPasswordUseCase(TokenUserPrivateTool tokenUserPrivateTool, ExternalNotificationDispatcher externalNotificationDispatcher) {
 		this.tokenUserPrivateTool = tokenUserPrivateTool;
-		this.knowyNotificationDispatcher = knowyNotificationDispatcher;
+		this.externalNotificationDispatcher = externalNotificationDispatcher;
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class SendRecoveryPasswordUseCase {
 		String token = tokenUserPrivateTool.createUserTokenByEmail(email);
 		String body = tokenBody(token, recoveryBaseUrl);
 
-		knowyNotificationDispatcher.dispatch(email.value(), subject, body);
+		externalNotificationDispatcher.dispatch(new ExternalNotification(email.value(), subject, body));
 	}
 
 	private String tokenBody(String token, String appUrl) {

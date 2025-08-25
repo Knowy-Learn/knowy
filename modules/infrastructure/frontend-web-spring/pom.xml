@@ -10,7 +10,7 @@
 	</parent>
 	<artifactId>frontend-web-spring</artifactId>
 
-	<name>knowy-server</name>
+	<name>frontend-web-spring</name>
 	<description>the knowy platform server</description>
 	<url/>
 	<licenses>

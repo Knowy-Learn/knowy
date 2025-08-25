@@ -1,10 +1,11 @@
 package com.knowy.core.user.usercase.manage;
 
 import com.knowy.core.exception.KnowyMailDispatchException;
+import com.knowy.core.port.ExternalNotificationDispatcher.ExternalNotification;
 import com.knowy.core.user.exception.KnowyTokenException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.KnowyWrongPasswordException;
-import com.knowy.core.port.KnowyNotificationDispatcher;
+import com.knowy.core.port.ExternalNotificationDispatcher;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.core.user.util.TokenUserPrivateTool;
@@ -22,7 +23,7 @@ import com.knowy.core.user.domain.UserPrivate;
 public class DeactivateAccountUseCase {
 
 	private final TokenUserPrivateTool tokenUserPrivateTool;
-	private final KnowyNotificationDispatcher knowyNotificationDispatcher;
+	private final ExternalNotificationDispatcher externalNotificationDispatcher;
 	private final KnowyPasswordEncoder knowyPasswordEncoder;
 	private final UserPrivateRepository userPrivateRepository;
 
@@ -30,18 +31,18 @@ public class DeactivateAccountUseCase {
 	 * Constructs a new {@code DeactivateAccountUseCase} with the required dependencies.
 	 *
 	 * @param tokenUserPrivateTool  Utility for generating and verifying user tokens.
-	 * @param knowyNotificationDispatcher  Email client for sending recovery messages.
+	 * @param externalNotificationDispatcher  Email client for sending recovery messages.
 	 * @param knowyPasswordEncoder  Adapter for verifying user passwords.
 	 * @param userPrivateRepository Repository for accessing and persisting private user data.
 	 */
 	public DeactivateAccountUseCase(
 		TokenUserPrivateTool tokenUserPrivateTool,
-		KnowyNotificationDispatcher knowyNotificationDispatcher,
+		ExternalNotificationDispatcher externalNotificationDispatcher,
 		KnowyPasswordEncoder knowyPasswordEncoder,
 		UserPrivateRepository userPrivateRepository
 	) {
 		this.tokenUserPrivateTool = tokenUserPrivateTool;
-		this.knowyNotificationDispatcher = knowyNotificationDispatcher;
+		this.externalNotificationDispatcher = externalNotificationDispatcher;
 		this.knowyPasswordEncoder = knowyPasswordEncoder;
 		this.userPrivateRepository = userPrivateRepository;
 	}
@@ -63,8 +64,8 @@ public class DeactivateAccountUseCase {
 		throws KnowyTokenException, KnowyUserNotFoundException, KnowyMailDispatchException, KnowyWrongPasswordException {
 
 		desactivateUserAccount(command.email(), command.password(), command.confirmPassword());
-		MailMessage mailMessage = createAccountRecoveryMailMessage(command.email(), command.recoveryBaseUrl());
-		knowyNotificationDispatcher.dispatch(mailMessage.to(), mailMessage.subject(), mailMessage.body());
+		ExternalNotification externalNotification = createAccountRecoveryNotification(command.email(), command.recoveryBaseUrl());
+		externalNotificationDispatcher.dispatch(externalNotification);
 	}
 
 	private void desactivateUserAccount(Email email, Password password, Password confirmPassword)
@@ -85,7 +86,7 @@ public class DeactivateAccountUseCase {
 		userPrivateRepository.save(newUserPrivate);
 	}
 
-	private MailMessage createAccountRecoveryMailMessage(Email email, String recoveryBaseUrl)
+	private ExternalNotification createAccountRecoveryNotification(Email email, String recoveryBaseUrl)
 		throws KnowyTokenException, KnowyUserNotFoundException {
 
 		final long THIRTY_DAYS_IN_MILLIS = 30L * 24 * 60 * 60 * 1000;
@@ -93,7 +94,7 @@ public class DeactivateAccountUseCase {
 		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
 		String token = tokenUserPrivateTool.createUserTokenByEmail(email, THIRTY_DAYS_IN_MILLIS);
 		String body = reactivationTokenBody(token, recoveryBaseUrl);
-		return new MailMessage(email.value(), subject, body);
+		return new ExternalNotification(email.value(), subject, body);
 	}
 
 	private String reactivationTokenBody(String token, String appUrl) {

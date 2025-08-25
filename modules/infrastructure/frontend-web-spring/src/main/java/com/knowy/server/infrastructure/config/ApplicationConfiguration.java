@@ -16,7 +16,6 @@ import com.knowy.core.user.util.TokenUserPrivateTool;
 import com.knowy.security.adapter.jwt.PasswordEncoderAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -60,12 +59,12 @@ public class ApplicationConfiguration {
 	@Bean
 	public DeactivateAccountUseCase userRecoveryAccountUseCase(
 		TokenUserPrivateTool tokenUserPrivateTool,
-		KnowyNotificationDispatcher knowyNotificationDispatcher,
+		ExternalNotificationDispatcher externalNotificationDispatcher,
 		PasswordEncoderAdapter passwordEncoderAdapter,
 		UserPrivateRepository userPrivateRepository
 	) {
 		return new DeactivateAccountUseCase(
-			tokenUserPrivateTool, knowyNotificationDispatcher, passwordEncoderAdapter, userPrivateRepository
+			tokenUserPrivateTool, externalNotificationDispatcher, passwordEncoderAdapter, userPrivateRepository
 		);
 	}
 
@@ -102,7 +101,7 @@ public class ApplicationConfiguration {
 		ProfileImageRepository profileImageRepository,
 		KnowyPasswordEncoder knowyPasswordEncoder,
 		KnowyTokenTools knowyTokenTools,
-		KnowyNotificationDispatcher knowyNotificationDispatcher
+		ExternalNotificationDispatcher externalNotificationDispatcher
 	) {
 		return new UserPrivateService(
 			userRepository,
@@ -110,7 +109,7 @@ public class ApplicationConfiguration {
 			profileImageRepository,
 			knowyPasswordEncoder,
 			knowyTokenTools,
-			knowyNotificationDispatcher
+			externalNotificationDispatcher
 		);
 	}
 

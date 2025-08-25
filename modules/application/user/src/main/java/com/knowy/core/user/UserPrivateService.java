@@ -1,6 +1,6 @@
 package com.knowy.core.user;
 
-import com.knowy.core.port.KnowyNotificationDispatcher;
+import com.knowy.core.port.ExternalNotificationDispatcher;
 import com.knowy.core.user.exception.*;
 import com.knowy.core.exception.KnowyMailDispatchException;
 import com.knowy.core.user.port.*;
@@ -44,7 +44,7 @@ public class UserPrivateService {
      * @param profileImageRepository Repository for retrieving profile images.
      * @param knowyPasswordEncoder   Password encoder for hashing user passwords.
      * @param knowyTokenTools        Utility for generating and validating security tokens.
-     * @param knowyNotificationDispatcher   Client for sending system emails.
+     * @param externalNotificationDispatcher   Client for sending system emails.
      */
     public UserPrivateService(
             UserRepository userRepository,
@@ -52,7 +52,7 @@ public class UserPrivateService {
             ProfileImageRepository profileImageRepository,
             KnowyPasswordEncoder knowyPasswordEncoder,
             KnowyTokenTools knowyTokenTools,
-            KnowyNotificationDispatcher knowyNotificationDispatcher
+            ExternalNotificationDispatcher externalNotificationDispatcher
     ) {
         this(
                 userRepository,
@@ -60,7 +60,7 @@ public class UserPrivateService {
                 profileImageRepository,
                 knowyPasswordEncoder,
                 knowyTokenTools,
-			knowyNotificationDispatcher,
+			externalNotificationDispatcher,
                 new TokenUserPrivateTool(knowyTokenTools, userPrivateRepository)
         );
     }
@@ -71,7 +71,7 @@ public class UserPrivateService {
             ProfileImageRepository profileImageRepository,
             KnowyPasswordEncoder knowyPasswordEncoder,
             KnowyTokenTools knowyTokenTools,
-            KnowyNotificationDispatcher knowyNotificationDispatcher,
+            ExternalNotificationDispatcher externalNotificationDispatcher,
             TokenUserPrivateTool tokenUserPrivateTool
     ) {
         this.userSignUpUseCase = new UserSignUpUseCase(
@@ -82,9 +82,9 @@ public class UserPrivateService {
         );
         this.userUpdateEmailUseCase = new UserUpdateEmailUseCase(userPrivateRepository, knowyPasswordEncoder);
         this.tokenUserPrivateTool = tokenUserPrivateTool;
-        this.sendRecoveryPasswordUseCase = new SendRecoveryPasswordUseCase(tokenUserPrivateTool, knowyNotificationDispatcher);
+        this.sendRecoveryPasswordUseCase = new SendRecoveryPasswordUseCase(tokenUserPrivateTool, externalNotificationDispatcher);
         this.deactivateAccountUseCase = new DeactivateAccountUseCase(
-                tokenUserPrivateTool, knowyNotificationDispatcher, knowyPasswordEncoder, userPrivateRepository
+                tokenUserPrivateTool, externalNotificationDispatcher, knowyPasswordEncoder, userPrivateRepository
         );
         this.reactivateAccountUseCase = new ReactivateAccountUseCase(tokenUserPrivateTool, userPrivateRepository);
     }
