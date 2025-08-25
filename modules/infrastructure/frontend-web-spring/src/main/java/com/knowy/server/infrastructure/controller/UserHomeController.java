@@ -27,7 +27,7 @@ public class UserHomeController {
 	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) throws KnowyInconsistentDataException {
 		Integer userId = userDetails.getUser().id();
 		long coursesCompleted = courseService.getCoursesCompleted(userId);
-		long totalCourses = courseService.getTotalCourses(userId);
+		long totalCourses = courseService.findAllByUserId(userId).size();
 		long percent = courseService.getCoursesPercentage(userId);
 		boolean hasCourses = totalCourses > 0;
 

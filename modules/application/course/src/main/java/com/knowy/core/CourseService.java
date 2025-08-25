@@ -133,13 +133,6 @@ public class CourseService {
 		return getCourseWithProgressUseCase.execute(userId, courseId);
 	}
 
-	public List<String> findAllLanguages() {
-		return categoryRepository.findAll()
-			.stream()
-			.map(Category::name)
-			.toList();
-	}
-
 	public Course findById(int id) throws KnowyInconsistentDataException {
 		return courseRepository.findById(id)
 			.orElseThrow(() -> new KnowyCourseNotFound("Not found course with  id: " + id));

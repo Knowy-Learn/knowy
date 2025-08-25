@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+// @Component
 @SuppressWarnings("java:S106")
 public class KnowyJpaCommandRunner implements CommandLineRunner {
 

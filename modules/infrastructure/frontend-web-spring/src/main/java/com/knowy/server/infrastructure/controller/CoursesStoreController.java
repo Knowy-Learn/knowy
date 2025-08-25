@@ -1,12 +1,13 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.core.CategoryService;
+import com.knowy.core.CourseService;
 import com.knowy.core.domain.Course;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.core.CourseService;
-import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
+import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,9 +28,11 @@ public class CoursesStoreController {
 	private static final String TOAST_MODEL_ATTRIBUTE = "toast";
 
 	private final CourseService courseService;
+	private final CategoryService categoryService;
 
-	public CoursesStoreController(CourseService courseService) {
+	public CoursesStoreController(CourseService courseService, CategoryService categoryService) {
 		this.courseService = courseService;
+		this.categoryService = categoryService;
 	}
 
 	@GetMapping("")
@@ -51,12 +55,15 @@ public class CoursesStoreController {
 			.filter(course -> !myCourseIds.contains(course.id()))
 			.toList();
 
-		List<CourseCardDTO> storeCourses = availableCourses.stream()
-			.map(course -> CourseCardDTO.fromDomain(
+		List<CourseCardDTO> storeCourses = new ArrayList<>();
+		for (Course course : availableCourses) {
+			CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
 				course,
-				courseService.getCourseProgress(userDetails.getUser().id(), course.id()),
-				CourseCardDTO.ActionType.ACQUIRE)
-			).toList();
+				courseService.getCourseProgress(userDetails.getUser().id(), course.id()).progress(),
+				CourseCardDTO.ActionType.START
+			);
+			storeCourses.add(courseCardDTO);
+		}
 
 		//Filters
 		if (category != null && !category.isEmpty()) {
@@ -96,7 +103,7 @@ public class CoursesStoreController {
 
 
 		model.addAttribute("courses", paginatedStoreCourses);
-		model.addAttribute("allLanguages", courseService.findAllLanguages());
+		model.addAttribute("allLanguages", categoryService.findAll());
 		model.addAttribute("order", order);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", totalPages);
@@ -110,7 +117,7 @@ public class CoursesStoreController {
 		@RequestParam("courseId") Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
-	) throws KnowyInconsistentDataException, KnowyUserNotFoundException {
+	) throws KnowyInconsistentDataException {
 		CourseController.handleCourseSubscription(courseId, userDetails, attrs, courseService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/store";
 	}

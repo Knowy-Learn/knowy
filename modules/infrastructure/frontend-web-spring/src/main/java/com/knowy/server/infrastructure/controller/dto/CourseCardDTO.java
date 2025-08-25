@@ -11,14 +11,14 @@ public record CourseCardDTO(
 	Integer id,
 	String name,
 	String author,
-	int progress,
+	float progress,
 	ActionType action,
 	List<String> categories,
 	String image,
 	LocalDateTime creationDate
 ) {
 
-	public static CourseCardDTO fromDomain(Course course, int progress, ActionType actionType) {
+	public static CourseCardDTO fromDomain(Course course, float progress, ActionType actionType) {
 		Objects.requireNonNull(actionType, "ActionType must not be null");
 
 		return new CourseCardDTO(

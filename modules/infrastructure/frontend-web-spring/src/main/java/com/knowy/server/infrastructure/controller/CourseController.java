@@ -1,8 +1,11 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.core.CategoryService;
 import com.knowy.core.CourseService;
+import com.knowy.core.domain.Course;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
 import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.port.CategoryRepository;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.dto.ToastDto;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -25,9 +29,11 @@ public class CourseController {
 	private static final String TOAST_MODEL_ATTRIBUTE = "toast";
 
 	private final CourseService courseService;
+	private final CategoryService categoryService;
 
-	public CourseController(CourseService courseService) {
+	public CourseController(CourseService courseService, CategoryService categoryService) {
 		this.courseService = courseService;
+		this.categoryService = categoryService;
 	}
 
 	static void handleCourseSubscription(
@@ -54,14 +60,16 @@ public class CourseController {
 		@RequestParam(name = "page", defaultValue = "1") int page,
 		@AuthenticationPrincipal UserSecurityDetails userDetails
 	) throws KnowyInconsistentDataException {
-		List<CourseCardDTO> courses = courseService.findAllByUserId(userDetails.getUser().id())
-			.stream()
-			.map(course -> CourseCardDTO.fromDomain(
+
+		List<CourseCardDTO> courses = new ArrayList<>();
+		for (Course course : courseService.findAllByUserId(userDetails.getUser().id())) {
+			CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
 				course,
-				courseService.getCourseProgress(userDetails.getUser().id(), course.id()),
+				courseService.getCourseProgress(userDetails.getUser().id(), course.id()).progress(),
 				CourseCardDTO.ActionType.START
-			))
-			.toList();
+			);
+			courses.add(courseCardDTO);
+		}
 
 		//Filter by language (category)
 		if (category != null && !category.isEmpty()) {
@@ -99,14 +107,15 @@ public class CourseController {
 			}
 		}
 
-		List<CourseCardDTO> recommendations = courseService
-			.getRecommendedCourses(userDetails.getUser().id(), userDetails.getUser().categories())
-			.stream()
-			.map(course -> CourseCardDTO.fromDomain(
+		List<CourseCardDTO> recommendations = new ArrayList<>();
+		for (Course course : courseService.getRecommendedCourses(userDetails.getUser().id(), userDetails.getUser().categories())) {
+			CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
 				course,
-				courseService.getCourseProgress(userDetails.getUser().id(), course.id()),
+				courseService.getCourseProgress(userDetails.getUser().id(), course.id()).progress(),
 				CourseCardDTO.ActionType.ACQUIRE
-			)).toList();
+			);
+			recommendations.add(courseCardDTO);
+		}
 
 		int pageSize = 9;
 
@@ -124,7 +133,7 @@ public class CourseController {
 		// 5 PAGINACIÓN
 		List<CourseCardDTO> paginatedCourses = fromIndex >= courses.size() ? List.of() : courses.subList(fromIndex, toIndex);
 
-		model.addAttribute("allLanguages", courseService.findAllLanguages());
+		model.addAttribute("allLanguages", categoryService.findAll());
 		model.addAttribute("courses", paginatedCourses);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", totalPages);
