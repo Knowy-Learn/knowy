@@ -1,5 +1,6 @@
 package com.knowy.persistence.adapter.jpa.dao;
 
+import com.knowy.core.domain.UserLesson;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonIdEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,7 +34,8 @@ public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, 
 	@Query("""
 		SELECT COUNT(pul)
 		FROM PublicUserLessonEntity pul
-		JOIN LessonEntity l ON pul.lessonId = l.id
+		    JOIN LessonEntity l
+		        ON pul.lessonId = l.id
 		WHERE pul.userId = :userId AND l.course.id = :courseId AND pul.status = :status
 		""")
 	int countByUserIdAndCourseIdAndStatus(
@@ -45,14 +47,22 @@ public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, 
 	@NonNull
 	Optional<PublicUserLessonEntity> findById(@NonNull PublicUserLessonIdEntity publicUserLessonIdEntity);
 
+	Set<PublicUserLessonEntity> findByUserId(int userId);
+
 	@Query("""
 		SELECT pul
 		FROM PublicUserLessonEntity pul
 		    JOIN pul.lessonEntity l
 		WHERE pul.userId = :userId
-			AND l.course.id = :courseId
+		    AND l.course.id = :courseId
 		""")
 	List<PublicUserLessonEntity> findAllByUserIdAndCourseId(@Param("userId") int userId, @Param("courseId") int courseId);
 
-    Set<PublicUserLessonEntity> findByUserId(int userId);
+	@Query("""
+		SELECT pul
+		FROM PublicUserLessonEntity pul
+		    JOIN pul.lessonEntity l
+		WHERE pul.userId = :userId
+		""")
+	List<UserLesson> findAllWhereUserIsSubscribed(@Param("userId") int userId);
 }

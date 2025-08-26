@@ -69,7 +69,7 @@ public class ExerciseController {
 					USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), lessonId)
 				));
 
-			Course course = courseService.findById(userLesson.lesson().courseId());
+			Course course = courseService.getById(userLesson.lesson().courseId());
 
 			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, course));
 			model.addAttribute("mode", "ANSWERING");
@@ -108,7 +108,7 @@ public class ExerciseController {
 				USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			));
 
-		Course course = courseService.findById(userLesson.lesson().courseId());
+		Course course = courseService.getById(userLesson.lesson().courseId());
 		ExerciseDto exerciseDto = ExerciseDto.fromDomain(userExercise, course, answerId);
 
 		if (!isCorrectAnswer(exerciseDto.options(), answerId)) {
@@ -189,7 +189,7 @@ public class ExerciseController {
 						+ userExercise.exercise().lessonId()
 				));
 
-			Course course = courseService.findById(userLesson.lesson().courseId());
+			Course course = courseService.getById(userLesson.lesson().courseId());
 
 			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, course));
 			model.addAttribute("mode", "ANSWERING");
@@ -229,7 +229,7 @@ public class ExerciseController {
 					+ userExercise.exercise().lessonId()
 			));
 
-		Course course = courseService.findById(userLesson.lesson().courseId());
+		Course course = courseService.getById(userLesson.lesson().courseId());
 
 		ExerciseDto exerciseDto = ExerciseDto.fromDomain(
 			userExercise,

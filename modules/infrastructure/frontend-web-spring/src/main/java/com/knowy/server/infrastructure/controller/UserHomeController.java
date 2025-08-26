@@ -2,6 +2,7 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.CourseService;
+import com.knowy.core.usecase.GetAllCoursesWithProgressResult;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseBannerDTO;
 import com.knowy.server.infrastructure.controller.dto.MissionsDto;
@@ -26,11 +27,19 @@ public class UserHomeController {
 	@GetMapping("/home")
 	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) throws KnowyInconsistentDataException {
 		Integer userId = userDetails.getUser().id();
-		long coursesCompleted = courseService.getCoursesCompleted(userId);
-		long totalCourses = courseService.findAllByUserId(userId).size();
-		long percent = courseService.getCoursesPercentage(userId);
+
+		List<GetAllCoursesWithProgressResult> coursesWithProgress = courseService.getAllCourseProgress(userId);
+
+		long coursesCompleted = coursesWithProgress.stream()
+			.filter(course -> course.progress() == 100f)
+			.count();
+		long totalCourses = coursesWithProgress.size();
+
 		boolean hasCourses = totalCourses > 0;
 
+		double percent = hasCourses
+			? ((double) coursesCompleted / totalCourses) * 100
+			: 0;
 
 		List<CourseBannerDTO> banners = courseService.findAllInRandomOrder()
 			.stream()

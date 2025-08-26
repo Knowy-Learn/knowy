@@ -58,16 +58,17 @@ public class GetCourseWithProgressUseCase {
 	}
 
 	private float calculateCourseProgress(List<UserLesson> userLessons) {
-		float totalCourseCompleted = userLessons.stream()
-			.reduce(0f, this::lessonProgressValue, Float::sum);
-		return totalCourseCompleted / userLessons.size();
+		return (float) userLessons.stream()
+			.mapToDouble(this::lessonProgressValue)
+			.average()
+			.orElse(0.0);
 	}
 
-	private float lessonProgressValue(float accumulator, UserLesson userLesson) {
+	private double lessonProgressValue(UserLesson userLesson) {
 		return switch (userLesson.status()) {
-			case PENDING -> accumulator + 0f;
-			case IN_PROGRESS -> accumulator + 0.5f;
-			case COMPLETED -> accumulator + 1f;
+			case PENDING -> 0.0;
+			case IN_PROGRESS -> 0.5;
+			case COMPLETED -> 1.0;
 		};
 	}
 

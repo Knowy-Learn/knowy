@@ -8,6 +8,7 @@ import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
+import com.knowy.core.usecase.GetAllCoursesWithProgressResult;
 import com.knowy.core.usecase.GetUserLessonByCourseIdWithProgressResult;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -401,7 +402,7 @@ class CourseServiceTest {
 		}
 
 		@Test
-		void given_courseWithoutLesson_when_getCourseProgress_then_throwKnowyCourseNotFound() {
+		void given_courseWithoutLesson_when_getCourseProgress_then_throwKnowyCourseNotFound() throws KnowyInconsistentDataException {
 			int userId = 3;
 			int courseId = 20;
 
@@ -454,7 +455,7 @@ class CourseServiceTest {
 			Mockito.when(courseRepository.findById(courseId))
 				.thenReturn(Optional.ofNullable(course));
 
-			Course result = assertDoesNotThrow(() -> courseService.findById(courseId));
+			Course result = assertDoesNotThrow(() -> courseService.getById(courseId));
 			assertEquals(course, result);
 		}
 
@@ -467,7 +468,7 @@ class CourseServiceTest {
 
 			assertThrows(
 				KnowyInconsistentDataException.class,
-				() -> courseService.findById(courseId)
+				() -> courseService.getById(courseId)
 			);
 		}
 
@@ -480,10 +481,66 @@ class CourseServiceTest {
 
 			assertThrows(
 				KnowyCourseNotFound.class,
-				() -> courseService.findById(courseId)
+				() -> courseService.getById(courseId)
 			);
 		}
 	}
 
+	@Nested
+	class GetAllCoursesWithProgressUseCaseTest {
 
+		@Test
+		void given_validUserId_when_getAllCourseProgress_then_returnAllCoursesWithTheirProgress()
+			throws KnowyInconsistentDataException {
+
+			int userId = 100;
+			int courseId1 = 10;
+			int courseId2 = 29;
+
+			Lesson l1 = new Lesson(23, courseId1, 24, "Title1", "Desc1");
+			Lesson l2 = new Lesson(24, courseId1, 25, "Title2", "Desc2");
+			Lesson l3 = new Lesson(25, courseId1, 26, "Title3", "Desc3");
+			Lesson l4 = new Lesson(26, courseId1, null, "Title4", "Desc4");
+			Lesson l5 = new Lesson(30, courseId2, 31, "Title5", "Desc5");
+			Lesson l6 = new Lesson(31, courseId2, null, "Title6", "Desc6");
+
+			List<UserLesson> userLessons = List.of(
+				new UserLesson(userId, l1, LocalDate.now(), UserLesson.ProgressStatus.COMPLETED),
+				new UserLesson(userId, l2, LocalDate.now(), UserLesson.ProgressStatus.COMPLETED),
+				new UserLesson(userId, l3, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS),
+				new UserLesson(userId, l4, LocalDate.now(), UserLesson.ProgressStatus.PENDING),
+				new UserLesson(userId, l5, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS),
+				new UserLesson(userId, l6, LocalDate.now(), UserLesson.ProgressStatus.PENDING)
+			);
+
+			Mockito.when(userLessonRepository.findAllWhereUserIsSubscribed(userId))
+				.thenReturn(userLessons);
+
+			List<GetAllCoursesWithProgressResult> results = assertDoesNotThrow(
+				() -> courseService.getAllCourseProgress(userId)
+			);
+			assertAll(
+				() -> assertEquals(2, results.size()),
+				() -> assertEquals(4, results.getFirst().userLessons().size()),
+				() -> assertEquals(2, results.get(1).userLessons().size()),
+				() -> assertEquals(0.625f, results.getFirst().progress()),
+				() -> assertEquals(0.25f, results.get(1).progress())
+			);
+		}
+
+		@Test
+		void given_inconsistentData_when_getAllCourseProgress_then_throwKnowyInconsistentDataException()
+			throws KnowyInconsistentDataException {
+
+			int userId = 100;
+
+			Mockito.when(userLessonRepository.findAllWhereUserIsSubscribed(userId))
+				.thenThrow(new KnowyInconsistentDataException("Inconsistent Data"));
+
+			assertThrows(
+				KnowyInconsistentDataException.class,
+				() -> courseService.getAllCourseProgress(userId)
+			);
+		}
+	}
 }

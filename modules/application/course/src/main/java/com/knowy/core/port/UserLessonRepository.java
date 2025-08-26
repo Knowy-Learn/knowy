@@ -15,7 +15,9 @@ public interface UserLessonRepository {
 
 	Optional<UserLesson> findById(int userId, int lessonId) throws KnowyInconsistentDataException;
 
-	List<UserLesson> findAllByUserIdAndCourseId(int userId, int courseId);
+	List<UserLesson> findAllByUserIdAndCourseId(int userId, int courseId) throws KnowyInconsistentDataException;
+
+	List<UserLesson> findAllWhereUserIsSubscribed(int userId) throws KnowyInconsistentDataException;
 
 	boolean existsById(int userId, int lessonId) throws KnowyInconsistentDataException;
 

@@ -73,4 +73,9 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 			.map(jpaUserLessonMapper::toDomain)
 			.toList();
 	}
+
+	@Override
+	public List<UserLesson> findAllWhereUserIsSubscribed(int userId) {
+		return jpaUserLessonDao.findAllWhereUserIsSubscribed(userId);
+	}
 }

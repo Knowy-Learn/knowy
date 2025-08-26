@@ -16,12 +16,12 @@ import java.util.Set;
 
 public class CourseService {
 
-	private final CourseRepository courseRepository;
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
 	private final GetRecommendedCoursesByCategoriesUseCase getRecommendedCoursesByCategoriesUseCase;
 	private final GetAllCoursesUseCase getAllCoursesUseCase;
 	private final GetCourseWithProgressUseCase getCourseWithProgressUseCase;
+	private final GetAllCoursesWithProgressUseCase getAllCoursesWithProgressUseCase;
 	private final GetCourseByIdUseCase getCourseByIdUseCase;
 	private final SubscribeUserToCourseUseCase subscribeUserToCourseUseCase;
 
@@ -30,7 +30,6 @@ public class CourseService {
 		LessonRepository lessonRepository,
 		UserLessonRepository userLessonRepository
 	) {
-		this.courseRepository = courseRepository;
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
 		this.getRecommendedCoursesByCategoriesUseCase = new GetRecommendedCoursesByCategoriesUseCase(courseRepository);
@@ -38,6 +37,7 @@ public class CourseService {
 		this.getCourseWithProgressUseCase = new GetCourseWithProgressUseCase(
 			courseRepository, userLessonRepository
 		);
+		this.getAllCoursesWithProgressUseCase = new GetAllCoursesWithProgressUseCase(userLessonRepository);
 		this.getCourseByIdUseCase = new GetCourseByIdUseCase(courseRepository);
 		this.subscribeUserToCourseUseCase = new SubscribeUserToCourseUseCase(lessonRepository, userLessonRepository);
 	}
@@ -115,6 +115,20 @@ public class CourseService {
 	}
 
 	/**
+	 * Retrieves a course by its unique identifier.
+	 * <p>
+	 * This method delegates to the {@link GetCourseByIdUseCase} to fetch the course. If no course exists with the given
+	 * ID, an exception is thrown.
+	 *
+	 * @param id the unique identifier of the course
+	 * @return the {@link Course} with the specified ID
+	 * @throws KnowyInconsistentDataException if the course with the given ID does not exist
+	 */
+	public Course getById(int id) throws KnowyInconsistentDataException {
+		return getCourseByIdUseCase.execute(id);
+	}
+
+	/**
 	 * Retrieves a course along with the progress of a specific user in that course.
 	 *
 	 * <p>Delegates the operation to {@link GetCourseWithProgressUseCase#execute(int, int)} to fetch
@@ -132,38 +146,16 @@ public class CourseService {
 	}
 
 	/**
-	 * Retrieves a course by its unique identifier.
+	 * Retrieves all courses along with the progress of a specific user in each course.
 	 * <p>
-	 * This method delegates to the {@link GetCourseByIdUseCase} to fetch the course. If no course exists with the given
-	 * ID, an exception is thrown.
+	 * Delegates to {@link GetAllCoursesWithProgressUseCase} to fetch all courses and calculate the user's progress for
+	 * each course.
 	 *
-	 * @param id the unique identifier of the course
-	 * @return the {@link Course} with the specified ID
-	 * @throws KnowyInconsistentDataException if the course with the given ID does not exist
+	 * @param userId the ID of the user whose course progress should be retrieved
+	 * @return a list of {@link GetAllCoursesWithProgressResult} containing course data and user progress
+	 * @throws KnowyInconsistentDataException if there is an inconsistency while retrieving course or progress data
 	 */
-	public Course findById(int id) throws KnowyInconsistentDataException {
-		return getCourseByIdUseCase.execute(id);
-	}
-
-	public long getCoursesCompleted(int userId) throws KnowyInconsistentDataException {
-		List<Course> userCourses = findAllByUserId(userId);
-		return userCourses
-			.stream()
-			.filter(course -> {
-				try {
-					return getCourseProgress(userId, course.id()).progress() == 100f;
-				} catch (KnowyInconsistentDataException e) {
-					throw new RuntimeException(e);
-				}
-			})
-			.count();
-	}
-
-	public long getCoursesPercentage(int userId) throws KnowyInconsistentDataException {
-		long totalCourses = courseRepository.findAllWhereUserIsSubscribed(userId).size();
-		long coursesCompleted = getCoursesCompleted(userId);
-		return (totalCourses == 0)
-			? 0
-			: (int) Math.round((coursesCompleted * 100.0) / totalCourses);
+	public List<GetAllCoursesWithProgressResult> getAllCourseProgress(int userId) throws KnowyInconsistentDataException {
+		return getAllCoursesWithProgressUseCase.execute(userId);
 	}
 }

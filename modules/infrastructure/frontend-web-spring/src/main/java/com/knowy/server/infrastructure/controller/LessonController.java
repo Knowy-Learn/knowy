@@ -58,7 +58,7 @@ public class LessonController {
 		List<LinksLessonDto> documentationDto = LinksLessonDto.fromDomains(getAllLessonDocumentations(userLessons));
 
 		CourseDto courseDto = CourseDto.fromDomain(
-			courseService.findById(userLessons.getFirst().lesson().courseId()),
+			courseService.getById(userLessons.getFirst().lesson().courseId()),
 			lessonsDto
 		);
 
@@ -122,7 +122,7 @@ public class LessonController {
 		List<SolutionDto> solutionsDto = SolutionDto.fromDomains(currentUserLesson.lesson().exercises());
 
 		CourseDto courseDto = CourseDto.fromDomain(
-			courseService.findById(userLessons.getFirst().lesson().courseId()),
+			courseService.getById(userLessons.getFirst().lesson().courseId()),
 			lessonsDto
 		);
 

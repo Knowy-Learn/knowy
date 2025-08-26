@@ -130,6 +130,6 @@ public class ApplicationConfiguration {
 		UserLessonRepository userLessonRepository,
 		CategoryRepository categoryRepository
 	) {
-		return new CourseService(courseRepository, lessonRepository, userLessonRepository, categoryRepository);
+		return new CourseService(courseRepository, lessonRepository, userLessonRepository);
 	}
 }
