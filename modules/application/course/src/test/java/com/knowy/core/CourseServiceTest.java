@@ -442,4 +442,48 @@ class CourseServiceTest {
 			);
 		}
 	}
+
+	@Nested
+	class GetCourseByIdUseCaseTest {
+
+		@Test
+		void given_validCourseId_when_getCourseById_then_returnCourse() throws KnowyInconsistentDataException {
+			int courseId = 34;
+			Course course = Mockito.mock(Course.class);
+
+			Mockito.when(courseRepository.findById(courseId))
+				.thenReturn(Optional.ofNullable(course));
+
+			Course result = assertDoesNotThrow(() -> courseService.findById(courseId));
+			assertEquals(course, result);
+		}
+
+		@Test
+		void given_inconsistentData_when_getCourseById_then_throwKnowyInconsistentDataException() throws KnowyInconsistentDataException {
+			int courseId = 34;
+
+			Mockito.when(courseRepository.findById(courseId))
+				.thenThrow(new KnowyInconsistentDataException("Inconsistent Data"));
+
+			assertThrows(
+				KnowyInconsistentDataException.class,
+				() -> courseService.findById(courseId)
+			);
+		}
+
+		@Test
+		void given_nonExistCourse_when_getCourseById_then_throwKnowyCourseNotFound() throws KnowyInconsistentDataException {
+			int courseId = 34;
+
+			Mockito.when(courseRepository.findById(courseId))
+				.thenReturn(Optional.empty());
+
+			assertThrows(
+				KnowyCourseNotFound.class,
+				() -> courseService.findById(courseId)
+			);
+		}
+	}
+
+
 }

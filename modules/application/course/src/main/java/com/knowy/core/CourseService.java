@@ -22,6 +22,7 @@ public class CourseService {
 	private final GetRecommendedCoursesByCategoriesUseCase getRecommendedCoursesByCategoriesUseCase;
 	private final GetAllCoursesUseCase getAllCoursesUseCase;
 	private final GetCourseWithProgressUseCase getCourseWithProgressUseCase;
+	private final GetCourseByIdUseCase getCourseByIdUseCase;
 	private final SubscribeUserToCourseUseCase subscribeUserToCourseUseCase;
 
 	public CourseService(
@@ -37,6 +38,7 @@ public class CourseService {
 		this.getCourseWithProgressUseCase = new GetCourseWithProgressUseCase(
 			courseRepository, userLessonRepository
 		);
+		this.getCourseByIdUseCase = new GetCourseByIdUseCase(courseRepository);
 		this.subscribeUserToCourseUseCase = new SubscribeUserToCourseUseCase(lessonRepository, userLessonRepository);
 	}
 
@@ -129,9 +131,18 @@ public class CourseService {
 		return getCourseWithProgressUseCase.execute(userId, courseId);
 	}
 
+	/**
+	 * Retrieves a course by its unique identifier.
+	 * <p>
+	 * This method delegates to the {@link GetCourseByIdUseCase} to fetch the course. If no course exists with the given
+	 * ID, an exception is thrown.
+	 *
+	 * @param id the unique identifier of the course
+	 * @return the {@link Course} with the specified ID
+	 * @throws KnowyInconsistentDataException if the course with the given ID does not exist
+	 */
 	public Course findById(int id) throws KnowyInconsistentDataException {
-		return courseRepository.findById(id)
-			.orElseThrow(() -> new KnowyCourseNotFound("Not found course with  id: " + id));
+		return getCourseByIdUseCase.execute(id);
 	}
 
 	public long getCoursesCompleted(int userId) throws KnowyInconsistentDataException {
