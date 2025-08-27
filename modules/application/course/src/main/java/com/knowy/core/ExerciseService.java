@@ -9,19 +9,17 @@ import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.usecase.exercise.GetNextExerciseByLessonIdUseCase;
 import com.knowy.core.usecase.exercise.GetNextExerciseByUserIdUseCase;
 import com.knowy.core.usecase.exercise.GetUserExerciseByIdOrCreate;
+import com.knowy.core.usecase.exercise.ProcessUserExerciseAnswerUseCase;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
 
 public class ExerciseService {
 
 	private final UserExerciseRepository userExerciseRepository;
-	private final ExerciseRepository exerciseRepository;
 	private final GetNextExerciseByLessonIdUseCase getNextExerciseByLessonIdUseCase;
 	private final GetNextExerciseByUserIdUseCase getNextExerciseByUserIdUseCase;
 	private final GetUserExerciseByIdOrCreate getUserExerciseByIdOrCreate;
+	private final ProcessUserExerciseAnswerUseCase processUserExerciseAnswerUseCase;
 
 	/**
 	 * The constructor
@@ -31,11 +29,11 @@ public class ExerciseService {
 	 */
 	public ExerciseService(UserExerciseRepository userExerciseRepository, ExerciseRepository exerciseRepository) {
 		this.userExerciseRepository = userExerciseRepository;
-		this.exerciseRepository = exerciseRepository;
 
 		this.getNextExerciseByLessonIdUseCase = new GetNextExerciseByLessonIdUseCase(userExerciseRepository);
 		this.getNextExerciseByUserIdUseCase = new GetNextExerciseByUserIdUseCase(userExerciseRepository);
 		this.getUserExerciseByIdOrCreate = new GetUserExerciseByIdOrCreate(userExerciseRepository, exerciseRepository);
+		this.processUserExerciseAnswerUseCase = new ProcessUserExerciseAnswerUseCase(userExerciseRepository);
 	}
 
 	/**
@@ -85,24 +83,12 @@ public class ExerciseService {
 		return getUserExerciseByIdOrCreate.execute(userId, exerciseId);
 	}
 
-	/**
-	 * Finds the average rate (score) for all exercises in a given lesson.
-	 *
-	 * @param lessonId the ID of the lesson
-	 * @return an Optional containing the average rate, or empty if none found
-	 */
+	// TODO - Move To LessonService
 	public Optional<Double> findAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {
 		return userExerciseRepository.findAverageRateByLessonId(lessonId);
 	}
 
-	/**
-	 * Gets the average rate (score) for all exercises in a given lesson. Throws an exception if no average rate is
-	 * found.
-	 *
-	 * @param lessonId the ID of the lesson
-	 * @return the average rate for the lesson
-	 * @throws KnowyExerciseNotFoundException if no average rate is found for the lesson
-	 */
+	// TODO - Move To LessonService
 	public double getAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {
 		return findAverageRateByLessonId(lessonId)
 			.orElseThrow(() -> new KnowyExerciseNotFoundException(
@@ -110,92 +96,16 @@ public class ExerciseService {
 	}
 
 	/**
-	 * Saves or updates a public user exercise entity in the repository.
+	 * Processes a user's answer for a given exercise by delegating to the {@link ProcessUserExerciseAnswerUseCase}.
 	 *
-	 * @return the persisted entity.
-	 * @throws NullPointerException if {@code publicUserExerciseEntity} is {@code null}.
-	 */
-	public UserExercise save(UserExercise userExercise) throws KnowyDataAccessException {
-		Objects.requireNonNull(userExercise, "publicUserExerciseEntity cannot be null");
-		return userExerciseRepository.save(userExercise);
-	}
-
-	/**
-	 * Updates the user's exercise record based on the difficulty of their answer.
+	 * <p>This method updates the {@link UserExercise} based on the difficulty of the user's answer
+	 * and schedules the next review accordingly.</p>
 	 *
-	 * <p>This method adjusts the user's rate and schedules the next review time,
-	 * according to the difficulty level provided.
-	 * </p>
-	 *
-	 * @param exerciseDifficult the difficulty level chosen by the user for this exercise
-	 * @throws NullPointerException if either parameter is null
+	 * @param exerciseDifficult the difficulty of the user's answer (EASY, MEDIUM, HARD, FAIL)
+	 * @param userExercise      the {@link UserExercise} to update
+	 * @throws KnowyDataAccessException if an error occurs while saving the updated exercise
 	 */
 	public void processUserAnswer(ExerciseDifficult exerciseDifficult, UserExercise userExercise) throws KnowyDataAccessException {
-		UserExercise updatedUserExercise = difficultSelect(exerciseDifficult, userExercise);
-		save(updatedUserExercise);
-	}
-
-	private UserExercise difficultSelect(ExerciseDifficult exerciseDifficult, UserExercise userExercise) {
-		Objects.requireNonNull(exerciseDifficult, "exerciseDifficult cannot be null");
-		Objects.requireNonNull(userExercise, "publicUserExerciseEntity cannot be null");
-
-		return switch (exerciseDifficult) {
-			case EASY -> easySelect(userExercise);
-			case MEDIUM -> mediumSelect(userExercise);
-			case HARD -> hardSelect(userExercise);
-			case FAIL -> failSelect(userExercise);
-		};
-	}
-
-	private UserExercise easySelect(UserExercise userExercise) {
-		int updatedRate = userExercise.rate() + 45;
-
-		LocalDateTime updatedNextReview = LocalDateTime.now()
-			.plus(userExercise.rate() >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(15));
-
-		return new UserExercise(
-			userExercise.userId(),
-			userExercise.exercise(),
-			updatedRate,
-			updatedNextReview
-		);
-	}
-
-	private UserExercise mediumSelect(UserExercise userExercise) {
-		int updatedRate = userExercise.rate() + 20;
-
-		LocalDateTime updatedNextReview = LocalDateTime.now()
-			.plus(userExercise.rate() >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(7));
-
-		return new UserExercise(
-			userExercise.userId(),
-			userExercise.exercise(),
-			updatedRate,
-			updatedNextReview
-		);
-	}
-
-	private UserExercise hardSelect(UserExercise userExercise) {
-		int updatedRate = userExercise.rate() - 15;
-		LocalDateTime updatedNextReview = LocalDateTime.now().plusMinutes(5);
-
-		return new UserExercise(
-			userExercise.userId(),
-			userExercise.exercise(),
-			updatedRate,
-			updatedNextReview
-		);
-	}
-
-	private UserExercise failSelect(UserExercise userExercise) {
-		int updatedRate = userExercise.rate() - 30;
-		LocalDateTime updatedNextReview = LocalDateTime.now().plusMinutes(1);
-
-		return new UserExercise(
-			userExercise.userId(),
-			userExercise.exercise(),
-			updatedRate,
-			updatedNextReview
-		);
+		processUserExerciseAnswerUseCase.execute(exerciseDifficult, userExercise);
 	}
 }
