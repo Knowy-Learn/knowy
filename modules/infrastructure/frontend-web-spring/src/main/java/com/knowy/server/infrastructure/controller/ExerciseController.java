@@ -8,7 +8,7 @@ import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.exception.KnowyUserLessonNotFoundException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.core.CourseService;
-import com.knowy.core.UserExerciseService;
+import com.knowy.core.ExerciseService;
 import com.knowy.core.UserLessonService;
 import com.knowy.core.domain.ExerciseDifficult;
 import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
@@ -31,17 +31,17 @@ public class ExerciseController {
 	private static final String EXERCISE_MODEL_ATTRIBUTE = "exercise";
 	private static final String EXERCISE_HTML_URL = "pages/exercise";
 
-	private final UserExerciseService userExerciseService;
+	private final ExerciseService exerciseService;
 	private final UserLessonService userLessonService;
 	private final CourseService courseService;
 
 	/**
 	 * The constructor
 	 *
-	 * @param userExerciseService the publicUserExerciseService
+	 * @param exerciseService the publicUserExerciseService
 	 */
-	public ExerciseController(UserExerciseService userExerciseService, UserLessonService userLessonService, CourseService courseService) {
-		this.userExerciseService = userExerciseService;
+	public ExerciseController(ExerciseService exerciseService, UserLessonService userLessonService, CourseService courseService) {
+		this.exerciseService = exerciseService;
 		this.userLessonService = userLessonService;
 		this.courseService = courseService;
 	}
@@ -61,7 +61,7 @@ public class ExerciseController {
 		Model model
 	) {
 		try {
-			UserExercise userExercise = userExerciseService
+			UserExercise userExercise = exerciseService
 				.getNextExerciseByLessonId(userDetails.getUser().id(), lessonId);
 
 			UserLesson userLesson = userLessonService.findById(userDetails.getUser().id(), lessonId)
@@ -99,7 +99,7 @@ public class ExerciseController {
 		Model model
 	) throws KnowyDataAccessException {
 
-		UserExercise userExercise = userExerciseService.getByIdOrCreate(userDetails.getUser().id(),
+		UserExercise userExercise = exerciseService.getByIdOrCreate(userDetails.getUser().id(),
 			exerciseId);
 
 		UserLesson userLesson = userLessonService
@@ -144,7 +144,7 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
 	) throws KnowyDataAccessException {
-		UserExercise userExercise = userExerciseService
+		UserExercise userExercise = exerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
 		UserLesson userLesson = userLessonService
@@ -153,12 +153,12 @@ public class ExerciseController {
 				USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			));
 
-		userExerciseService.processUserAnswer(evaluation, userExercise);
+		exerciseService.processUserAnswer(evaluation, userExercise);
 
 		int lessonId = userExercise.exercise().lessonId();
 		int courseId = userLesson.lesson().courseId();
 
-		double average = userExerciseService.getAverageRateByLessonId(lessonId);
+		double average = exerciseService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
 			userLessonService.updateLessonStatusToCompleted(userDetails.getUser().id(), userLesson.lesson());
 			return "redirect:/course/%d".formatted(courseId);
@@ -179,7 +179,7 @@ public class ExerciseController {
 		Model model
 	) {
 		try {
-			UserExercise userExercise = userExerciseService
+			UserExercise userExercise = exerciseService
 				.getNextExerciseByUserId(userDetails.getUser().id());
 
 			UserLesson userLesson = userLessonService
@@ -219,7 +219,7 @@ public class ExerciseController {
 		Model model
 	) throws KnowyDataAccessException {
 
-		UserExercise userExercise = userExerciseService
+		UserExercise userExercise = exerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
 		UserLesson userLesson = userLessonService
@@ -264,10 +264,10 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
 	) throws KnowyDataAccessException {
-		UserExercise userExercise = userExerciseService
+		UserExercise userExercise = exerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
-		userExerciseService.processUserAnswer(evaluation, userExercise);
+		exerciseService.processUserAnswer(evaluation, userExercise);
 		return "redirect:/exercise/review";
 	}
 }

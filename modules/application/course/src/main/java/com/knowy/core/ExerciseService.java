@@ -6,16 +6,18 @@ import com.knowy.core.exception.KnowyDataAccessException;
 import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.port.ExerciseRepository;
 import com.knowy.core.port.UserExerciseRepository;
+import com.knowy.core.usecase.exercise.GetNextExerciseByLessonIdUseCase;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
-public class UserExerciseService {
+public class ExerciseService {
 
 	private final UserExerciseRepository userExerciseRepository;
 	private final ExerciseRepository exerciseRepository;
+	private final GetNextExerciseByLessonIdUseCase getNextExerciseByLessonIdUseCase;
 
 	/**
 	 * The constructor
@@ -23,33 +25,28 @@ public class UserExerciseService {
 	 * @param userExerciseRepository the publicUserExerciseRepository
 	 * @param exerciseRepository     the exerciseRepository
 	 */
-	public UserExerciseService(UserExerciseRepository userExerciseRepository, ExerciseRepository exerciseRepository) {
+	public ExerciseService(UserExerciseRepository userExerciseRepository, ExerciseRepository exerciseRepository) {
 		this.userExerciseRepository = userExerciseRepository;
 		this.exerciseRepository = exerciseRepository;
+
+		this.getNextExerciseByLessonIdUseCase = new GetNextExerciseByLessonIdUseCase(userExerciseRepository);
 	}
 
 	/**
-	 * Retrieves the next available exercise for a specific user and lesson.
-	 *
-	 * @param userId   the ID of the public user.
-	 * @param lessonId the ID of the lesson.
-	 * @return an {@code Optional} containing the next exercise if available, or empty if none is found.
-	 */
-	public Optional<UserExercise> findNextExerciseByLessonId(int userId, int lessonId) throws KnowyDataAccessException {
-		return userExerciseRepository.findNextExerciseByLessonId(userId, lessonId);
-	}
-
-	/**
-	 * Retrieves the next exercise for a given user and lesson.
+	 * Retrieves the next exercise for a user within a specific lesson.
+	 * <p>
+	 * This method delegates to {@link GetNextExerciseByLessonIdUseCase} to obtain the next {@link UserExercise} that
+	 * the user should complete. If no exercise is found, the use case will throw a
+	 * {@link KnowyExerciseNotFoundException}.
 	 *
 	 * @param userId   the ID of the user
 	 * @param lessonId the ID of the lesson
-	 * @return the next PublicUserExerciseEntity for the user in the lesson
-	 * @throws KnowyExerciseNotFoundException if no next exercise is found for the user in the specified lesson
+	 * @return the next {@link UserExercise} for the given user and lesson
+	 * @throws KnowyDataAccessException       if an error occurs while accessing the repository
+	 * @throws KnowyExerciseNotFoundException if no next exercise exists for the given user and lesson
 	 */
 	public UserExercise getNextExerciseByLessonId(int userId, int lessonId) throws KnowyDataAccessException {
-		return findNextExerciseByLessonId(userId, lessonId)
-			.orElseThrow(() -> new KnowyExerciseNotFoundException("No next exercise found for user ID " + userId + " in lesson ID " + lessonId));
+		return getNextExerciseByLessonIdUseCase.execute(userId, lessonId);
 	}
 
 	/**

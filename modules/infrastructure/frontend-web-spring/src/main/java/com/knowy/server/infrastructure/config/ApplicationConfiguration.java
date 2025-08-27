@@ -2,7 +2,7 @@ package com.knowy.server.infrastructure.config;
 
 import com.knowy.core.CategoryService;
 import com.knowy.core.CourseService;
-import com.knowy.core.UserExerciseService;
+import com.knowy.core.ExerciseService;
 import com.knowy.core.UserLessonService;
 import com.knowy.core.port.*;
 import com.knowy.core.user.UserPrivateService;
@@ -69,12 +69,12 @@ public class ApplicationConfiguration {
 	}
 
 	@Bean
-	public UserExerciseService exerciseService(
+	public ExerciseService exerciseService(
 		UserExerciseRepository userExerciseRepository,
 		UserRepository userRepository,
 		ExerciseRepository exerciseRepository
 	) {
-		return new UserExerciseService(userExerciseRepository, exerciseRepository);
+		return new ExerciseService(userExerciseRepository, exerciseRepository);
 	}
 
 	@Bean
