@@ -2,10 +2,9 @@ package com.knowy.core;
 
 import com.knowy.core.domain.Lesson;
 import com.knowy.core.domain.UserLesson;
-import com.knowy.core.exception.KnowyInconsistentDataException;
-import com.knowy.core.exception.KnowyLessonNotFoundException;
-import com.knowy.core.exception.KnowyUserLessonNotFoundException;
+import com.knowy.core.exception.*;
 import com.knowy.core.port.LessonRepository;
+import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.port.UserLessonRepository;
 
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.Optional;
 public class UserLessonService {
 
 	private final UserLessonRepository userLessonRepository;
+	private final UserExerciseRepository userExerciseRepository;
 	private final LessonRepository lessonRepository;
 
 	/**
@@ -21,8 +21,9 @@ public class UserLessonService {
 	 *
 	 * @param userLessonRepository the publicUserLessonRepository
 	 */
-	public UserLessonService(UserLessonRepository userLessonRepository, LessonRepository lessonRepository) {
+	public UserLessonService(UserLessonRepository userLessonRepository, UserExerciseRepository userExerciseRepository, LessonRepository lessonRepository) {
 		this.userLessonRepository = userLessonRepository;
+		this.userExerciseRepository = userExerciseRepository;
 		this.lessonRepository = lessonRepository;
 	}
 
@@ -86,5 +87,15 @@ public class UserLessonService {
 			userLesson.startDate(),
 			UserLesson.ProgressStatus.IN_PROGRESS
 		));
+	}
+
+	public Optional<Double> findAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {
+		return userExerciseRepository.findAverageRateByLessonId(lessonId);
+	}
+
+	public double getAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {
+		return findAverageRateByLessonId(lessonId)
+			.orElseThrow(() -> new KnowyExerciseNotFoundException(
+				"No average rate found for lesson ID " + lessonId));
 	}
 }

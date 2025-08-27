@@ -80,9 +80,10 @@ public class ApplicationConfiguration {
 	@Bean
 	public UserLessonService userLessonService(
 		UserLessonRepository userLessonRepository,
+		UserExerciseRepository userExerciseRepository,
 		LessonRepository lessonRepository
 	) {
-		return new UserLessonService(userLessonRepository, lessonRepository);
+		return new UserLessonService(userLessonRepository, userExerciseRepository, lessonRepository);
 	}
 
 	@Bean

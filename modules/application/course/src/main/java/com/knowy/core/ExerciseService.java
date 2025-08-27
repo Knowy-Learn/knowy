@@ -83,18 +83,6 @@ public class ExerciseService {
 		return getUserExerciseByIdOrCreate.execute(userId, exerciseId);
 	}
 
-	// TODO - Move To LessonService
-	public Optional<Double> findAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {
-		return userExerciseRepository.findAverageRateByLessonId(lessonId);
-	}
-
-	// TODO - Move To LessonService
-	public double getAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {
-		return findAverageRateByLessonId(lessonId)
-			.orElseThrow(() -> new KnowyExerciseNotFoundException(
-				"No average rate found for lesson ID " + lessonId));
-	}
-
 	/**
 	 * Processes a user's answer for a given exercise by delegating to the {@link ProcessUserExerciseAnswerUseCase}.
 	 *

@@ -158,7 +158,7 @@ public class ExerciseController {
 		int lessonId = userExercise.exercise().lessonId();
 		int courseId = userLesson.lesson().courseId();
 
-		double average = exerciseService.getAverageRateByLessonId(lessonId);
+		double average = userLessonService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
 			userLessonService.updateLessonStatusToCompleted(userDetails.getUser().id(), userLesson.lesson());
 			return "redirect:/course/%d".formatted(courseId);
