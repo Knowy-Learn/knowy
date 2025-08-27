@@ -1,8 +1,10 @@
 package com.knowy.core;
 
 import com.knowy.core.domain.Exercise;
+import com.knowy.core.domain.Option;
 import com.knowy.core.domain.UserExercise;
 import com.knowy.core.exception.KnowyDataAccessException;
+import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.port.ExerciseRepository;
 import com.knowy.core.port.UserExerciseRepository;
 import org.junit.jupiter.api.Nested;
@@ -14,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,6 +93,70 @@ public class ExerciseServiceTest {
 			assertThrows(
 				KnowyDataAccessException.class,
 				() -> exerciseService.getNextExerciseByUserId(userId)
+			);
+		}
+	}
+
+	@Nested
+	class GetUserExerciseByIdOrCreate {
+
+		@Test
+		void given_createdUserExercise_when_getByIdOrCreate_then_returnUserExercise() throws KnowyDataAccessException {
+			int userId = 23;
+			int exerciseId = 93;
+
+			UserExercise userExercise = new UserExercise(
+				userId, Mockito.mock(Exercise.class), 25, LocalDateTime.now());
+
+			Mockito.when(userExerciseRepository.findById(userId, exerciseId))
+				.thenReturn(Optional.of(userExercise));
+
+			UserExercise result = assertDoesNotThrow(() -> exerciseService.getByIdOrCreate(userId, exerciseId));
+			assertAll(
+				() -> assertEquals(userExercise, result),
+				() -> Mockito.verify(exerciseRepository, Mockito.times(0)).findById(Mockito.anyInt())
+			);
+		}
+
+		@Test
+		void given_nonCreatedUserExercise_when_getByIdOrCreate_then_returnNewUserExercise() throws KnowyDataAccessException {
+			int userId = 23;
+			int exerciseId = 93;
+
+			List<Option> options = List.of(Mockito.mock(Option.class), Mockito.mock(Option.class), Mockito.mock(Option.class));
+			Exercise exercise = new Exercise(93, 2334, "What is Java?", options);
+
+			UserExercise userExercise = new UserExercise(userId, exercise, 0, LocalDateTime.now());
+
+			Mockito.when(userExerciseRepository.findById(userId, exerciseId))
+				.thenReturn(Optional.empty());
+			Mockito.when(exerciseRepository.findById(exerciseId))
+				.thenReturn(Optional.of(exercise));
+
+			UserExercise result = assertDoesNotThrow(() -> exerciseService.getByIdOrCreate(userId, exerciseId));
+			assertAll(
+				() -> assertEquals(userExercise.userId(), result.userId()),
+				() -> assertEquals(userExercise.exercise(), result.exercise()),
+				() -> assertEquals(userExercise.rate(), result.rate()),
+				() -> Mockito.verify(exerciseRepository, Mockito.times(1)).findById(Mockito.anyInt())
+			);
+		}
+
+		@Test
+		void given_nonExistExerciseId_when_getByIdOrCreate_then_throwKnowyDataAccessException() throws KnowyDataAccessException {
+			int userId = 23;
+			int exerciseId = 93;
+
+			Mockito.when(userExerciseRepository.findById(userId, exerciseId))
+				.thenReturn(Optional.empty());
+			Mockito.when(exerciseRepository.findById(exerciseId))
+				.thenAnswer(invocation -> {
+					throw new KnowyExerciseNotFoundException("Exercise not found");
+				});
+
+			assertThrows(
+				KnowyExerciseNotFoundException.class,
+				() -> exerciseService.getByIdOrCreate(userId, exerciseId)
 			);
 		}
 	}

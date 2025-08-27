@@ -8,6 +8,7 @@ import com.knowy.core.port.ExerciseRepository;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.usecase.exercise.GetNextExerciseByLessonIdUseCase;
 import com.knowy.core.usecase.exercise.GetNextExerciseByUserIdUseCase;
+import com.knowy.core.usecase.exercise.GetUserExerciseByIdOrCreate;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class ExerciseService {
 	private final ExerciseRepository exerciseRepository;
 	private final GetNextExerciseByLessonIdUseCase getNextExerciseByLessonIdUseCase;
 	private final GetNextExerciseByUserIdUseCase getNextExerciseByUserIdUseCase;
+	private final GetUserExerciseByIdOrCreate getUserExerciseByIdOrCreate;
 
 	/**
 	 * The constructor
@@ -33,6 +35,7 @@ public class ExerciseService {
 
 		this.getNextExerciseByLessonIdUseCase = new GetNextExerciseByLessonIdUseCase(userExerciseRepository);
 		this.getNextExerciseByUserIdUseCase = new GetNextExerciseByUserIdUseCase(userExerciseRepository);
+		this.getUserExerciseByIdOrCreate = new GetUserExerciseByIdOrCreate(userExerciseRepository, exerciseRepository);
 	}
 
 	/**
@@ -67,44 +70,19 @@ public class ExerciseService {
 	}
 
 	/**
-	 * Finds a PublicUserExerciseEntity by user ID and exercise ID.
+	 * Retrieves the {@link UserExercise} for a specific user and exercise.
+	 * <p>
+	 * If the {@link UserExercise} does not exist, a new one is created with default progress and the current
+	 * timestamp.
 	 *
 	 * @param userId     the ID of the user
 	 * @param exerciseId the ID of the exercise
-	 * @return an Optional containing the PublicUserExerciseEntity if found, otherwise empty
+	 * @return the existing or newly created {@link UserExercise}
+	 * @throws KnowyDataAccessException       if an error occurs while accessing the repository
+	 * @throws KnowyExerciseNotFoundException if the specified exercise does not exist
 	 */
-	public Optional<UserExercise> findById(int userId, int exerciseId) throws KnowyDataAccessException {
-		return userExerciseRepository.findById(userId, exerciseId);
-	}
-
-	/**
-	 * Retrieves the PublicUserExerciseEntity for a given user and exercise. If it does not exist, create a new one.
-	 *
-	 * @param userId     the ID of the user
-	 * @param exerciseId the ID of the exercise
-	 * @return the existing or newly created PublicUserExerciseEntity
-	 * @throws KnowyExerciseNotFoundException if the exercise is not found
-	 */
-	public UserExercise getByIdOrCreate(int userId, int exerciseId)
-		throws KnowyDataAccessException {
-
-		Optional<UserExercise> publicUserExercise = findById(userId, exerciseId);
-		if (publicUserExercise.isEmpty()) {
-			return createUserExerciseEntity(userId, exerciseId);
-		}
-		return publicUserExercise.get();
-	}
-
-	private UserExercise createUserExerciseEntity(int userId, int exerciseId)
-		throws KnowyExerciseNotFoundException {
-
-		return new UserExercise(
-			userId,
-			exerciseRepository.findById(exerciseId)
-				.orElseThrow(() -> new KnowyExerciseNotFoundException("Exercise " + exerciseId + " not found")),
-			0,
-			LocalDateTime.now()
-		);
+	public UserExercise getByIdOrCreate(int userId, int exerciseId) throws KnowyDataAccessException {
+		return getUserExerciseByIdOrCreate.execute(userId, exerciseId);
 	}
 
 	/**
