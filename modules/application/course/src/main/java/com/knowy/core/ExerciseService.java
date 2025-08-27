@@ -7,6 +7,7 @@ import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.port.ExerciseRepository;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.usecase.exercise.GetNextExerciseByLessonIdUseCase;
+import com.knowy.core.usecase.exercise.GetNextExerciseByUserIdUseCase;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class ExerciseService {
 	private final UserExerciseRepository userExerciseRepository;
 	private final ExerciseRepository exerciseRepository;
 	private final GetNextExerciseByLessonIdUseCase getNextExerciseByLessonIdUseCase;
+	private final GetNextExerciseByUserIdUseCase getNextExerciseByUserIdUseCase;
 
 	/**
 	 * The constructor
@@ -30,6 +32,7 @@ public class ExerciseService {
 		this.exerciseRepository = exerciseRepository;
 
 		this.getNextExerciseByLessonIdUseCase = new GetNextExerciseByLessonIdUseCase(userExerciseRepository);
+		this.getNextExerciseByUserIdUseCase = new GetNextExerciseByUserIdUseCase(userExerciseRepository);
 	}
 
 	/**
@@ -50,25 +53,17 @@ public class ExerciseService {
 	}
 
 	/**
-	 * Retrieves the next available exercise for a specific user, without filtering by lesson.
+	 * Retrieves the next exercise assigned to the specified user, regardless of lesson or course.
+	 * <p>
+	 * Delegates to {@link GetNextExerciseByUserIdUseCase} to fetch the next pending {@link UserExercise}.
 	 *
-	 * @param userId the ID of the public user.
-	 * @return an {@code Optional} containing the next exercise if available, or empty if none is found.
-	 */
-	public Optional<UserExercise> findNextExerciseByUserId(int userId) throws KnowyDataAccessException {
-		return userExerciseRepository.findNextExerciseByUserId(userId);
-	}
-
-	/**
-	 * Retrieves the next exercise available for a given user.
-	 *
-	 * @param userId the ID of the user
-	 * @return the next PublicUserExerciseEntity for the user
-	 * @throws KnowyExerciseNotFoundException if no next exercise is found for the user
+	 * @param userId the ID of the user whose next exercise should be retrieved
+	 * @return the next {@link UserExercise} assigned to the user
+	 * @throws KnowyDataAccessException       if an error occurs while accessing the repository
+	 * @throws KnowyExerciseNotFoundException if no next exercise exists for the given user
 	 */
 	public UserExercise getNextExerciseByUserId(int userId) throws KnowyDataAccessException {
-		return findNextExerciseByUserId(userId)
-			.orElseThrow(() -> new KnowyExerciseNotFoundException("No next exercise found for user ID " + userId));
+		return getNextExerciseByUserIdUseCase.execute(userId);
 	}
 
 	/**

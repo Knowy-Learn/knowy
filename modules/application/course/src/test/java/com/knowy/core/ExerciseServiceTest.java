@@ -62,4 +62,35 @@ public class ExerciseServiceTest {
 			);
 		}
 	}
+
+	@Nested
+	class GetNextExerciseByUserIdUseCaseTest {
+
+		@Test
+		void given_validUserAndLesson_when_getNextExercise_then_returnNextUserExercise() throws KnowyDataAccessException {
+			int userId = 6;
+
+			UserExercise userExercise = new UserExercise(
+				userId, Mockito.mock(Exercise.class), 45, LocalDateTime.now());
+
+			Mockito.when(userExerciseRepository.findNextExerciseByUserId(userId))
+				.thenReturn(Optional.of(userExercise));
+
+			UserExercise result = assertDoesNotThrow(() -> exerciseService.getNextExerciseByUserId(userId));
+			assertEquals(userExercise, result);
+		}
+
+		@Test
+		void given_dataAccessException_when_getNextExercise_then_throwKnowyDataAccessException() throws KnowyDataAccessException {
+			int userId = 6;
+
+			Mockito.when(userExerciseRepository.findNextExerciseByUserId(userId))
+				.thenThrow(new KnowyDataAccessException("Data Access"));
+
+			assertThrows(
+				KnowyDataAccessException.class,
+				() -> exerciseService.getNextExerciseByUserId(userId)
+			);
+		}
+	}
 }
