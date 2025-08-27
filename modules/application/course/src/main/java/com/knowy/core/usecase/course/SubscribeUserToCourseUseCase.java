@@ -1,4 +1,4 @@
-package com.knowy.core.usecase;
+package com.knowy.core.usecase.course;
 
 import com.knowy.core.domain.Lesson;
 import com.knowy.core.domain.UserLesson;

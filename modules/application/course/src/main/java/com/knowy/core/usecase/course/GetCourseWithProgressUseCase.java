@@ -1,4 +1,4 @@
-package com.knowy.core.usecase;
+package com.knowy.core.usecase.course;
 
 import com.knowy.core.domain.Course;
 import com.knowy.core.domain.UserLesson;
@@ -33,17 +33,17 @@ public class GetCourseWithProgressUseCase {
 	 *
 	 * @param userId   the ID of the user
 	 * @param courseId the ID of the course
-	 * @return a {@link GetUserLessonByCourseIdWithProgressResult} containing the course and the user's progress
+	 * @return a {@link GetCourseWithProgressResult} containing the course and the user's progress
 	 * @throws KnowyInconsistentDataException if no lessons are found for the user in the given course
 	 * @throws KnowyCourseNotFound            if the course with the given ID does not exist
 	 */
-	public GetUserLessonByCourseIdWithProgressResult execute(int userId, int courseId) throws KnowyInconsistentDataException {
+	public GetCourseWithProgressResult execute(int userId, int courseId) throws KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllUserLessonByUserIdAndCourseId(userId, courseId);
 		float totalCourseProgress = calculateCourseProgress(userLessons);
 
 		Course course = getCourseByCourseId(courseId);
 
-		return new GetUserLessonByCourseIdWithProgressResult(course, totalCourseProgress);
+		return new GetCourseWithProgressResult(course, totalCourseProgress);
 	}
 
 	private List<UserLesson> getAllUserLessonByUserIdAndCourseId(int userId, int courseId) throws KnowyInconsistentDataException {

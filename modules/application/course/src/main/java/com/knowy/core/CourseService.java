@@ -9,7 +9,7 @@ import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
-import com.knowy.core.usecase.*;
+import com.knowy.core.usecase.course.*;
 
 import java.util.List;
 import java.util.Set;
@@ -136,10 +136,10 @@ public class CourseService {
 	 *
 	 * @param userId   the ID of the user
 	 * @param courseId the ID of the course
-	 * @return a {@link GetUserLessonByCourseIdWithProgressResult} containing the course and the user's progress
+	 * @return a {@link GetCourseWithProgressResult} containing the course and the user's progress
 	 * @throws KnowyInconsistentDataException if no lessons are found for the user in the given course
 	 */
-	public GetUserLessonByCourseIdWithProgressResult getCourseProgress(Integer userId, Integer courseId)
+	public GetCourseWithProgressResult getCourseProgress(Integer userId, Integer courseId)
 		throws KnowyInconsistentDataException {
 
 		return getCourseWithProgressUseCase.execute(userId, courseId);

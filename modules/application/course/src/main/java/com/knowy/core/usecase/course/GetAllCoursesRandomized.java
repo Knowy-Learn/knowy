@@ -1,11 +1,10 @@
-package com.knowy.core.usecase;
+package com.knowy.core.usecase.course;
 
 import com.knowy.core.domain.Course;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Use case for retrieving all available courses in a randomized order.

@@ -8,8 +8,8 @@ import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
-import com.knowy.core.usecase.GetAllCoursesWithProgressResult;
-import com.knowy.core.usecase.GetUserLessonByCourseIdWithProgressResult;
+import com.knowy.core.usecase.course.GetAllCoursesWithProgressResult;
+import com.knowy.core.usecase.course.GetCourseWithProgressResult;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -395,7 +395,7 @@ class CourseServiceTest {
 			Mockito.when(courseRepository.findById(courseId))
 				.thenReturn(Optional.ofNullable(course));
 
-			GetUserLessonByCourseIdWithProgressResult result = assertDoesNotThrow(() ->
+			GetCourseWithProgressResult result = assertDoesNotThrow(() ->
 				courseService.getCourseProgress(userId, courseId)
 			);
 			assertEquals(0.625f, result.progress());
