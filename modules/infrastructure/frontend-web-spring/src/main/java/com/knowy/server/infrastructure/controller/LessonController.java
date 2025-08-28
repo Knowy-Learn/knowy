@@ -131,7 +131,7 @@ public class LessonController {
 	}
 
 	private List<UserLesson> getAllPublicUserLessons(int userId, int courseId) throws KnowyInconsistentDataException {
-		return lessonService.findAllByCourseId(userId, courseId);
+		return lessonService.getUserLessonAllByCourseId(userId, courseId);
 	}
 
 	private UserLesson getCurrentPublicUserLesson(List<UserLesson> userLessons, int currentLessonId) throws KnowyCurrentLessonNotFoundException {

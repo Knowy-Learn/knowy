@@ -6,6 +6,7 @@ import com.knowy.core.exception.*;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.port.UserLessonRepository;
+import com.knowy.core.usecase.lesson.GetAllUserLessonByCourseIdUseCase;
 import com.knowy.core.usecase.lesson.GetUserLessonByIdUseCase;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class LessonService {
 	private final UserExerciseRepository userExerciseRepository;
 	private final LessonRepository lessonRepository;
 	private final GetUserLessonByIdUseCase getUserLessonByIdUseCase;
+	private final GetAllUserLessonByCourseIdUseCase getAllUserLessonByCourseIdUseCase;
 
 	/**
 	 * The constructor
@@ -33,6 +35,7 @@ public class LessonService {
 		this.lessonRepository = lessonRepository;
 
 		this.getUserLessonByIdUseCase = new GetUserLessonByIdUseCase(userLessonRepository);
+		this.getAllUserLessonByCourseIdUseCase = new GetAllUserLessonByCourseIdUseCase(userLessonRepository);
 	}
 
 	/**
@@ -51,15 +54,17 @@ public class LessonService {
 	}
 
 	/**
-	 * Retrieves all records for a given user and course.
+	 * Retrieves all lessons associated with a specific user in a given course.
 	 *
-	 * <p>This method returns the user's progress across all lessons within the specified course.</p>
+	 * <p>This method delegates to {@link GetAllUserLessonByCourseIdUseCase} to fetch the data.</p>
 	 *
-	 * @param courseId The ID, of course.
-	 * @return A list of representing the user's lesson data for the course.
+	 * @param userId   the ID of the user
+	 * @param courseId the ID of the course
+	 * @return a {@link List} of {@link UserLesson} for the specified user and course
+	 * @throws KnowyInconsistentDataException if there is an issue retrieving the user lessons
 	 */
-	public List<UserLesson> findAllByCourseId(int userId, int courseId) throws KnowyInconsistentDataException {
-		return userLessonRepository.findAllByUserIdAndCourseId(userId, courseId);
+	public List<UserLesson> getUserLessonAllByCourseId(int userId, int courseId) throws KnowyInconsistentDataException {
+		return getAllUserLessonByCourseIdUseCase.execute(userId, courseId);
 	}
 
 	/**

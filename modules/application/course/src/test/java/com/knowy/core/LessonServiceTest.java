@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -65,6 +66,39 @@ public class LessonServiceTest {
 			assertThrows(
 				KnowyUserLessonNotFoundException.class,
 				() -> lessonService.getUserLessonById(userId, lessonId)
+			);
+		}
+	}
+
+	@Nested
+	class GetAllUserLessonByCourseIdUseCaseTest {
+
+		@Test
+		void given_validUserCourseIds_when_getUserLessonByCourseId_then_returnListOfUserLessons()
+			throws KnowyInconsistentDataException {
+
+			int userId = 23;
+			int courseId = 12;
+
+			Mockito.when(userLessonRepository.findAllByUserIdAndCourseId(userId, courseId))
+				.thenReturn(List.of(
+					Mockito.mock(UserLesson.class), Mockito.mock(UserLesson.class), Mockito.mock(UserLesson.class)
+				));
+
+			assertDoesNotThrow(() -> lessonService.getUserLessonAllByCourseId(userId, courseId));
+		}
+
+		@Test
+		void given_courseWithoutLesson_when_getUserLessonByCourseId_then_throw() throws KnowyInconsistentDataException {
+			int userId = 23;
+			int courseId = 12;
+
+			Mockito.when(userLessonRepository.findAllByUserIdAndCourseId(userId, courseId))
+				.thenThrow(new KnowyUserLessonNotFoundException("User Lesson Not Found"));
+
+			assertThrows(
+				KnowyUserLessonNotFoundException.class,
+				() -> lessonService.getUserLessonAllByCourseId(userId, courseId)
 			);
 		}
 	}
