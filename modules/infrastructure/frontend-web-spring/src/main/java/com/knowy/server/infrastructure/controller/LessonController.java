@@ -4,7 +4,7 @@ import com.knowy.core.domain.Documentation;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.CourseService;
-import com.knowy.core.UserLessonService;
+import com.knowy.core.LessonService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseDto;
 import com.knowy.server.infrastructure.controller.dto.LessonDto;
@@ -27,11 +27,11 @@ import java.util.Optional;
 @RequestMapping("/course")
 public class LessonController {
 
-	private final UserLessonService userLessonService;
+	private final LessonService lessonService;
 	private final CourseService courseService;
 
-	public LessonController(UserLessonService userLessonService, CourseService courseService) {
-		this.userLessonService = userLessonService;
+	public LessonController(LessonService lessonService, CourseService courseService) {
+		this.lessonService = lessonService;
 		this.courseService = courseService;
 	}
 
@@ -131,7 +131,7 @@ public class LessonController {
 	}
 
 	private List<UserLesson> getAllPublicUserLessons(int userId, int courseId) throws KnowyInconsistentDataException {
-		return userLessonService.findAllByCourseId(userId, courseId);
+		return lessonService.findAllByCourseId(userId, courseId);
 	}
 
 	private UserLesson getCurrentPublicUserLesson(List<UserLesson> userLessons, int currentLessonId) throws KnowyCurrentLessonNotFoundException {

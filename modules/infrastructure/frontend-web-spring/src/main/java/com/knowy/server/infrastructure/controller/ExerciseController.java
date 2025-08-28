@@ -9,7 +9,7 @@ import com.knowy.core.exception.KnowyUserLessonNotFoundException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.core.CourseService;
 import com.knowy.core.ExerciseService;
-import com.knowy.core.UserLessonService;
+import com.knowy.core.LessonService;
 import com.knowy.core.domain.ExerciseDifficult;
 import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
 import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
@@ -32,7 +32,7 @@ public class ExerciseController {
 	private static final String EXERCISE_HTML_URL = "pages/exercise";
 
 	private final ExerciseService exerciseService;
-	private final UserLessonService userLessonService;
+	private final LessonService lessonService;
 	private final CourseService courseService;
 
 	/**
@@ -40,9 +40,9 @@ public class ExerciseController {
 	 *
 	 * @param exerciseService the publicUserExerciseService
 	 */
-	public ExerciseController(ExerciseService exerciseService, UserLessonService userLessonService, CourseService courseService) {
+	public ExerciseController(ExerciseService exerciseService, LessonService lessonService, CourseService courseService) {
 		this.exerciseService = exerciseService;
-		this.userLessonService = userLessonService;
+		this.lessonService = lessonService;
 		this.courseService = courseService;
 	}
 
@@ -64,10 +64,7 @@ public class ExerciseController {
 			UserExercise userExercise = exerciseService
 				.getNextExerciseByLessonId(userDetails.getUser().id(), lessonId);
 
-			UserLesson userLesson = userLessonService.findById(userDetails.getUser().id(), lessonId)
-				.orElseThrow(() -> new KnowyUserLessonNotFoundException(
-					USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), lessonId)
-				));
+			UserLesson userLesson = lessonService.getUserLessonById(userDetails.getUser().id(), lessonId);
 
 			Course course = courseService.getById(userLesson.lesson().courseId());
 
@@ -102,11 +99,8 @@ public class ExerciseController {
 		UserExercise userExercise = exerciseService.getByIdOrCreate(userDetails.getUser().id(),
 			exerciseId);
 
-		UserLesson userLesson = userLessonService
-			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
-			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
-				USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), userExercise.exercise().lessonId())
-			));
+		UserLesson userLesson = lessonService
+			.getUserLessonById(userDetails.getUser().id(), userExercise.exercise().lessonId());
 
 		Course course = courseService.getById(userLesson.lesson().courseId());
 		ExerciseDto exerciseDto = ExerciseDto.fromDomain(userExercise, course, answerId);
@@ -147,20 +141,17 @@ public class ExerciseController {
 		UserExercise userExercise = exerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
-		UserLesson userLesson = userLessonService
-			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
-			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
-				USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), userExercise.exercise().lessonId())
-			));
+		UserLesson userLesson = lessonService
+			.getUserLessonById(userDetails.getUser().id(), userExercise.exercise().lessonId());
 
 		exerciseService.processUserAnswer(evaluation, userExercise);
 
 		int lessonId = userExercise.exercise().lessonId();
 		int courseId = userLesson.lesson().courseId();
 
-		double average = userLessonService.getAverageRateByLessonId(lessonId);
+		double average = lessonService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
-			userLessonService.updateLessonStatusToCompleted(userDetails.getUser().id(), userLesson.lesson());
+			lessonService.updateLessonStatusToCompleted(userDetails.getUser().id(), userLesson.lesson());
 			return "redirect:/course/%d".formatted(courseId);
 		}
 		return "redirect:/course/%d/exercise/review".formatted(lessonId);
@@ -182,12 +173,8 @@ public class ExerciseController {
 			UserExercise userExercise = exerciseService
 				.getNextExerciseByUserId(userDetails.getUser().id());
 
-			UserLesson userLesson = userLessonService
-				.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
-				.orElseThrow(() -> new KnowyUserLessonNotFoundException(
-					"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
-						+ userExercise.exercise().lessonId()
-				));
+			UserLesson userLesson = lessonService
+				.getUserLessonById(userDetails.getUser().id(), userExercise.exercise().lessonId());
 
 			Course course = courseService.getById(userLesson.lesson().courseId());
 
@@ -222,12 +209,8 @@ public class ExerciseController {
 		UserExercise userExercise = exerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
-		UserLesson userLesson = userLessonService
-			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
-			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
-				"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
-					+ userExercise.exercise().lessonId()
-			));
+		UserLesson userLesson = lessonService
+			.getUserLessonById(userDetails.getUser().id(), userExercise.exercise().lessonId());
 
 		Course course = courseService.getById(userLesson.lesson().courseId());
 
