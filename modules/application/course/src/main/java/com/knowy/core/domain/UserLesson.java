@@ -12,6 +12,13 @@ public record UserLesson(
 	public enum ProgressStatus {
 		PENDING,
 		IN_PROGRESS,
-		COMPLETED
+		COMPLETED;
+
+		public ProgressStatus getNextStatus() {
+			return switch (this) {
+				case PENDING -> IN_PROGRESS;
+				case IN_PROGRESS, COMPLETED -> COMPLETED;
+			};
+		}
 	}
 }

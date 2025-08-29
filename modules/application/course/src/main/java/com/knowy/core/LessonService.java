@@ -1,13 +1,16 @@
 package com.knowy.core;
 
-import com.knowy.core.domain.Lesson;
 import com.knowy.core.domain.UserLesson;
-import com.knowy.core.exception.*;
+import com.knowy.core.exception.KnowyDataAccessException;
+import com.knowy.core.exception.KnowyExerciseNotFoundException;
+import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.KnowyUnsupportedOperationRuntimeException;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.usecase.lesson.GetAllUserLessonByCourseIdUseCase;
 import com.knowy.core.usecase.lesson.GetUserLessonByIdUseCase;
+import com.knowy.core.usecase.lesson.UpdateUserLessonStatusUseCase;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,7 @@ public class LessonService {
 	private final LessonRepository lessonRepository;
 	private final GetUserLessonByIdUseCase getUserLessonByIdUseCase;
 	private final GetAllUserLessonByCourseIdUseCase getAllUserLessonByCourseIdUseCase;
+	private final UpdateUserLessonStatusUseCase updateUserLessonStatusUseCase;
 
 	/**
 	 * The constructor
@@ -36,6 +40,7 @@ public class LessonService {
 
 		this.getUserLessonByIdUseCase = new GetUserLessonByIdUseCase(userLessonRepository);
 		this.getAllUserLessonByCourseIdUseCase = new GetAllUserLessonByCourseIdUseCase(userLessonRepository);
+		this.updateUserLessonStatusUseCase = new UpdateUserLessonStatusUseCase(userLessonRepository);
 	}
 
 	/**
@@ -68,41 +73,22 @@ public class LessonService {
 	}
 
 	/**
-	 * Marks the current lesson as completed for the given user and, if a next lesson exists, sets its status to
-	 * "in_progress".
+	 * Updates the progress status of a user's lesson.
+	 * <p>
+	 * Currently, only {@link UserLesson.ProgressStatus#COMPLETED} is supported. Attempting to update to any other
+	 * status will throw a {@link KnowyUnsupportedOperationRuntimeException}.
+	 * </p>
 	 *
-	 * @throws KnowyUserLessonNotFoundException if the relationship for the given user and lesson is not found
+	 * @param statusToUpdate the new progress status to set; only {@code COMPLETED} is currently supported
+	 * @param userId         the ID of the user
+	 * @param lessonId       the ID of the lesson
+	 * @throws KnowyInconsistentDataException            if the user lesson cannot be found or saved
+	 * @throws KnowyUnsupportedOperationRuntimeException if the given status is not {@code COMPLETED}
 	 */
-	public void updateLessonStatusToCompleted(int userId, Lesson lesson)
-		throws KnowyInconsistentDataException {
-		UserLesson userLesson = getUserLessonById(userId, lesson.id());
+	public void updateUserLessonStatus(UserLesson.ProgressStatus statusToUpdate, int userId, int lessonId)
+		throws KnowyInconsistentDataException, KnowyUnsupportedOperationRuntimeException {
 
-		updateNextLessonStatusToInProgress(userId, lesson.id());
-		userLessonRepository.save(new UserLesson(
-			userId,
-			lesson,
-			userLesson.startDate(),
-			UserLesson.ProgressStatus.COMPLETED
-		));
-	}
-
-	private void updateNextLessonStatusToInProgress(int userId, int lessonId) throws KnowyInconsistentDataException {
-		Lesson lesson = lessonRepository.findById(lessonId)
-			.orElseThrow(() -> new KnowyLessonNotFoundException("Not found lesson with Id: " + lessonId));
-		if (lesson.nextLessonId() == null) {
-			return;
-		}
-
-		UserLesson userLesson = userLessonRepository.findById(userId, lesson.nextLessonId())
-			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
-				"Not found lesson with id: " + lesson.nextLessonId() + "by user with id: " + userId
-			));
-		userLessonRepository.save(new UserLesson(
-			userLesson.userId(),
-			userLesson.lesson(),
-			userLesson.startDate(),
-			UserLesson.ProgressStatus.IN_PROGRESS
-		));
+		updateUserLessonStatusUseCase.execute(statusToUpdate, userId, lessonId);
 	}
 
 	public Optional<Double> findAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {

@@ -5,6 +5,7 @@ import com.knowy.core.domain.UserExercise;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyDataAccessException;
 import com.knowy.core.exception.KnowyExerciseNotFoundException;
+import com.knowy.core.exception.KnowyUnsupportedOperationRuntimeException;
 import com.knowy.core.exception.KnowyUserLessonNotFoundException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.core.CourseService;
@@ -137,7 +138,7 @@ public class ExerciseController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
-	) throws KnowyDataAccessException {
+	) throws KnowyDataAccessException, KnowyUnsupportedOperationRuntimeException {
 		UserExercise userExercise = exerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
@@ -151,7 +152,7 @@ public class ExerciseController {
 
 		double average = lessonService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
-			lessonService.updateLessonStatusToCompleted(userDetails.getUser().id(), userLesson.lesson());
+			lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userDetails.getUser().id(), lessonId);
 			return "redirect:/course/%d".formatted(courseId);
 		}
 		return "redirect:/course/%d/exercise/review".formatted(lessonId);

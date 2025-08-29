@@ -3,6 +3,7 @@ package com.knowy.core;
 import com.knowy.core.domain.Lesson;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.KnowyUnsupportedOperationRuntimeException;
 import com.knowy.core.exception.KnowyUserLessonNotFoundException;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserExerciseRepository;
@@ -100,6 +101,115 @@ public class LessonServiceTest {
 				KnowyUserLessonNotFoundException.class,
 				() -> lessonService.getUserLessonAllByCourseId(userId, courseId)
 			);
+		}
+	}
+
+	@Nested
+	class UpdateUserLessonStatusUseCaseTest {
+
+		@Test
+		void given_penultimateUserLesson_when_updateStatusToCompleted_thenUpdateSuccessfully() throws KnowyInconsistentDataException {
+			int userId = 23;
+			int lessonId = 34;
+			int nextLessonId = 35;
+			int courseId = 12;
+
+			Lesson currentLesson = new Lesson(lessonId, courseId, nextLessonId, "Title", "Desc");
+			UserLesson currentUserLesson = new UserLesson(
+				userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+
+			Lesson nextLesson = new Lesson(nextLessonId, courseId, null, "Title", "Desc");
+			UserLesson nextUserLesson = new UserLesson(
+				userId, nextLesson, LocalDate.now(), UserLesson.ProgressStatus.PENDING);
+
+			Mockito.when(userLessonRepository.findById(userId, lessonId))
+				.thenReturn(Optional.of(currentUserLesson));
+			Mockito.when(userLessonRepository.findById(userId, nextLessonId))
+				.thenReturn(Optional.of(nextUserLesson));
+
+			assertDoesNotThrow(() ->
+				lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userId, lessonId)
+			);
+			Mockito.verify(userLessonRepository, Mockito.times(1))
+				.save(new UserLesson(userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.COMPLETED));
+			Mockito.verify(userLessonRepository, Mockito.times(1))
+				.save(new UserLesson(userId, nextLesson, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS));
+		}
+
+		@Test
+		void given_lastUserLesson_when_updateStatusToCompleted_thenUpdateSuccessfully() throws KnowyInconsistentDataException {
+			int userId = 23;
+			int lessonId = 34;
+			int courseId = 12;
+
+			Lesson currentLesson = new Lesson(lessonId, courseId, null, "Title", "Desc");
+			UserLesson currentUserLesson = new UserLesson(
+				userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+
+			Mockito.when(userLessonRepository.findById(userId, lessonId))
+				.thenReturn(Optional.of(currentUserLesson));
+
+			assertDoesNotThrow(() ->
+				lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userId, lessonId)
+			);
+			Mockito.verify(userLessonRepository, Mockito.times(1))
+				.save(new UserLesson(userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.COMPLETED));
+			Mockito.verify(userLessonRepository, Mockito.times(1))
+				.save(Mockito.any(UserLesson.class));
+		}
+
+		@Test
+		void given_invalidCurrentUserLesson_when_updateStatusToCompleted_then_throwKnowyUserLessonNotFoundException()
+			throws KnowyInconsistentDataException {
+			int userId = 23;
+			int lessonId = 34;
+
+			Mockito.when(userLessonRepository.findById(userId, lessonId))
+				.thenThrow(new KnowyUserLessonNotFoundException("UserLesson not found"));
+
+			assertThrows(
+				KnowyUserLessonNotFoundException.class,
+				() -> lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userId, lessonId)
+			);
+			Mockito.verify(userLessonRepository, Mockito.never()).save(Mockito.any(UserLesson.class));
+		}
+
+		@Test
+		void given_invalidNextUserLesson_when_updateStatusToCompleted_then_throwKnowyUserLessonNotFoundException()
+			throws KnowyInconsistentDataException {
+			int userId = 23;
+			int lessonId = 34;
+			int nextLessonId = 35;
+			int courseId = 12;
+
+			Lesson currentLesson = new Lesson(lessonId, courseId, nextLessonId, "Title", "Desc");
+			UserLesson currentUserLesson = new UserLesson(
+				userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+
+			Mockito.when(userLessonRepository.findById(userId, lessonId))
+				.thenReturn(Optional.of(currentUserLesson));
+			Mockito.when(userLessonRepository.findById(userId, nextLessonId))
+				.thenThrow(new KnowyUserLessonNotFoundException("UserLesson not found"));
+
+			assertThrows(
+				KnowyUserLessonNotFoundException.class,
+				() -> lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userId, lessonId)
+			);
+			Mockito.verify(userLessonRepository, Mockito.never()).save(Mockito.any(UserLesson.class));
+		}
+
+		@Test
+		void given_nonCompletedStatus_when_updateStatusToCompleted_then_throwKnowyUnsupportedOperationException()
+			throws KnowyInconsistentDataException {
+
+			int userId = 23;
+			int lessonId = 34;
+
+			assertThrows(
+				KnowyUnsupportedOperationRuntimeException.class,
+				() -> lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.PENDING, userId, lessonId)
+			);
+			Mockito.verify(userLessonRepository, Mockito.never()).save(Mockito.any(UserLesson.class));
 		}
 	}
 }
