@@ -81,9 +81,9 @@ public class ApplicationConfiguration {
 	public LessonService userLessonService(
 		UserLessonRepository userLessonRepository,
 		UserExerciseRepository userExerciseRepository,
-		LessonRepository lessonRepository
+		LessonBaseRepository lessonBaseRepository
 	) {
-		return new LessonService(userLessonRepository, userExerciseRepository, lessonRepository);
+		return new LessonService(userLessonRepository, userExerciseRepository, lessonBaseRepository);
 	}
 
 	@Bean

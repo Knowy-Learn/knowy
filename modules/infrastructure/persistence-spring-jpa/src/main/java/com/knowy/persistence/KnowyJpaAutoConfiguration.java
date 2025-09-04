@@ -58,6 +58,14 @@ public class KnowyJpaAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
+	public LessonBaseRepository jpaLessonBaseRepository(
+		JpaLessonDao jpaLessonDao, JpaLessonBaseMapper jpaLessonBaseMapper
+	) {
+		return new JpaLessonBaseRepository(jpaLessonDao, jpaLessonBaseMapper);
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
 	public ProfileImageRepository jpaProfileImageRepository(
 		JpaProfileImageDao jpaProfileImageDao, JpaProfileImageMapper jpaProfileImageMapper
 	) {

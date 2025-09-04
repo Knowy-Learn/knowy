@@ -14,10 +14,7 @@ import com.knowy.persistence.adapter.jpa.mapper.JpaCourseMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,5 +99,10 @@ public class JpaCourseRepository implements CourseRepository {
 	@Override
 	public Optional<Course> findById(Integer id) {
 		return jpaCourseDao.findById(id).map(jpaCourseMapper::toDomain);
+	}
+
+	@Override
+	public OptionalInt findCourseIdByLessonId(int lessonId) throws KnowyInconsistentDataException {
+		return OptionalInt.empty();
 	}
 }

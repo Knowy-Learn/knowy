@@ -62,9 +62,4 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 		return jpaUserExerciseDao.findNextExerciseByUserId(userId)
 			.map(jpaUserExerciseMapper::toDomain);
 	}
-
-	@Override
-	public Optional<Double> findAverageRateByLessonId(int lessonId) {
-		return jpaUserExerciseDao.findAverageRateByLessonId(lessonId);
-	}
 }

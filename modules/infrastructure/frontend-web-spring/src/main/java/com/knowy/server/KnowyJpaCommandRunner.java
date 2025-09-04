@@ -1,6 +1,7 @@
 package com.knowy.server;
 
 import com.knowy.core.domain.UserExercise;
+import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,7 +21,7 @@ public class KnowyJpaCommandRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		System.out.println("=== Probando JPQL ===");
 
-		// Tu consulta JPQL
+/*		// Tu consulta JPQL
 		List<PublicUserExerciseEntity> entities = em.createQuery(
 				"""
 					SELECT pue
@@ -38,7 +39,16 @@ public class KnowyJpaCommandRunner implements CommandLineRunner {
 				"id: " + entity.getExerciseEntity().getId() +
 				" rate: " + entity.getRate()
 			)
-		);
+		);*/
+
+
+		System.out.println("---------- Single JPQL Query ----------");
+		CourseEntity entity = em.createQuery(
+				"SELECT l.course FROM LessonEntity l WHERE l.id = 1",
+				CourseEntity.class
+		).getSingleResult();
+		System.out.println("id: " + entity.getId() + " title: " + entity.getTitle() + " author: " + entity.getAuthor());
+
 	}
 }
 
