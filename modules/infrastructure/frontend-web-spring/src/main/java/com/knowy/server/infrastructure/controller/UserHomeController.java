@@ -6,6 +6,7 @@ import com.knowy.core.usecase.course.GetAllCoursesWithProgressResult;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseBannerDTO;
 import com.knowy.server.infrastructure.controller.dto.MissionsDto;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,13 +26,14 @@ public class UserHomeController {
 	}
 
 	@GetMapping("/home")
+	@Transactional
 	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) throws KnowyInconsistentDataException {
 		Integer userId = userDetails.getUser().id();
 
 		List<GetAllCoursesWithProgressResult> coursesWithProgress = courseService.getAllCourseProgress(userId);
 
 		long coursesCompleted = coursesWithProgress.stream()
-			.filter(course -> course.progress() == 100f)
+			.filter(course -> course.progress() >= 1.0)
 			.count();
 		long totalCourses = coursesWithProgress.size();
 

@@ -94,6 +94,13 @@ public class AdjustLessonToSurveyResponseUseCase {
 		return getAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, lessonId);
 	}
 
+	private double calculateLessonProgress(List<UserExercise> userExercises) throws KnowyInconsistentDataException {
+		if (userExercises.isEmpty()) {
+			throw new KnowyInconsistentDataException("Expected user exercises, but list is empty: " + userExercises);
+		}
+		return UserLesson.calculateLessonProgressById(userExercises);
+	}
+
 	private UserLesson.ProgressStatus updateLessonStatusIfCompleted(int userId, int lessonId, double progress) throws KnowyInconsistentDataException {
 		if (progress >= 0.8) {
 			UserLesson userLesson = updateUserLessonStatusUseCase.execute(
@@ -101,13 +108,6 @@ public class AdjustLessonToSurveyResponseUseCase {
 			return userLesson.status();
 		}
 		return UserLesson.ProgressStatus.IN_PROGRESS;
-	}
-
-	private double calculateLessonProgress(List<UserExercise> userExercises) throws KnowyInconsistentDataException {
-		if (userExercises.isEmpty()) {
-			throw new KnowyInconsistentDataException("Expected user exercises, but list is empty: " + userExercises);
-		}
-		return UserLesson.calculateLessonProgressById(userExercises);
 	}
 }
 

@@ -9,6 +9,7 @@ import com.knowy.core.port.CategoryRepository;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.dto.ToastDto;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,6 +54,7 @@ public class CourseController {
 	}
 
 	@GetMapping("")
+	@Transactional
 	public String myCourses(
 		Model model,
 		@RequestParam(name = "category", required = false) String category,
@@ -65,7 +67,7 @@ public class CourseController {
 		for (Course course : courseService.findAllByUserId(userDetails.getUser().id())) {
 			CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
 				course,
-				courseService.getCourseProgress(userDetails.getUser().id(), course.id()).progress(),
+				courseService.getCourseProgress(userDetails.getUser().id(), course.id()).progress() * 100,
 				CourseCardDTO.ActionType.START
 			);
 			courses.add(courseCardDTO);
@@ -111,7 +113,7 @@ public class CourseController {
 		for (Course course : courseService.getRecommendedCourses(userDetails.getUser().id(), userDetails.getUser().categories())) {
 			CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
 				course,
-				courseService.getCourseProgress(userDetails.getUser().id(), course.id()).progress(),
+				0.0f,
 				CourseCardDTO.ActionType.ACQUIRE
 			);
 			recommendations.add(courseCardDTO);

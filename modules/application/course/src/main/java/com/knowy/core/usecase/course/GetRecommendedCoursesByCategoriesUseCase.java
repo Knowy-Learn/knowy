@@ -50,5 +50,4 @@ public class GetRecommendedCoursesByCategoriesUseCase {
 			.limit(3)
 			.toList();
 	}
-
 }

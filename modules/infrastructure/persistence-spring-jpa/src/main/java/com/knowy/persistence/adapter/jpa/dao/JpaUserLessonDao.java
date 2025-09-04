@@ -64,5 +64,5 @@ public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, 
 		    JOIN pul.lessonEntity l
 		WHERE pul.userId = :userId
 		""")
-	List<UserLesson> findAllWhereUserIsSubscribed(@Param("userId") int userId);
+	List<PublicUserLessonEntity> findAllWhereUserIsSubscribed(@Param("userId") int userId);
 }

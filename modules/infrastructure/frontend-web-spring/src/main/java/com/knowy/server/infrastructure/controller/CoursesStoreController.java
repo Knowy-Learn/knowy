@@ -59,8 +59,8 @@ public class CoursesStoreController {
 		for (Course course : availableCourses) {
 			CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
 				course,
-				courseService.getCourseProgress(userDetails.getUser().id(), course.id()).progress(),
-				CourseCardDTO.ActionType.START
+				0.0f,
+				CourseCardDTO.ActionType.ACQUIRE
 			);
 			storeCourses.add(courseCardDTO);
 		}

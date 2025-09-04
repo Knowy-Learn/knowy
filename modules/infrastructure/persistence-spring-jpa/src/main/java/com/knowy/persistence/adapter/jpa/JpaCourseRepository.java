@@ -93,7 +93,8 @@ public class JpaCourseRepository implements CourseRepository {
 		List<Integer> categoriesIds = categories.stream()
 			.map(Category::id)
 			.toList();
-		return jpaCourseDao.findByCategoryIdsInRandomOrder(categoriesIds);
+		return jpaCourseDao.findByCategoryIdsInRandomOrder(categoriesIds)
+			.map(jpaCourseMapper::toDomain);
 	}
 
 	@Override

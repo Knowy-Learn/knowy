@@ -28,7 +28,7 @@ public interface JpaUserExerciseDao extends JpaRepository<PublicUserExerciseEnti
 		FROM PublicUserExerciseEntity pue
 		    JOIN pue.exerciseEntity e
 		    JOIN e.lesson l
-		WHERE pue.id.idPublicUser = 1 AND l.id = 1
+		WHERE pue.id.idPublicUser = :userId AND l.id = :lessonId
 		""")
 	List<PublicUserExerciseEntity> findAllByUserIdAndLessonId(@Param("userId") int userId, @Param("lessonId") int lessonId);
 

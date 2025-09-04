@@ -20,13 +20,13 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 	Stream<CourseEntity> findAllRandom();
 
 	@Query("""
-		SELECT DISTINCT c
+		SELECT c
 		FROM CourseEntity c
 		    JOIN c.languages lang
 		WHERE lang.id IN (:categoriesIds)
 		ORDER BY function('RANDOM')
 		""")
-	Stream<Course> findByCategoryIdsInRandomOrder(List<Integer> categoriesIds);
+	Stream<CourseEntity> findByCategoryIdsInRandomOrder(@Param("categoriesIds") List<Integer> categoriesIds);
 
 	@Query("SELECT l.course FROM LessonEntity l WHERE l.id = :lessonId")
 	CourseEntity findCourseIdByLessonId(@Param("lessonId") int lessonId);
