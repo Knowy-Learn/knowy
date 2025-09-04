@@ -1,46 +1,65 @@
 package com.knowy.core;
 
+import com.knowy.core.domain.ExerciseDifficult;
+import com.knowy.core.domain.LessonBase;
+import com.knowy.core.domain.UserExercise;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyDataAccessException;
-import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.exception.KnowyUnsupportedOperationRuntimeException;
-import com.knowy.core.port.LessonRepository;
+import com.knowy.core.port.LessonBaseRepository;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.port.UserLessonRepository;
+import com.knowy.core.usecase.adjust.AdjustLessonToSurveyResponseResult;
+import com.knowy.core.usecase.adjust.AdjustLessonToSurveyResponseUseCase;
 import com.knowy.core.usecase.lesson.GetAllUserLessonByCourseIdUseCase;
 import com.knowy.core.usecase.lesson.GetUserLessonByIdUseCase;
 import com.knowy.core.usecase.lesson.UpdateUserLessonStatusUseCase;
+import com.knowy.core.usecase.lessonbase.GetLessonBaseByIdUserCase;
 
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Service for managing lessons and user progress within lessons.
+ */
 public class LessonService {
 
-	private final UserLessonRepository userLessonRepository;
-	private final UserExerciseRepository userExerciseRepository;
-	private final LessonRepository lessonRepository;
+	private final GetLessonBaseByIdUserCase getLessonBaseByIdUserCase;
 	private final GetUserLessonByIdUseCase getUserLessonByIdUseCase;
 	private final GetAllUserLessonByCourseIdUseCase getAllUserLessonByCourseIdUseCase;
 	private final UpdateUserLessonStatusUseCase updateUserLessonStatusUseCase;
+	private final AdjustLessonToSurveyResponseUseCase adjustLessonToSurveyResponseUseCase;
 
 	/**
-	 * The constructor
+	 * Constructs a new {@code LessonService} with the required repositories.
 	 *
-	 * @param userLessonRepository the publicUserLessonRepository
+	 * @param userLessonRepository   repository for accessing user lessons
+	 * @param userExerciseRepository repository for accessing user exercises
+	 * @param lessonBaseRepository   repository for accessing lesson base data
 	 */
 	public LessonService(
 		UserLessonRepository userLessonRepository,
 		UserExerciseRepository userExerciseRepository,
-		LessonRepository lessonRepository
+		LessonBaseRepository lessonBaseRepository
 	) {
-		this.userLessonRepository = userLessonRepository;
-		this.userExerciseRepository = userExerciseRepository;
-		this.lessonRepository = lessonRepository;
-
+		this.getLessonBaseByIdUserCase = new GetLessonBaseByIdUserCase(lessonBaseRepository);
 		this.getUserLessonByIdUseCase = new GetUserLessonByIdUseCase(userLessonRepository);
 		this.getAllUserLessonByCourseIdUseCase = new GetAllUserLessonByCourseIdUseCase(userLessonRepository);
 		this.updateUserLessonStatusUseCase = new UpdateUserLessonStatusUseCase(userLessonRepository);
+		this.adjustLessonToSurveyResponseUseCase = new AdjustLessonToSurveyResponseUseCase(
+			userExerciseRepository, userLessonRepository
+		);
+	}
+
+	/**
+	 * Retrieves the {@link LessonBase} for a given lesson ID.
+	 *
+	 * @param lessonId the ID of the lesson
+	 * @return the corresponding {@link LessonBase} object
+	 * @throws KnowyDataAccessException if the lesson cannot be found
+	 */
+	public LessonBase getLessonBaseById(int lessonId) throws KnowyDataAccessException {
+		return getLessonBaseByIdUserCase.execute(lessonId);
 	}
 
 	/**
@@ -91,13 +110,22 @@ public class LessonService {
 		updateUserLessonStatusUseCase.execute(statusToUpdate, userId, lessonId);
 	}
 
-	public Optional<Double> findAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {
-		return userExerciseRepository.findAverageRateByLessonId(lessonId);
-	}
 
-	public double getAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {
-		return findAverageRateByLessonId(lessonId)
-			.orElseThrow(() -> new KnowyExerciseNotFoundException(
-				"No average rate found for lesson ID " + lessonId));
+	/**
+	 * Adjusts a lesson based on a user's response to an exercise.
+	 * <p>
+	 * This method updates the user's exercise rate and progress, calculates the lesson progress, and updates the lesson
+	 * status if the progress threshold is met.
+	 * </p>
+	 *
+	 * @param exerciseDifficult the difficulty of the user's response
+	 * @param userExercise      the {@link UserExercise} to adjust
+	 * @return an {@link AdjustLessonToSurveyResponseResult} containing the updated state
+	 * @throws KnowyDataAccessException if there is an issue accessing or updating the exercises
+	 */
+	public AdjustLessonToSurveyResponseResult adjustLessonToSurvey(ExerciseDifficult exerciseDifficult, UserExercise userExercise)
+		throws KnowyDataAccessException {
+
+		return adjustLessonToSurveyResponseUseCase.execute(exerciseDifficult, userExercise);
 	}
 }

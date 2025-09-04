@@ -1,4 +1,4 @@
-package com.knowy.core.usecase.exercise;
+package com.knowy.core.usecase.adjust;
 
 import com.knowy.core.domain.ExerciseDifficult;
 import com.knowy.core.domain.UserExercise;
@@ -10,45 +10,46 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Use case for processing a user's answer to an exercise and updating the user's exercise progress.
+ * Use case for adjusting a user's exercise progress based on their survey response (difficulty rating).
  *
- * <p>This use case adjusts the user's exercise rate and schedules the next review based on the difficulty
- * of the answer (EASY, MEDIUM, HARD, FAIL). It then persists the updated {@link UserExercise} using the
- * {@link UserExerciseRepository}.</p>
+ * <p>This use case modifies the user's exercise rate and schedules the next review time
+ * according to the difficulty level selected (EASY, MEDIUM, HARD, FAIL). The updated {@link UserExercise} is then
+ * persisted via the {@link UserExerciseRepository}.</p>
  */
-public class ProcessUserExerciseAnswerUseCase {
+class AdjustExerciseToSurveyResponseUseCase {
 
 	private final UserExerciseRepository userExerciseRepository;
 
 	/**
-	 * Constructs a new {@code ProcessUserExerciseAnswerUseCase} with the specified repository.
+	 * Constructs a new {@code AdjustExerciseToSurveyResponseUseCase} with the specified repository.
 	 *
-	 * @param userExerciseRepository the repository used to save updated user exercises
+	 * @param userExerciseRepository the repository used to persist updated user exercises
 	 */
-	public ProcessUserExerciseAnswerUseCase(UserExerciseRepository userExerciseRepository) {
+	public AdjustExerciseToSurveyResponseUseCase(UserExerciseRepository userExerciseRepository) {
 		this.userExerciseRepository = userExerciseRepository;
 	}
 
 	/**
-	 * Processes a user's answer for a given exercise and updates the exercise progress.
+	 * Processes a user's answer for a given exercise and updates their progress accordingly.
 	 *
-	 * <p>The update logic varies depending on the difficulty of the user's response:
+	 * <p>Depending on the difficulty of the response:
 	 * <ul>
-	 *     <li>EASY: increases rate significantly and schedules next review accordingly</li>
-	 *     <li>MEDIUM: increases rate moderately</li>
-	 *     <li>HARD: decreases rate slightly</li>
-	 *     <li>FAIL: decreases rate significantly</li>
+	 *     <li><b>EASY</b>: increases the rate significantly and schedules a longer review interval</li>
+	 *     <li><b>MEDIUM</b>: increases the rate moderately</li>
+	 *     <li><b>HARD</b>: decreases the rate slightly</li>
+	 *     <li><b>FAIL</b>: decreases the rate significantly with a very short review interval</li>
 	 * </ul>
 	 * </p>
 	 *
-	 * @param exerciseDifficult the difficulty of the user's answer
-	 * @param userExercise      the {@link UserExercise} to update
+	 * @param exerciseDifficult the difficulty selected by the user
+	 * @param userExercise      the {@link UserExercise} to be updated
+	 * @return the updated and persisted {@link UserExercise}
 	 * @throws KnowyDataAccessException if an error occurs while saving the updated user exercise
-	 * @throws NullPointerException     if either {@code exerciseDifficult} or {@code userExercise} is null
+	 * @throws NullPointerException     if {@code exerciseDifficult} or {@code userExercise} is {@code null}
 	 */
-	public void execute(ExerciseDifficult exerciseDifficult, UserExercise userExercise) throws KnowyDataAccessException {
+	public UserExercise execute(ExerciseDifficult exerciseDifficult, UserExercise userExercise) throws KnowyDataAccessException {
 		UserExercise updatedUserExercise = difficultSelect(exerciseDifficult, userExercise);
-		userExerciseRepository.save(updatedUserExercise);
+		return userExerciseRepository.save(updatedUserExercise);
 	}
 
 	private UserExercise difficultSelect(ExerciseDifficult exerciseDifficult, UserExercise userExercise) {

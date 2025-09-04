@@ -1,6 +1,7 @@
 package com.knowy.server;
 
-import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
+import com.knowy.core.domain.UserExercise;
+import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.boot.CommandLineRunner;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-// @Component
+@Component
 @SuppressWarnings("java:S106")
 public class KnowyJpaCommandRunner implements CommandLineRunner {
 
@@ -20,18 +21,24 @@ public class KnowyJpaCommandRunner implements CommandLineRunner {
 		System.out.println("=== Probando JPQL ===");
 
 		// Tu consulta JPQL
-		List<LessonEntity> entities = em.createQuery(
+		List<PublicUserExerciseEntity> entities = em.createQuery(
 				"""
-					SELECT l
-					FROM LessonEntity l
-					    INNER JOIN l.publicUserLessons pul
-					WHERE l.course.id = 1 AND pul.userId = 1
-					""", LessonEntity.class)
+					SELECT pue
+					FROM PublicUserExerciseEntity pue
+					JOIN pue.exerciseEntity e
+					JOIN e.lesson l
+					WHERE pue.id.idPublicUser = 1
+					  AND l.id = 1
+					""", PublicUserExerciseEntity.class)
 			.getResultList();
 
 		// Imprime los resultados
 		entities.forEach(
-			entity -> System.out.println("id: " + entity.getId() + " | title: " + entity.getTitle())
+			entity -> System.out.println(
+				"id: " + entity.getExerciseEntity().getId() +
+				" rate: " + entity.getRate()
+			)
 		);
 	}
 }
+

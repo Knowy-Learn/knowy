@@ -1,39 +1,38 @@
 package com.knowy.core;
 
-import com.knowy.core.domain.ExerciseDifficult;
 import com.knowy.core.domain.UserExercise;
 import com.knowy.core.exception.KnowyDataAccessException;
 import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.port.ExerciseRepository;
 import com.knowy.core.port.UserExerciseRepository;
+import com.knowy.core.usecase.exercise.GetAllUserExercisesByCourseIdAndLessonIdUseCase;
 import com.knowy.core.usecase.exercise.GetNextExerciseByLessonIdUseCase;
 import com.knowy.core.usecase.exercise.GetNextExerciseByUserIdUseCase;
 import com.knowy.core.usecase.exercise.GetUserExerciseByIdOrCreate;
-import com.knowy.core.usecase.exercise.ProcessUserExerciseAnswerUseCase;
 
-import java.util.Optional;
+import java.util.List;
 
 public class ExerciseService {
 
-	private final UserExerciseRepository userExerciseRepository;
 	private final GetNextExerciseByLessonIdUseCase getNextExerciseByLessonIdUseCase;
 	private final GetNextExerciseByUserIdUseCase getNextExerciseByUserIdUseCase;
 	private final GetUserExerciseByIdOrCreate getUserExerciseByIdOrCreate;
-	private final ProcessUserExerciseAnswerUseCase processUserExerciseAnswerUseCase;
+	private final GetAllUserExercisesByCourseIdAndLessonIdUseCase getAllUserExercisesByCourseIdAndLessonIdUseCase;
 
 	/**
-	 * The constructor
+	 * Constructs a new {@code ExerciseService} and initializes all underlying use cases.
 	 *
-	 * @param userExerciseRepository the publicUserExerciseRepository
-	 * @param exerciseRepository     the exerciseRepository
+	 * @param userExerciseRepository the repository used to manage user exercises
+	 * @param exerciseRepository     the repository used to access exercise data
 	 */
-	public ExerciseService(UserExerciseRepository userExerciseRepository, ExerciseRepository exerciseRepository) {
-		this.userExerciseRepository = userExerciseRepository;
-
+	public ExerciseService(
+		UserExerciseRepository userExerciseRepository,
+		ExerciseRepository exerciseRepository
+	) {
 		this.getNextExerciseByLessonIdUseCase = new GetNextExerciseByLessonIdUseCase(userExerciseRepository);
 		this.getNextExerciseByUserIdUseCase = new GetNextExerciseByUserIdUseCase(userExerciseRepository);
 		this.getUserExerciseByIdOrCreate = new GetUserExerciseByIdOrCreate(userExerciseRepository, exerciseRepository);
-		this.processUserExerciseAnswerUseCase = new ProcessUserExerciseAnswerUseCase(userExerciseRepository);
+		this.getAllUserExercisesByCourseIdAndLessonIdUseCase = new GetAllUserExercisesByCourseIdAndLessonIdUseCase(userExerciseRepository);
 	}
 
 	/**
@@ -84,16 +83,18 @@ public class ExerciseService {
 	}
 
 	/**
-	 * Processes a user's answer for a given exercise by delegating to the {@link ProcessUserExerciseAnswerUseCase}.
+	 * Retrieves all exercises associated with a given user and lesson.
+	 * <p>
+	 * This method delegates to {@link GetAllUserExercisesByCourseIdAndLessonIdUseCase} to fetch the {@link UserExercise} entities. If no
+	 * exercises are found, an empty list is returned.
+	 * </p>
 	 *
-	 * <p>This method updates the {@link UserExercise} based on the difficulty of the user's answer
-	 * and schedules the next review accordingly.</p>
-	 *
-	 * @param exerciseDifficult the difficulty of the user's answer (EASY, MEDIUM, HARD, FAIL)
-	 * @param userExercise      the {@link UserExercise} to update
-	 * @throws KnowyDataAccessException if an error occurs while saving the updated exercise
+	 * @param userId   the ID of the user
+	 * @param lessonId the ID of the lesson
+	 * @return a list of {@link UserExercise} for the specified user and lesson, or an empty list if none exist
+	 * @throws KnowyDataAccessException if an error occurs while accessing the data source
 	 */
-	public void processUserAnswer(ExerciseDifficult exerciseDifficult, UserExercise userExercise) throws KnowyDataAccessException {
-		processUserExerciseAnswerUseCase.execute(exerciseDifficult, userExercise);
+	public List<UserExercise> getAllUserExerciseByUserIdAndLessonId(int userId, int lessonId) throws KnowyDataAccessException {
+		return getAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, lessonId);
 	}
 }

@@ -1,6 +1,7 @@
 package com.knowy.persistence.adapter.jpa;
 
 import com.knowy.core.domain.UserExercise;
+import com.knowy.core.exception.KnowyDataAccessException;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserExerciseDao;
@@ -44,6 +45,13 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 	}
 
 	@Override
+	public List<UserExercise> findAllByUserIdAndLessonId(int userId, int lessonId) throws KnowyDataAccessException {
+		return jpaUserExerciseDao.findAllByUserIdAndLessonId(userId, lessonId).stream()
+			.map(jpaUserExerciseMapper::toDomain)
+			.toList();
+	}
+
+	@Override
 	public Optional<UserExercise> findNextExerciseByLessonId(int userId, int lessonId) {
 		return jpaUserExerciseDao.findNextExerciseByLessonId(userId, lessonId)
 			.map(jpaUserExerciseMapper::toDomain);
@@ -59,5 +67,4 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 	public Optional<Double> findAverageRateByLessonId(int lessonId) {
 		return jpaUserExerciseDao.findAverageRateByLessonId(lessonId);
 	}
-
 }

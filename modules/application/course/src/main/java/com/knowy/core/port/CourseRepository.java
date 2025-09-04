@@ -6,10 +6,7 @@ import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 public interface CourseRepository {
@@ -28,4 +25,6 @@ public interface CourseRepository {
 	Stream<Course> findByCategoriesStreamingInRandomOrder(Collection<Category> categories);
 
 	Optional<Course> findById(Integer id) throws KnowyInconsistentDataException;
+
+	OptionalInt findCourseIdByLessonId(int lessonId) throws KnowyInconsistentDataException;
 }

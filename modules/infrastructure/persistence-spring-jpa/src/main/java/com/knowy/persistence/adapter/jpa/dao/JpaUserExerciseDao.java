@@ -23,6 +23,15 @@ public interface JpaUserExerciseDao extends JpaRepository<PublicUserExerciseEnti
 	@NonNull
 	List<PublicUserExerciseEntity> findAll();
 
+	@Query("""
+		SELECT pue
+		FROM PublicUserExerciseEntity pue
+		    JOIN pue.exerciseEntity e
+		    JOIN e.lesson l
+		WHERE pue.id.idPublicUser = 1 AND l.id = 1
+		""")
+	List<PublicUserExerciseEntity> findAllByUserIdAndLessonId(@Param("userId") int userId, @Param("lessonId") int lessonId);
+
 	@Query(value = """
 		SELECT
 		    pl.id_public_user AS id_public_user,
@@ -48,10 +57,7 @@ public interface JpaUserExerciseDao extends JpaRepository<PublicUserExerciseEnti
 		    RANDOM()
 		LIMIT(1)
 		""", nativeQuery = true)
-	Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(
-		@Param("userId") int userId,
-		@Param("lessonId") int lessonId
-	);
+	Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(@Param("userId") int userId, @Param("lessonId") int lessonId);
 
 	@Query(value = """
 		SELECT

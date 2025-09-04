@@ -1,17 +1,15 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.core.domain.Course;
-import com.knowy.core.domain.UserExercise;
-import com.knowy.core.domain.UserLesson;
+import com.knowy.core.CourseService;
+import com.knowy.core.ExerciseService;
+import com.knowy.core.LessonService;
+import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyDataAccessException;
 import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.exception.KnowyUnsupportedOperationRuntimeException;
 import com.knowy.core.exception.KnowyUserLessonNotFoundException;
+import com.knowy.core.usecase.adjust.AdjustLessonToSurveyResponseResult;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.core.CourseService;
-import com.knowy.core.ExerciseService;
-import com.knowy.core.LessonService;
-import com.knowy.core.domain.ExerciseDifficult;
 import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
 import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
@@ -139,23 +137,16 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
 	) throws KnowyDataAccessException, KnowyUnsupportedOperationRuntimeException {
-		UserExercise userExercise = exerciseService
-			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
+		int userId = userDetails.getUser().id();
 
-		UserLesson userLesson = lessonService
-			.getUserLessonById(userDetails.getUser().id(), userExercise.exercise().lessonId());
+		UserExercise userExercise = exerciseService.getByIdOrCreate(userId, exerciseId);
+		AdjustLessonToSurveyResponseResult surveyResponseResult = lessonService.adjustLessonToSurvey(evaluation, userExercise);
+		LessonBase lessonBase = lessonService.getLessonBaseById(surveyResponseResult.lessonId());
 
-		exerciseService.processUserAnswer(evaluation, userExercise);
-
-		int lessonId = userExercise.exercise().lessonId();
-		int courseId = userLesson.lesson().courseId();
-
-		double average = lessonService.getAverageRateByLessonId(lessonId);
-		if (average >= 80) {
-			lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userDetails.getUser().id(), lessonId);
-			return "redirect:/course/%d".formatted(courseId);
+		if (surveyResponseResult.lessonStatus().equals(UserLesson.ProgressStatus.COMPLETED)) {
+			return "redirect:/course/%d".formatted(lessonBase.courseId());
 		}
-		return "redirect:/course/%d/exercise/review".formatted(lessonId);
+		return "redirect:/course/%d/exercise/review".formatted(userExercise.exercise().lessonId());
 	}
 
 	/**
@@ -251,7 +242,7 @@ public class ExerciseController {
 		UserExercise userExercise = exerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
-		exerciseService.processUserAnswer(evaluation, userExercise);
+		lessonService.adjustLessonToSurvey(evaluation, userExercise);
 		return "redirect:/exercise/review";
 	}
 }

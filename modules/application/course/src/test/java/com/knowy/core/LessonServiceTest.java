@@ -1,27 +1,27 @@
 package com.knowy.core;
 
-import com.knowy.core.domain.Lesson;
-import com.knowy.core.domain.UserLesson;
-import com.knowy.core.exception.KnowyInconsistentDataException;
-import com.knowy.core.exception.KnowyUnsupportedOperationRuntimeException;
-import com.knowy.core.exception.KnowyUserLessonNotFoundException;
+import com.knowy.core.domain.*;
+import com.knowy.core.exception.*;
+import com.knowy.core.port.LessonBaseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LessonServiceTest {
@@ -34,6 +34,9 @@ public class LessonServiceTest {
 
 	@Mock
 	private LessonRepository lessonRepository;
+
+	@Mock
+	private LessonBaseRepository lessonBaseRepository;
 
 	@InjectMocks
 	private LessonService lessonService;
@@ -210,6 +213,33 @@ public class LessonServiceTest {
 				() -> lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.PENDING, userId, lessonId)
 			);
 			Mockito.verify(userLessonRepository, Mockito.never()).save(Mockito.any(UserLesson.class));
+		}
+	}
+
+	@Nested
+	class GetLessonBaseByIdUseCaseTest {
+
+		@Test
+		void given_validUserLessonId_when_getById_then_returnUserLesson() throws KnowyDataAccessException {
+			int lessonId = 25;
+
+			Mockito.when(lessonBaseRepository.findById(lessonId))
+				.thenReturn(Optional.of(Mockito.mock(LessonBase.class)));
+
+			assertDoesNotThrow(() -> lessonService.getLessonBaseById(lessonId));
+		}
+
+		@Test
+		void given_nonExistUserLessonId_when_getById_then_throwKnowyUserLessonNotFoundException() throws KnowyDataAccessException {
+			int lessonId = 25;
+
+			Mockito.when(lessonBaseRepository.findById(lessonId))
+				.thenThrow(new KnowyLessonNotFoundException("Lesson not found"));
+
+			assertThrows(
+				KnowyLessonNotFoundException.class,
+				() -> lessonService.getLessonBaseById(lessonId)
+			);
 		}
 	}
 }

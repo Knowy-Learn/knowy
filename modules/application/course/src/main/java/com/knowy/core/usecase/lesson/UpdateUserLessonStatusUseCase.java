@@ -9,8 +9,9 @@ import com.knowy.core.port.UserLessonRepository;
 /**
  * Use case for updating the progress status of a {@link UserLesson}.
  * <p>
- * Currently, this use case only supports updating the status to {@link UserLesson.ProgressStatus#COMPLETED}. Attempting
- * to update to any other status will throw a {@link KnowyUnsupportedOperationRuntimeException}.
+ * Currently, only updating the status to {@link UserLesson.ProgressStatus#COMPLETED} is supported. Attempting to set
+ * any other status will throw a {@link KnowyUnsupportedOperationRuntimeException}. When completing a lesson, the next
+ * lesson (if it exists) will automatically be advanced to the next logical status.
  * </p>
  */
 public class UpdateUserLessonStatusUseCase {
@@ -18,9 +19,9 @@ public class UpdateUserLessonStatusUseCase {
 	private final UserLessonRepository userLessonRepository;
 
 	/**
-	 * Constructs a new {@code UpdateUserLessonStatusUseCase} with the given repository.
+	 * Constructs a new {@code UpdateUserLessonStatusUseCase} with the provided repository.
 	 *
-	 * @param userLessonRepository the repository used to persist {@link UserLesson} updates
+	 * @param userLessonRepository repository for persisting {@link UserLesson} updates
 	 */
 	public UpdateUserLessonStatusUseCase(UserLessonRepository userLessonRepository) {
 		this.userLessonRepository = userLessonRepository;
@@ -29,17 +30,18 @@ public class UpdateUserLessonStatusUseCase {
 	/**
 	 * Updates the progress status of a user's lesson.
 	 * <p>
-	 * If the new status is {@link UserLesson.ProgressStatus#COMPLETED}, this method will also update the next lesson's
-	 * status (if it exists) to the next logical status.
+	 * If {@code statusToUpdate} is {@link UserLesson.ProgressStatus#COMPLETED}, this method will also update the next
+	 * lesson (if any) to its next logical status. Only {@code COMPLETED} is supported.
 	 * </p>
 	 *
-	 * @param statusToUpdate the new progress status to set; only {@code COMPLETED} is currently supported
+	 * @param statusToUpdate the new progress status to set; only {@code COMPLETED} is supported
 	 * @param userId         the ID of the user
 	 * @param lessonId       the ID of the lesson
-	 * @throws KnowyInconsistentDataException            if the user lesson cannot be found or saved
-	 * @throws KnowyUnsupportedOperationRuntimeException if the given status is not {@code COMPLETED}
+	 * @return the updated {@link UserLesson} instance
+	 * @throws KnowyInconsistentDataException            if the user lesson cannot be found or persisted
+	 * @throws KnowyUnsupportedOperationRuntimeException if the status is not {@code COMPLETED}
 	 */
-	public void execute(UserLesson.ProgressStatus statusToUpdate, int userId, int lessonId)
+	public UserLesson execute(UserLesson.ProgressStatus statusToUpdate, int userId, int lessonId)
 		throws KnowyInconsistentDataException, KnowyUnsupportedOperationRuntimeException {
 
 		if (!statusToUpdate.equals(UserLesson.ProgressStatus.COMPLETED)) {
@@ -50,7 +52,7 @@ public class UpdateUserLessonStatusUseCase {
 		if (userLesson.lesson().nextLessonId() != null) {
 			updateNextLessonStatus(userId, userLesson.lesson().nextLessonId());
 		}
-		saveUpdatedUserLesson(userLesson, statusToUpdate.getNextStatus());
+		return saveUpdatedUserLesson(userLesson, statusToUpdate.getNextStatus());
 	}
 
 	private void updateNextLessonStatus(int userId, int nextLessonId) throws KnowyInconsistentDataException {
@@ -65,8 +67,8 @@ public class UpdateUserLessonStatusUseCase {
 			));
 	}
 
-	private void saveUpdatedUserLesson(UserLesson userLesson, UserLesson.ProgressStatus status) throws KnowyInconsistentDataException {
-		userLessonRepository.save(new UserLesson(
+	private UserLesson saveUpdatedUserLesson(UserLesson userLesson, UserLesson.ProgressStatus status) throws KnowyInconsistentDataException {
+		return userLessonRepository.save(new UserLesson(
 			userLesson.userId(),
 			userLesson.lesson(),
 			userLesson.startDate(),
