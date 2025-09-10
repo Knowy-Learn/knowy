@@ -2,8 +2,17 @@ services:
     java-server:
         container_name: kn-server
         environment:
+            - DB_URL=jdbc:postgresql://postgres:5432/${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DB_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+            - SSL_KEY_ALIAS=${SSL_KEY_ALIAS}
+            - SSL_KEYSTORE=${SSL_KEYSTORE}
             - SSL_KEY=${SSL_KEY}
+            - SSL_KEYSTORE_TYPE=${SSL_KEYSTORE_TYPE}
             - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+            - MAIL_HOST=mailpit
+            - MAIL_PORT=1025
         build:
             context: .
             dockerfile: server/Dockerfile
@@ -24,9 +33,9 @@ services:
         image: postgres:17
         container_name: kn-postgres17
         environment:
-            POSTGRES_USER: knowy
-            POSTGRES_PASSWORD: knowy
-            POSTGRES_DB: knowydb
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
         networks:
             - knowy_net
         volumes:

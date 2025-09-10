@@ -30,6 +30,7 @@
 		<maven.compiler.release>21</maven.compiler.release>
 		<sass.source.in>src/main/resources/static/styles</sass.source.in>
 		<sass.source.out>generated-resources/main/static/styles</sass.source.out>
+		<keystore.pass>default-keystore-must-be-replaced-in-public-deploys</keystore.pass>
 	</properties>
 
 	<dependencies>
@@ -135,6 +136,13 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>3.4.5</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -195,6 +203,22 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>keytool-maven-plugin</artifactId>
+				<!-- Normalmente no se ejecutará, pero podrá ser ejecutado manualmente con: mvn clean keytool:generateKeyPair -->
+				<configuration>
+					<alias>knowy-server</alias>
+					<dname>CN=localhost, OU=knowy-${project.artifactId}, O=knowy, C=ES</dname>
+					<keystore>${project.build.directory}/generated-resources/main/keystore.p12</keystore>
+					<storepass>${keystore.pass}</storepass>
+					<storetype>pkcs12</storetype>
+					<keyalg>RSA</keyalg>
+					<sigalg>SHA512withRSA</sigalg>
+					<keysize>2048</keysize>
+					<validity>3650</validity>
+				</configuration>
 			</plugin>
 		</plugins>
 		<resources>

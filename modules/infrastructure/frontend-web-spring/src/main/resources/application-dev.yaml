@@ -1,29 +1,17 @@
 spring:
-    config:
-        import: "file:.env[.properties]"
-    datasource:
-        url: jdbc:postgresql://postgres:5432/knowydb
-        username: knowy
-        password: knowy
     mail:
-        host: localhost
-        port: 1025
         properties:
             mail:
                 debug: true
 server:
-    port: 8080
     error:
         include-message: always
         include-binding-errors: always
-    ssl:
-        enabled: false
 logging:
     level:
         org:
             springframework:
                 security: debug
-
 management:
     health:
         mail:

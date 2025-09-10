@@ -14,21 +14,30 @@ your_compose() {
 }
 
 run_operation() {
+	case "$1" in
+    	"up")
+    		base_options="--build"
+    		;;
+    	*)
+    		base_options=""
+    		;;
+    esac
+
     if [[ "$1" == "up" || "$1" == "build" || "$1" == "restart" ]]; then
     	mvn verify --projects builds/knowy-thymeleaf-compose --also-make -Dmaven.test.skip
     fi
 
-	if [[ "$2" == "default" || -z "$2" ]]; then
-    	compose_file=$(find builds/knowy-thymeleaf-compose/target/ -name "compose.yaml")
+	if [[ "$3" == "default" || -z "$3" ]]; then
+    	compose_file=$(find "builds/knowy-$2-compose/target/" -name "compose.yaml")
     else
-    	compose_file=$(find builds/knowy-thymeleaf-compose/target/ -name "compose-$2.yaml")
+    	compose_file=$(find "builds/knowy-$2-compose/target/" -name "compose-$3.yaml")
     fi
-    your_compose -f "$compose_file" "$1" "${@:3}"
+    your_compose -f "$compose_file" "$1" "$base_options" "${@:4}"
 }
 
 run_clean() {
-	mvn clean verify --projects builds/knowy-thymeleaf-compose --also-make -Dmaven.test.skip
-	for compose_file in $(find builds/knowy-thymeleaf-compose/target/ -name "compose*"); do
+	mvn clean verify --projects builds/knowy-$1-compose --also-make -Dmaven.test.skip
+	for compose_file in $(find builds/knowy-$1-compose/target/ -name "compose*"); do
 		your_compose -f "$compose_file" down -v
 	done
 }
@@ -38,22 +47,25 @@ print_help() {
     ./knowy <operation>
 
 Operations:
-    help                Print this help
-    clean               Clean, re-compile, shutdown and remove all the containers, including their respective volumes
-    up [profile]        Start the containers of the specified profile
-    down [profile]      Shutdown and remove the containers of the specified profile
-    restart [profile]   Restarts the containers of the specified profile
+    help                            Print this help
+    clean <artifact>                Clean, re-compile, shutdown and remove all the containers, including their respective volumes
+    up <artifact> [profile]         Start the containers of the specified profile
+    down <artifact> [profile]       Shutdown and remove the containers of the specified profile
+    restart <artifact> [profile]    Restarts the containers of the specified profile
+
+Artifacts:
+    devenv       The knowy-devenv-compose project
+    thymeleaf    The knowy-thymeleaf-compose project
 
 Profiles:
-    default             Same as no profile; find an executes the default compose.yaml file
-    dev                 The compose-dev.yaml file
-    dev-onlydb          The compose-dev-onlydb.yaml file
-    prod                The compose-prod.yaml
+    default    Same as no profile; find an executes the default compose.yaml file
+    local      The compose-local.yaml file
 
 Examples:
-    ./knowy up dev
-    ./knowy down dev -v
-    ./knowy restart dev'
+	./knowy up thymeleaf
+    ./knowy up thymeleaf local
+    ./knowy down devenv default -v
+    ./knowy restart devenv'
     exit 0
 }
 
@@ -62,7 +74,7 @@ case "$1" in
 		print_help
 		;;
 	"clean")
-		run_clean
+		run_clean "$2"
 		;;
 	*)
 		run_operation "$@"

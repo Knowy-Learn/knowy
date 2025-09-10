@@ -30,6 +30,7 @@
 		<module>modules/infrastructure/backend-api-spring</module>
 		<module>modules/infrastructure/frontend-web-angular</module>
 		<module>builds/knowy-thymeleaf-compose</module>
+		<module>builds/knowy-devenv-compose</module>
 	</modules>
 
 	<dependencyManagement>
@@ -130,6 +131,25 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>3.7.1</version>
+					<executions>
+						<execution>
+							<id>make-assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<appendAssemblyId>false</appendAssemblyId>
+						<formats>
+							<format>zip</format>
+							<format>dir</format>
+						</formats>
+						<descriptors>
+							<descriptor>src/assembly/package.xml</descriptor>
+						</descriptors>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -156,6 +176,11 @@
 							</configuration>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>keytool-maven-plugin</artifactId>
+					<version>1.7</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -225,7 +225,7 @@ Tienes dos opciones para iniciar todos los servicios (base de datos, correo):
 - **Opción A:** Desde la terminal
   Regresa al directorio raíz (donde está el archivo compose-dev-onlydb.yaml) y ejecuta:
    ```bash
-   docker compose -f compose-dev-onlydb.yaml up -d
+   docker compose -f compose-postgredb.yaml up -d
    docker compose -f compose-dev-mailpit.yaml up -d
    ```
 
