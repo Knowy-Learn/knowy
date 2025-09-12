@@ -62,7 +62,7 @@ Profiles:
     local      The compose-local.yaml file
 
 Examples:
-	./knowy up thymeleaf
+    ./knowy up thymeleaf
     ./knowy up thymeleaf local
     ./knowy down devenv default -v
     ./knowy restart devenv'
