@@ -2,81 +2,132 @@
 
 set -e # exit on error
 
-your_compose() {
-	if [[ -n $(command -v podman) ]]; then
-		podman compose "$@"
-	elif [[ -n $(command -v compose) ]]; then
-		compose "$@"
-	else
-		echo "You need to have podman or docker installed" >&2
-		exit 1
-	fi
-}
-
-run_operation() {
-	case "$1" in
-    	"up")
-    		base_options="--build"
-    		;;
-    	*)
-    		base_options=""
-    		;;
+main() {
+    case "$1" in
+        "help")
+            print_help
+            ;;
+        "purge")
+            run_purge "$2"
+            ;;
+        "clean")
+            run_clean "$2"
+            ;;
+        *)
+            run_operation "$@"
+            ;;
     esac
-
-    if [[ "$1" == "up" || "$1" == "build" || "$1" == "restart" ]]; then
-    	mvn verify --projects builds/knowy-thymeleaf-compose --also-make -Dmaven.test.skip
-    fi
-
-	if [[ "$3" == "default" || -z "$3" ]]; then
-    	compose_file=$(find "builds/knowy-$2-compose/target/" -name "compose.yaml")
-    else
-    	compose_file=$(find "builds/knowy-$2-compose/target/" -name "compose-$3.yaml")
-    fi
-    your_compose -f "$compose_file" "$1" "$base_options" "${@:4}"
-}
-
-run_clean() {
-	mvn clean verify --projects builds/knowy-$1-compose --also-make -Dmaven.test.skip
-	for compose_file in $(find builds/knowy-$1-compose/target/ -name "compose*"); do
-		your_compose -f "$compose_file" down -v
-	done
 }
 
 print_help() {
-    echo 'Usage:
+    echo '
+Usage:
+
     ./knowy <operation>
 
+
 Operations:
+
     help                            Print this help
-    clean <artifact>                Clean, re-compile, shutdown and remove all the containers, including their respective volumes
+
+    clean <artifact>                Clean, re-compile, shutdown and remove the artifact containers, including their respective volumes
+
     up <artifact> [profile]         Start the containers of the specified profile
+
     down <artifact> [profile]       Shutdown and remove the containers of the specified profile
+
     restart <artifact> [profile]    Restarts the containers of the specified profile
 
+    purge <artifact>                Forced version of clean. WARNING! This command removes:
+                                            - all stopped containers
+                                            - all networks not used by at least one container
+                                            - all volumes not used by at least one container
+                                            - all dangling images
+                                            - all dangling build cache
+
+
 Artifacts:
+
     devenv       The knowy-devenv-compose project
+
     thymeleaf    The knowy-thymeleaf-compose project
 
+
 Profiles:
+
     default    Same as no profile; find an executes the default compose.yaml file
+
     local      The compose-local.yaml file
 
+
 Examples:
+
     ./knowy up thymeleaf
+
     ./knowy up thymeleaf local
+
     ./knowy down devenv default -v
-    ./knowy restart devenv'
+
+    ./knowy restart devenv
+'
     exit 0
 }
 
-case "$1" in
-	"help")
-		print_help
-		;;
-	"clean")
-		run_clean "$2"
-		;;
-	*)
-		run_operation "$@"
-		;;
-esac
+run_purge() {
+    run_clean "$1"
+    your_provider system prune --volumes
+}
+
+your_provider() {
+    if [[ -n $(command -v podman) ]]; then
+            podman "$@"
+        elif [[ -n $(command -v compose) ]]; then
+            docker "$@"
+        else
+            echo "You need to have podman or docker installed" >&2
+            exit 1
+        fi
+}
+
+run_clean() {
+    mvn clean verify --projects builds/knowy-$1-compose --also-make -Dmaven.test.skip
+    for compose_file in $(find builds/knowy-$1-compose/target/ -name "compose*"); do
+        your_compose -f "$compose_file" down -v
+    done
+}
+
+run_operation() {
+    case "$1" in
+        "up")
+            additional_params=("--build" "${@:4}")
+            ;;
+        *)
+            additional_params=("${@:4}")
+            ;;
+    esac
+
+    if [[ "$1" == "up" || "$1" == "build" || "$1" == "restart" ]]; then
+        mvn verify --projects builds/knowy-thymeleaf-compose --also-make -Dmaven.test.skip
+    fi
+
+    if [[ "$3" == "default" || -z "$3" ]]; then
+        compose_file=$(find "builds/knowy-$2-compose/target/" -name "compose.yaml")
+    else
+        compose_file=$(find "builds/knowy-$2-compose/target/" -name "compose-$3.yaml")
+    fi
+    your_compose -f "$compose_file" "$1" "${additional_params[@]}"
+}
+
+your_compose() {
+    if [[ -n $(command -v podman) ]]; then
+        podman compose "$@"
+    elif [[ -n $(command -v compose) ]]; then
+        compose "$@"
+    else
+        echo "You need to have podman or docker installed" >&2
+        exit 1
+    fi
+}
+
+## Run:
+main "$@"
