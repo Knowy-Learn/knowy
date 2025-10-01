@@ -141,10 +141,10 @@ public class ExerciseController {
 
 		UserExercise userExercise = exerciseService.getByIdOrCreate(userId, exerciseId);
 		AdjustLessonToSurveyResponseResult surveyResponseResult = lessonService.adjustLessonToSurvey(evaluation, userExercise);
-		LessonBase lessonBase = lessonService.getLessonBaseById(surveyResponseResult.lessonId());
+		LessonInfo lessonInfo = lessonService.getLessonBaseById(surveyResponseResult.lessonId());
 
 		if (surveyResponseResult.lessonStatus().equals(UserLesson.ProgressStatus.COMPLETED)) {
-			return "redirect:/course/%d".formatted(lessonBase.courseId());
+			return "redirect:/course/%d".formatted(lessonInfo.courseId());
 		}
 		return "redirect:/course/%d/exercise/review".formatted(userExercise.exercise().lessonId());
 	}

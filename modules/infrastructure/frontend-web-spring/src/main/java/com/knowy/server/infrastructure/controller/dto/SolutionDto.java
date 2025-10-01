@@ -21,7 +21,7 @@ public record SolutionDto(
 	public static SolutionDto fromDomain(Exercise exercise) {
 		return new SolutionDto(
 			"Ejercicio ",
-			exercise.question(),
+			exercise.statement(),
 			exercise.options().stream()
 				.filter(Option::isCorrect)
 				.map(Option::optionText)
