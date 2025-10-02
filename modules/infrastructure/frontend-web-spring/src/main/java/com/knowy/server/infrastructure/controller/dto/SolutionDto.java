@@ -23,8 +23,8 @@ public record SolutionDto(
 			"Ejercicio ",
 			exercise.statement(),
 			exercise.options().stream()
-				.filter(Option::isCorrect)
-				.map(Option::optionText)
+				.filter(Option::isValid)
+				.map(Option::value)
 				.toList()
 		);
 	}

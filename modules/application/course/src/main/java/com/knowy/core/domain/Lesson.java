@@ -11,7 +11,7 @@ public record Lesson(
 	String explanation,
 	Set<Documentation> documentations,
 	Set<Exercise> exercises
-) implements LessonIdentifier, LessonData {
+) implements LessonIdentifier, LessonData<Documentation, Exercise> {
 
 	public Lesson(
 		int id,

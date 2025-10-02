@@ -1,16 +1,16 @@
 package com.knowy.core.usecase.importer;
 
 import com.knowy.core.Importer;
-import com.knowy.core.domain.Course;
-import com.knowy.core.domain.Exercise;
-import com.knowy.core.domain.Lesson;
-import com.knowy.core.domain.Option;
+import com.knowy.core.domain.*;
 import com.knowy.core.port.DataLoader;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CoursesImporterUseCase implements Importer<List<Course>> {
 
@@ -22,28 +22,36 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 
 	@Override
 	public List<Course> execute(InputStream inputStream) {
-/*		Map<String, Object> data = dataLoader.loadData(inputStream);
-		return mapToCourse(data);*/
+		Map<String, Object> data = dataLoader.loadData(inputStream);
 		return null;
 	}
 
-/*	private List<Course> mapToCourse(Map<String, Object> data) {
-		List<Map<String,Object>> coursesData = ensureList(data.get("courses"));
-		List<Course> courses = new ArrayList<>();
+	/*
+	private List<CourseData.InmutableCourseData> mapToCourse(Map<String, Object> data) {
+		List<Map<String, Object>> coursesData = ensureList(data.get("courses"));
+		List<CourseData.InmutableCourseData> courses = new ArrayList<>();
 
 		for (Map<String, Object> courseMap : coursesData) {
 			String title = (String) courseMap.get("title");
 			String description = (String) courseMap.get("description");
+			String image = (String) courseMap.get("image");
+			String author = (String) courseMap.get("author");
+			LocalDateTime creationDate = LocalDateTime.now();
+
+			List<String> categoriesData = (List<String>) courseMap.get("categories");
+			Set<CategoryData> categories = categoriesData.stream()
+				.map(CategoryData.InmutableCategoryData::new)
+				.collect(Collectors.toSet());
 
 			List<Map<String, Object>> lessonsData = ensureList(courseMap.get("lessons"));
-			List<Lesson> lessons = mapToLesson(lessonsData);
+			Set<LessonData.InmutableLessonData> lessons = mapToLesson(lessonsData);
 
-			courses.add(new Course(title, description, lessons));
+			courses.add(new CourseData.InmutableCourseData(title, description, image, author, creationDate, categories, lessons));
 		}
 		return courses;
 	}
 
-	private List<Lesson> mapToLesson(List<Map<String, Object>> lessonsData) {
+	private Set<Lesson> mapToLesson(List<Map<String, Object>> lessonsData) {
 		List<Lesson> lessons = new ArrayList<>();
 		for (Map<String, Object> lessonMap : lessonsData) {
 			String title = (String) lessonMap.get("title");
@@ -81,6 +89,7 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 		return options;
 	}
 
+*/
 	@SuppressWarnings("unchecked")
 	private List<Map<String, Object>> ensureList(Object obj) {
 		if (obj instanceof List) {
@@ -89,5 +98,5 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 			return List.of((Map<String, Object>) obj);
 		}
 		return List.of();
-	}*/
+	}
 }

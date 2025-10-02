@@ -7,5 +7,5 @@ public record Exercise(
 	int lessonId,
 	String statement,
 	List<Option> options
-) implements ExerciseIdentifier, ExerciseData {
+) implements ExerciseIdentifier, ExerciseData<Option> {
 }

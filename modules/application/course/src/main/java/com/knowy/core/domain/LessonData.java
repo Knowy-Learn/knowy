@@ -2,18 +2,17 @@ package com.knowy.core.domain;
 
 import java.util.Set;
 
-public interface LessonData extends LessonMinData {
+public interface LessonData<D extends DocumentationData, E extends ExerciseData<? extends OptionData>> extends LessonMinData {
 
-	Set<Documentation> documentations();
+	Set<D> documentations();
 
-	Set<Exercise> exercises();
+	Set<E> exercises();
 
 	record InmutableLessonData(
 		String title,
 		String explanation,
-		Set<Documentation> documentations,
-		Set<Exercise> exercises
-	) implements LessonData {
-
+		Set<DocumentationData> documentations,
+		Set<ExerciseData<OptionData>> exercises
+	) implements LessonData<DocumentationData, ExerciseData<OptionData>> {
 	}
 }
