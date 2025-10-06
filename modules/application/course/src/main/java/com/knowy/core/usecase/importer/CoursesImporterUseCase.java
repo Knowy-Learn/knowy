@@ -1,102 +1,110 @@
 package com.knowy.core.usecase.importer;
 
 import com.knowy.core.Importer;
+import com.knowy.core.ImporterHelper;
 import com.knowy.core.domain.*;
 import com.knowy.core.port.DataLoader;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class CoursesImporterUseCase implements Importer<List<Course>> {
+import static com.knowy.core.ImporterHelper.PropertyExtractor;
+import static com.knowy.core.ImporterHelper.extractorFor;
+
+/**
+ * Use case for importing courses from an {@link InputStream}. Converts raw data into domain entity root and its related
+ * domain entities.
+ */
+public class CoursesImporterUseCase implements Importer<List<CourseUnidentifiedData>> {
+
+	private static final String TAG_TITLE = "title";
 
 	private final DataLoader dataLoader;
 
+	/**
+	 * Creates a new {@code CoursesImporterUseCase} with the given data loader.
+	 *
+	 * @param dataLoader the loader used to parse raw data
+	 */
 	public CoursesImporterUseCase(DataLoader dataLoader) {
 		this.dataLoader = dataLoader;
 	}
 
+	/**
+	 * Imports courses from the provided input stream.
+	 *
+	 * @param inputStream the source of raw course data
+	 * @return a list of course data objects
+	 * @throws KnowyImporterParseException if parsing fails
+	 */
 	@Override
-	public List<Course> execute(InputStream inputStream) {
-		Map<String, Object> data = dataLoader.loadData(inputStream);
-		return null;
+	public List<CourseUnidentifiedData> execute(InputStream inputStream) throws KnowyImporterParseException {
+		Map<String, Object> courses = dataLoader.loadData(inputStream);
+
+		PropertyExtractor rootPropertyExtractor = extractorFor(courses);
+		return rootPropertyExtractor.extract("course", this::createCourse, ArrayList::new);
 	}
 
-	/*
-	private List<CourseData.InmutableCourseData> mapToCourse(Map<String, Object> data) {
-		List<Map<String, Object>> coursesData = ensureList(data.get("courses"));
-		List<CourseData.InmutableCourseData> courses = new ArrayList<>();
-
-		for (Map<String, Object> courseMap : coursesData) {
-			String title = (String) courseMap.get("title");
-			String description = (String) courseMap.get("description");
-			String image = (String) courseMap.get("image");
-			String author = (String) courseMap.get("author");
-			LocalDateTime creationDate = LocalDateTime.now();
-
-			List<String> categoriesData = (List<String>) courseMap.get("categories");
-			Set<CategoryData> categories = categoriesData.stream()
-				.map(CategoryData.InmutableCategoryData::new)
-				.collect(Collectors.toSet());
-
-			List<Map<String, Object>> lessonsData = ensureList(courseMap.get("lessons"));
-			Set<LessonData.InmutableLessonData> lessons = mapToLesson(lessonsData);
-
-			courses.add(new CourseData.InmutableCourseData(title, description, image, author, creationDate, categories, lessons));
-		}
-		return courses;
-	}
-
-	private Set<Lesson> mapToLesson(List<Map<String, Object>> lessonsData) {
-		List<Lesson> lessons = new ArrayList<>();
-		for (Map<String, Object> lessonMap : lessonsData) {
-			String title = (String) lessonMap.get("title");
-			String explanation = (String) lessonMap.get("explanation");
-
-			List<Map<String, Object>> exercisesData = ensureList(lessonMap.get("exercises"));
-			List<Exercise> exercises = mapToExercise(exercisesData);
-
-			lessons.add(new Lesson(title, explanation, exercises));
-		}
-		return lessons;
-	}
-
-	private List<Exercise> mapToExercise(List<Map<String, Object>> exercisesData) {
-		List<Exercise> exercises = new ArrayList<>();
-		for (Map<String, Object> exerciseMap : exercisesData) {
-			String statement = (String) exerciseMap.get("statement");
-
-			List<Map<String, Object>> optionsData = ensureList(exerciseMap.get("options"));
-			List<Option> options = mapToOption(optionsData);
-
-			exercises.add(new Exercise(statement, options));
-		}
-		return exercises;
-	}
-
-	private List<Option> mapToOption(List<Map<String, Object>> optionsData) {
-		List<Option> options = new ArrayList<>();
-		for (Map<String, Object> optionMap : optionsData) {
-			String value = (String) optionMap.get("statement");
-			String isValid = (String) optionMap.getOrDefault("isValid", false);
-
-			options.add(new Option(value, isValid));
-		}
-		return options;
-	}
-
-*/
 	@SuppressWarnings("unchecked")
-	private List<Map<String, Object>> ensureList(Object obj) {
-		if (obj instanceof List) {
-			return (List<Map<String, Object>>) obj;
-		} else if (obj instanceof Map) {
-			return List.of((Map<String, Object>) obj);
-		}
-		return List.of();
+	private CourseUnidentifiedData createCourse(Map<String, Object> courseMap) throws KnowyImporterParseException {
+		String title = ImporterHelper.getRequiredString(courseMap, TAG_TITLE);
+		String description = ImporterHelper.getRequiredString(courseMap, "description");
+		String image = ImporterHelper.getRequiredString(courseMap, "image");
+		String author = ImporterHelper.getRequiredString(courseMap, "author");
+		LocalDateTime creationDate = LocalDateTime.now();
+
+
+		List<String> categoriesData = (List<String>) courseMap.get("categories");
+		Set<CategoryData> categories = categoriesData.stream()
+			.map(CategoryData.InmutableCategoryData::new)
+			.collect(Collectors.toSet());
+
+		PropertyExtractor coursePropertyExtractor = extractorFor(courseMap);
+		Set<LessonUnidentifiedData> lessons = coursePropertyExtractor
+			.extract("lessons", this::createLesson, HashSet::new);
+
+		return new CourseData.InmutableCourseData(title, description, image, author, creationDate, categories, lessons);
+	}
+
+	private LessonUnidentifiedData createLesson(Map<String, Object> lessonMap) throws KnowyImporterParseException {
+		String title = ImporterHelper.getRequiredString(lessonMap, TAG_TITLE);
+		String explanation = ImporterHelper.getRequiredString(lessonMap, "explanation");
+
+		PropertyExtractor lessonPropertyExtractor = extractorFor(lessonMap);
+
+		Set<DocumentationData> documentations = lessonPropertyExtractor.extract(
+			"documentation", this::createDocumentation, HashSet::new
+		);
+		Set<ExerciseUnidentifiedData> exercises = lessonPropertyExtractor.extract(
+			"exercises", this::createExercise, HashSet::new
+		);
+
+		return new LessonData.InmutableLessonData(title, explanation, documentations, exercises);
+	}
+
+	private DocumentationData createDocumentation(Map<String, Object> documentationMap) throws KnowyImporterParseException {
+		String title = ImporterHelper.getRequiredString(documentationMap, TAG_TITLE);
+		String link = ImporterHelper.getRequiredString(documentationMap, "link");
+
+		return new DocumentationData.InmutableDocumentationData(title, link);
+	}
+
+	private ExerciseUnidentifiedData createExercise(Map<String, Object> exerciseMap) throws KnowyImporterParseException {
+		String statement = ImporterHelper.getRequiredString(exerciseMap, "statement");
+
+		PropertyExtractor exercisePropertyExtractor = extractorFor(exerciseMap);
+		List<OptionData> options = exercisePropertyExtractor
+			.extract("options", this::createOption, ArrayList::new);
+
+		return new ExerciseData.InmutableExerciseData(statement, options);
+	}
+
+	private OptionData createOption(Map<String, Object> optionMap) throws KnowyImporterParseException {
+		String value = ImporterHelper.getRequiredString(optionMap, "value");
+		boolean isValid = (boolean) optionMap.getOrDefault("isValid", false);
+
+		return new OptionData.InmutableOptionData(value, isValid);
 	}
 }
