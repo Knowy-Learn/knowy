@@ -28,6 +28,6 @@ public class ExerciseEntity {
 	@Column(name = "statement", length = 100, nullable = false)
 	private String question;
 
-	@OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<OptionEntity> options;
 }

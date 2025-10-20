@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS public.exercise
 (
 	id        serial  NOT NULL,
 	id_lesson integer NOT NULL,
-	question  text    NOT NULL DEFAULT '',
+	statement text    NOT NULL DEFAULT '',
 	PRIMARY KEY (id)
 );
 

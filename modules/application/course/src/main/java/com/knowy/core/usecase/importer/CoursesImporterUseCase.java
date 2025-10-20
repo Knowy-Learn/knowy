@@ -3,8 +3,11 @@ package com.knowy.core.usecase.importer;
 import com.knowy.core.Importer;
 import com.knowy.core.ImporterHelper;
 import com.knowy.core.domain.*;
+import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.DataLoader;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -17,19 +20,21 @@ import static com.knowy.core.ImporterHelper.extractorFor;
  * Use case for importing courses from an {@link InputStream}. Converts raw data into domain entity root and its related
  * domain entities.
  */
-public class CoursesImporterUseCase implements Importer<List<CourseUnidentifiedData>> {
+public class CoursesImporterUseCase implements Importer<List<Course>> {
 
 	private static final String TAG_TITLE = "title";
 
 	private final DataLoader dataLoader;
+	private final CourseRepository courseRepository;
 
 	/**
 	 * Creates a new {@code CoursesImporterUseCase} with the given data loader.
 	 *
 	 * @param dataLoader the loader used to parse raw data
 	 */
-	public CoursesImporterUseCase(DataLoader dataLoader) {
+	public CoursesImporterUseCase(DataLoader dataLoader, CourseRepository courseRepository) {
 		this.dataLoader = dataLoader;
+		this.courseRepository = courseRepository;
 	}
 
 	/**
@@ -40,11 +45,16 @@ public class CoursesImporterUseCase implements Importer<List<CourseUnidentifiedD
 	 * @throws KnowyImporterParseException if parsing fails
 	 */
 	@Override
-	public List<CourseUnidentifiedData> execute(InputStream inputStream) throws KnowyImporterParseException {
+	public List<Course> execute(InputStream inputStream)
+		throws KnowyImporterParseException, KnowyInconsistentDataException, IOException {
+
 		Map<String, Object> courses = dataLoader.loadData(inputStream);
 
 		PropertyExtractor rootPropertyExtractor = extractorFor(courses);
-		return rootPropertyExtractor.extract("course", this::createCourse, ArrayList::new);
+		List<CourseUnidentifiedData> courseUnidentifiedDataList = rootPropertyExtractor
+			.extract("course", this::createCourse, ArrayList::new);
+
+		return courseRepository.saveAll(courseUnidentifiedDataList);
 	}
 
 	@SuppressWarnings("unchecked")

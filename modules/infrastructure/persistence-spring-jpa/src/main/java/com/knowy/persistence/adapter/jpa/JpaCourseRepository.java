@@ -2,17 +2,20 @@ package com.knowy.persistence.adapter.jpa;
 
 import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
+import com.knowy.core.domain.CourseUnidentifiedData;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCourseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserLessonDao;
+import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaCourseMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +31,26 @@ public class JpaCourseRepository implements CourseRepository {
 		this.jpaCourseDao = jpaCourseDao;
 		this.jpaUserLessonDao = jpaUserLessonDao;
 		this.jpaCourseMapper = jpaCourseMapper;
+	}
+
+	@Override
+	@Transactional
+	public <T extends CourseUnidentifiedData> List<Course> saveAll(List<T> courses) throws KnowyInconsistentDataException {
+
+		/*
+		var mapper = new JpaCourseMapper(
+			new JpaCategoryMapper(),
+			new JpaLessonMapper()
+		);
+		*/
+		List<CourseEntity> courseEntities = new ArrayList<>();
+		for (T course : courses) {
+			courseEntities.add(jpaCourseMapper.toEntity(course));
+		}
+		return courseEntities.stream()
+			.map(jpaCourseDao::saveAndFlush)
+			.map(jpaCourseMapper::toDomain)
+			.toList();
 	}
 
 	@Override

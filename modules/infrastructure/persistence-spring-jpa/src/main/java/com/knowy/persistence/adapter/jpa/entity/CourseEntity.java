@@ -34,7 +34,7 @@ public class CourseEntity {
 	@Column(name = "creation_date")
 	private LocalDateTime creationDate;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(
 		name = "course_language",
 		joinColumns = @JoinColumn(name = "id_course"),
@@ -42,6 +42,6 @@ public class CourseEntity {
 	)
 	private List<CategoryEntity> languages = new ArrayList<>();
 
-	@OneToMany(mappedBy = "course")
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
 	private List<LessonEntity> lessons = new ArrayList<>();
 }

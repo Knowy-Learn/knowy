@@ -31,7 +31,8 @@
 		<module>modules/infrastructure/frontend-web-angular</module>
 		<module>builds/knowy-thymeleaf-compose</module>
 		<module>builds/knowy-devenv-compose</module>
-	</modules>
+        <module>modules/infrastructure/xml-data-loader</module>
+    </modules>
 
 	<dependencyManagement>
 		<dependencies>

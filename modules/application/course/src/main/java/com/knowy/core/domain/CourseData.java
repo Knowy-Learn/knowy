@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public interface CourseData<C extends CategoryData,
-	L extends LessonData<DocumentationData, ? extends ExerciseData<? extends OptionData>>> extends CourseMinData {
+	L extends LessonData<? extends DocumentationData, ? extends ExerciseData<? extends OptionData>>> extends CourseMinData {
 	Set<C> categories();
 
 	Set<L> lessons();

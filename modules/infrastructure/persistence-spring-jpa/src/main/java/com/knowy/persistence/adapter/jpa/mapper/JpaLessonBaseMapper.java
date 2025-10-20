@@ -24,6 +24,6 @@ public class JpaLessonBaseMapper implements EntityMapper<LessonInfo, LessonEntit
 
 	@Override
 	public LessonEntity toEntity(LessonInfo domain) {
-		return null;
+		throw new UnsupportedOperationException("Operation not implemented");
 	}
 }

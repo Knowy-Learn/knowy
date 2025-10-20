@@ -1,7 +1,9 @@
 package com.knowy.core;
 
+import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.exception.KnowyValidationException;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -18,7 +20,7 @@ public interface Importer<T> {
 	 * @return the imported object of type {@code T}
 	 * @throws KnowyImporterParseException if the input cannot be parsed or validated
 	 */
-	T execute(InputStream inputStream) throws KnowyImporterParseException;
+	T execute(InputStream inputStream) throws KnowyImporterParseException, KnowyInconsistentDataException, IOException;
 
 	/**
 	 * Exception thrown when an error occurs while parsing or validating.

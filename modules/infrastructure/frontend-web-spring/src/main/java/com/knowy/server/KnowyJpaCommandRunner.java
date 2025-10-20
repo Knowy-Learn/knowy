@@ -1,14 +1,10 @@
 package com.knowy.server;
 
-import com.knowy.core.domain.UserExercise;
-import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
-import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseEntity;
+import com.knowy.persistence.adapter.jpa.entity.ExerciseEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @SuppressWarnings("java:S106")
@@ -21,33 +17,39 @@ public class KnowyJpaCommandRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		System.out.println("=== Probando JPQL ===");
 
-/*		// Tu consulta JPQL
-		List<PublicUserExerciseEntity> entities = em.createQuery(
+		// Tu consulta JPQL
+/*		List<PublicUserEntity> entities = em.createQuery(
 				"""
-					SELECT pue
-					FROM PublicUserExerciseEntity pue
-					JOIN pue.exerciseEntity e
-					JOIN e.lesson l
-					WHERE pue.id.idPublicUser = 1
-					  AND l.id = 1
-					""", PublicUserExerciseEntity.class)
+					SELECT pu
+					FROM LessonEntity l
+					JOIN PublicUserLessonEntity pul ON pul.lessonId = l.id
+					JOIN PublicUserEntity pu ON pu.id = pul.userId
+					WHERE l.id = 1
+					""", PublicUserEntity.class)
 			.getResultList();
 
 		// Imprime los resultados
 		entities.forEach(
 			entity -> System.out.println(
-				"id: " + entity.getExerciseEntity().getId() +
-				" rate: " + entity.getRate()
+				"id: " + entity.getId() +
+					" name: " + entity.getNickname()
 			)
-		);*/
+		);
+*/
 
 
 		System.out.println("---------- Single JPQL Query ----------");
-		CourseEntity entity = em.createQuery(
-				"SELECT l.course FROM LessonEntity l WHERE l.id = 1",
-				CourseEntity.class
+		ExerciseEntity entity = em.createQuery(
+			"""
+				SELECT e
+				FROM OptionEntity o
+				JOIN o.exercise e
+				WHERE o.id = 1
+				""",
+			ExerciseEntity.class
 		).getSingleResult();
-		System.out.println("id: " + entity.getId() + " title: " + entity.getTitle() + " author: " + entity.getAuthor());
+		System.out.println("id: " + entity.getId() + " Statement: " + entity.getQuestion());
+
 
 	}
 }

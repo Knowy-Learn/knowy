@@ -2,6 +2,8 @@ package com.knowy.core.usecase.importer;
 
 import com.knowy.core.Importer;
 import com.knowy.core.domain.*;
+import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.DataLoader;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +13,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -28,23 +31,31 @@ class CoursesImporterUseCaseTest {
 	@Mock
 	private DataLoader dataLoader;
 
+	@Mock
+	private CourseRepository courseRepository;
+
 	@InjectMocks
 	private CoursesImporterUseCase coursesImporterUseCase;
 
 	@Test
-	void given_validCourseData_when_execute_then_mapsToCourseData() {
+	void given_validCourseData_when_execute_then_mapsToCourseData() throws KnowyInconsistentDataException, IOException {
 		Map<String, Object> mockMap = getMockedMap();
+		Course courseMock = Mockito.mock(Course.class);
 
 		Mockito.when(dataLoader.loadData(Mockito.any(InputStream.class)))
 			.thenReturn(mockMap);
+		Mockito.when(courseRepository.saveAll(Mockito.any()))
+			.thenReturn(List.of(courseMock));
 
 		try (MockedStatic<LocalDateTime> mockedNow = Mockito.mockStatic(LocalDateTime.class)) {
 			mockedNow.when(LocalDateTime::now).thenReturn(FIXED_DATE);
 
-			List<CourseUnidentifiedData> result = assertDoesNotThrow(
+			List<Course> result = assertDoesNotThrow(
 				() -> coursesImporterUseCase.execute(Mockito.mock(InputStream.class))
 			);
-			assertEquals(getMockedCourseUnidentifiedData(), result);
+			assertEquals(List.of(courseMock), result);
+			Mockito.verify(courseRepository, Mockito.times(1))
+				.saveAll(getMockedCourseUnidentifiedData());
 		}
 	}
 
@@ -122,7 +133,7 @@ class CoursesImporterUseCaseTest {
 	}
 
 	@Test
-	void given_courseDataWithInvalidTags_when_execute_then_throwsKnowySourceParsingException() {
+	void given_courseDataWithInvalidTags_when_execute_then_throwsKnowySourceParsingException() throws IOException {
 		Map<String, Object> mockMap = getMockedInvalidMap();
 
 		Mockito.when(dataLoader.loadData(Mockito.any(InputStream.class)))
