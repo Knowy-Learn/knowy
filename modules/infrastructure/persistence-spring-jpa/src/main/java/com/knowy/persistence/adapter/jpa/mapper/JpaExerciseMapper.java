@@ -9,12 +9,10 @@ import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.ExerciseEntity;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.OptionEntity;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class JpaExerciseMapper implements EntityMapper<Exercise, ExerciseEntity> {
 
 	private final JpaOptionMapper jpaOptionMapper;

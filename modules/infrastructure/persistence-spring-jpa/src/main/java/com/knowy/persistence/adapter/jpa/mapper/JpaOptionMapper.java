@@ -6,9 +6,7 @@ import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.entity.ExerciseEntity;
 import com.knowy.persistence.adapter.jpa.entity.OptionEntity;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JpaOptionMapper implements EntityMapper<Option, OptionEntity> {
 
 	private final JpaExerciseDao jpaExerciseDao;

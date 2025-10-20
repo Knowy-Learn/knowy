@@ -5,11 +5,9 @@ import com.knowy.core.domain.DocumentationData;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.DocumentationEntity;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class JpaDocumentationMapper implements EntityMapper<Documentation, DocumentationEntity> {
 
 	private final JpaLessonDao jpaLessonDao;

@@ -4,9 +4,7 @@ import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.Password;
 import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.persistence.adapter.jpa.entity.PrivateUserEntity;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JpaUserPrivateMapper implements EntityMapper<UserPrivate, PrivateUserEntity> {
 
 	private final JpaUserMapper jpaUserMapper;

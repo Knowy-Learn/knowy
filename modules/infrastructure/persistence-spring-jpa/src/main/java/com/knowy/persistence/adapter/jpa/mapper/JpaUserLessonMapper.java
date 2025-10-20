@@ -6,9 +6,7 @@ import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserDao;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JpaUserLessonMapper implements EntityMapper<UserLesson, PublicUserLessonEntity> {
 
 	private final JpaLessonMapper jpaLessonMapper;

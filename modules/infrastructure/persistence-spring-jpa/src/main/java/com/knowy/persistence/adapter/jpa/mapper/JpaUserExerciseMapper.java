@@ -7,9 +7,7 @@ import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserDao;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseId;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JpaUserExerciseMapper implements EntityMapper<UserExercise, PublicUserExerciseEntity> {
 	private final JpaUserDao jpaUserDao;
 	private final JpaExerciseDao jpaExerciseDao;

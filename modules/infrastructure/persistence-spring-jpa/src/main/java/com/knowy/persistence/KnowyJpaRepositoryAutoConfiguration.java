@@ -11,14 +11,12 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @AutoConfiguration
-@ComponentScan("com.knowy.persistence.adapter.jpa.mapper")
 @EntityScan("com.knowy.persistence.adapter.jpa.entity")
 @EnableJpaRepositories("com.knowy.persistence.adapter.jpa.dao")
-public class KnowyJpaAutoConfiguration {
+public class KnowyJpaRepositoryAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
@@ -28,8 +26,7 @@ public class KnowyJpaAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public CategoryRepository jpaCategoryRepository(JpaCategoryDao jpaCategoryDao,
-													JpaCategoryMapper jpaCategoryMapper) {
+	public CategoryRepository jpaCategoryRepository(JpaCategoryDao jpaCategoryDao, JpaCategoryMapper jpaCategoryMapper) {
 		return new JpaCategoryRepository(jpaCategoryDao, jpaCategoryMapper);
 	}
 
@@ -43,8 +40,7 @@ public class KnowyJpaAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public ExerciseRepository jpaExerciseRepository(JpaExerciseDao jpaExerciseDao,
-													JpaExerciseMapper jpaExerciseMapper) {
+	public ExerciseRepository jpaExerciseRepository(JpaExerciseDao jpaExerciseDao, JpaExerciseMapper jpaExerciseMapper) {
 		return new JpaExerciseRepository(jpaExerciseDao, jpaExerciseMapper);
 	}
 
@@ -100,6 +96,5 @@ public class KnowyJpaAutoConfiguration {
 	public UserRepository jpaUserRepository(JpaUserDao jpaUserDao, JpaUserMapper jpaUserMapper) {
 		return new JpaUserRepository(jpaUserDao, jpaUserMapper);
 	}
-
 }
 
