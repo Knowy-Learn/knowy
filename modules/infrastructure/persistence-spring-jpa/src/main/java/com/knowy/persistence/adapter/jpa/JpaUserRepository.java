@@ -4,8 +4,6 @@ import com.knowy.core.user.domain.User;
 import com.knowy.core.user.port.UserRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserDao;
-import com.knowy.persistence.adapter.jpa.mapper.JpaCategoryMapper;
-import com.knowy.persistence.adapter.jpa.mapper.JpaProfileImageMapper;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserMapper;
 
 import java.util.Optional;
@@ -22,10 +20,7 @@ public class JpaUserRepository implements UserRepository {
 
 	@Override
 	public Optional<User> findById(Integer id) {
-		JpaUserMapper jpaUserMapper = new JpaUserMapper(
-			new JpaCategoryMapper(jpaCategoryDao),
-			new JpaProfileImageMapper()
-		);
+		JpaUserMapper jpaUserMapper = new JpaUserMapper(jpaCategoryDao);
 
 		return jpaUserDao.findById(id).map(jpaUserMapper::toDomain);
 	}
@@ -37,10 +32,7 @@ public class JpaUserRepository implements UserRepository {
 
 	@Override
 	public User save(User user) {
-		JpaUserMapper jpaUserMapper = new JpaUserMapper(
-			new JpaCategoryMapper(jpaCategoryDao),
-			new JpaProfileImageMapper()
-		);
+		JpaUserMapper jpaUserMapper = new JpaUserMapper(jpaCategoryDao);
 
 		jpaUserDao.save(jpaUserMapper.toEntity(user));
 		return user;
@@ -48,10 +40,7 @@ public class JpaUserRepository implements UserRepository {
 
 	@Override
 	public Optional<User> findByNickname(String nickname) {
-		JpaUserMapper jpaUserMapper = new JpaUserMapper(
-			new JpaCategoryMapper(jpaCategoryDao),
-			new JpaProfileImageMapper()
-		);
+		JpaUserMapper jpaUserMapper = new JpaUserMapper(jpaCategoryDao);
 
 		return jpaUserDao.findByNickname(nickname).map(jpaUserMapper::toDomain);
 	}

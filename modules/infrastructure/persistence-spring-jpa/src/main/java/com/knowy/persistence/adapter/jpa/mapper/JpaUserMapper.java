@@ -1,6 +1,7 @@
 package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.user.domain.User;
+import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserEntity;
 
 import java.util.stream.Collectors;
@@ -10,9 +11,9 @@ public class JpaUserMapper implements EntityMapper<User, PublicUserEntity> {
 	private final JpaCategoryMapper jpaCategoryMapper;
 	private final JpaProfileImageMapper jpaProfileImageMapper;
 
-	public JpaUserMapper(JpaCategoryMapper jpaCategoryMapper, JpaProfileImageMapper jpaProfileImageMapper) {
-		this.jpaCategoryMapper = jpaCategoryMapper;
-		this.jpaProfileImageMapper = jpaProfileImageMapper;
+	public JpaUserMapper(JpaCategoryDao jpaCategoryDao) {
+		this.jpaCategoryMapper = new JpaCategoryMapper(jpaCategoryDao);
+		this.jpaProfileImageMapper = new JpaProfileImageMapper();
 	}
 
 	@Override

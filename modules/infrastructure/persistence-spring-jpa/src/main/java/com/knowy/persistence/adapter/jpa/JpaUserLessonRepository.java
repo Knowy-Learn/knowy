@@ -6,7 +6,7 @@ import com.knowy.core.port.UserLessonRepository;
 import com.knowy.persistence.adapter.jpa.dao.*;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonIdEntity;
-import com.knowy.persistence.adapter.jpa.mapper.*;
+import com.knowy.persistence.adapter.jpa.mapper.JpaUserLessonMapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -107,18 +107,6 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 	}
 
 	private JpaUserLessonMapper getJpaUserLessonMapper() {
-		return new JpaUserLessonMapper(
-			new JpaLessonMapper(
-				new JpaDocumentationMapper(jpaLessonDao),
-				new JpaExerciseMapper(
-					new JpaOptionMapper(jpaExerciseDao),
-					jpaLessonDao
-				),
-				jpaCourseDao,
-				jpaLessonDao
-			),
-			jpaUserDao,
-			jpaLessonDao
-		);
+		return new JpaUserLessonMapper(jpaUserDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao);
 	}
 }

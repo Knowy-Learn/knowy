@@ -9,8 +9,6 @@ import com.knowy.persistence.adapter.jpa.dao.JpaUserDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserExerciseDao;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseId;
-import com.knowy.persistence.adapter.jpa.mapper.JpaExerciseMapper;
-import com.knowy.persistence.adapter.jpa.mapper.JpaOptionMapper;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserExerciseMapper;
 
 import java.util.List;
@@ -87,13 +85,6 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 	}
 
 	private JpaUserExerciseMapper jpaUserExerciseMapper() {
-		return new JpaUserExerciseMapper(
-			jpaUserDao,
-			jpaExerciseDao,
-			new JpaExerciseMapper(
-				new JpaOptionMapper(jpaExerciseDao),
-				jpaLessonDao
-			)
-		);
+		return new JpaUserExerciseMapper(jpaUserDao, jpaExerciseDao, jpaLessonDao);
 	}
 }

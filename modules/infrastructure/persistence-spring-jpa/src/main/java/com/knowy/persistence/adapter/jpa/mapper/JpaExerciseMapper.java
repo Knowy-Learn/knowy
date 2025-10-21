@@ -5,6 +5,7 @@ import com.knowy.core.domain.ExerciseUnidentifiedData;
 import com.knowy.core.domain.Option;
 import com.knowy.core.domain.OptionData;
 import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.ExerciseEntity;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
@@ -18,8 +19,8 @@ public class JpaExerciseMapper implements EntityMapper<Exercise, ExerciseEntity>
 	private final JpaOptionMapper jpaOptionMapper;
 	private final JpaLessonDao jpaLessonDao;
 
-	public JpaExerciseMapper(JpaOptionMapper jpaOptionMapper, JpaLessonDao jpaLessonDao) {
-		this.jpaOptionMapper = jpaOptionMapper;
+	public JpaExerciseMapper(JpaExerciseDao jpaExerciseDao, JpaLessonDao jpaLessonDao) {
+		this.jpaOptionMapper = new JpaOptionMapper(jpaExerciseDao);
 		this.jpaLessonDao = jpaLessonDao;
 	}
 

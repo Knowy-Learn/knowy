@@ -11,7 +11,7 @@ import com.knowy.persistence.adapter.jpa.dao.*;
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
-import com.knowy.persistence.adapter.jpa.mapper.*;
+import com.knowy.persistence.adapter.jpa.mapper.JpaCourseMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +45,7 @@ public class JpaCourseRepository implements CourseRepository {
 	@Override
 	@Transactional
 	public <T extends CourseUnidentifiedData> List<Course> saveAll(List<T> courses) throws KnowyInconsistentDataException {
-		JpaCourseMapper jpaCourseMapper = getNewJpaCourseMapper();
+		JpaCourseMapper jpaCourseMapper = getJpaCourseMapper();
 
 		List<CourseEntity> courseEntities = new ArrayList<>();
 		for (T course : courses) {
@@ -59,7 +59,7 @@ public class JpaCourseRepository implements CourseRepository {
 
 	@Override
 	public List<Course> findAllById(List<Integer> ids) {
-		JpaCourseMapper jpaCourseMapper = getNewJpaCourseMapper();
+		JpaCourseMapper jpaCourseMapper = getJpaCourseMapper();
 
 		return jpaCourseDao.findAllById(ids)
 			.stream()
@@ -75,7 +75,7 @@ public class JpaCourseRepository implements CourseRepository {
 	}
 
 	private List<Course> fetchCourses(Pagination pagination) {
-		JpaCourseMapper jpaCourseMapper = getNewJpaCourseMapper();
+		JpaCourseMapper jpaCourseMapper = getJpaCourseMapper();
 
 		Pageable pageRequest = PageRequest.of(pagination.page(), pagination.size());
 		return jpaCourseDao.findAll(pageRequest)
@@ -106,7 +106,7 @@ public class JpaCourseRepository implements CourseRepository {
 
 	@Override
 	public Stream<Course> findAllStreamingInRandomOrder() {
-		JpaCourseMapper jpaCourseMapper = getNewJpaCourseMapper();
+		JpaCourseMapper jpaCourseMapper = getJpaCourseMapper();
 
 		return jpaCourseDao.findAllRandom()
 			.map(jpaCourseMapper::toDomain);
@@ -114,7 +114,7 @@ public class JpaCourseRepository implements CourseRepository {
 
 	@Override
 	public Set<Course> findAllWhereUserIsSubscribed(int userId) {
-		JpaCourseMapper jpaCourseMapper = getNewJpaCourseMapper();
+		JpaCourseMapper jpaCourseMapper = getJpaCourseMapper();
 
 		return jpaUserLessonDao.findByUserId(userId).stream()
 			.map(PublicUserLessonEntity::getLessonEntity)
@@ -125,7 +125,7 @@ public class JpaCourseRepository implements CourseRepository {
 
 	@Override
 	public Stream<Course> findByCategoriesStreamingInRandomOrder(Collection<Category> categories) {
-		JpaCourseMapper jpaCourseMapper = getNewJpaCourseMapper();
+		JpaCourseMapper jpaCourseMapper = getJpaCourseMapper();
 
 		List<Integer> categoriesIds = categories.stream()
 			.map(Category::id)
@@ -136,24 +136,13 @@ public class JpaCourseRepository implements CourseRepository {
 
 	@Override
 	public Optional<Course> findById(Integer id) {
-		JpaCourseMapper jpaCourseMapper = getNewJpaCourseMapper();
+		JpaCourseMapper jpaCourseMapper = getJpaCourseMapper();
 
 		return jpaCourseDao.findById(id).map(jpaCourseMapper::toDomain);
 	}
 
-	private JpaCourseMapper getNewJpaCourseMapper() {
-		return new JpaCourseMapper(
-			new JpaCategoryMapper(jpaCategoryDao),
-			new JpaLessonMapper(
-				new JpaDocumentationMapper(jpaLessonDao),
-				new JpaExerciseMapper(
-					new JpaOptionMapper(jpaExerciseDao),
-					jpaLessonDao
-				),
-				jpaCourseDao,
-				jpaLessonDao
-			)
-		);
+	private JpaCourseMapper getJpaCourseMapper() {
+		return new JpaCourseMapper(jpaCategoryDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao);
 	}
 
 	@Override

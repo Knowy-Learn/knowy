@@ -3,6 +3,7 @@ package com.knowy.persistence.adapter.jpa.mapper;
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.persistence.adapter.jpa.dao.JpaCourseDao;
+import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import com.knowy.persistence.adapter.jpa.entity.DocumentationEntity;
@@ -22,13 +23,12 @@ public class JpaLessonMapper implements EntityMapper<Lesson, LessonEntity> {
 	private final JpaLessonDao jpaLessonDao;
 
 	public JpaLessonMapper(
-		JpaDocumentationMapper jpaDocumentationMapper,
-		JpaExerciseMapper jpaExerciseMapper,
 		JpaCourseDao jpaCourseDao,
-		JpaLessonDao jpaLessonDao
+		JpaLessonDao jpaLessonDao,
+		JpaExerciseDao jpaExerciseDao
 	) {
-		this.jpaDocumentationMapper = jpaDocumentationMapper;
-		this.jpaExerciseMapper = jpaExerciseMapper;
+		this.jpaDocumentationMapper = new JpaDocumentationMapper(jpaLessonDao);
+		this.jpaExerciseMapper = new JpaExerciseMapper(jpaExerciseDao, jpaLessonDao);
 		this.jpaCourseDao = jpaCourseDao;
 		this.jpaLessonDao = jpaLessonDao;
 	}

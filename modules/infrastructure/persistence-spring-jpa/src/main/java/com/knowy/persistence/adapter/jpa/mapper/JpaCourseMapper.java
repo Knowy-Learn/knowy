@@ -2,10 +2,13 @@ package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
+import com.knowy.persistence.adapter.jpa.dao.JpaCourseDao;
+import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
+import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.CategoryEntity;
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
-import org.springframework.context.annotation.Lazy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,9 +20,14 @@ public class JpaCourseMapper implements EntityMapper<Course, CourseEntity> {
 	private final JpaCategoryMapper jpaCategoryMapper;
 	private final JpaLessonMapper jpaLessonMapper;
 
-	public JpaCourseMapper(JpaCategoryMapper jpaCategoryMapper, @Lazy JpaLessonMapper jpaLessonMapper) {
-		this.jpaCategoryMapper = jpaCategoryMapper;
-		this.jpaLessonMapper = jpaLessonMapper;
+	public JpaCourseMapper(
+		JpaCategoryDao jpaCategoryDao,
+		JpaLessonDao jpaLessonDao,
+		JpaCourseDao jpaCourseDao,
+		JpaExerciseDao jpaExerciseDao
+	) {
+		this.jpaCategoryMapper = new JpaCategoryMapper(jpaCategoryDao);
+		this.jpaLessonMapper = new JpaLessonMapper(jpaCourseDao, jpaLessonDao, jpaExerciseDao);
 	}
 
 	@Override

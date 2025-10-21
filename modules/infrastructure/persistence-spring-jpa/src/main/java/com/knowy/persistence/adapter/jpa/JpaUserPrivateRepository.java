@@ -5,9 +5,6 @@ import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserPrivateDao;
 import com.knowy.persistence.adapter.jpa.entity.PrivateUserEntity;
-import com.knowy.persistence.adapter.jpa.mapper.JpaCategoryMapper;
-import com.knowy.persistence.adapter.jpa.mapper.JpaProfileImageMapper;
-import com.knowy.persistence.adapter.jpa.mapper.JpaUserMapper;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserPrivateMapper;
 
 import java.util.Optional;
@@ -45,11 +42,6 @@ public class JpaUserPrivateRepository implements UserPrivateRepository {
 	}
 
 	private JpaUserPrivateMapper getJpaUserPrivateMapper() {
-		return new JpaUserPrivateMapper(
-			new JpaUserMapper(
-				new JpaCategoryMapper(jpaCategoryDao),
-				new JpaProfileImageMapper()
-			)
-		);
+		return new JpaUserPrivateMapper(jpaCategoryDao);
 	}
 }
