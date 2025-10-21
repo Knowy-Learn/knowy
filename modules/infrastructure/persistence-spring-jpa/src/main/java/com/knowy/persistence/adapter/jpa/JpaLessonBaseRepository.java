@@ -11,15 +11,15 @@ import java.util.Optional;
 public class JpaLessonBaseRepository implements LessonBaseRepository {
 
 	private final JpaLessonDao jpaLessonDao;
-	private final JpaLessonBaseMapper jpaLessonBaseMapper;
 
-	public JpaLessonBaseRepository(JpaLessonDao jpaLessonDao, JpaLessonBaseMapper jpaLessonBaseMapper) {
+	public JpaLessonBaseRepository(JpaLessonDao jpaLessonDao) {
 		this.jpaLessonDao = jpaLessonDao;
-		this.jpaLessonBaseMapper = jpaLessonBaseMapper;
 	}
 
 	@Override
 	public Optional<LessonInfo> findById(int lessonId) throws KnowyDataAccessException {
+		JpaLessonBaseMapper jpaLessonBaseMapper = new JpaLessonBaseMapper();
+
 		return jpaLessonDao.findById(lessonId).map(jpaLessonBaseMapper::toDomain);
 	}
 }

@@ -6,7 +6,6 @@ import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.core.user.port.UserRepository;
 import com.knowy.persistence.adapter.jpa.*;
 import com.knowy.persistence.adapter.jpa.dao.*;
-import com.knowy.persistence.adapter.jpa.mapper.*;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -26,75 +25,84 @@ public class KnowyJpaRepositoryAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public CategoryRepository jpaCategoryRepository(JpaCategoryDao jpaCategoryDao, JpaCategoryMapper jpaCategoryMapper) {
-		return new JpaCategoryRepository(jpaCategoryDao, jpaCategoryMapper);
+	public CategoryRepository jpaCategoryRepository(JpaCategoryDao jpaCategoryDao) {
+		return new JpaCategoryRepository(jpaCategoryDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
 	public CourseRepository jpaCourseRepository(
-		JpaCourseDao jpaCourseDao, JpaUserLessonDao jpaUserLessonDao, JpaCourseMapper jpaCourseMapper
+		JpaCourseDao jpaCourseDao,
+		JpaUserLessonDao jpaUserLessonDao,
+		JpaCategoryDao jpaCategoryDao,
+		JpaLessonDao jpaLessonDao,
+		JpaExerciseDao jpaExerciseDao
 	) {
-		return new JpaCourseRepository(jpaCourseDao, jpaUserLessonDao, jpaCourseMapper);
+		return new JpaCourseRepository(jpaCourseDao, jpaUserLessonDao, jpaCategoryDao, jpaLessonDao, jpaExerciseDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public ExerciseRepository jpaExerciseRepository(JpaExerciseDao jpaExerciseDao, JpaExerciseMapper jpaExerciseMapper) {
-		return new JpaExerciseRepository(jpaExerciseDao, jpaExerciseMapper);
+	public ExerciseRepository jpaExerciseRepository(JpaExerciseDao jpaExerciseDao, JpaLessonDao jpaLessonDao) {
+		return new JpaExerciseRepository(jpaExerciseDao, jpaLessonDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
 	public LessonRepository jpaLessonRepository(
-		JpaLessonDao jpaLessonDao, JpaUserLessonDao jpaUserLessonDao, JpaLessonMapper jpaLessonMapper
+		JpaLessonDao jpaLessonDao, JpaUserLessonDao jpaUserLessonDao, JpaExerciseDao jpaExerciseDao, JpaCourseDao jpaCourseDao
 	) {
-		return new JpaLessonRepository(jpaLessonDao, jpaUserLessonDao, jpaLessonMapper);
+		return new JpaLessonRepository(jpaLessonDao, jpaUserLessonDao, jpaExerciseDao, jpaCourseDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
 	public LessonBaseRepository jpaLessonBaseRepository(
-		JpaLessonDao jpaLessonDao, JpaLessonBaseMapper jpaLessonBaseMapper
+		JpaLessonDao jpaLessonDao
 	) {
-		return new JpaLessonBaseRepository(jpaLessonDao, jpaLessonBaseMapper);
+		return new JpaLessonBaseRepository(jpaLessonDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public ProfileImageRepository jpaProfileImageRepository(
-		JpaProfileImageDao jpaProfileImageDao, JpaProfileImageMapper jpaProfileImageMapper
-	) {
-		return new JpaProfileImageRepository(jpaProfileImageDao, jpaProfileImageMapper);
+	public ProfileImageRepository jpaProfileImageRepository(JpaProfileImageDao jpaProfileImageDao) {
+		return new JpaProfileImageRepository(jpaProfileImageDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public UserExerciseRepository jpaUserExerciseRepository(JpaUserExerciseDao jpaUserExerciseDao,
-															JpaUserExerciseMapper jpaUserExerciseMapper) {
-		return new JpaUserExerciseRepository(jpaUserExerciseDao, jpaUserExerciseMapper);
+	public UserExerciseRepository jpaUserExerciseRepository(
+		JpaUserExerciseDao jpaUserExerciseDao,
+		JpaUserDao jpaUserDao,
+		JpaExerciseDao jpaExerciseDao,
+		JpaLessonDao jpaLessonDao
+	) {
+		return new JpaUserExerciseRepository(jpaUserExerciseDao, jpaUserDao, jpaExerciseDao, jpaLessonDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
 	public UserLessonRepository jpaUserLessonRepository(
-		JpaUserLessonDao jpaUserLessonDao, JpaUserLessonMapper jpaUserLessonMapper
+		JpaUserLessonDao jpaUserLessonDao,
+		JpaLessonDao jpaLessonDao,
+		JpaExerciseDao jpaExerciseDao,
+		JpaCourseDao jpaCourseDao, JpaUserDao jpaUserDao
 	) {
-		return new JpaUserLessonRepository(jpaUserLessonDao, jpaUserLessonMapper);
+		return new JpaUserLessonRepository(jpaUserLessonDao, jpaLessonDao, jpaExerciseDao, jpaCourseDao, jpaUserDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
 	public UserPrivateRepository jpaUserPrivateRepository(
-		JpaUserPrivateDao jpaUserPrivateDao, JpaUserPrivateMapper jpaUserPrivateMapper
+		JpaUserPrivateDao jpaUserPrivateDao, JpaCategoryDao jpaCategoryDao
 	) {
-		return new JpaUserPrivateRepository(jpaUserPrivateDao, jpaUserPrivateMapper);
+		return new JpaUserPrivateRepository(jpaUserPrivateDao, jpaCategoryDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public UserRepository jpaUserRepository(JpaUserDao jpaUserDao, JpaUserMapper jpaUserMapper) {
-		return new JpaUserRepository(jpaUserDao, jpaUserMapper);
+	public UserRepository jpaUserRepository(JpaUserDao jpaUserDao, JpaCategoryDao jpaCategoryDao) {
+		return new JpaUserRepository(jpaUserDao, jpaCategoryDao);
 	}
 }
 

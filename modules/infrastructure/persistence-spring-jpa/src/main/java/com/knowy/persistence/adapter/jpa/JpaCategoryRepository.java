@@ -14,20 +14,22 @@ import java.util.stream.Collectors;
 public class JpaCategoryRepository implements CategoryRepository {
 
 	private final JpaCategoryDao jpaCategoryDao;
-	private final JpaCategoryMapper jpaCategoryMapper;
 
-	public JpaCategoryRepository(JpaCategoryDao jpaCategoryDao, JpaCategoryMapper jpaCategoryMapper) {
+	public JpaCategoryRepository(JpaCategoryDao jpaCategoryDao) {
 		this.jpaCategoryDao = jpaCategoryDao;
-		this.jpaCategoryMapper = jpaCategoryMapper;
 	}
 
 	@Override
 	public Optional<Category> findByName(String name) throws KnowyInconsistentDataException {
+		JpaCategoryMapper jpaCategoryMapper = new JpaCategoryMapper(jpaCategoryDao);
+
 		return jpaCategoryDao.findByName(name).map(jpaCategoryMapper::toDomain);
 	}
 
 	@Override
 	public Set<Category> findByNameInIgnoreCase(String[] names) throws KnowyInconsistentDataException {
+		JpaCategoryMapper jpaCategoryMapper = new JpaCategoryMapper(jpaCategoryDao);
+
 		return jpaCategoryDao.findByNameInIgnoreCase(names).stream()
 			.map(jpaCategoryMapper::toDomain)
 			.collect(Collectors.toSet());
@@ -35,6 +37,8 @@ public class JpaCategoryRepository implements CategoryRepository {
 
 	@Override
 	public List<Category> findAll() {
+		JpaCategoryMapper jpaCategoryMapper = new JpaCategoryMapper(jpaCategoryDao);
+
 		return jpaCategoryDao.findAll().stream()
 			.map(jpaCategoryMapper::toDomain)
 			.toList();
