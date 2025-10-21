@@ -6,12 +6,16 @@ import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.entity.CategoryEntity;
 
+import java.util.*;
+
 public class JpaCategoryMapper implements EntityMapper<Category, CategoryEntity> {
 
 	private final JpaCategoryDao jpaCategoryDao;
+	private final Map<CategoryEntity, CategoryEntity> categories;
 
 	public JpaCategoryMapper(JpaCategoryDao jpaCategoryDao) {
 		this.jpaCategoryDao = jpaCategoryDao;
+		this.categories = new HashMap<>();
 	}
 
 	@Override
@@ -28,12 +32,19 @@ public class JpaCategoryMapper implements EntityMapper<Category, CategoryEntity>
 	}
 
 	public <T extends CategoryData> CategoryEntity toEntity(T domain) throws KnowyInconsistentDataException {
-		return jpaCategoryDao.findByName(domain.name())
-			.orElseGet(() -> {
-					CategoryEntity categoryEntity = new CategoryEntity();
-					categoryEntity.setName(domain.name());
-					return jpaCategoryDao.saveAndFlush(categoryEntity);
-				}
-			);
+		CategoryEntity newCategory = new CategoryEntity();
+		newCategory.setName(domain.name());
+
+		if (categories.containsKey(newCategory)) {
+			return categories.get(newCategory);
+		}
+
+		Optional<CategoryEntity> databaseCategory = jpaCategoryDao.findByName(domain.name());
+		if (databaseCategory.isPresent()) {
+			return databaseCategory.get();
+		}
+
+		categories.put(newCategory, newCategory);
+		return newCategory;
 	}
 }
