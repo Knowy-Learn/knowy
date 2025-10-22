@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserLessonRepository {
-	boolean existsByUserIdAndLessonId(Integer userId, Integer lessonId) throws KnowyInconsistentDataException;
 
 	List<Integer> findCourseIdsByUserId(Integer userId) throws KnowyInconsistentDataException;
 
@@ -19,12 +18,7 @@ public interface UserLessonRepository {
 
 	List<UserLesson> findAllWhereUserIsSubscribed(int userId) throws KnowyInconsistentDataException;
 
-	boolean existsById(int userId, int lessonId) throws KnowyInconsistentDataException;
-
 	UserLesson save(UserLesson userLesson) throws KnowyInconsistentDataException;
 
 	List<UserLesson> saveAll(Collection<UserLesson> userLessons) throws KnowyInconsistentDataException;
-
-	int countByUserIdAndCourseIdAndStatus(Integer userId, Integer courseId, UserLesson.ProgressStatus status) throws KnowyInconsistentDataException;
-
 }

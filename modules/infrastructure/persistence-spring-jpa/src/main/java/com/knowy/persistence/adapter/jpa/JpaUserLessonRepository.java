@@ -34,21 +34,9 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 		this.jpaUserDao = jpaUserDao;
 	}
 
-	// FIXME: DELETE
-	@Override
-	public boolean existsByUserIdAndLessonId(Integer userId, Integer lessonId) {
-		return jpaUserLessonDao.existsByUserIdAndLessonId(userId, lessonId);
-	}
-
 	@Override
 	public List<Integer> findCourseIdsByUserId(Integer userId) {
 		return jpaUserLessonDao.findCourseIdsByUserId(userId);
-	}
-
-	// FIXME: DELETE
-	@Override
-	public boolean existsById(int userId, int lessonId) {
-		return jpaUserLessonDao.existsById(new PublicUserLessonIdEntity(userId, lessonId));
 	}
 
 	@Override
@@ -71,13 +59,6 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 		return jpaUserLessonDao.saveAll(lessonEntities).stream()
 			.map(jpaUserLessonMapper::toDomain)
 			.toList();
-	}
-
-	// FIXME: DELETE
-	@Override
-	public int countByUserIdAndCourseIdAndStatus(Integer userId, Integer courseId, UserLesson.ProgressStatus status) {
-
-		return jpaUserLessonDao.countByUserIdAndCourseIdAndStatus(userId, courseId, status.name().toLowerCase());
 	}
 
 	@Override

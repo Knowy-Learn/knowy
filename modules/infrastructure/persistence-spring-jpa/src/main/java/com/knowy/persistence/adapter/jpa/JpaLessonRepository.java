@@ -63,9 +63,4 @@ public class JpaLessonRepository implements LessonRepository {
 	private JpaLessonMapper jpaLessonMapper() {
 		return new JpaLessonMapper(jpaCourseDao, jpaLessonDao, jpaExerciseDao);
 	}
-
-	@Override
-	public int countByCourseId(Integer courseId) {
-		return jpaLessonDao.countByCourseId(courseId);
-	}
 }
