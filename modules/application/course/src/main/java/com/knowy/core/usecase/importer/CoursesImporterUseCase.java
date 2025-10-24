@@ -4,11 +4,13 @@ import com.knowy.core.Importer;
 import com.knowy.core.ImporterHelper;
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.KnowyValidationException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.DataLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,10 +47,10 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 	 * @throws KnowyImporterParseException if parsing fails
 	 */
 	@Override
-	public List<Course> execute(InputStream inputStream)
-		throws KnowyImporterParseException, KnowyInconsistentDataException, IOException {
+	public List<Course> execute(InputStream inputStream, URL schema)
+		throws KnowyValidationException, KnowyInconsistentDataException, IOException {
 
-		Map<String, Object> courses = dataLoader.loadData(inputStream);
+		Map<String, Object> courses = dataLoader.loadData(inputStream, schema);
 
 		PropertyExtractor rootPropertyExtractor = extractorFor(courses);
 		List<CourseUnidentifiedData> courseUnidentifiedDataList = rootPropertyExtractor
@@ -65,30 +67,36 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 		String author = ImporterHelper.getRequiredString(courseMap, "author");
 		LocalDateTime creationDate = LocalDateTime.now();
 
+		Map<String, Object> categoriesData = (Map<String, Object>) courseMap.get("categories");
 
-		List<String> categoriesData = (List<String>) courseMap.get("categories");
-		Set<CategoryData> categories = categoriesData.stream()
+		List<String> categoryData = (List<String>) categoriesData.get("category");
+		Set<CategoryData> categories = categoryData.stream()
 			.map(CategoryData.InmutableCategoryData::new)
 			.collect(Collectors.toSet());
 
-		PropertyExtractor coursePropertyExtractor = extractorFor(courseMap);
-		Set<LessonUnidentifiedData> lessons = coursePropertyExtractor
-			.extract("lessons", this::createLesson, HashSet::new);
+		PropertyExtractor coursePropertyExtractor = extractorFor((Map<String, Object>) courseMap.get("lessons"));
+		Set<LessonUnidentifiedData> lesson = coursePropertyExtractor
+			.extract("lesson", this::createLesson, LinkedHashSet::new);
 
-		return new CourseData.InmutableCourseData(title, description, image, author, creationDate, categories, lessons);
+		return new CourseData.InmutableCourseData(title, description, image, author, creationDate, categories, lesson);
 	}
 
 	private LessonUnidentifiedData createLesson(Map<String, Object> lessonMap) throws KnowyImporterParseException {
 		String title = ImporterHelper.getRequiredString(lessonMap, TAG_TITLE);
 		String explanation = ImporterHelper.getRequiredString(lessonMap, "explanation");
 
-		PropertyExtractor lessonPropertyExtractor = extractorFor(lessonMap);
+		var documentationData = (Map<String, Object>) lessonMap.get("documentations");
+		Set<DocumentationData> documentations = new HashSet<>();
+		if (documentationData != null) {
+			PropertyExtractor documentationPropertyExtractor = extractorFor(documentationData);
+			documentations = documentationPropertyExtractor.extract(
+				"documentation", this::createDocumentation, HashSet::new
+			);
+		}
 
-		Set<DocumentationData> documentations = lessonPropertyExtractor.extract(
-			"documentation", this::createDocumentation, HashSet::new
-		);
-		Set<ExerciseUnidentifiedData> exercises = lessonPropertyExtractor.extract(
-			"exercises", this::createExercise, HashSet::new
+		PropertyExtractor exercisePropertyExtractor = extractorFor((Map<String, Object>) lessonMap.get("exercises"));
+		Set<ExerciseUnidentifiedData> exercises = exercisePropertyExtractor.extract(
+			"exercise", this::createExercise, HashSet::new
 		);
 
 		return new LessonData.InmutableLessonData(title, explanation, documentations, exercises);
@@ -104,17 +112,16 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 	private ExerciseUnidentifiedData createExercise(Map<String, Object> exerciseMap) throws KnowyImporterParseException {
 		String statement = ImporterHelper.getRequiredString(exerciseMap, "statement");
 
-		PropertyExtractor exercisePropertyExtractor = extractorFor(exerciseMap);
-		List<OptionData> options = exercisePropertyExtractor
-			.extract("options", this::createOption, ArrayList::new);
+		PropertyExtractor optionPropertyExtractor = extractorFor((Map<String, Object>) exerciseMap.get("options"));
+		List<OptionData> options = optionPropertyExtractor.extract("option", this::createOption, ArrayList::new);
 
 		return new ExerciseData.InmutableExerciseData(statement, options);
 	}
 
 	private OptionData createOption(Map<String, Object> optionMap) throws KnowyImporterParseException {
 		String value = ImporterHelper.getRequiredString(optionMap, "value");
-		boolean isValid = (boolean) optionMap.getOrDefault("isValid", false);
+		String stringIsValid = ImporterHelper.getRequiredString(optionMap, "isValid");
 
-		return new OptionData.InmutableOptionData(value, isValid);
+		return new OptionData.InmutableOptionData(value, Boolean.parseBoolean(stringIsValid));
 	}
 }

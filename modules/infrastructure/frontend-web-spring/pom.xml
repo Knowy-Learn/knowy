@@ -54,6 +54,14 @@
 			<groupId>com.knowy</groupId>
 			<artifactId>notification-spring-mail</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>xml-knowy-schemes</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>xml-data-loader</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

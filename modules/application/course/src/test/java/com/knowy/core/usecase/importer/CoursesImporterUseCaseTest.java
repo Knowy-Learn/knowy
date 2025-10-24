@@ -3,6 +3,7 @@ package com.knowy.core.usecase.importer;
 import com.knowy.core.Importer;
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.KnowyValidationException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.DataLoader;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -38,11 +40,11 @@ class CoursesImporterUseCaseTest {
 	private CoursesImporterUseCase coursesImporterUseCase;
 
 	@Test
-	void given_validCourseData_when_execute_then_mapsToCourseData() throws KnowyInconsistentDataException, IOException {
+	void given_validCourseData_when_execute_then_mapsToCourseData() throws KnowyInconsistentDataException, IOException, KnowyValidationException {
 		Map<String, Object> mockMap = getMockedMap();
 		Course courseMock = Mockito.mock(Course.class);
 
-		Mockito.when(dataLoader.loadData(Mockito.any(InputStream.class)))
+		Mockito.when(dataLoader.loadData(Mockito.any(InputStream.class), Mockito.any(URL.class)))
 			.thenReturn(mockMap);
 		Mockito.when(courseRepository.saveAll(Mockito.any()))
 			.thenReturn(List.of(courseMock));
@@ -51,7 +53,7 @@ class CoursesImporterUseCaseTest {
 			mockedNow.when(LocalDateTime::now).thenReturn(FIXED_DATE);
 
 			List<Course> result = assertDoesNotThrow(
-				() -> coursesImporterUseCase.execute(Mockito.mock(InputStream.class))
+				() -> coursesImporterUseCase.execute(Mockito.mock(InputStream.class), Mockito.mock(URL.class))
 			);
 			assertEquals(List.of(courseMock), result);
 			Mockito.verify(courseRepository, Mockito.times(1))
@@ -133,10 +135,10 @@ class CoursesImporterUseCaseTest {
 	}
 
 	@Test
-	void given_courseDataWithInvalidTags_when_execute_then_throwsKnowySourceParsingException() throws IOException {
+	void given_courseDataWithInvalidTags_when_execute_then_throwsKnowySourceParsingException() throws IOException, KnowyValidationException {
 		Map<String, Object> mockMap = getMockedInvalidMap();
 
-		Mockito.when(dataLoader.loadData(Mockito.any(InputStream.class)))
+		Mockito.when(dataLoader.loadData(Mockito.any(InputStream.class), Mockito.any(URL.class)))
 			.thenReturn(mockMap);
 
 		try (MockedStatic<LocalDateTime> mockedNow = Mockito.mockStatic(LocalDateTime.class)) {
@@ -144,7 +146,7 @@ class CoursesImporterUseCaseTest {
 
 			assertThrows(
 				Importer.KnowyImporterParseException.class,
-				() -> coursesImporterUseCase.execute(Mockito.mock(InputStream.class))
+				() -> coursesImporterUseCase.execute(Mockito.mock(InputStream.class), Mockito.mock(URL.class))
 			);
 		}
 	}

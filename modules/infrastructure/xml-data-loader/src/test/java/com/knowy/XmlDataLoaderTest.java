@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,7 +21,7 @@ class XmlDataLoaderTest {
 	@Test
 	void given_xmlAndXsdFile_when_loadData_then_returnMapStringObject() {
 		InputStream xml = ClassLoader.getSystemClassLoader().getResourceAsStream("data.xml");
-		InputStream xsd = ClassLoader.getSystemClassLoader().getResourceAsStream("data.xsd");
+		URL xsd = ClassLoader.getSystemClassLoader().getResource("data.xsd");
 
 		Map<String, Object> result = assertDoesNotThrow(() -> xmlDataLoader.loadData(
 				Objects.requireNonNull(xml),
@@ -50,7 +51,7 @@ class XmlDataLoaderTest {
 	@Test
 	void given_invalidXmlFile_when_loadData_then_throwKnowyValidationException() {
 		InputStream xml = ClassLoader.getSystemClassLoader().getResourceAsStream("invaliddata.xml");
-		InputStream xsd = ClassLoader.getSystemClassLoader().getResourceAsStream("data.xsd");
+		URL xsd = ClassLoader.getSystemClassLoader().getResource("data.xsd");
 
 		assertThrows(
 			KnowyValidationException.class,

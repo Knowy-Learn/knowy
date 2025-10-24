@@ -6,6 +6,7 @@ import com.knowy.core.exception.KnowyValidationException;
 import com.knowy.core.port.DataLoader;
 
 import java.io.*;
+import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,9 +19,10 @@ public class XmlDataLoader implements DataLoader {
 	}
 
 	@Override
-	public Map<String, Object> loadData(InputStream inputStream, InputStream schemaStream) throws KnowyValidationException, IOException {
+	public Map<String, Object> loadData(InputStream inputStream, URL schema) throws KnowyValidationException,
+		IOException {
 		try (InputStream markedStream = mark(inputStream)) {
-			xmlValidation.validate(markedStream, schemaStream);
+			xmlValidation.validate(markedStream, schema);
 			markedStream.reset();
 			return readXml(markedStream);
 		}

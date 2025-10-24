@@ -13,10 +13,11 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 class XmlValidation {
 
-	public void validate(InputStream xml, InputStream xsd) throws KnowyValidationException, IOException {
+	public void validate(InputStream xml, URL xsd) throws KnowyValidationException, IOException {
 		try {
 			Schema schema = createSchema(xsd);
 			Validator validator = schema.newValidator();
@@ -26,9 +27,9 @@ class XmlValidation {
 		}
 	}
 
-	private Schema createSchema(InputStream xsd) throws SAXException {
+	private Schema createSchema(URL xsd) throws SAXException {
 		SchemaFactory schemaFactory = createSchemaFactory();
-		return schemaFactory.newSchema(new StreamSource(xsd));
+		return schemaFactory.newSchema(xsd);
 	}
 
 	private SchemaFactory createSchemaFactory() throws SAXNotSupportedException, SAXNotRecognizedException {

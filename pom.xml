@@ -32,6 +32,7 @@
 		<module>builds/knowy-thymeleaf-compose</module>
 		<module>builds/knowy-devenv-compose</module>
         <module>modules/infrastructure/xml-data-loader</module>
+        <module>modules/infrastructure/xml-knowy-schemes</module>
     </modules>
 
 	<dependencyManagement>
@@ -69,6 +70,16 @@
 			<dependency>
 				<groupId>com.knowy</groupId>
 				<artifactId>frontend-web-spring</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>xml-knowy-schemes</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>xml-data-loader</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

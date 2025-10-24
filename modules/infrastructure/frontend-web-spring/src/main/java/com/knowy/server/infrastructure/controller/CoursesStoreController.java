@@ -5,6 +5,7 @@ import com.knowy.core.CourseService;
 import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
 import com.knowy.core.domain.Pagination;
+import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyInconsistentDataException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
@@ -45,71 +46,82 @@ public class CoursesStoreController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails
 	) throws KnowyInconsistentDataException {
 
-		List<Course> allCourses = courseService.getAllCourses(new Pagination(page, 8));
+		try {
+			List<Course> allCourses = courseService.getAllCourses(new Pagination(page, 8));
 
-		List<Integer> myCourseIds = courseService.findAllByUserId(userDetails.getUser().id())
-			.stream()
-			.map(Course::id)
-			.toList();
-
-		List<Course> availableCourses = allCourses.stream()
-			.filter(course -> !myCourseIds.contains(course.id()))
-			.toList();
-
-		List<CourseCardDTO> storeCourses = new ArrayList<>();
-		for (Course course : availableCourses) {
-			CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
-				course,
-				0.0f,
-				CourseCardDTO.ActionType.ACQUIRE
-			);
-			storeCourses.add(courseCardDTO);
-		}
-
-		//Filters
-		if (category != null && !category.isEmpty()) {
-			storeCourses = storeCourses.stream()
-				.filter(card -> card.categories() != null && card.categories().contains(category))
+			List<Integer> myCourseIds = courseService.findAllByUserId(userDetails.getUser().id())
+				.stream()
+				.map(Course::id)
 				.toList();
-		}
-		if (order != null) {
-			switch (order) {
-				case "alpha_desc" -> storeCourses = storeCourses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::name, String.CASE_INSENSITIVE_ORDER).reversed())
-					.toList();
-				case "date_asc" -> storeCourses = storeCourses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::id))
-					.toList();
-				case "date_desc" -> storeCourses = storeCourses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::id).reversed())
-					.toList();
-				default -> storeCourses = storeCourses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::name, String.CASE_INSENSITIVE_ORDER))
+
+			List<Course> availableCourses = allCourses.stream()
+				.filter(course -> !myCourseIds.contains(course.id()))
+				.toList();
+
+			List<CourseCardDTO> storeCourses = new ArrayList<>();
+			for (Course course : availableCourses) {
+				CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
+					course,
+					0.0f,
+					CourseCardDTO.ActionType.ACQUIRE
+				);
+				storeCourses.add(courseCardDTO);
+			}
+
+			//Filters
+			if (category != null && !category.isEmpty()) {
+				storeCourses = storeCourses.stream()
+					.filter(card -> card.categories() != null && card.categories().contains(category))
 					.toList();
 			}
+			if (order != null) {
+				switch (order) {
+					case "alpha_desc" -> storeCourses = storeCourses.stream()
+						.sorted(Comparator.comparing(CourseCardDTO::name, String.CASE_INSENSITIVE_ORDER).reversed())
+						.toList();
+					case "date_asc" -> storeCourses = storeCourses.stream()
+						.sorted(Comparator.comparing(CourseCardDTO::id))
+						.toList();
+					case "date_desc" -> storeCourses = storeCourses.stream()
+						.sorted(Comparator.comparing(CourseCardDTO::id).reversed())
+						.toList();
+					default -> storeCourses = storeCourses.stream()
+						.sorted(Comparator.comparing(CourseCardDTO::name, String.CASE_INSENSITIVE_ORDER))
+						.toList();
+				}
+			}
+
+			// PAGINACIÓN
+			int pageSize = 8;
+			int totalPages = (int) Math.ceil((double) storeCourses.size() / pageSize);
+			if (totalPages == 0) totalPages = 1; // mínimo 1 página
+
+			if (page < 1) page = 1;
+			if (page > totalPages) page = totalPages;
+
+			int fromIndex = (page - 1) * pageSize;
+			int toIndex = Math.min(fromIndex + pageSize, storeCourses.size());
+
+			List<CourseCardDTO> paginatedStoreCourses = fromIndex >= storeCourses.size() ? List.of() : storeCourses.subList(fromIndex, toIndex);
+
+			model.addAttribute("courses", paginatedStoreCourses);
+			model.addAttribute("allLanguages", categoryService.findAll().stream().map(Category::name));
+			model.addAttribute("order", order);
+			model.addAttribute("currentPage", page);
+			model.addAttribute("totalPages", totalPages);
+			model.addAttribute("category", category);
+			model.addAttribute("acquireAction", "/store/subscribe");
+			return "pages/courses-store";
+		} catch (KnowyCourseNotFound e) {
+			model.addAttribute("courses", List.of());
+			model.addAttribute("allLanguages", categoryService.findAll().stream().map(Category::name));
+			model.addAttribute("order", order);
+			model.addAttribute("currentPage", page);
+			model.addAttribute("totalPages", 0);
+			model.addAttribute("category", category);
+			model.addAttribute("acquireAction", "/store/subscribe");
+			return "pages/courses-store";
 		}
-
-		// PAGINACIÓN
-		int pageSize = 8;
-		int totalPages = (int) Math.ceil((double) storeCourses.size() / pageSize);
-		if (totalPages == 0) totalPages = 1; // mínimo 1 página
-
-		if (page < 1) page = 1;
-		if (page > totalPages) page = totalPages;
-
-		int fromIndex = (page - 1) * pageSize;
-		int toIndex = Math.min(fromIndex + pageSize, storeCourses.size());
-
-		List<CourseCardDTO> paginatedStoreCourses = fromIndex >= storeCourses.size() ? List.of() : storeCourses.subList(fromIndex, toIndex);
-
-		model.addAttribute("courses", paginatedStoreCourses);
-		model.addAttribute("allLanguages", categoryService.findAll().stream().map(Category::name));
-		model.addAttribute("order", order);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("category", category);
-		model.addAttribute("acquireAction", "/store/subscribe");
-		return "pages/courses-store";
 	}
 
 	@PostMapping("/subscribe")
