@@ -42,6 +42,17 @@ public class JpaCourseRepository implements CourseRepository {
 		this.jpaExerciseDao = jpaExerciseDao;
 	}
 
+	/**
+	 * Saves a list of course data objects into the database.
+	 * <p>
+	 * Each input object is mapped to a {@link CourseEntity} using {@link JpaCourseMapper}, persisted via
+	 * {@code jpaCourseDao}, and then mapped back to the domain {@link Course} object.
+	 *
+	 * @param courses the list of course data objects to save; must extend {@link CourseUnidentifiedData}
+	 * @param <T>     the type of the input course objects
+	 * @return a list of {@link Course} objects after being persisted
+	 * @throws KnowyInconsistentDataException if any of the input data objects are inconsistent
+	 */
 	@Override
 	@Transactional
 	public <T extends CourseUnidentifiedData> List<Course> saveAll(List<T> courses) throws KnowyInconsistentDataException {
