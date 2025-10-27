@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 public class ImporterHelper {
 
 	private ImporterHelper() {
+		// Private constructor to prevent instantiation
 	}
 
 	/**
@@ -21,7 +22,7 @@ public class ImporterHelper {
 	 * @param map the map containing the values
 	 * @param key the key to retrieve
 	 * @return the string value associated with the key
-	 * @throws Importer.KnowyImporterParseException if the value is null
+	 * @throws Importer.KnowyImporterParseException if the value is null or missing
 	 */
 	public static String getRequiredString(Map<String, Object> map, String key) throws Importer.KnowyImporterParseException {
 		String value = (String) map.get(key);
@@ -33,7 +34,7 @@ public class ImporterHelper {
 	 * Maps elements from an iterable into a collection using a mapper function.
 	 *
 	 * @param elements    the elements to map
-	 * @param mapper      the mapping function
+	 * @param mapper      the mapping function that may throw an exception
 	 * @param accumulator a supplier providing the target collection
 	 * @param <T>         the input element type
 	 * @param <R>         the result element type
@@ -91,11 +92,12 @@ public class ImporterHelper {
 	 * @param container the container map
 	 * @param key       the key to look up
 	 * @return the value as a list of maps
-	 * @throws Importer.KnowyImporterParseException if the value cannot be converted
+	 * @throws Importer.KnowyImporterParseException if the value is null or cannot be converted
 	 */
 	public static List<Map<String, Object>> getAsList(Map<String, Object> container, String key) throws Importer.KnowyImporterParseException {
 		return ensureList(container.get(key), key);
 	}
+
 
 	/**
 	 * Helper class for extracting and mapping properties from a container map.
