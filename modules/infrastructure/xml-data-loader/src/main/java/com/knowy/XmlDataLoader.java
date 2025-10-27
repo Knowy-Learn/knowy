@@ -10,14 +10,33 @@ import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Implementation of {@link DataLoader} for loading and validating XML data.
+ * <p>
+ * Uses an {@link XmlValidation} instance to validate the input stream against a schema, then reads the XML into a
+ * {@link Map} representation.
+ */
 public class XmlDataLoader implements DataLoader {
 
 	private final XmlValidation xmlValidation;
 
+	/**
+	 * Creates a new {@code XmlDataLoader} instance with a default {@link XmlValidation} validator.
+	 */
 	public XmlDataLoader() {
 		this.xmlValidation = new XmlValidation();
 	}
 
+
+	/**
+	 * Loads XML data from the given input stream and validates it against the provided schema.
+	 *
+	 * @param inputStream the input stream containing the XML data
+	 * @param schema      the URL of the XML schema for validation
+	 * @return a map containing the XML data as key-value pairs
+	 * @throws KnowyValidationException if the XML does not conform to the schema
+	 * @throws IOException              if an I/O error occurs while reading the input stream
+	 */
 	@Override
 	public Map<String, Object> loadData(InputStream inputStream, URL schema) throws KnowyValidationException,
 		IOException {
@@ -28,6 +47,13 @@ public class XmlDataLoader implements DataLoader {
 		}
 	}
 
+	/**
+	 * Reads XML data from the given input stream into a map.
+	 *
+	 * @param inputStream the input stream containing XML data
+	 * @return a map representing the XML structure
+	 * @throws IOException if an I/O error occurs during parsing
+	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> readXml(InputStream inputStream) throws IOException {
 		XmlMapper xmlMapper = new XmlMapper();

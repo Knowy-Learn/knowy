@@ -1,6 +1,5 @@
 package com.knowy;
 
-import com.knowy.core.exception.KnowyException;
 import com.knowy.core.exception.KnowyValidationException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
@@ -15,8 +14,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+
+/**
+ * Utility class for validating XML input streams against an XSD schema.
+ * <p>
+ * This class is used internally by {@link XmlDataLoader} to ensure that XML data conforms to its schema before
+ * parsing.
+ */
 class XmlValidation {
 
+	/**
+	 * Validates the given XML input stream against the provided XSD schema.
+	 *
+	 * @param xml the input stream containing the XML data
+	 * @param xsd the URL of the XSD schema for validation
+	 * @throws KnowyValidationException if the XML does not comply with the schema
+	 * @throws IOException              if an I/O error occurs while reading the XML or schema
+	 */
 	public void validate(InputStream xml, URL xsd) throws KnowyValidationException, IOException {
 		try {
 			Schema schema = createSchema(xsd);
