@@ -9,11 +9,11 @@ public record ExerciseOptionDto(
 ) {
 
 	public static ExerciseOptionDto fromDomain(Option option) {
-		return new ExerciseOptionDto(option.id(), option.optionText(), AnswerStatus.NO_RESPONSE);
+		return new ExerciseOptionDto(option.id(), option.value(), AnswerStatus.NO_RESPONSE);
 	}
 
 	public static ExerciseOptionDto fromDomain(Option option, int answerId) {
-		return new ExerciseOptionDto(option.id(), option.optionText(), AnswerStatus.from(option, answerId));
+		return new ExerciseOptionDto(option.id(), option.value(), AnswerStatus.from(option, answerId));
 	}
 
 	public enum AnswerStatus {
@@ -22,10 +22,10 @@ public record ExerciseOptionDto(
 		RESPONSE_SUCCESS;
 
 		public static AnswerStatus from(Option option, int answerId) {
-			if (option.id() == answerId && !option.isCorrect()) {
+			if (option.id() == answerId && !option.isValid()) {
 				return RESPONSE_FAIL;
 			}
-			if (option.isCorrect()) {
+			if (option.isValid()) {
 				return RESPONSE_SUCCESS;
 			}
 			return NO_RESPONSE;

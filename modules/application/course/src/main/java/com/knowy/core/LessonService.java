@@ -1,7 +1,7 @@
 package com.knowy.core;
 
 import com.knowy.core.domain.ExerciseDifficult;
-import com.knowy.core.domain.LessonBase;
+import com.knowy.core.domain.LessonInfo;
 import com.knowy.core.domain.UserExercise;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.KnowyDataAccessException;
@@ -52,13 +52,13 @@ public class LessonService {
 	}
 
 	/**
-	 * Retrieves the {@link LessonBase} for a given lesson ID.
+	 * Retrieves the {@link LessonInfo} for a given lesson ID.
 	 *
 	 * @param lessonId the ID of the lesson
-	 * @return the corresponding {@link LessonBase} object
+	 * @return the corresponding {@link LessonInfo} object
 	 * @throws KnowyDataAccessException if the lesson cannot be found
 	 */
-	public LessonBase getLessonBaseById(int lessonId) throws KnowyDataAccessException {
+	public LessonInfo getLessonBaseById(int lessonId) throws KnowyDataAccessException {
 		return getLessonBaseByIdUserCase.execute(lessonId);
 	}
 

@@ -10,15 +10,15 @@ import java.util.Optional;
 public class JpaProfileImageRepository implements ProfileImageRepository {
 
 	private final JpaProfileImageDao jpaProfileImageDao;
-	private final JpaProfileImageMapper jpaProfileImageMapper;
 
-	public JpaProfileImageRepository(JpaProfileImageDao jpaProfileImageDao, JpaProfileImageMapper jpaProfileImageMapper) {
+	public JpaProfileImageRepository(JpaProfileImageDao jpaProfileImageDao) {
 		this.jpaProfileImageDao = jpaProfileImageDao;
-		this.jpaProfileImageMapper = jpaProfileImageMapper;
 	}
 
 	@Override
 	public Optional<ProfileImage> findById(int id) {
+		JpaProfileImageMapper jpaProfileImageMapper = new JpaProfileImageMapper();
+
 		return jpaProfileImageDao.findById(id).map(jpaProfileImageMapper::toDomain);
 	}
 }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Type for option -->
+    <xs:complexType name="optionType">
+        <xs:sequence>
+            <xs:element name="value" type="xs:string"/>
+            <xs:element name="isValid" type="xs:boolean" default="false" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Type for exercise -->
+    <xs:complexType name="exerciseType">
+        <xs:sequence>
+            <xs:element name="statement" type="xs:string"/>
+            <xs:element name="options">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="option" type="optionType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Type for documentation -->
+    <xs:complexType name="documentationType">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="link" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Type for lesson -->
+    <xs:complexType name="lessonType">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="explanation" type="xs:string"/>
+            <xs:element name="documentations" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="documentation" type="documentationType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="exercises" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="exercise" type="exerciseType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Type for course -->
+    <xs:complexType name="courseType">
+        <xs:sequence>
+            <xs:element name="title"/>
+            <xs:element name="description" type="xs:string" minOccurs="0"/>
+            <xs:element name="image" type="xs:string"/>
+            <xs:element name="author" type="xs:string"/>
+            <xs:element name="categories">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="category" type="xs:string" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="lessons">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="lesson" type="lessonType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Root element -->
+    <xs:element name="courses">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="course" type="courseType" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

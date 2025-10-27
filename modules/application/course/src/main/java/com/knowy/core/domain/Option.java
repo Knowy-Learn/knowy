@@ -2,7 +2,10 @@ package com.knowy.core.domain;
 
 public record Option(
 	int id,
-	String optionText,
-	boolean isCorrect
-) {
+	String value,
+	boolean isValid
+) implements OptionIdentifier, OptionData {
+	public Option(int id, OptionData optionData) {
+		this(id, optionData.value(), optionData.isValid());
+	}
 }

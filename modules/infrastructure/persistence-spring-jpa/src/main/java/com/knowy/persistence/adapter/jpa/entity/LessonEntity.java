@@ -36,7 +36,7 @@ public class LessonEntity {
 	@Column(name = "explanation", length = 250, nullable = false)
 	private String explanation;
 
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(
 		name = "lesson_documentation",
 		joinColumns = @JoinColumn(name = "id_lesson"),
@@ -44,9 +44,6 @@ public class LessonEntity {
 	)
 	private List<DocumentationEntity> documentations;
 
-	@OneToMany(mappedBy = "lesson")
+	@OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
 	private List<ExerciseEntity> exercises = new ArrayList<>();
-
-	@OneToMany(mappedBy = "lessonEntity")
-	private Set<PublicUserLessonEntity> publicUserLessons;
 }

@@ -54,7 +54,7 @@ public class LessonController {
 		Model model
 	) throws KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getUser().id(), courseId);
-		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons);
+		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons).reversed();
 		List<LinksLessonDto> documentationDto = LinksLessonDto.fromDomains(getAllLessonDocumentations(userLessons));
 
 		CourseDto courseDto = CourseDto.fromDomain(
@@ -115,7 +115,7 @@ public class LessonController {
 		Model model
 	) throws KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getUser().id(), courseId);
-		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons);
+		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons).reversed();
 
 		UserLesson currentUserLesson = getCurrentPublicUserLesson(userLessons, lessonId);
 		List<LinksLessonDto> documentationDto = LinksLessonDto.fromDomains(currentUserLesson.lesson().documentations());

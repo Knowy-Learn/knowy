@@ -31,7 +31,10 @@
 		<module>modules/infrastructure/frontend-web-angular</module>
 		<module>builds/knowy-thymeleaf-compose</module>
 		<module>builds/knowy-devenv-compose</module>
-	</modules>
+        <module>modules/infrastructure/xml-data-loader</module>
+        <module>modules/infrastructure/xml-knowy-schemes</module>
+        <module>modules/application/loader</module>
+    </modules>
 
 	<dependencyManagement>
 		<dependencies>
@@ -52,6 +55,11 @@
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
+				<artifactId>loader-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
 				<artifactId>persistence-spring-jpa</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -68,6 +76,16 @@
 			<dependency>
 				<groupId>com.knowy</groupId>
 				<artifactId>frontend-web-spring</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>xml-knowy-schemes</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>xml-data-loader</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

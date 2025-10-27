@@ -25,9 +25,9 @@ public class ExerciseEntity {
 	@JoinColumn(name = "id_lesson", nullable = false)
 	private LessonEntity lesson;
 
-	@Column(name = "question", length = 100, nullable = false)
+	@Column(name = "statement", length = 100, nullable = false)
 	private String question;
 
-	@OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<OptionEntity> options;
 }

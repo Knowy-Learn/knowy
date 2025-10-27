@@ -25,6 +25,15 @@ public interface JpaUserDao extends JpaRepository<PublicUserEntity, Integer> {
 		});
 	}
 
+	@Query("""
+		SELECT pu
+		FROM LessonEntity l
+		JOIN PublicUserLessonEntity pul ON pul.lessonId = l.id
+		JOIN PublicUserEntity pu ON pu.id = pul.userId
+		WHERE l.id = 1
+		""")
+	Optional<PublicUserEntity> findAllByLessonId(@Param("lesson") int lessonId);
+
 	@NonNull
 	<S extends PublicUserEntity> S save(@NonNull S user);
 

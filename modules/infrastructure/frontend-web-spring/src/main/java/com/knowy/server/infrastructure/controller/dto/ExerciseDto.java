@@ -21,7 +21,7 @@ public record ExerciseDto(
 			userExercise.exercise().id(),
 			course.title(),
 			userExercise.rate(),
-			userExercise.exercise().question(),
+			userExercise.exercise().statement(),
 			"TODO",
 			userExercise.exercise().options()
 				.stream()
@@ -41,7 +41,7 @@ public record ExerciseDto(
 			userExercise.exercise().id(),
 			course.title(),
 			userExercise.rate(),
-			userExercise.exercise().question(),
+			userExercise.exercise().statement(),
 			"TODO",
 			options
 		);

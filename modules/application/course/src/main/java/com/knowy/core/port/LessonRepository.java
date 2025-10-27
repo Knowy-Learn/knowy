@@ -13,6 +13,4 @@ public interface LessonRepository {
 	Optional<Lesson> findById(Integer id);
 
 	Set<Lesson> findAllWhereUserIsSubscribedTo(int userId);
-
-	int countByCourseId(Integer courseId);
 }

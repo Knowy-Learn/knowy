@@ -2,6 +2,7 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.CategoryService;
 import com.knowy.core.CourseService;
+import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
 import com.knowy.core.exception.KnowyInconsistentDataException;
@@ -135,7 +136,7 @@ public class CourseController {
 		// 5 PAGINACIÓN
 		List<CourseCardDTO> paginatedCourses = fromIndex >= courses.size() ? List.of() : courses.subList(fromIndex, toIndex);
 
-		model.addAttribute("allLanguages", categoryService.findAll());
+		model.addAttribute("allLanguages", categoryService.findAll().stream().map(Category::name));
 		model.addAttribute("courses", paginatedCourses);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", totalPages);

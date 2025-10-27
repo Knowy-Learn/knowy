@@ -2,6 +2,8 @@ package com.knowy.persistence.adapter.jpa;
 
 import com.knowy.core.domain.Lesson;
 import com.knowy.core.port.LessonRepository;
+import com.knowy.persistence.adapter.jpa.dao.JpaCourseDao;
+import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
@@ -16,21 +18,33 @@ public class JpaLessonRepository implements LessonRepository {
 
 	private final JpaLessonDao jpaLessonDao;
 	private final JpaUserLessonDao jpaUserLessonDao;
-	private final JpaLessonMapper jpaLessonMapper;
+	private final JpaExerciseDao jpaExerciseDao;
+	private final JpaCourseDao jpaCourseDao;
 
-	public JpaLessonRepository(JpaLessonDao jpaLessonDao, JpaUserLessonDao jpaUserLessonDao, JpaLessonMapper jpaLessonMapper) {
+	public JpaLessonRepository(
+		JpaLessonDao jpaLessonDao,
+		JpaUserLessonDao jpaUserLessonDao,
+		JpaExerciseDao jpaExerciseDao,
+		JpaCourseDao jpaCourseDao
+	) {
 		this.jpaLessonDao = jpaLessonDao;
 		this.jpaUserLessonDao = jpaUserLessonDao;
-		this.jpaLessonMapper = jpaLessonMapper;
+		this.jpaExerciseDao = jpaExerciseDao;
+		this.jpaCourseDao = jpaCourseDao;
 	}
 
 	@Override
 	public Optional<Lesson> findById(Integer id) {
+		JpaLessonMapper jpaLessonMapper = jpaLessonMapper();
+
 		return jpaLessonDao.findById(id).map(jpaLessonMapper::toDomain);
 	}
 
+
 	@Override
 	public Set<Lesson> findAllWhereUserIsSubscribedTo(int userId) {
+		JpaLessonMapper jpaLessonMapper = jpaLessonMapper();
+
 		return jpaUserLessonDao.findByUserId(userId).stream()
 			.map(PublicUserLessonEntity::getLessonEntity)
 			.map(jpaLessonMapper::toDomain)
@@ -39,13 +53,14 @@ public class JpaLessonRepository implements LessonRepository {
 
 	@Override
 	public List<Lesson> findAllByCourseId(Integer courseId) {
+		JpaLessonMapper jpaLessonMapper = jpaLessonMapper();
+
 		return jpaLessonDao.findByCourseId(courseId).stream()
 			.map(jpaLessonMapper::toDomain)
 			.toList();
 	}
 
-	@Override
-	public int countByCourseId(Integer courseId) {
-		return jpaLessonDao.countByCourseId(courseId);
+	private JpaLessonMapper jpaLessonMapper() {
+		return new JpaLessonMapper(jpaCourseDao, jpaLessonDao, jpaExerciseDao);
 	}
 }
