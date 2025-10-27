@@ -33,6 +33,7 @@
 		<module>builds/knowy-devenv-compose</module>
         <module>modules/infrastructure/xml-data-loader</module>
         <module>modules/infrastructure/xml-knowy-schemes</module>
+        <module>modules/application/loader</module>
     </modules>
 
 	<dependencyManagement>
@@ -50,6 +51,11 @@
 			<dependency>
 				<groupId>com.knowy</groupId>
 				<artifactId>course-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>loader-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

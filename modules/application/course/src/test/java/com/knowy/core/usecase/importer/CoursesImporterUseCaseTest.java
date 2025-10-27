@@ -69,30 +69,35 @@ class CoursesImporterUseCaseTest {
 		course.put("description", "Curso introductorio para aprender los fundamentos de Java.");
 		course.put("image", "java_basico.png");
 		course.put("author", "Juan Pérez");
-		course.put("categories", List.of("Programación", "Java"));
+		course.put("categories", Map.of("category", List.of("Programación", "Java")));
 
-		Map<String, Object> lesson1 = new HashMap<>();
-		lesson1.put("title", "Introducción a Java");
-		lesson1.put("explanation", "En esta lección se presenta la historia y usos del lenguaje Java.");
-		lesson1.put("documentation", List.of(
-				Map.of(
-					"title", "Documentación Oficial de Java",
-					"link", "https://docs.oracle.com/javase/tutorial/")
+		Map<String, Object> lesson = new HashMap<>();
+		lesson.put("title", "Introducción a Java");
+		lesson.put("explanation", "En esta lección se presenta la historia y usos del lenguaje Java.");
+
+		Map<String, Object> documentation = Map.of("documentation",
+			Map.of(
+				"title", "Documentación Oficial de Java",
+				"link", "https://docs.oracle.com/javase/tutorial/")
+		);
+		lesson.put("documentations", documentation);
+
+		Map<String, Object> option = Map.of("option",
+			List.of(
+				Map.of("value", "Microsoft", "isValid", "false"),
+				Map.of("value", "Sun Microsystems", "isValid", "true"),
+				Map.of("value", "IBM", "isValid", "false")
 			)
 		);
-		lesson1.put("exercises",
-			List.of(Map.of(
+		Map<String, Object> exercise = Map.of("exercise",
+			Map.of(
 				"statement", "¿Cuál de los siguientes es un tipo primitivo en Java?",
-				"options", List.of(
-					Map.of("value", "Microsoft", "isValid", false),
-					Map.of("value", "Sun Microsystems", "isValid", true),
-					Map.of("value", "IBM", "isValid", false)
-				)
-			))
-		);
+				"options", option
+			));
+		lesson.put("exercises", exercise);
 
-		course.put("lessons", List.of(lesson1));
-		mockMap.put("course", List.of(course));
+		course.put("lessons", Map.of("lesson", List.of(lesson)));
+		mockMap.put("course", course);
 		return mockMap;
 	}
 

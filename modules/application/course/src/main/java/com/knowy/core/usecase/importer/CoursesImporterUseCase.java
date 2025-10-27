@@ -51,6 +51,7 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 		throws KnowyValidationException, KnowyInconsistentDataException, IOException {
 
 		Map<String, Object> courses = dataLoader.loadData(inputStream, schema);
+		System.out.println(courses);
 
 		PropertyExtractor rootPropertyExtractor = extractorFor(courses);
 		List<CourseUnidentifiedData> courseUnidentifiedDataList = rootPropertyExtractor
