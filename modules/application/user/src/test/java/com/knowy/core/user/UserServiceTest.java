@@ -43,7 +43,7 @@ class UserServiceTest {
 	@Nested
 	class UserUpdateCategoriesUseCaseTest {
 		@Test
-		void given_newCategories_when_updateCategories_saveNewUserWithNewCategories() {
+		void given_newCategories_when_updateCategories_saveNewUserWithNewCategories() throws KnowyInconsistentDataException {
 			User user = new User(
 				42,
 				"ExistNickname",
@@ -87,7 +87,7 @@ class UserServiceTest {
 		}
 
 		@Test
-		void given_nonPersistedCategories_when_updateCategories_then_throwKnowyInconsistentDataException() {
+		void given_nonPersistedCategories_when_updateCategories_then_throwKnowyInconsistentDataException() throws KnowyInconsistentDataException {
 			User user = new User(
 				10,
 				"ExistNickname",

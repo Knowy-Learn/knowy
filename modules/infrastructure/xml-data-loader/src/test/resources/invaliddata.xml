@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items>
+	<item>
+		<id>1</id>
+		<nam>Item One</nam>
+		<value>Value One</value>
+	</item>
+	<item>
+		<id>2</id>
+		<nam>Item Two</nam>
+		<value>Value Two</value>
+	</item>
+	<item>
+		<id>3</id>
+		<nam>Item Three</nam>
+		<value>Value Three</value>
+	</item>
+</items>

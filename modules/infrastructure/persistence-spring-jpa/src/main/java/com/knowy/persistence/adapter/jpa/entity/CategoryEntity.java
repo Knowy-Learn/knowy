@@ -8,12 +8,14 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Cacheable
 @Table(name = "language")
 public class CategoryEntity implements Serializable {
 
@@ -27,4 +29,15 @@ public class CategoryEntity implements Serializable {
 
 	@ManyToMany(mappedBy = "languages", fetch = FetchType.LAZY)
 	private List<PublicUserEntity> publicUsers;
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof CategoryEntity that)) return false;
+		return Objects.equals(name, that.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(name);
+	}
 }

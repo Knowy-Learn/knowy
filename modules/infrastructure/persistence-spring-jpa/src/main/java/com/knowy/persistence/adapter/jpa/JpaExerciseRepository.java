@@ -3,6 +3,7 @@ package com.knowy.persistence.adapter.jpa;
 import com.knowy.core.domain.Exercise;
 import com.knowy.core.port.ExerciseRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
+import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.mapper.JpaExerciseMapper;
 
 import java.util.Optional;
@@ -10,15 +11,17 @@ import java.util.Optional;
 public class JpaExerciseRepository implements ExerciseRepository {
 
 	private final JpaExerciseDao jpaExerciseDao;
-	private final JpaExerciseMapper jpaExerciseMapper;
+	private final JpaLessonDao jpaLessonDao;
 
-	public JpaExerciseRepository(JpaExerciseDao jpaExerciseDao, JpaExerciseMapper jpaExerciseMapper) {
+	public JpaExerciseRepository(JpaExerciseDao jpaExerciseDao, JpaLessonDao jpaLessonDao) {
 		this.jpaExerciseDao = jpaExerciseDao;
-		this.jpaExerciseMapper = jpaExerciseMapper;
+		this.jpaLessonDao = jpaLessonDao;
 	}
 
 	@Override
 	public Optional<Exercise> findById(int id) {
+		JpaExerciseMapper jpaExerciseMapper = new JpaExerciseMapper(jpaExerciseDao, jpaLessonDao);
+
 		return jpaExerciseDao.findById(id).map(jpaExerciseMapper::toDomain);
 	}
 }

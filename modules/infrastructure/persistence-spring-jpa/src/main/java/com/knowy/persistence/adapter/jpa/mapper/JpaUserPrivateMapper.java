@@ -3,16 +3,15 @@ package com.knowy.persistence.adapter.jpa.mapper;
 import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.Password;
 import com.knowy.core.user.domain.UserPrivate;
+import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.entity.PrivateUserEntity;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JpaUserPrivateMapper implements EntityMapper<UserPrivate, PrivateUserEntity> {
 
 	private final JpaUserMapper jpaUserMapper;
 
-	public JpaUserPrivateMapper(JpaUserMapper jpaUserMapper) {
-		this.jpaUserMapper = jpaUserMapper;
+	public JpaUserPrivateMapper(JpaCategoryDao jpaCategoryDao) {
+		this.jpaUserMapper = new JpaUserMapper(jpaCategoryDao);
 	}
 
 	@Override

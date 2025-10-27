@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="data.xsd">
+	<item>
+		<id>1</id>
+		<name>Item One</name>
+		<value>Value One</value>
+	</item>
+	<item>
+		<id>2</id>
+		<name>Item Two</name>
+		<value>Value Two</value>
+	</item>
+	<item>
+		<id>3</id>
+		<name>Item Three</name>
+		<value>Value Three</value>
+	</item>
+</items>

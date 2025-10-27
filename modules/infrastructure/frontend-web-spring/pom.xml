@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.knowy</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.1.0</version>
+		<version>1.2.0</version>
 		<relativePath>../../../pom.xml</relativePath>
 	</parent>
 	<artifactId>frontend-web-spring</artifactId>
@@ -53,6 +53,14 @@
 		<dependency>
 			<groupId>com.knowy</groupId>
 			<artifactId>notification-spring-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>xml-knowy-schemes</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>xml-data-loader</artifactId>
 		</dependency>
 
 		<dependency>

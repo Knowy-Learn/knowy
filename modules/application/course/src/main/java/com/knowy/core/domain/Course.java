@@ -2,8 +2,8 @@ package com.knowy.core.domain;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
-
 
 public record Course(
 	int id,
@@ -14,7 +14,7 @@ public record Course(
 	LocalDateTime creationDate,
 	Set<Category> categories,
 	Set<Lesson> lessons
-) {
+) implements CourseIdentifier, CourseData<Category, Lesson> {
 	public Course(
 		int id,
 		String title,
@@ -23,6 +23,6 @@ public record Course(
 		String author,
 		LocalDateTime creationDate
 	) {
-		this(id, title, description, image, author, creationDate, new HashSet<>(), new HashSet<>());
+		this(id, title, description, image, author, creationDate, new HashSet<>(), new LinkedHashSet<>());
 	}
 }

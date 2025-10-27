@@ -1,6 +1,5 @@
 package com.knowy.persistence.adapter.jpa.dao;
 
-import com.knowy.core.domain.Course;
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

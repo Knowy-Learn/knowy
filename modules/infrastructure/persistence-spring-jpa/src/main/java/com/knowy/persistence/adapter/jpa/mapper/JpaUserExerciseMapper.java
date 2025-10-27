@@ -4,21 +4,20 @@ import com.knowy.core.domain.UserExercise;
 import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.user.exception.KnowyUserNotFoundException;
 import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
+import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserDao;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserExerciseId;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JpaUserExerciseMapper implements EntityMapper<UserExercise, PublicUserExerciseEntity> {
 	private final JpaUserDao jpaUserDao;
 	private final JpaExerciseDao jpaExerciseDao;
 	private final JpaExerciseMapper jpaExerciseMapper;
 
-	public JpaUserExerciseMapper(JpaUserDao jpaUserDao, JpaExerciseDao jpaExerciseDao, JpaExerciseMapper jpaExerciseMapper) {
+	public JpaUserExerciseMapper(JpaUserDao jpaUserDao, JpaExerciseDao jpaExerciseDao, JpaLessonDao jpaLessonDao) {
 		this.jpaUserDao = jpaUserDao;
 		this.jpaExerciseDao = jpaExerciseDao;
-		this.jpaExerciseMapper = jpaExerciseMapper;
+		this.jpaExerciseMapper = new JpaExerciseMapper(jpaExerciseDao, jpaLessonDao);
 	}
 
 	@Override

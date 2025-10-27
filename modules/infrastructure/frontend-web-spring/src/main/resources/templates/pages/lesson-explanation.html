@@ -21,7 +21,7 @@
 				<a th:href="@{'/course/' + ${courseId}}" class="introduction-btn--purple">Introducción al curso</a>
 			</div>
 		</div>
-		<div th:replace="~{components/lessonscard ::lessonscard(${course}, ${courseId})}"></div>
+		<div th:replace="~{components/lessonscard :: lessonscard(${course}, ${courseId})}"></div>
 	</div>
 </aside>
 

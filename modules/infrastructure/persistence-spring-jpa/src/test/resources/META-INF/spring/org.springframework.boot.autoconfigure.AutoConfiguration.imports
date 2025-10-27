@@ -1,0 +1,2 @@
+com.knowy.persistence.KnowyJpaRepositoryAutoConfiguration
+com.knowy.persistence.KnowyJpaMapperAutoConfiguration

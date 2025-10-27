@@ -9,15 +9,12 @@ import com.knowy.core.port.UserLessonRepository;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -217,14 +214,14 @@ public class LessonServiceTest {
 	}
 
 	@Nested
-	class GetLessonBaseByIdUseCaseTest {
+	class GetLessonInfoByIdUseCaseTest {
 
 		@Test
 		void given_validUserLessonId_when_getById_then_returnUserLesson() throws KnowyDataAccessException {
 			int lessonId = 25;
 
 			Mockito.when(lessonBaseRepository.findById(lessonId))
-				.thenReturn(Optional.of(Mockito.mock(LessonBase.class)));
+				.thenReturn(Optional.of(Mockito.mock(LessonInfo.class)));
 
 			assertDoesNotThrow(() -> lessonService.getLessonBaseById(lessonId));
 		}

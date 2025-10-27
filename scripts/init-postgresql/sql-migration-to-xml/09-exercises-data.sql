@@ -1,7 +1,7 @@
 TRUNCATE TABLE public.exercise RESTART IDENTITY CASCADE;
 
 -- Lección 1: Introducción al curso
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES
 	(1, '¿Qué lenguajes tienen influencia o relación directa con Java?'),
 	(1, '¿Qué ejemplos de aplicaciones se mencionan que utilizan Java en su backend?'),
@@ -15,7 +15,7 @@ VALUES
 	(1, '¿Qué actitud recomienda el curso adoptar al estudiar programación por primera vez?');
 
 -- Lección 2: ¿Qué es Java y cómo funciona?
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (2, '¿Qué significa que Java sea "multiplataforma"?'),
 	   (2, '¿Cuál es el nombre del componente que permite ejecutar el bytecode en cualquier sistema operativo?'),
 	   (2, 'Verdadero o falso: En Java, puedes ejecutar directamente el archivo .java sin compilarlo antes.'),
@@ -28,7 +28,7 @@ VALUES (2, '¿Qué significa que Java sea "multiplataforma"?'),
 	   (2, 'Verdadero o falso: Para programar en Java solo necesitas tener instalada la JVM.');
 
 -- Lección 3: Variables. Estructura básica.
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES
 	(3, '¿Qué es una variable en Java?'),
 	(3, '¿Qué se necesita declarar al crear una variable en Java?'),
@@ -43,7 +43,7 @@ VALUES
 
 
 -- Lección 4: Variables. Tipos primitivos.
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES
 	(4, '¿Qué son los tipos primitivos en Java?'),
 	(4, '¿Cuál de los siguientes tipos se utiliza para representar números enteros?'),
@@ -58,7 +58,7 @@ VALUES
 
 
 -- Lección 5: Variables. Tipos no primitivos.
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES
 	(5, '¿Qué son los tipos no primitivos en Java?'),
 	(5, '¿Cuál de los siguientes ejemplos representa un tipo no primitivo?'),
@@ -72,7 +72,7 @@ VALUES
 	(5, '¿Cuál de los siguientes NO es un tipo no primitivo en Java?');
 
 -- Lección 6: Constantes y buenas prácticas en el manejo de variables.
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES
 	(6, '¿Qué palabra clave se utiliza en Java para declarar una constante?'),
 	(6, '¿Qué sucede si intentas modificar una constante en Java después de haberla declarado?'),
@@ -86,7 +86,7 @@ VALUES
 	(6, '¿Cuál de estas opciones representa correctamente la declaración de una constante?');
 
 -- Lección 7: Operadores aritméticos.
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES
 	(7, '¿Qué operador se utiliza para obtener el resto de una división en Java?'),
 	(7, '¿Cuál de los siguientes operadores se utiliza para comparar si dos valores son iguales?'),
@@ -100,7 +100,7 @@ VALUES
 	(7, '¿Cuál es el resultado de esta expresión: <code>(5 > 3) && (2 < 4)</code>?');
 
 -- Lección 9: Concatenación de cadenas
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES
 	(8, '¿Qué operador se usa en Java para concatenar cadenas?'),
 	(8, '¿Qué resultado produce esta operación? <code>"Hola" + ", " + "Ana"</code>'),
@@ -114,7 +114,7 @@ VALUES
 	(8, 'La concatenación es útil para construir mensajes dinámicos. ¿Verdadero o falso?');
 
 -- Lección 9: Conversión de tipos en Java (Casting)
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES
 	(9, '¿Qué tipo de conversión en Java es automática y no requiere casting?'),
 	(9, '¿Cuál de las siguientes afirmaciones describe correctamente el narrowing casting?'),
@@ -128,7 +128,7 @@ VALUES
 	(9, 'El narrowing casting requiere usar paréntesis con el tipo de destino. ¿Verdadero o falso?');
 
 -- Lección 10: Clases y métodos en Java
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES
 	(10, '¿Qué representa una clase en Java?'),
 	(10, '¿Cuál de los siguientes elementos NO forma parte de una clase en Java?'),
@@ -142,250 +142,250 @@ VALUES
 	(10, 'Un método puede acceder directamente a los atributos de la clase. ¿Verdadero o falso?');
 
 -- Lección 11
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (11, '¿Qué es la concurrencia en Java y para qué sirve?');
 
 -- Lección 12
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (12, '¿Cuáles son algunas buenas prácticas de programación en Java?');
 
 -- Lección 13
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (13, '¿Qué necesitas para empezar a desarrollar aplicaciones web en Java?');
 
 -- Lección 14
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (14, '¿Qué es un framework en Java y cuál es su utilidad principal?');
 
 -- Lección 15
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (15, '¿Qué pilares forman parte de la Programación Orientada a Objetos en Java?');
 
 -- Lección 16
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (16, '¿Qué ventaja principal ofrece el uso de polimorfismo en Java?');
 
 -- Lección 17
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (17, '¿Qué estructura de datos usarías para almacenar un conjunto sin elementos repetidos?');
 
 -- Lección 18
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (18, '¿Qué diferencia hay entre una lista y un mapa en Java?');
 
 -- Lección 19
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (19, '¿Qué es Spring y cuál es su principal objetivo?');
 
 -- Lección 20
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (20, '¿Qué es la inyección de dependencias en el contexto de Spring?');
 
 -- Lección 21
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (21, '¿Qué herramienta ofrece Spring Boot para ejecutar rápidamente una aplicación?');
 
 -- Lección 22
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (22, '¿Qué anotación en Spring Boot se usa para declarar un servicio REST?');
 
 -- Lección 23
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (23, '¿Cuál es la finalidad principal de un Servlet en Java EE?');
 
 -- Lección 24
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (24, '¿Qué servidor embebido suele usarse para desplegar aplicaciones Java?');
 
 -- Lección 25
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (25, '¿Qué funcionalidad brinda un controlador REST en una API?');
 
 -- Lección 26
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (26, '¿Cómo puede un cliente JavaScript consumir una API REST?');
 
 -- Lección 27
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (27, '¿Para qué se usa la API JPA en Java?');
 
 -- Lección 28
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (28, '¿Cuál es la diferencia entre FetchType.EAGER y FetchType.LAZY en Hibernate?');
 
 -- Lección 29
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (29, '¿Qué librería se utiliza mayormente para pruebas unitarias en Java?');
 
 -- Lección 30
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (30, '¿Qué beneficios ofrece el uso de Mockito en pruebas unitarias?');
 
 -- Lección 31
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (31, '¿Cuál es el primer paso para construir una app en JavaFX?');
 
 -- Lección 32
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (32, '¿Qué componentes permiten interacción con el usuario en JavaFX?');
 
 -- Lección 33
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (33, '¿Qué instrucción imprime texto en la consola en Java?');
 
 -- Lección 34
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (34, '¿Qué tipo de dato usarías para almacenar el nombre de una persona?');
 
 -- Lección 35
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (35, '¿Qué diferencia hay entre <code>let</code> y <code>const</code> en JavaScript?');
 
 -- Lección 36
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (36, '¿Qué es una función flecha en JavaScript?');
 
 -- Lección 37
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (37, '¿Qué problema resuelve el uso de clases en JavaScript moderno?');
 
 -- Lección 38
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (38, '¿Qué palabra clave permite utilizar <em>promesas</em> más fácilmente en JS?');
 
 -- Lección 39
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (39, '¿Qué objeto especial permite interactuar con el DOM en JavaScript?');
 
 -- Lección 40
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (40, '¿Qué método se usa para hacer peticiones HTTP en JavaScript moderno?');
 
 -- Lección 41
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (41, '¿Qué palabra clave define una clase en Java?');
 
 -- Lección 42
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (42, '¿Qué diferencia hay entre una interface y una clase abstracta?');
 
 -- Lección 43
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (43, '¿Qué es una aplicación de múltiples capas (multicapa)?');
 
 -- Lección 44
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (44, '¿Qué permite JDBC en el desarrollo Java?');
 
 -- Lección 45
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (45, '¿Qué etiqueta define la estructura básica de una página HTML?');
 
 -- Lección 46
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (46, '¿Qué elemento se usa para insertar un video en HTML5?');
 
 -- Lección 47
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (47, '¿Qué son las etiquetas <code>ARIA</code> y para qué se usan?');
 
 -- Lección 48
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (48, '¿Qué elementos ayuda al posicionamiento SEO en HTML semántico?');
 
 -- Lección 49
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (49, '¿Qué selector CSS se usa para seleccionar todos los elementos <code>&lt;p&gt;</code>?');
 
 -- Lección 50
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (50, '¿Qué propiedad CSS permite centrar un bloque con <code>margin: auto;</code>?');
 
 -- Lección 51
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (51, '¿Qué ventajas ofrece Flexbox sobre el modelo de caja tradicional?');
 
 -- Lección 52
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (52, '¿Qué propiedad CSS permite una transición suave entre estilos?');
 
 -- Lección 53
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (53, '¿Qué función se usa para imprimir texto en Python?');
 
 -- Lección 54
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (54, '¿Qué palabra clave se usa en Python para escribir una estructura condicional?');
 
 -- Lección 55
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (55, '¿Qué función de Pandas se utiliza para cargar un archivo CSV?');
 
 -- Lección 56
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (56, '¿Qué biblioteca gráfica se usa comúnmente junto con Pandas para visualizaciones?');
 
 -- Lección 57
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (57, '¿Qué función de PHP se usa para imprimir en pantalla?');
 
 -- Lección 58
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (58, '¿Qué superglobal de PHP se utiliza para obtener los datos de un formulario enviado por POST?');
 
 -- Lección 59
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (59, '¿Qué función de PHP permite establecer conexión con una base de datos MySQL?');
 
 -- Lección 60
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (60, '¿Qué significa el acrónimo CRUD?');
 
 -- Lección 61
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (61, '¿Cuál es la función principal del método <code>Main()</code> en C#?');
 
 -- Lección 62
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (62, '¿Qué es un objeto en C# y cómo se declara?');
 
 -- Lección 63
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (63, '¿Qué permite hacer LINQ en colecciones como listas?');
 
 -- Lección 64
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (64, '¿Qué tipo de aplicación permite crear Windows Forms?');
 
 -- Lección 65
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (65, '¿Qué palabra clave define un tipo en TypeScript?');
 
 -- Lección 66
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (66, '¿Para qué se utiliza una interfaz (<code>interface</code>) en TypeScript?');
 
 -- Lección 67
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (67, '¿Qué archivo contiene el metadato y configuración de un proyecto Angular?');
 
 -- Lección 68
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (68, '¿Qué servicio Angular permite manejar peticiones HTTP?');
 
 -- Lección 69
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (69, '¿Qué línea imprime texto en Ruby?');
 
 -- Lección 70
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (70, '¿Qué estructura proporciona Ruby on Rails para organizar una web MVC?');
 
 -- Lección 71
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (71, '¿Qué palabra clave se usa para declarar una constante en Swift?');
 
 -- Lección 72
-INSERT INTO public.exercise (id_lesson, question)
+INSERT INTO public.exercise (id_lesson, statement)
 VALUES (72, '¿Qué herramienta de desarrollo visual ofrece Apple para diseñar interfaces en iOS?');
 
