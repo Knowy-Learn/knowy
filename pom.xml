@@ -28,7 +28,7 @@
 		<module>modules/infrastructure/notification-spring-mail</module>
 		<module>modules/infrastructure/frontend-web-spring</module>
 		<module>modules/infrastructure/backend-api-spring</module>
-		<module>modules/infrastructure/frontend-web-angular</module>
+		<module>modules/infrastructure/frontend-web-astro</module>
 		<module>builds/knowy-thymeleaf-compose</module>
 		<module>builds/knowy-devenv-compose</module>
         <module>modules/infrastructure/xml-data-loader</module>
@@ -90,7 +90,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
-				<artifactId>frontend-web-angular</artifactId>
+				<artifactId>frontend-web-astro</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<!-- spring -->

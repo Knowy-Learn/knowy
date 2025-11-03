@@ -9,7 +9,7 @@
 		<version>1.2.0</version>
 		<relativePath>../../../pom.xml</relativePath>
 	</parent>
-	<artifactId>frontend-web-angular</artifactId>
+	<artifactId>frontend-web-astro</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
