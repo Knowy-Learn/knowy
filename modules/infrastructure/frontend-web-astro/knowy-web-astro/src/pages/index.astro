@@ -1,11 +1,263 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro"
+import logo from "../assets/knowy.svg"
+import Navbar from "../components/Navbar.astro"
+import LinkButton from "../components/LinkButton.astro"
 ---
 
 <Layout>
-	<Welcome />
+	<Navbar />
+
+	<main class="h-auto w-full">
+		<section class="grid h-3/5 grid-cols-1 bg-green-200 p-12 font-sans md:grid-cols-2">
+			<div data-label="Intro" class="flex flex-col items-center justify-center gap-4 text-center">
+				<h1 class="text-3xl font-bold text-green-800">¡Aprende los conceptos de programación a tu ritmo!</h1>
+				<p class="text-lg text-green-900">Cursos interactivos, retos y aprendizaje personalizado.</p>
+
+				<div class="mt-4 flex flex-row items-center justify-end gap-2">
+					<LinkButton href="#" variant="primary">Inicio Sesión</LinkButton>
+					<LinkButton href="#" variant="secondary">Registrarse</LinkButton>
+				</div>
+			</div>
+			<a data-label="Logo" class="flex items-center justify-center gap-2 not-md:hidden">
+				<img src={logo.src} alt="Logo" width={logo.width} height={logo.height} />
+			</a>
+		</section>
+
+		<section
+			class="flex flex-row items-center justify-center gap-10 overflow-hidden bg-green-500 p-3 font-sans text-lg font-bold text-white"
+		>
+			<span tabindex="0">Java</span>
+			<span tabindex="0">JavaScript</span>
+			<span tabindex="0">TypeScript</span>
+			<span tabindex="0">Ruby</span>
+			<span tabindex="0">C#</span>
+			<span tabindex="0">SQL</span>
+			<span tabindex="0">Python</span>
+		</section>
+
+		<!--
+				<section class="flex flex-col items-center justify-center p-6">
+					<h2 class="text-4xl font-medium">Funcionalidades</h2>
+
+					<div class="flex flex-row items-center justify-center gap-2 p-6">
+						<div class="max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+							<a href="#">
+								<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+									Noteworthy technology acquisitions 2021
+								</h5>
+							</a>
+							<p class="mb-3 font-normal text-gray-700">
+								Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological
+								order.
+							</p>
+							<a
+								href="#"
+								class="inline-flex items-center rounded-lg bg-green-500 px-3 py-2 text-center text-sm font-medium text-white hover:bg-green-600 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+							>
+								Read more
+								<svg
+									class="ms-2 h-3.5 w-3.5 rtl:rotate-180"
+									aria-hidden="true"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 14 10"
+								>
+									<path
+										stroke="currentColor"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M1 5h12m0 0L9 1m4 4L9 9"
+									>
+									</path>
+								</svg>
+							</a>
+						</div>
+
+						<div class="max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+							<a href="#">
+								<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+									Noteworthy technology acquisitions 2021
+								</h5>
+							</a>
+							<p class="mb-3 font-normal text-gray-700">
+								Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological
+								order.
+							</p>
+							<a
+								href="#"
+								class="inline-flex items-center rounded-lg bg-green-500 px-3 py-2 text-center text-sm font-medium text-white hover:bg-green-600 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+							>
+								Read more
+								<svg
+									class="ms-2 h-3.5 w-3.5 rtl:rotate-180"
+									aria-hidden="true"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 14 10"
+								>
+									<path
+										stroke="currentColor"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M1 5h12m0 0L9 1m4 4L9 9"
+									>
+									</path>
+								</svg>
+							</a>
+						</div>
+					</div>
+				</section>
+		<!--
+				&lt;!&ndash; Ultimas Novedades &ndash;&gt;
+				<section class="flex flex-col items-center justify-center gap-4 p-6">
+					<h2 class="text-4xl font-medium">Últimas Novedades</h2>
+		
+					<div class="rounded-md border border-gray-200 bg-white p-10 shadow-sm shadow-zinc-200">
+						<ol class="relative border-s border-gray-200">
+							<li class="ms-6 mb-10">
+								<span
+									class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-green-100 ring-8 ring-white"
+								>
+									<svg
+										class="h-2.5 w-2.5 text-green-800"
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
+										<path
+											d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+										>
+										</path>
+									</svg>
+								</span>
+								<h3 class="mb-1 flex items-center text-lg font-semibold text-gray-900">
+									Flowbite Application UI v2.0.0 <span
+										class="ms-3 me-2 rounded-sm bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800"
+									>
+										Latest
+									</span>
+								</h3>
+								<time class="mb-2 block text-sm leading-none font-normal text-gray-400">
+									Released on January 13th, 2022
+								</time>
+								<p class="mb-4 text-base font-normal text-gray-500">
+									Get access to over 20+ pages including a dashboard layout, charts, kanban board, calendar,
+									and pre-order E-commerce & Marketing pages.
+								</p>
+								<a
+									href="#"
+									class="inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:text-green-700 focus:ring-4 focus:ring-gray-100 focus:outline-none"
+								>
+									<svg
+										class="me-2.5 h-3.5 w-3.5"
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
+										<path
+											d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z"
+										>
+										</path>
+										<path
+											d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+										>
+										</path>
+									</svg>
+									Download ZIP
+								</a>
+							</li>
+							<li class="ms-6 mb-10">
+								<span
+									class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-green-100 ring-8 ring-white"
+								>
+									<svg
+										class="h-2.5 w-2.5 text-green-800"
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
+										<path
+											d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+										>
+										</path>
+									</svg>
+								</span>
+								<h3 class="mb-1 text-lg font-semibold text-gray-900">Flowbite Figma v1.3.0</h3>
+								<time class="mb-2 block text-sm leading-none font-normal text-gray-400">
+									Released on December 7th, 2021
+								</time>
+								<p class="text-base font-normal text-gray-500">
+									All of the pages and components are first designed in Figma and we keep a parity between the
+									two versions even as we update the project.
+								</p>
+							</li>
+							<li class="ms-6">
+								<span
+									class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-green-100 ring-8 ring-white"
+								>
+									<svg
+										class="h-2.5 w-2.5 text-green-800"
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
+										<path
+											d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+										>
+										</path>
+									</svg>
+								</span>
+								<h3 class="mb-1 text-lg font-semibold text-gray-900">Flowbite Library v1.2.2</h3>
+								<time class="mb-2 block text-sm leading-none font-normal text-gray-400">
+									Released on December 2nd, 2021
+								</time>
+								<p class="text-base font-normal text-gray-500">
+									Get started with dozens of web components and interactive elements built on top of Tailwind
+									CSS.
+								</p>
+							</li>
+						</ol>
+					</div>
+				</section>
+			</main>
+		
+			<footer class="w-full rounded-lg bg-green-500 shadow-sm">
+				<div class="mx-auto w-full max-w-screen-xl p-4 md:py-8">
+					<div class="sm:flex sm:items-center sm:justify-between">
+						<a
+							data-label="Logo"
+							class="flex h-full w-1/2 flex-row items-center gap-1 p-4 text-xl font-bold text-white"
+						>
+							<img src={logo.src} alt="Logo" class="h-11" />
+							<span>Knowy</span>
+						</a>
+						<ul class="mb-6 flex flex-wrap items-center text-sm font-medium text-white sm:mb-0">
+							<li>
+								<a href="#" class="me-4 hover:underline md:me-6">About</a>
+							</li>
+							<li>
+								<a href="#" class="me-4 hover:underline md:me-6">Privacy Policy</a>
+							</li>
+							<li>
+								<a href="#" class="me-4 hover:underline md:me-6">Licensing</a>
+							</li>
+							<li>
+								<a href="#" class="hover:underline">Contact</a>
+							</li>
+						</ul>
+					</div>
+					<hr class="my-6 border-gray-200 sm:mx-auto lg:my-8" />
+					<span class="block text-sm text-white sm:text-center">
+						© 2025 <a href="#" class="hover:underline">Knowy</a>. All Rights Reserved.
+					</span>
+				</div>
+			</footer>-->
+	</main>
 </Layout>

@@ -1,0 +1,26 @@
+---
+/**
+ * Reusable button link component.
+ *
+ * @component
+ * @param {string} - Destination URL for the link.
+ * @param {"primary"|"secondary"} - Visual style variant.
+ * @slot - Button content (text or elements inside the button).
+ */
+interface Props {
+	href?: string
+	variant?: "primary" | "secondary"
+}
+
+const { href = "#", variant = "primary" } = Astro.props
+
+const base = "rounded-xl p-2 text-lg shadow-md transition-all duration-200 focus:ring-2 focus:ring-green-400"
+const variants = {
+	primary: "bg-green-600 text-white hover:scale-105 hover:bg-green-700",
+	secondary: "bg-white text-green-700 ring-1 ring-green-400 hover:bg-green-50 hover:scale-105"
+}
+---
+
+<a href={href} class={`${base} ${variants[variant]}`}>
+	<slot />
+</a>

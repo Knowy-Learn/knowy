@@ -1,0 +1,68 @@
+---
+import logo from "../assets/knowy.svg"
+import LinkButton from "./LinkButton.astro"
+---
+
+<header class="sticky top-0 z-50 flex h-1/12 w-full items-center bg-green-500">
+	<a
+		href="/"
+		class="flex h-full w-1/2 items-center gap-2 p-4 text-xl font-bold text-white"
+		aria-label="Página principal"
+	>
+		<img src={logo.src} alt="Logo Knowy" class="h-11" />
+		<span>Knowy</span>
+	</a>
+
+	{/* Desktop navigation */}
+	<nav class="hidden w-1/2 items-center justify-end gap-3 p-4 md:flex">
+		<LinkButton href="#" variant="primary">Inicio Sesión</LinkButton>
+		<LinkButton href="#" variant="secondary">Registrarse</LinkButton>
+	</nav>
+
+	{/* Mobile navigation */}
+	<aside class="fixed top-0 right-0 z-50 flex h-16 w-full items-center justify-end bg-transparent md:hidden">
+		{/* Button that open the menu */}
+		<button
+			id="menuButton"
+			class="z-50 m-4 flex h-12 w-12 items-center justify-center rounded-md bg-green-600/60 text-2xl text-white shadow-lg transition-transform duration-200 active:scale-90"
+			aria-label="Abrir menú móvil"
+		>
+			🏠
+		</button>
+
+		{/* Menu content */}
+		<nav
+			id="mobileMenu"
+			class="fixed top-0 right-0 z-40 h-screen w-0 overflow-hidden bg-green-500 transition-[width] duration-300"
+		>
+			<ul class="mt-20 flex flex-col gap-2 text-2xl font-medium text-white">
+				<li>
+					<a href="#" class="block p-4 pl-8 transition-colors duration-200 hover:bg-green-600">
+						Iniciar Sesión
+					</a>
+				</li>
+				<li>
+					<a href="#" class="block p-4 pl-8 transition-colors duration-200 hover:bg-green-600">
+						Registrarse
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</aside>
+</header>
+
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		const btn = document.getElementById("menuButton") as HTMLButtonElement | null
+		const menu = document.getElementById("mobileMenu") as HTMLElement | null
+
+		let open = false
+
+		btn?.addEventListener("click", () => {
+			if (menu) {
+				open = !open
+				menu.style.width = open ? "66%" : "0"
+			}
+		})
+	})
+</script>
