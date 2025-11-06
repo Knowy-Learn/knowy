@@ -33,7 +33,7 @@ import LinkButton from "./LinkButton.astro"
 		{/* Menu content */}
 		<nav
 			id="mobileMenu"
-			class="fixed top-0 right-0 z-40 h-screen w-0 overflow-hidden bg-green-500 transition-[width] duration-300"
+			class="fixed top-0 right-0 z-40 h-screen w-0 overflow-hidden bg-green-500 transition-[width,background-color] duration-300"
 		>
 			<ul class="mt-20 flex flex-col gap-2 text-2xl font-medium text-white">
 				<li>
@@ -61,7 +61,16 @@ import LinkButton from "./LinkButton.astro"
 		btn?.addEventListener("click", () => {
 			if (menu) {
 				open = !open
-				menu.style.width = open ? "66%" : "0"
+
+				if (open) {
+					menu.style.width = "66%"
+					menu.classList.remove("bg-transparent")
+					menu.classList.add("bg-green-500")
+					return
+				}
+				menu.style.width = "0"
+				menu.classList.remove("bg-green-500")
+				menu.classList.add("bg-transparent")
 			}
 		})
 	})
