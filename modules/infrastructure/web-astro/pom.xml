@@ -9,8 +9,8 @@
 		<version>1.2.0</version>
 		<relativePath>../../../pom.xml</relativePath>
 	</parent>
-	<artifactId>frontend-web-astro</artifactId>
-	<packaging>pom</packaging>
+	<artifactId>web-astro</artifactId>
+	<packaging>war</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,7 +52,7 @@
 
 					<execution>
 						<id>npm-build</id>
-						<phase>compile</phase> <!-- o package -->
+						<phase>compile</phase>
 						<goals>
 							<goal>npm</goal>
 						</goals>
@@ -61,6 +61,43 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+				<executions>
+					<execution>
+						<id>copy-astro-build</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>
+								${project.build.directory}/${project.build.finalName}/public
+							</outputDirectory>
+							<resources>
+								<resource>
+									<directory>target/classes/public</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<warSourceDirectory>
+						${project.build.directory}/${project.build.finalName}
+					</warSourceDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

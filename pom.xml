@@ -26,15 +26,16 @@
 		<module>modules/infrastructure/persistence-spring-jpa</module>
 		<module>modules/infrastructure/security-spring-jwt</module>
 		<module>modules/infrastructure/notification-spring-mail</module>
-		<module>modules/infrastructure/frontend-web-spring</module>
+		<module>modules/infrastructure/frontend-spring-web-thymeleaf</module>
 		<module>modules/infrastructure/backend-api-spring</module>
-		<module>modules/infrastructure/frontend-web-astro</module>
+		<module>modules/infrastructure/web-astro</module>
 		<module>builds/knowy-thymeleaf-compose</module>
 		<module>builds/knowy-devenv-compose</module>
-        <module>modules/infrastructure/xml-data-loader</module>
-        <module>modules/infrastructure/xml-knowy-schemes</module>
-        <module>modules/application/loader</module>
-    </modules>
+		<module>modules/infrastructure/xml-data-loader</module>
+		<module>modules/infrastructure/xml-knowy-schemes</module>
+		<module>modules/application/loader</module>
+		<module>modules/infrastructure/frontend-spring-web-astro</module>
+	</modules>
 
 	<dependencyManagement>
 		<dependencies>
@@ -75,7 +76,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
-				<artifactId>frontend-web-spring</artifactId>
+				<artifactId>frontend-spring-web-thymeleaf</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -90,8 +91,9 @@
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
-				<artifactId>frontend-web-astro</artifactId>
+				<artifactId>web-astro</artifactId>
 				<version>${project.version}</version>
+				<type>war</type>
 			</dependency>
 			<!-- spring -->
 			<dependency>
