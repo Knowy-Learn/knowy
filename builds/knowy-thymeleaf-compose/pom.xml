@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.knowy</groupId>
-			<artifactId>frontend-web-spring</artifactId>
+			<artifactId>frontend-spring-web-thymeleaf</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
