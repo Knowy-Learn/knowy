@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS public.news
 	id               serial       NOT NULL,
 	title		     varchar(100) NOT NULL,
 	content          text         NOT NULL,
-	publish_date   date         NOT NULL,
+	publish_date     date         NOT NULL,
 	PRIMARY KEY (id)
 );
 
