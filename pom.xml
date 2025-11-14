@@ -23,6 +23,7 @@
 		<module>modules/application/base</module>
 		<module>modules/application/user</module>
 		<module>modules/application/course</module>
+		<module>modules/application/news</module>
 		<module>modules/infrastructure/persistence-spring-jpa</module>
 		<module>modules/infrastructure/security-spring-jwt</module>
 		<module>modules/infrastructure/notification-spring-mail</module>
@@ -58,6 +59,10 @@
 				<groupId>com.knowy</groupId>
 				<artifactId>loader-core</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>news-core</artifactId>
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
