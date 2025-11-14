@@ -63,6 +63,7 @@
 			<dependency>
 				<groupId>com.knowy</groupId>
 				<artifactId>news-core</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>

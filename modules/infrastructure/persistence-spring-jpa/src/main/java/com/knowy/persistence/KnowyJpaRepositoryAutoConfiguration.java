@@ -104,5 +104,11 @@ public class KnowyJpaRepositoryAutoConfiguration {
 	public UserRepository jpaUserRepository(JpaUserDao jpaUserDao, JpaCategoryDao jpaCategoryDao) {
 		return new JpaUserRepository(jpaUserDao, jpaCategoryDao);
 	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public NewsRepository jpaNewsRepository(JpaNewsDao jpaNewsDao) {
+		return new JpaNewsRepository(jpaNewsDao);
+	}
 }
 

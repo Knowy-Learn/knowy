@@ -139,6 +139,15 @@ CREATE TABLE IF NOT EXISTS public.lesson_documentation
 	PRIMARY KEY (id_lesson, id_documentation)
 );
 
+CREATE TABLE IF NOT EXISTS public.news
+(
+	id               serial       NOT NULL,
+	title		     varchar(100) NOT NULL,
+	content          text         NOT NULL,
+	publish_date   date         NOT NULL,
+	PRIMARY KEY (id)
+);
+
 -- FK public_user
 ALTER TABLE IF EXISTS public.public_user
 	ADD FOREIGN KEY (id_profile_image)
