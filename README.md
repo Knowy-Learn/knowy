@@ -275,43 +275,22 @@ Para más información, puedes leer el texto completo de la licencia en el archi
 oficial:<br>
 👉 https://www.gnu.org/licenses/gpl-3.0.html
 
-## 🤝 Colaboradores
+# 🤝 Colaboradores
 
-Este proyecto ha sido posible gracias al trabajo conjunto de todas las personas que han contribuido en diferentes etapas de su desarrollo.  
-A cada una, ¡gracias por su esfuerzo, tiempo y dedicación! 💪✨
+Este proyecto ha sido posible gracias al esfuerzo y dedicación de todas las personas que han contribuido en sus distintas etapas. ¡A cada una, gracias por su tiempo y compromiso! 💪✨
 
----
+Entre quienes aportaron al desarrollo del proyecto, la arquitectura, el backend, el frontend o colaboraciones puntuales se incluyen:  
 
-### 👩‍💻 Dirección técnica y desarrollo principal
-- [**SaraMForte**](https://github.com/SaraMForte)  
-  Lideró la organización técnica y la arquitectura base del proyecto, además de desarrollar la mayor parte del código y mantener la coherencia a lo largo de todas las versiones.
+- SaraMForte  
+- jagame90  
+- Aarón Helices Martín-Niño  
+- David Gil Campos  
+- NRichardsF  
+- Iván Carvajal Huetor  
+- Judit Olaya Grima Lorente  
+- Manuel Corvo Belda  
+- Jorgazo  
 
----
+Cada uno ha contribuido de manera fundamental, ayudando a dar forma al proyecto y aportando ideas, código y soporte en diferentes áreas.  
 
-### 🏗️ Arquitectura de software
-- [**jagame90**](https://github.com/jagame)  
-  Responsable de plantear la **arquitectura general** y las bases estructurales del proyecto, contribuyendo a su visión técnica global.
-
----
-
-### 💻 Desarrollo backend y frontend (hasta v1.0)
-- [**Aarón Helices Martín-Niño**](https://github.com/aaronhmn)  
-- [**David Gil Campos**](https://github.com/Sinnick29)  
-- [**NRichardsF**](https://github.com/nrichardsf)  
-
-Colaboraron activamente en el desarrollo de funcionalidades clave, tanto en el **frontend** como en el **backend**, aportando una base sólida durante las primeras versiones del proyecto.
-
----
-
-### 🧩 Colaboraciones puntuales (hasta v1.0)
-- [**Iván Carvajal Huetor**](https://github.com/ivancarvajalhuetor)  
-- [**Judit Olaya Grima Lorente**](https://github.com/JuditoLaya)  
-- [**Manuel Corvo Belda**](https://github.com/Worldlover12)  
-- [**Jorgazo**](https://github.com/JorgeSR95)  
-
-Realizaron contribuciones en áreas específicas del desarrollo y ayudaron a dar forma a distintas partes del proyecto en sus primeras fases.
-
----
-
-💫 **Gracias a todas las personas que han formado parte de este proyecto, en cualquier etapa o versión.**  
-Cada aportación ha sido fundamental para llegar hasta aquí. 🚀
+💫 Gracias a todas las personas que han formado parte de este proyecto en cualquier etapa. Cada aportación ha sido clave para llegar hasta aquí. 🚀
