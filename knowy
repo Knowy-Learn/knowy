@@ -115,13 +115,24 @@ run_operation() {
     else
         compose_file=$(find "builds/knowy-$2-compose/target/" -name "compose-$3.yaml")
     fi
-    your_compose -f "$compose_file" "$1" "${additional_params[@]}"
+
+    echo ""
+
+    if [[ -z "$compose_file" ]]; then
+        echo "No compose file found in builds/knowy-$2-compose/target"
+        return 1
+    else
+        echo "Found compose file: $compose_file"
+        your_compose -f "$compose_file" "$1" "${additional_params[@]}"
+    fi
 }
 
 your_compose() {
     if [[ -n $(command -v podman) ]]; then
+        echo "running with podman"
         podman compose "$@"
     elif [[ -n $(command -v compose) ]]; then
+        echo "running with compose"
         compose "$@"
     else
         echo "You need to have podman or docker installed" >&2

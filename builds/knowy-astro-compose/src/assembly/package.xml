@@ -1,0 +1,33 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 http://maven.apache.org/xsd/assembly-2.2.0.xsd">
+	<id>docker-server-zip</id>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<dependencySets>
+		<dependencySet>
+			<includes>
+				<include>com.knowy:frontend-spring-web-astro:jar:*</include>
+			</includes>
+			<outputFileNameMapping>frontend-spring-web.jar</outputFileNameMapping>
+			<outputDirectory>server/frontend-spring-web</outputDirectory>
+		</dependencySet>
+
+		<dependencySet>
+			<includes>
+				<include>com.knowy:backend-api-spring:jar:*</include>
+			</includes>
+			<outputFileNameMapping>backend-api-spring.jar</outputFileNameMapping>
+			<outputDirectory>server/backend-api-spring</outputDirectory>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>.</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../../scripts/init-postgresql/sql</directory>
+			<outputDirectory>sql/init</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>

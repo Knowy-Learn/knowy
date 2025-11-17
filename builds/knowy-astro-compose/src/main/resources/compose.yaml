@@ -1,0 +1,98 @@
+services:
+    frontend-spring-web:
+        container_name: frontend-spring-web
+        environment:
+            - SPRING_PROFILES_ACTIVE=dev
+        build:
+            context: .
+            dockerfile: server/frontend-spring-web/Dockerfile
+        ports:
+            - "443:443"
+        networks:
+            - knowy_net
+    #        healthcheck:
+    #            test: [ "CMD-SHELL", "curl --fail http://localhost/actuator/health || exit 1" ]
+    #            interval: 30s
+    #            timeout: 5s
+    #            retries: 3
+    #            start_period: 10s
+
+    backend-spring-server:
+        container_name: backend-spring-server
+        environment:
+            - DB_URL=jdbc:postgresql://postgres:5432/${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DB_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+            - SSL_KEY_ALIAS=${SSL_KEY_ALIAS}
+            - SSL_KEYSTORE=${SSL_KEYSTORE}
+            - SSL_KEY=${SSL_KEY}
+            - SSL_KEYSTORE_TYPE=${SSL_KEYSTORE_TYPE}
+            - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+            - MAIL_HOST=mailpit
+            - MAIL_PORT=1025
+        build:
+            context: .
+            dockerfile: server/backend-api-spring/Dockerfile
+        ports:
+            - "8080:8080"
+        networks:
+            - knowy_net
+        depends_on:
+            - postgres
+            - mailpit
+    #        healthcheck:
+    #            test: [ "CMD-SHELL", "curl --fail http://localhost/actuator/health || exit 1" ]
+    #            interval: 30s
+    #            timeout: 5s
+    #            retries: 3
+    #            start_period: 10s
+
+    postgres:
+        image: postgres:17
+        container_name: kn-postgres17
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
+        networks:
+            - knowy_net
+        volumes:
+            - kn_db_data:/var/lib/postgresql/data
+            - ./sql/init:/docker-entrypoint-initdb.d
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U knowy -d knowydb" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+
+    mailpit:
+        container_name: kn-mailpit
+        image: axllent/mailpit
+        volumes:
+            - kn_mailpit_data:/data
+        ports:
+            - ${PORT_PROD_MAILPIT_UI:-8025}:8025 #UI mailpit port
+        networks:
+            - knowy_net
+        environment:
+            MP_MAX_MESSAGES: 1000
+            MP_DATABASE: /data/knmailpit.db
+            MP_SMTP_AUTH_ACCEPT_ANY: 1
+            MP_SMTP_AUTH_ALLOW_INSECURE: 1
+        depends_on:
+            - java-server
+        healthcheck:
+            test: [ "CMD-SHELL", "curl -f http://localhost:8025 || exit 1" ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
+
+volumes:
+    kn_db_data:
+    kn_mailpit_data:
+
+networks:
+    knowy_net:

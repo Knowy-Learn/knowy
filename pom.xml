@@ -36,10 +36,12 @@
 		<module>modules/infrastructure/xml-knowy-schemes</module>
 		<module>modules/application/loader</module>
 		<module>modules/infrastructure/frontend-spring-web-astro</module>
+		<module>builds/knowy-astro-compose</module>
 	</modules>
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- application -->
 			<dependency>
 				<groupId>com.knowy</groupId>
 				<artifactId>basic-core</artifactId>
@@ -65,6 +67,12 @@
 				<artifactId>news-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<!-- infrastructure -->
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>backend-api-spring</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.knowy</groupId>
 				<artifactId>persistence-spring-jpa</artifactId>
@@ -83,6 +91,11 @@
 			<dependency>
 				<groupId>com.knowy</groupId>
 				<artifactId>frontend-spring-web-thymeleaf</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>frontend-spring-web-astro</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>backend-api-spring</artifactId>
+	<packaging>jar</packaging>
 
 	<properties>
 		<maven.compiler.source>21</maven.compiler.source>
@@ -52,7 +53,15 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>3.4.5</version>
+				<executions>
+					<execution>
+						<id>spring-build</id>
+						<phase>package</phase>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>

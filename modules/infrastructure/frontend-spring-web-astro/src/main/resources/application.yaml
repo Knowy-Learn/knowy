@@ -1,4 +1,20 @@
-spring:
-    web:
-        resources:
-            static-locations: "classpath:/public"
+server:
+    port: 443
+    ssl:
+        enabled: true
+        key-store: classpath:${SSL_KEYSTORE:keystore.p12}
+        key-store-password: ${SSL_KEY:default-keystore-must-be-replaced-in-public-deploys}
+        key-store-type: ${SSL_KEYSTORE_TYPE:PKCS12}
+        key-alias: ${SSL_KEY_ALIAS:knowy-server}
+    error:
+        whitelabel:
+            enabled: false
+    servlet:
+        session:
+            timeout: 1d
+
+#management:
+#    endpoints:
+#        web:
+#            exposure:
+#                include: health,info
