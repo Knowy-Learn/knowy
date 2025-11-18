@@ -3,6 +3,7 @@ package com.knowy.server.api.controller;
 import com.knowy.core.NewsService;
 import com.knowy.core.domain.News;
 import com.knowy.core.domain.Pagination;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
+// FIXME
+@CrossOrigin(origins = "http://localhost:4321")
 @RestController
 @RequestMapping("news")
 public class NewsController {

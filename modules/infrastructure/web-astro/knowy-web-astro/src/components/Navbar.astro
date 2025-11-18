@@ -3,10 +3,10 @@ import logo from "../assets/knowy.svg"
 import LinkButton from "./LinkButton.astro"
 ---
 
-<header class="sticky top-0 z-50 flex h-16 w-full items-center bg-green-500">
+<header class="sticky top-0 z-50 flex h-16 w-full items-center bg-primary-500">
 	<a
 		href="/"
-		class="flex h-full w-1/2 items-center gap-2 p-4 text-xl font-bold text-white"
+		class="flex h-full w-1/2 items-center gap-2 p-4 text-xl font-bold text-accent-100"
 		aria-label="Página principal"
 	>
 		<img src={logo.src} alt="Logo Knowy" class="h-11" />
@@ -24,7 +24,7 @@ import LinkButton from "./LinkButton.astro"
 		{/* Button that open the menu */}
 		<button
 			id="menuButton"
-			class="z-50 m-4 flex h-12 w-12 items-center justify-center rounded-md bg-green-600 text-2xl text-white shadow-lg transition-transform duration-200 active:scale-90"
+			class="z-50 m-4 flex h-12 w-12 items-center justify-center rounded-md bg-primary-600 text-2xl text-accent-100 shadow-lg transition-transform duration-200 active:scale-90"
 			aria-label="Abrir menú móvil"
 		>
 			🏠
@@ -33,16 +33,22 @@ import LinkButton from "./LinkButton.astro"
 		{/* Menu content */}
 		<nav
 			id="mobileMenu"
-			class="fixed top-0 right-0 z-40 h-screen w-0 overflow-hidden bg-green-500 transition-[width,background-color] duration-300"
+			class="fixed top-0 right-0 z-40 h-screen w-0 overflow-hidden bg-primary-500 transition-[width,background-color] duration-300"
 		>
-			<ul class="mt-20 flex flex-col gap-2 text-2xl font-medium text-white">
+			<ul class="mt-20 flex flex-col gap-2 text-2xl font-medium text-accent-100">
 				<li>
-					<a href="#" class="block p-4 pl-8 transition-colors duration-200 hover:bg-green-600">
+					<a
+						href="#"
+						class="block p-4 pl-8 transition-colors duration-200 hover:bg-primary-600"
+					>
 						Iniciar Sesión
 					</a>
 				</li>
 				<li>
-					<a href="#" class="block p-4 pl-8 transition-colors duration-200 hover:bg-green-600">
+					<a
+						href="#"
+						class="block p-4 pl-8 transition-colors duration-200 hover:bg-primary-600"
+					>
 						Registrarse
 					</a>
 				</li>
@@ -65,11 +71,11 @@ import LinkButton from "./LinkButton.astro"
 				if (open) {
 					menu.style.width = "66%"
 					menu.classList.remove("bg-transparent")
-					menu.classList.add("bg-green-500")
+					menu.classList.add("bg-primary-500")
 					return
 				}
 				menu.style.width = "0"
-				menu.classList.remove("bg-green-500")
+				menu.classList.remove("bg-primary-500")
 				menu.classList.add("bg-transparent")
 			}
 		})

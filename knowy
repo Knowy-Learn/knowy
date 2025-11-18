@@ -52,6 +52,8 @@ Artifacts:
 
     thymeleaf    The knowy-thymeleaf-compose project
 
+    astro        The knowy-astro-compose project
+
 
 Profiles:
 
