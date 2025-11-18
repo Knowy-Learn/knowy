@@ -1,12 +1,12 @@
 ---
 /**
-	* Reusable button link component.
-	*
-	* @component
-	* @param {string} - Destination URL for the link.
-	* @param {"primary"|"secondary"} - Visual style variant.
-	* @slot - Button content (text or elements inside the button).
-	*/
+ * Reusable button link component.
+ *
+ * @component
+ * @param {string} - Destination URL for the link.
+ * @param {"primary"|"secondary"} - Visual style variant.
+ * @slot - Button content (text or elements inside the button).
+ */
 interface Props {
 	href?: string
 	variant?: "primary" | "secondary"
@@ -17,7 +17,8 @@ const { href = "#", variant = "primary" } = Astro.props
 const base = "rounded-xl p-2 text-lg shadow-md transition-all duration-200 focus:ring-2"
 const variants = {
 	primary: "bg-primary-600 text-accent-100 hover:scale-105 hover:bg-primary-700 focus:ring-accent-600",
-	secondary: "bg-accent-100 text-primary-600 ring-1 ring-primary-500 hover:bg-accent-200 hover:scale-105" +
+	secondary:
+		"bg-accent-100 text-primary-600 ring-1 ring-primary-500 hover:bg-accent-200 hover:scale-105" +
 		" focus:ring-accent-600"
 }
 ---

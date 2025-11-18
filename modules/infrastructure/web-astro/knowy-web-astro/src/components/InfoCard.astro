@@ -6,15 +6,15 @@ interface Props {
 const { title } = Astro.props
 ---
 
-<div class="h-56 max-w-sm min-w-xs rounded-lg border border-secondary-300 bg-accent-100 p-4 shadow-sm">
-	<div class="flex max-h-12 h-12 w-full flex-col items-center justify-center">
+<div class="border-secondary-300 bg-accent-100 h-56 max-w-sm min-w-xs rounded-lg border p-4 shadow-sm">
+	<div class="flex h-12 max-h-12 w-full flex-col items-center justify-center">
 		<slot name="icon" />
 	</div>
 
-	<h5 class="mb-2 text-center text-2xl font-bold tracking-tight text-secondary-800">
+	<h5 class="text-secondary-800 mb-2 text-center text-2xl font-bold tracking-tight">
 		{title}
 	</h5>
-	<p class="mb-3 font-normal text-secondary-600">
+	<p class="text-secondary-600 mb-3 font-normal">
 		<slot />
 	</p>
 </div>

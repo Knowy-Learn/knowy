@@ -5,49 +5,48 @@
    ============================ */
 @theme {
 	/* Primary (verde) */
-	--color-primary-100: #C3E6C8;
-	--color-primary-200: #9FD6A8;
-	--color-primary-300: #7AC689;
-	--color-primary-400: #56B569;
-	--color-primary-500: #3DA64F;
-	--color-primary-600: #2F8640;
+	--color-primary-100: #c3e6c8;
+	--color-primary-200: #9fd6a8;
+	--color-primary-300: #7ac689;
+	--color-primary-400: #56b569;
+	--color-primary-500: #3da64f;
+	--color-primary-600: #2f8640;
 	--color-primary-700: #206630;
 	--color-primary-800: #134520;
 	--color-primary-900: #061410;
 
 	/* Secondary (azul gris oscuro) */
-	--color-secondary-100: #E3E8ED;
-	--color-secondary-200: #C7D1DB;
-	--color-secondary-300: #AAB9C9;
-	--color-secondary-400: #8EA2B7;
-	--color-secondary-500: #728BA5;
-	--color-secondary-600: #5B7088;
+	--color-secondary-100: #e3e8ed;
+	--color-secondary-200: #c7d1db;
+	--color-secondary-300: #aab9c9;
+	--color-secondary-400: #8ea2b7;
+	--color-secondary-500: #728ba5;
+	--color-secondary-600: #5b7088;
 	--color-secondary-700: #445670;
-	--color-secondary-800: #2E3C58;
-	--color-secondary-900: #181F30;
+	--color-secondary-800: #2e3c58;
+	--color-secondary-900: #181f30;
 
 	/* Accent / Background (dorados) */
-	--color-accent-100: #FFF8E1;
-	--color-accent-200: #FFEFBC;
-	--color-accent-300: #FFE59A;
-	--color-accent-400: #FFDC78;
-	--color-accent-500: #FFD255;
-	--color-accent-600: #E6B944;
-	--color-accent-700: #CC9F33;
-	--color-accent-800: #B38622;
+	--color-accent-100: #fff8e1;
+	--color-accent-200: #ffefbc;
+	--color-accent-300: #ffe59a;
+	--color-accent-400: #ffdc78;
+	--color-accent-500: #ffd255;
+	--color-accent-600: #e6b944;
+	--color-accent-700: #cc9f33;
+	--color-accent-800: #b38622;
 	--color-accent-900: #997211;
 
 	/* Background & Text */
-	--color-background: #FFFFFF;
-	--color-foreground: #3DA64F;
+	--color-background: #ffffff;
+	--color-foreground: #3da64f;
 
 	/* Status colors */
-	--color-success: #22C55E;
-	--color-warning: #EAB308;
-	--color-error: #EF4444;
-	--color-alert: #F97316;
+	--color-success: #22c55e;
+	--color-warning: #eab308;
+	--color-error: #ef4444;
+	--color-alert: #f97316;
 }
-
 
 @layer base {
 }

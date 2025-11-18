@@ -1,22 +1,22 @@
 {
-  "name": "knowy-web-astro",
-  "type": "module",
-  "version": "1.2.0",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.1.16",
-    "astro": "^5.15.3",
-    "marked": "^17.0.0",
-    "tailwindcss": "^4.1.16"
-  },
-  "devDependencies": {
-    "prettier": "^3.6.2",
-    "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.7.1"
-  }
+	"name": "knowy-web-astro",
+	"type": "module",
+	"version": "1.2.0",
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"@tailwindcss/vite": "^4.1.16",
+		"astro": "^5.15.3",
+		"marked": "^17.0.0",
+		"tailwindcss": "^4.1.16"
+	},
+	"devDependencies": {
+		"prettier": "^3.6.2",
+		"prettier-plugin-astro": "^0.14.1",
+		"prettier-plugin-tailwindcss": "^0.7.1"
+	}
 }

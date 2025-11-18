@@ -1,0 +1,50 @@
+---
+import logo from "../../assets/knowy.svg"
+import Layout from "../../layouts/Layout.astro"
+import InputField from "../../components/InputField.astro"
+---
+
+<Layout>
+	<main class="bg-background flex min-h-screen items-center justify-center">
+		<section
+			class="md:bg-accent-100/50 md:border-secondary-200 flex w-full max-w-md flex-col p-6 md:rounded-lg md:border md:shadow-lg"
+		>
+			<div class="my-2 flex w-full flex-col items-center">
+				<a
+					href="/"
+					class="text-primary-500 flex items-center gap-2 text-2xl font-bold"
+					aria-label="Página principal"
+				>
+					<img src={logo.src} alt="Logo Knowy" class="h-18" />
+					<span>Knowy</span>
+				</a>
+			</div>
+
+			<form class="flex w-full flex-col gap-4">
+				<h1 class="text-primary-700 w-full text-center text-4xl font-semibold">Inicio Sesión</h1>
+
+				<InputField id="email" placeholder="text@gmail.com" label="Correo electrónico" type="email" />
+
+				<InputField id="password" placeholder="password" type="password">
+					<a href="@{/password-change/email}" class="text-primary-500 hover:underline"
+						>¿Has olvidado la contraseña?
+					</a>
+				</InputField>
+
+				<button
+					class="bg-primary-600 text-accent-100 hover:bg-primary-700 focus:ring-accent-600 rounded-md p-2 text-lg shadow-md transition-all duration-200 hover:scale-105 focus:ring-2"
+					type="submit"
+				>
+					Iniciar Sesión
+				</button>
+
+				<div class="flex flex-col gap-2 text-center">
+					<a href="@{/register}" class="text-secondary-500 hover:underline"
+						>¿No tienes cuenta?
+						<span class="text-primary-500">¡Regístrate aquí!</span></a>
+					<a href="/" class="text-gray-500 hover:underline"> ← Volver a la web </a>
+				</div>
+			</form>
+		</section>
+	</main>
+</Layout>

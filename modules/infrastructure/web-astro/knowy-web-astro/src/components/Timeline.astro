@@ -2,30 +2,30 @@
 
 ---
 
-<div class="rounded-md border border-secondary-300 bg-accent-100 min-w-full p-8 shadow-sm shadow-zinc-200">
-	<ol class="relative border-s border-secondary-300"></ol>
+<div class="border-secondary-300 bg-accent-100 min-w-full rounded-md border p-8 shadow-sm shadow-zinc-200">
+	<ol class="border-secondary-300 relative border-s"></ol>
 </div>
 
 <script>
-	import {marked} from "marked";
+	import { marked } from "marked"
 
 	function formatDate(dateString: string, locale: string) {
-		const date = new Date(dateString);
+		const date = new Date(dateString)
 		return new Intl.DateTimeFormat(locale, {
 			day: "numeric",
 			month: "long",
-			year: "numeric",
-		}).format(date);
+			year: "numeric"
+		}).format(date)
 	}
 
 	interface NewsItem {
-		title: string;
-		content: string;
-		date: string;
+		title: string
+		content: string
+		date: string
 	}
 
-	const response = await fetch("http://localhost:8080/api/v1/news");
-	const newsList: NewsItem[] = await response.json();
+	const response = await fetch("http://localhost:8080/api/v1/news")
+	const newsList: NewsItem[] = await response.json()
 
 	const list = document.querySelector("ol") as HTMLElement
 
