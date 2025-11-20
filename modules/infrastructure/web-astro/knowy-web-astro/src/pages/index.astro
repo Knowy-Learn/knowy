@@ -14,20 +14,37 @@ import Footer from "../components/Footer.astro"
 
 	<main class="h-auto w-full">
 		<section class="bg-primary-200 grid h-3/5 grid-cols-1 p-16 font-sans md:grid-cols-2">
+			{/* Presentation */}
 			<div data-label="Intro" class="flex flex-col items-center justify-center gap-4 text-center">
 				<h1 class="text-primary-800 text-3xl font-bold">¡Aprende los conceptos de programación a tu ritmo!</h1>
 				<p class="text-primary-800 text-lg">Cursos interactivos, retos y aprendizaje personalizado.</p>
 
-				<div class="mt-4 flex flex-row items-center justify-end gap-2">
-					<LinkButton href="/auth/login" variant="primary">Inicio Sesión</LinkButton>
-					<LinkButton href="#" variant="secondary">Registrarse</LinkButton>
+				{/* Access buttons */}
+				<div class="mt-4 flex flex-col items-center justify-center gap-1">
+					<div class="grid grid-rows-1 gap-2 sm:grid-cols-2">
+						<LinkButton href="/auth/login" variant="primary"> Inicio Sesión </LinkButton>
+
+						<LinkButton href="/auth/regist" variant="secondary"> Registrarse </LinkButton>
+					</div>
+
+					{/* Separator */}
+					<div class="flex w-full items-center gap-2">
+						<div class="border-secondary-700 flex-grow border-t"></div>
+						<span class="text-secondary-700">o</span>
+						<div class="border-secondary-700 flex-grow border-t"></div>
+					</div>
+
+					<LinkButton href="/auth/guest" variant="secondary"> Entrar como invitado </LinkButton>
 				</div>
 			</div>
+
+			{/* Presentation logo */}
 			<a data-label="Logo" class="flex items-center justify-center gap-2 not-md:hidden">
 				<img src={logo.src} alt="Logo" width={logo.width} height={logo.height} />
 			</a>
 		</section>
 
+		{/* Language separator */}
 		<section
 			class="bg-primary-500 text-accent-100 flex flex-row items-center justify-center gap-10 overflow-hidden p-3 font-sans text-lg font-bold"
 		>
@@ -40,6 +57,7 @@ import Footer from "../components/Footer.astro"
 			<span>Python</span>
 		</section>
 
+		{/* Functionality section */}
 		<section class="flex flex-col items-center justify-center px-16 py-6">
 			<h2 class="text-primary-800 mb-4 w-full text-center text-4xl font-medium">Funcionalidades</h2>
 
@@ -81,6 +99,7 @@ import Footer from "../components/Footer.astro"
 			</div>
 		</section>
 
+		{/* Last News about the project */}
 		<section class="flex flex-col items-center justify-center gap-4 px-12 py-6 md:px-36">
 			<h2 class="text-primary-800 w-full text-center text-4xl font-medium">Últimas Novedades</h2>
 			<Timeline />

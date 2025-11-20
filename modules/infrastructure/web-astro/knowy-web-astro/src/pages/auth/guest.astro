@@ -2,7 +2,6 @@
 import logo from "../../assets/knowy.svg"
 import Layout from "../../layouts/Layout.astro"
 import InputField from "../../components/InputField.astro"
-import LinkButton from "../../components/LinkButton.astro"
 ---
 
 <Layout>
@@ -22,44 +21,52 @@ import LinkButton from "../../components/LinkButton.astro"
 			</div>
 
 			<form class="flex w-full flex-col gap-5">
+
 				<h1 class="text-primary-700 w-full text-center text-3xl font-semibold">
-					Inicio de sesión
+					Acceso temporal
 				</h1>
 
-				<InputField id="email" placeholder="text@gmail.com" label="Correo electrónico" type="email" />
+				<p class="flex items-start gap-2 rounded-md border border-warning/40 bg-warning/10 p-3 text-sm text-secondary-700">
+					<span class="text-warning text-lg">⚠️</span>
+					<span>
+			Esta cuenta temporal solo se mantendrá en este dispositivo y navegador durante
+			<span class="font-semibold text-warning">7 días</span>.
+		</span>
+				</p>
 
-				<InputField id="password" placeholder="password" type="password">
-					<a href="@{/password-change/email}" class="text-primary-500 text-sm hover:underline">
-						¿Has olvidado la contraseña?
-					</a>
-				</InputField>
+				<InputField id="name" placeholder="knowy" label="Nombre de usuario" type="text" />
+
+				<InputField id="password" placeholder="*******" label="Contraseña" type="password" />
+
+				<InputField id="password-repeat" placeholder="*******" label="Repetir contraseña" type="password" />
 
 				<button
 					class="rounded-md bg-primary-600 p-2 text-lg text-accent-100 shadow-md transition-all duration-200 hover:scale-105 hover:bg-primary-700 focus:ring-2 focus:ring-accent-600"
 					type="submit"
 				>
-					Iniciar sesión
+					Entrar con acceso temporal
 				</button>
-
-				{/* Separator */}
-				<div class="flex w-full items-center gap-3 text-secondary-600">
-					<div class="flex-grow border-t border-secondary-300"></div>
-					<span class="text-sm">o</span>
-					<div class="flex-grow border-t border-secondary-300"></div>
-				</div>
-
-				<LinkButton href="/auth/guest" variant="secondary">
-					Entrar como invitado
-				</LinkButton>
 
 				<div class="mt-2 flex flex-col items-center gap-2 text-center text-sm">
 
-					<a href="/auth/regist" class="text-secondary-500 hover:text-primary-600 hover:underline transition">
-						¿No tienes cuenta?
-						<span class="font-semibold text-primary-600">¡Regístrate aquí!</span>
+					<p class="text-secondary-500">
+						¿Ya tienes una cuenta?
+						<a href="/auth/login" class="font-semibold text-primary-600 hover:underline">
+							Inicia sesión aquí
+						</a>
+					</p>
+
+					<a
+						href="/auth/regist"
+						class="text-secondary-500 hover:text-primary-600 font-medium hover:underline transition"
+					>
+						¿Quieres registrarte?
 					</a>
 
-					<a href="/" class="mt-1 text-secondary-400 hover:text-secondary-600 hover:underline text-xs">
+					<a
+						href="/"
+						class="mt-1 text-secondary-400 hover:text-secondary-600 hover:underline text-xs"
+					>
 						← Volver a la web
 					</a>
 				</div>

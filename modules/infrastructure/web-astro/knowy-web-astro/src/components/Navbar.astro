@@ -3,7 +3,7 @@ import logo from "../assets/knowy.svg"
 import LinkButton from "./LinkButton.astro"
 ---
 
-<header class="bg-primary-500 sticky top-0 z-50 flex h-16 w-full items-center">
+<header class="bg-primary-500 sticky z-50 flex h-16 w-full items-center">
 	<a
 		href="/"
 		class="text-accent-100 flex h-full w-1/2 items-center gap-2 p-4 text-xl font-bold"
@@ -14,9 +14,10 @@ import LinkButton from "./LinkButton.astro"
 	</a>
 
 	{/* Desktop navigation */}
-	<nav class="hidden w-1/2 items-center justify-end gap-3 p-4 md:flex">
+	<nav class="hidden w-1/2 items-end justify-end gap-3 px-10 py-4 md:grid md:grid-cols-2 lg:grid-cols-3">
+		<div class="not-lg:hidden"></div>
 		<LinkButton href="/auth/login" variant="primary">Inicio Sesión</LinkButton>
-		<LinkButton href="#" variant="secondary">Registrarse</LinkButton>
+		<LinkButton href="/auth/regist" variant="secondary">Registrarse</LinkButton>
 	</nav>
 
 	{/* Mobile navigation */}

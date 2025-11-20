@@ -1,0 +1,68 @@
+---
+import logo from "../../assets/knowy.svg"
+import Layout from "../../layouts/Layout.astro"
+import InputField from "../../components/InputField.astro"
+---
+
+<Layout>
+	<main class="bg-background flex min-h-screen items-center justify-center">
+		<section
+			class="md:bg-accent-100/50 md:border-secondary-200 flex w-full max-w-md flex-col p-6 md:rounded-lg md:border md:shadow-lg"
+		>
+			<div class="my-3 flex w-full flex-col items-center">
+				<a
+					href="/"
+					class="text-primary-500 flex items-center gap-2 text-2xl font-bold"
+					aria-label="Página principal"
+				>
+					<img src={logo.src} alt="Logo Knowy" class="h-18" />
+					<span>Knowy</span>
+				</a>
+			</div>
+
+			<form class="flex w-full flex-col gap-5">
+				<h1 class="text-primary-700 w-full text-center text-3xl font-semibold">
+					Registro
+				</h1>
+
+				<InputField id="name" placeholder="knowy" label="Nombre de usuario" type="text" />
+
+				<InputField id="email" placeholder="knowy@knowy.com" label="Correo electrónico" type="email" />
+
+				<InputField id="password" placeholder="*******" label="Contraseña" type="password" />
+
+				<InputField id="password-repeat" placeholder="*******" label="Repetir contraseña" type="password" />
+
+				<button
+					class="rounded-md bg-primary-600 p-2 text-lg text-accent-100 shadow-md transition-all duration-200 hover:scale-105 hover:bg-primary-700 focus:ring-2 focus:ring-accent-600"
+					type="submit"
+				>
+					Registrarse
+				</button>
+
+				<div class="mt-2 flex flex-col items-center gap-2 text-center text-sm">
+					<span class="text-secondary-500">
+						¿Ya tienes una cuenta?
+						<a href="/auth/login" class="font-semibold text-primary-600 hover:underline">
+							Inicia sesión aquí
+						</a>
+					</span>
+
+					<a
+						href="/auth/guest"
+						class="text-secondary-500 hover:text-primary-600 transition hover:underline"
+					>
+						Probar con una cuenta temporal
+					</a>
+
+					<a
+						href="/"
+						class="mt-1 text-secondary-400 text-xs hover:text-secondary-600 hover:underline"
+					>
+						← Volver a la web
+					</a>
+				</div>
+			</form>
+		</section>
+	</main>
+</Layout>
