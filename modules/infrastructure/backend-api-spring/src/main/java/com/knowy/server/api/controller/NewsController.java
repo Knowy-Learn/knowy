@@ -3,19 +3,18 @@ package com.knowy.server.api.controller;
 import com.knowy.core.NewsService;
 import com.knowy.core.domain.News;
 import com.knowy.core.domain.Pagination;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.knowy.server.api.dto.NewsDto;
+import com.knowy.server.api.dto.NewsGet200Response;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-// FIXME
-@CrossOrigin(origins = "http://localhost:4321")
 @RestController
-@RequestMapping("news")
-public class NewsController {
+@Validated
+public class NewsController implements NewsApi {
 
 	private final NewsService newsService;
 
@@ -23,20 +22,19 @@ public class NewsController {
 		this.newsService = newsService;
 	}
 
-	/**
-	 * Retrieves the latest news items.
-	 * <p>
-	 * Uses a fixed pagination of the first 3 items.
-	 *
-	 * @return a list containing the latest news items
-	 */
-	@GetMapping
-	public List<News> getNews() {
-		Pagination pagination = new Pagination(0, 3);
+	@Override
+	public ResponseEntity<NewsGet200Response> newsGet(String acceptLanguage, Integer page, Integer pageSize) {
+		var pagination = new Pagination(page, pageSize);
 
 		Iterable<News> newsIterable = newsService.findLastNews(pagination);
 
-		return StreamSupport.stream(newsIterable.spliterator(), false)
+		List<NewsDto> newsDto = StreamSupport.stream(newsIterable.spliterator(), false)
+			.map(newItem -> new NewsDto(newItem.id(), newItem.title(), newItem.content(), newItem.date()))
 			.toList();
+		return ResponseEntity.ok(new NewsGet200Response(
+			page,
+			pageSize,
+			newsDto
+		));
 	}
 }

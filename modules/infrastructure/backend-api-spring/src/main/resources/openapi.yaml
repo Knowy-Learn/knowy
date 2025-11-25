@@ -1,0 +1,136 @@
+openapi: 3.0.4
+info:
+    title: Knowy API
+    version: 1.0.0
+    description: API to fetch latest news and articles
+paths:
+    /news:
+        get:
+            summary: Get the latest news
+            parameters:
+                -   name: Accept-Language
+                    in: header
+                    description: Language for the response (e.g., es, en)
+                    required: false
+                    schema:
+                        type: string
+                        default: en
+                - name: page
+                  in: query
+                  description: Page number
+                  required: false
+                  schema:
+                      type: integer
+                      default: 0
+                      minimum: 0
+                - name: pageSize
+                  in: query
+                  description: Page size
+                  required: false
+                  schema:
+                      type: integer
+                      default: 10
+                      minimum: 1
+            responses:
+                '200':
+                    description: Array News
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    page:
+                                        type: integer
+                                    pageSize:
+                                        type: integer
+                                    items:
+                                        type: array
+                                        description: List of new items
+                                        items:
+                                            $ref: '#/components/schemas/NewsDto'
+                                required:
+                                    - page
+                                    - pageSize
+                                    - totalPages
+                                    - items
+                '400':
+                    description: Bad Request
+                    $ref: '#/components/responses/BadRequest'
+
+                '429':
+                    description: Too Many Requests - Rate limit exceeded
+                    $ref: '#/components/responses/TooManyRequests'
+                '500':
+                    description: Internal Server Error
+                    $ref: '#/components/responses/InternalServerError'
+
+components:
+
+    schemas:
+        NewsDto:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                    example: 123
+                title:
+                    type: string
+                    example: "Breaking News"
+                content:
+                    type: string
+                    example: "This is the content of the news..."
+                date:
+                    type: string
+                    format: date
+                    example: "2025-11-24"
+            required:
+                - id
+                - title
+                - content
+                - date
+
+        # Knowy Exceptions
+        KnowyErrorReportDto:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    description: Server UUID error code
+                    example: "550e8400-e29b-41d4-a716-446655440000"
+                message:
+                    type: string
+                    description: Description of the error
+                    example: "Unexpected server error"
+            required:
+                - uuid
+                - message
+
+    responses:
+        # Knowy Exceptions Responses
+        BadRequest:
+            description: Bad Request
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/KnowyErrorReportDto'
+
+        TooManyRequests:
+            description: Too many requests
+            headers:
+                Retry-After:
+                    description: Number of seconds to wait before retrying
+                    schema:
+                        type: integer
+                        example: 60
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/KnowyErrorReportDto'
+        InternalServerError:
+            description: Internal Server Error
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/KnowyErrorReportDto'

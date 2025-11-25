@@ -2,6 +2,7 @@ spring:
     mvc:
         servlet:
             path: /api/v1
+
     datasource:
         url: ${DB_URL:jdbc:postgresql://localhost:5434/knowydb}
         username: ${DB_USER:knowy}
