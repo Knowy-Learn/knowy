@@ -12,4 +12,6 @@ public class ApplicationConfiguration {
 	public NewsService newsService(NewsRepository newsRepository) {
 		return new NewsService(newsRepository);
 	}
+
+
 }

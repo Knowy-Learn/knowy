@@ -16,8 +16,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ErrorHandlerController {
-	private static final Logger logger = LoggerFactory.getLogger(ErrorHandlerController.class);
+public class GlobalErrorHandlerController {
+	private static final Logger logger = LoggerFactory.getLogger(GlobalErrorHandlerController.class);
 
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<KnowyErrorReportDto> handleConstraintViolation(ConstraintViolationException ex, HttpServletRequest request) {
@@ -45,8 +45,6 @@ public class ErrorHandlerController {
 		}
 		return fullPathName;
 	}
-
-	// TODO: Rate Limit 429
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<KnowyErrorReportDto> handleServerError(Exception ex, HttpServletRequest request) {

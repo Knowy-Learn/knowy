@@ -32,6 +32,10 @@
 			<groupId>com.knowy</groupId>
 			<artifactId>news-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>security-spring-jwt</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.knowy</groupId>
@@ -76,6 +80,18 @@
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>6.4.12</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>6.4.12</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 

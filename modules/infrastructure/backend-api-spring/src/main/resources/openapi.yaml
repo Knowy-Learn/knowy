@@ -2,10 +2,178 @@ openapi: 3.0.4
 info:
     title: Knowy API
     version: 1.0.0
-    description: API to fetch latest news and articles
+    description: General API for Knowy application, providing endpoints for authentication, news, and other features.
+tags:
+    -   name: Authentication
+        description: Authentication and login-related endpoints
+    -   name: News
+        description: Endpoints related to news
+
+servers:
+    - url: http://localhost:8080/api/v1
+      description: Local development server
 paths:
+    /auth/login:
+        post:
+            tags:
+                - Authentication
+            summary: Authenticate a user with email and password
+            description: Returns a JWT token if the credentials are valid.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                                - password
+                            properties:
+                                email:
+                                    type: string
+                                    format: email
+                                    example: knowy@kn.com
+                                password:
+                                    type: string
+                                    format: password
+                                    example: 12345678
+            responses:
+                '200':
+                    description: Successful user login
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    accessToken:
+                                        type: string
+                                        description: authentication token
+                                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                '400':
+                    description: Invalid request body
+                '401':
+                    description: Authentication failed (wrong email or password)
+    /auth/register:
+        post:
+            tags:
+                - Authentication
+            summary: Register a new user
+            description: Create a new user account with email, username, and password. Returns an authentication token on success.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                                - username
+                                - password
+                                - passwordConfirm
+                            properties:
+                                username:
+                                    type: string
+                                    example: UserNameExample
+                                email:
+                                    type: string
+                                    format: email
+                                    example: user@example.com
+                                password:
+                                    type: string
+                                    format: password
+                                    example: mySecretPassword
+                                passwordConfirm:
+                                    type: string
+                                    format: password
+                                    example: mySecretPassword
+            responses:
+                '201':
+                    description: User successfully registered
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    accessToken:
+                                        type: string
+                                        description: JWT authentication token (if using JWT)
+                                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                '400':
+                    description: Invalid request body or passwords do not match
+                '409':
+                    description: User with this email already exists
+    /auth/refresh-token:
+        post:
+            tags:
+                - Authentication
+            summary: Refresh authentication token
+            description: Use a valid refresh token to obtain a new access token. The refresh token can be sent in a cookie or in the request body.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - refreshToken
+                            properties:
+                                refreshToken:
+                                    type: string
+                                    description: The refresh token issued during login
+                                    example: dGhpcy1pc19hLXJlZnJlc2gtdG9rZW4
+            responses:
+                '200':
+                    description: Successfully issued a new access token
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    accessToken:
+                                        type: string
+                                        description: New JWT access token
+                                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                '400':
+                    description: Invalid request or missing refresh token
+                '401':
+                    description: Refresh token invalid or expired
+    /auth/validate:
+        post:
+            tags:
+                - Authentication
+            summary: Validate access token
+            description: Endpoint to validate an access token. Returns 200 if the token is valid.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - accessToken
+                            properties:
+                                accessToken:
+                                    type: string
+                                    description: The access token to validate
+                                    example: dGhpcy1pc19hLWFjY2Vzcy10b2tlbg
+            responses:
+                '200':
+                    description: The token is valid
+                '400':
+                    description: Invalid or expired token
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Invalid access token
+
     /news:
         get:
+            tags:
+                - News
             summary: Get the latest news
             parameters:
                 -   name: Accept-Language
@@ -15,22 +183,22 @@ paths:
                     schema:
                         type: string
                         default: en
-                - name: page
-                  in: query
-                  description: Page number
-                  required: false
-                  schema:
-                      type: integer
-                      default: 0
-                      minimum: 0
-                - name: pageSize
-                  in: query
-                  description: Page size
-                  required: false
-                  schema:
-                      type: integer
-                      default: 10
-                      minimum: 1
+                -   name: page
+                    in: query
+                    description: Page number
+                    required: false
+                    schema:
+                        type: integer
+                        default: 0
+                        minimum: 0
+                -   name: pageSize
+                    in: query
+                    description: Page size
+                    required: false
+                    schema:
+                        type: integer
+                        default: 10
+                        minimum: 1
             responses:
                 '200':
                     description: Array News
@@ -56,19 +224,19 @@ paths:
                 '400':
                     description: Bad Request
                     $ref: '#/components/responses/BadRequest'
-
-                '429':
-                    description: Too Many Requests - Rate limit exceeded
-                    $ref: '#/components/responses/TooManyRequests'
                 '500':
                     description: Internal Server Error
                     $ref: '#/components/responses/InternalServerError'
 
 components:
-
     schemas:
         NewsDto:
             type: object
+            required:
+                - id
+                - title
+                - content
+                - date
             properties:
                 id:
                     type: integer
@@ -84,15 +252,13 @@ components:
                     type: string
                     format: date
                     example: "2025-11-24"
-            required:
-                - id
-                - title
-                - content
-                - date
 
         # Knowy Exceptions
         KnowyErrorReportDto:
             type: object
+            required:
+                - uuid
+                - message
             properties:
                 uuid:
                     type: string
@@ -103,27 +269,11 @@ components:
                     type: string
                     description: Description of the error
                     example: "Unexpected server error"
-            required:
-                - uuid
-                - message
 
     responses:
         # Knowy Exceptions Responses
         BadRequest:
             description: Bad Request
-            content:
-                application/json:
-                    schema:
-                        $ref: '#/components/schemas/KnowyErrorReportDto'
-
-        TooManyRequests:
-            description: Too many requests
-            headers:
-                Retry-After:
-                    description: Number of seconds to wait before retrying
-                    schema:
-                        type: integer
-                        example: 60
             content:
                 application/json:
                     schema:
