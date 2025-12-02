@@ -1,9 +1,9 @@
 package com.knowy.core.user.usercase.update.email;
 
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.KnowyUserEmailFormatException;
-import com.knowy.core.user.exception.KnowyUnchangedEmailException;
-import com.knowy.core.user.exception.KnowyWrongPasswordException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedEmailException;
+import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.core.user.usercase.KnowyUseCase;

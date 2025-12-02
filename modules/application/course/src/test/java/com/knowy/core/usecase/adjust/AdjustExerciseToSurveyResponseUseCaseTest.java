@@ -3,7 +3,7 @@ package com.knowy.core.usecase.adjust;
 import com.knowy.core.domain.Exercise;
 import com.knowy.core.domain.ExerciseDifficult;
 import com.knowy.core.domain.UserExercise;
-import com.knowy.core.exception.KnowyDataAccessException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.port.UserExerciseRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

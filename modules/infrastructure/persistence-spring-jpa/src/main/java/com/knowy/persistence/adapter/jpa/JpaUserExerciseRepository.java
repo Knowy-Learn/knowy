@@ -1,7 +1,7 @@
 package com.knowy.persistence.adapter.jpa;
 
 import com.knowy.core.domain.UserExercise;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;

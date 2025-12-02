@@ -1,7 +1,7 @@
 package com.knowy.core.user.usercase.update.categories;
 
-import com.knowy.core.exception.KnowyInconsistentDataException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.user.port.UserRepository;
 import com.knowy.core.domain.Category;

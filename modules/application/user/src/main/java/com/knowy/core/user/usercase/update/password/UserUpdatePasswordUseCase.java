@@ -1,9 +1,9 @@
 package com.knowy.core.user.usercase.update.password;
 
-import com.knowy.core.user.exception.KnowyTokenException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.KnowyPasswordFormatException;
-import com.knowy.core.user.exception.KnowyWrongPasswordException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
+import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
 import com.knowy.core.user.util.PasswordResetInfo;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.port.KnowyTokenTools;

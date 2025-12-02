@@ -1,7 +1,7 @@
 package com.knowy.security.adapter.jwt;
 
 import com.knowy.core.user.domain.UserPrivate;
-import com.knowy.core.user.exception.KnowyWrongPasswordException;
+import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

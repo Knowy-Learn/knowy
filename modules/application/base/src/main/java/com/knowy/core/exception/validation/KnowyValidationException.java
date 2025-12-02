@@ -1,4 +1,6 @@
-package com.knowy.core.exception;
+package com.knowy.core.exception.validation;
+
+import com.knowy.core.exception.KnowyException;
 
 /**
  * Exception for validation errors as a checked exception.

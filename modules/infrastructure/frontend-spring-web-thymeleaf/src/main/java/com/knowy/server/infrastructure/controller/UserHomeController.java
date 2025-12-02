@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.CourseService;
 import com.knowy.core.usecase.course.GetAllCoursesWithProgressResult;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;

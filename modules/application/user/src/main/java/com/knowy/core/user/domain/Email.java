@@ -1,7 +1,7 @@
 package com.knowy.core.user.domain;
 
-import com.knowy.core.user.exception.KnowyUserEmailFormatException;
-import com.knowy.core.user.exception.KnowyUserEmailFormatRuntimeException;
+import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
+import com.knowy.core.user.exception.validation.KnowyUserEmailFormatRuntimeException;
 
 import java.io.Serializable;
 import java.util.Objects;

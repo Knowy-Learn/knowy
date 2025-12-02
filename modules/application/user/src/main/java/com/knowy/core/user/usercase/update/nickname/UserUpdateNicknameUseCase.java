@@ -1,9 +1,9 @@
 package com.knowy.core.user.usercase.update.nickname;
 
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.KnowyInvalidUserNicknameException;
-import com.knowy.core.user.exception.KnowyNicknameAlreadyTakenException;
-import com.knowy.core.user.exception.KnowyUnchangedNicknameException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
+import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedNicknameException;
 import com.knowy.core.user.port.UserRepository;
 import com.knowy.core.util.StringUtils;
 import com.knowy.core.user.domain.User;

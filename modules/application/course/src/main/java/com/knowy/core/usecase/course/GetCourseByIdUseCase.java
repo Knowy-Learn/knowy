@@ -2,7 +2,7 @@ package com.knowy.core.usecase.course;
 
 import com.knowy.core.domain.Course;
 import com.knowy.core.exception.KnowyCourseNotFound;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 
 /**

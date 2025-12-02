@@ -1,4 +1,4 @@
-package com.knowy.core.exception;
+package com.knowy.core.exception.data;
 
 public class KnowyInconsistentDataException extends KnowyDataAccessException {
 	public KnowyInconsistentDataException(String message) {

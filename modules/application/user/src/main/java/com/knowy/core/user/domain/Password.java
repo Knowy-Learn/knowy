@@ -1,7 +1,7 @@
 package com.knowy.core.user.domain;
 
-import com.knowy.core.user.exception.KnowyPasswordFormatException;
-import com.knowy.core.user.exception.KnowyPasswordFormatRuntimeException;
+import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
+import com.knowy.core.user.exception.validation.KnowyPasswordFormatRuntimeException;
 
 import java.io.Serializable;
 import java.util.Objects;

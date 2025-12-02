@@ -1,7 +1,7 @@
 package com.knowy.core.usecase.lessonbase;
 
 import com.knowy.core.domain.LessonInfo;
-import com.knowy.core.exception.KnowyDataAccessException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.KnowyLessonNotFoundException;
 import com.knowy.core.port.LessonBaseRepository;
 

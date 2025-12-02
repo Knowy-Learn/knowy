@@ -2,7 +2,7 @@ package com.knowy.core.port;
 
 
 import com.knowy.core.domain.UserLesson;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 
 import java.util.Collection;
 import java.util.List;

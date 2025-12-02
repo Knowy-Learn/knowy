@@ -3,7 +3,7 @@ package com.knowy.security.adapter.jwt;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.knowy.core.user.exception.KnowyTokenException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.port.KnowyTokenTools;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

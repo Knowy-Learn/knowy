@@ -1,11 +1,20 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.core.user.exception.*;
 import com.knowy.core.CategoryService;
 import com.knowy.core.user.UserPrivateService;
 import com.knowy.core.user.UserService;
 import com.knowy.core.exception.KnowyException;
-import com.knowy.core.exception.KnowyMailDispatchException;
+import com.knowy.core.exception.mail.KnowyMailDispatchException;
+import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedEmailException;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedImageException;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedNicknameException;
+import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
+import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
 import com.knowy.core.user.usercase.manage.DeactivateAccountCommand;
 import com.knowy.core.user.usercase.update.email.UserUpdateEmailCommand;
 import com.knowy.core.user.domain.Email;

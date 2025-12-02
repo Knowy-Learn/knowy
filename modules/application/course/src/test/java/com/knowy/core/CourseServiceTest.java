@@ -3,7 +3,7 @@ package com.knowy.core;
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;

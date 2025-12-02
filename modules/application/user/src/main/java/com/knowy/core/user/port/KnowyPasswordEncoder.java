@@ -1,6 +1,6 @@
 package com.knowy.core.user.port;
 
-import com.knowy.core.user.exception.KnowyWrongPasswordException;
+import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
 import com.knowy.core.user.domain.UserPrivate;
 
 public interface KnowyPasswordEncoder {

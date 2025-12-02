@@ -1,6 +1,6 @@
-package com.knowy.core.user.exception;
+package com.knowy.core.user.exception.validation;
 
-import com.knowy.core.exception.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyValidationException;
 
 public class KnowyInvalidUserException extends KnowyValidationException {
 

@@ -1,8 +1,8 @@
 package com.knowy;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.knowy.core.exception.KnowyIllegalArgumentRuntimeException;
-import com.knowy.core.exception.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyIllegalArgumentRuntimeException;
+import com.knowy.core.exception.validation.KnowyValidationException;
 import com.knowy.core.port.DataLoader;
 
 import java.io.*;

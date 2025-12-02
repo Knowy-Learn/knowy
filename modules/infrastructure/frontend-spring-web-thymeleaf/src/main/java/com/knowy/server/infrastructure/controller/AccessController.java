@@ -1,10 +1,17 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.core.exception.KnowyMailDispatchException;
+import com.knowy.core.exception.mail.KnowyMailDispatchException;
 import com.knowy.core.user.UserPrivateService;
 import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.UserPrivate;
-import com.knowy.core.user.exception.*;
+import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
+import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
+import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
+import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.usercase.register.UserSingUpCommand;
 import com.knowy.core.user.usercase.update.password.UserUpdatePasswordCommand;
 import com.knowy.server.infrastructure.controller.dto.LoginFormDto;
@@ -101,7 +108,8 @@ public class AccessController {
 
 			userSecurityDetailsHelper.autoLoginUserByEmail(userPrivate.email().value());
 			return "redirect:/home";
-		} catch (KnowyInvalidUserException | KnowyPasswordFormatException e) {
+		} catch (KnowyInvalidUserException | KnowyPasswordFormatException | KnowyEmailAlreadyTakenException |
+				 KnowyNicknameAlreadyTakenException e) {
 			redirectAttributes.addFlashAttribute("user", user);
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, e.getMessage());
 			return "redirect:/register";

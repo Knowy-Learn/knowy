@@ -1,7 +1,7 @@
 package com.knowy.server;
 
-import com.knowy.core.exception.KnowyInconsistentDataException;
-import com.knowy.core.exception.KnowyValidationException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
+import com.knowy.core.exception.validation.KnowyValidationException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.DataLoader;
 import com.knowy.core.usecase.importer.CoursesImporterUseCase;

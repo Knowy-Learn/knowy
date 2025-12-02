@@ -1,8 +1,8 @@
 package com.knowy.core.user.usercase.manage;
 
-import com.knowy.core.exception.KnowyMailDispatchException;
-import com.knowy.core.user.exception.KnowyTokenException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
+import com.knowy.core.exception.mail.KnowyMailDispatchException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.port.ExternalNotificationDispatcher;
 import com.knowy.core.port.ExternalNotificationDispatcher.ExternalNotification;
 import com.knowy.core.user.util.TokenUserPrivateTool;

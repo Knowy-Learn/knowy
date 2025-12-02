@@ -1,16 +1,16 @@
-package com.knowy.server.api.usecase.auth;
+package com.knowy.security.usecase;
 
 import com.knowy.core.user.domain.User;
 import com.knowy.core.user.domain.UserPrivate;
-import com.knowy.core.user.exception.KnowyTokenException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.port.KnowyTokenTools;
 import com.knowy.core.user.port.UserPrivateRepository;
+import com.knowy.core.user.usercase.KnowyUseCase;
 import com.knowy.core.user.util.PasswordResetInfo;
 import com.knowy.security.model.UserSecurityDto;
-import com.knowy.server.api.dto.AuthValidatePostRequest;
 
-public class ValidateUserUseCase {
+public class ValidateUserUseCase implements KnowyUseCase<String, User> {
 
 	private final KnowyTokenTools knowyTokenTools;
 	private final UserPrivateRepository userPrivateRepository;
@@ -20,14 +20,10 @@ public class ValidateUserUseCase {
 		this.userPrivateRepository = userPrivateRepository;
 	}
 
-	public User execute(AuthValidatePostRequest authValidatePostRequest) throws KnowyTokenException,
-		KnowyUserNotFoundException {
-		UserSecurityDto userSecurityDto = knowyTokenTools.decodeUnverified(
-			authValidatePostRequest.getAccessToken(),
-			UserSecurityDto.class
-		);
+	public User execute(String token) throws KnowyTokenException, KnowyUserNotFoundException {
+		UserSecurityDto userSecurityDto = knowyTokenTools.decodeUnverified(token, UserSecurityDto.class);
 		UserPrivate userPrivate = getUserPrivateByIdOrThrow(userSecurityDto.id());
-		knowyTokenTools.decode(userPrivate.password().value(), authValidatePostRequest.getAccessToken(), PasswordResetInfo.class);
+		knowyTokenTools.decode(userPrivate.password().value(), token, PasswordResetInfo.class);
 
 		return userPrivate.cropToUser();
 	}

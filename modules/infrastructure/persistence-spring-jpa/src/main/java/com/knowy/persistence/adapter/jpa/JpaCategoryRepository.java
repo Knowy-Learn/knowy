@@ -1,7 +1,7 @@
 package com.knowy.persistence.adapter.jpa;
 
 import com.knowy.core.domain.Category;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CategoryRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.mapper.JpaCategoryMapper;

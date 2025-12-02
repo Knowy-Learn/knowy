@@ -2,6 +2,8 @@ package com.knowy.core;
 
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.*;
+import com.knowy.core.exception.data.KnowyDataAccessException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.LessonBaseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserExerciseRepository;

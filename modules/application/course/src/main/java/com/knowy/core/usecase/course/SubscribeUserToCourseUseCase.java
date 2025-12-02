@@ -4,7 +4,7 @@ import com.knowy.core.domain.Lesson;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.domain.UserLesson.ProgressStatus;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
 

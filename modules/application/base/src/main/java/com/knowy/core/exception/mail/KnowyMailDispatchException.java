@@ -1,4 +1,6 @@
-package com.knowy.core.exception;
+package com.knowy.core.exception.mail;
+
+import com.knowy.core.exception.KnowyException;
 
 public class KnowyMailDispatchException extends KnowyException {
 	public KnowyMailDispatchException(String message) {

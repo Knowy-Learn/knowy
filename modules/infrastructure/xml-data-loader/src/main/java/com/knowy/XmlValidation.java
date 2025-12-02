@@ -1,6 +1,6 @@
 package com.knowy;
 
-import com.knowy.core.exception.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyValidationException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;

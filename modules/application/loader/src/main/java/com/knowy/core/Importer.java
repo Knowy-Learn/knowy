@@ -1,7 +1,7 @@
 package com.knowy.core;
 
-import com.knowy.core.exception.KnowyInconsistentDataException;
-import com.knowy.core.exception.KnowyValidationException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
+import com.knowy.core.exception.validation.KnowyValidationException;
 
 import java.io.IOException;
 import java.io.InputStream;

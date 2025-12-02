@@ -1,10 +1,12 @@
 package com.knowy.core.user.usercase.register;
 
-import com.knowy.core.user.exception.KnowyImageNotFoundException;
-import com.knowy.core.user.exception.KnowyUserEmailFormatException;
-import com.knowy.core.user.exception.KnowyInvalidUserException;
-import com.knowy.core.user.exception.KnowyInvalidUserNicknameException;
-import com.knowy.core.user.exception.KnowyPasswordFormatException;
+import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
+import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
+import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
+import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
+import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.port.ProfileImageRepository;
 import com.knowy.core.user.port.UserPrivateRepository;
@@ -58,7 +60,7 @@ public class UserSignUpUseCase  implements KnowyUseCase<UserSingUpCommand, UserP
      * @throws KnowyPasswordFormatException If the password format is invalid.
      */
     public UserPrivate execute(UserSingUpCommand userSingUpCommand)
-            throws KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException {
+		throws KnowyImageNotFoundException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException, KnowyInvalidUserException, KnowyNicknameAlreadyTakenException {
 
         assertUserNickname(userSingUpCommand.nickname());
         validateEmail(userSingUpCommand.email());
@@ -78,20 +80,20 @@ public class UserSignUpUseCase  implements KnowyUseCase<UserSingUpCommand, UserP
         return userPrivateRepository.save(userPrivate);
     }
 
-    private void assertUserNickname(String nickname) throws KnowyInvalidUserException {
+    private void assertUserNickname(String nickname) throws KnowyInvalidUserException, KnowyNicknameAlreadyTakenException {
         if (StringUtils.isBlank(nickname)) {
             throw new KnowyInvalidUserNicknameException("Invalid nickname");
         }
 
         if (userRepository.findByNickname(nickname).isPresent()) {
-            throw new KnowyInvalidUserNicknameException("Nickname already exists");
+            throw new KnowyNicknameAlreadyTakenException("Nickname already exists");
         }
     }
 
-    private void validateEmail(String email) throws KnowyUserEmailFormatException {
+    private void validateEmail(String email) throws KnowyUserEmailFormatException, KnowyEmailAlreadyTakenException {
         Email.assertValid(email);
         if (userPrivateRepository.findByEmail(email).isPresent()) {
-            throw new KnowyUserEmailFormatException("Email already exists");
+            throw new KnowyEmailAlreadyTakenException("Email already exists");
         }
     }
 }

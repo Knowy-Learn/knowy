@@ -2,7 +2,7 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.domain.Documentation;
 import com.knowy.core.domain.UserLesson;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.CourseService;
 import com.knowy.core.LessonService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;

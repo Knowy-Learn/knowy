@@ -1,6 +1,6 @@
 package com.knowy.core.port;
 
-import com.knowy.core.exception.KnowyMailDispatchException;
+import com.knowy.core.exception.mail.KnowyMailDispatchException;
 
 public interface ExternalNotificationDispatcher {
 

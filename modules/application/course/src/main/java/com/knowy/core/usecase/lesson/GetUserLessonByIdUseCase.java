@@ -1,7 +1,7 @@
 package com.knowy.core.usecase.lesson;
 
 import com.knowy.core.domain.UserLesson;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.exception.KnowyUserLessonNotFoundException;
 import com.knowy.core.port.UserLessonRepository;
 

@@ -1,12 +1,12 @@
 package com.knowy.core.user;
 
-import com.knowy.core.exception.KnowyInconsistentDataException;
-import com.knowy.core.user.exception.KnowyImageNotFoundException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.KnowyInvalidUserNicknameException;
-import com.knowy.core.user.exception.KnowyNicknameAlreadyTakenException;
-import com.knowy.core.user.exception.KnowyUnchangedImageException;
-import com.knowy.core.user.exception.KnowyUnchangedNicknameException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
+import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
+import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedImageException;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedNicknameException;
 import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.user.port.ProfileImageRepository;
 import com.knowy.core.user.port.UserRepository;

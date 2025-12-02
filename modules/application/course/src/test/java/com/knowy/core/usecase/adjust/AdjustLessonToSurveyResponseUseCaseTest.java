@@ -1,8 +1,8 @@
 package com.knowy.core.usecase.adjust;
 
 import com.knowy.core.domain.*;
-import com.knowy.core.exception.KnowyDataAccessException;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.usecase.exercise.GetAllUserExercisesByCourseIdAndLessonIdUseCase;

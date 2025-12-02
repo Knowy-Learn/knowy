@@ -1,6 +1,6 @@
 package com.knowy.notification.adapter.mail;
 
-import com.knowy.core.exception.KnowyMailDispatchException;
+import com.knowy.core.exception.mail.KnowyMailDispatchException;
 import com.knowy.core.port.ExternalNotificationDispatcher;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;

@@ -81,11 +81,11 @@ paths:
                                 password:
                                     type: string
                                     format: password
-                                    example: mySecretPassword
+                                    example: mySecret.1234
                                 passwordConfirm:
                                     type: string
                                     format: password
-                                    example: mySecretPassword
+                                    example: mySecret.1234
             responses:
                 '201':
                     description: User successfully registered
@@ -102,41 +102,7 @@ paths:
                     description: Invalid request body or passwords do not match
                 '409':
                     description: User with this email already exists
-    /auth/refresh-token:
-        post:
-            tags:
-                - Authentication
-            summary: Refresh authentication token
-            description: Use a valid refresh token to obtain a new access token. The refresh token can be sent in a cookie or in the request body.
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            required:
-                                - refreshToken
-                            properties:
-                                refreshToken:
-                                    type: string
-                                    description: The refresh token issued during login
-                                    example: dGhpcy1pc19hLXJlZnJlc2gtdG9rZW4
-            responses:
-                '200':
-                    description: Successfully issued a new access token
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    accessToken:
-                                        type: string
-                                        description: New JWT access token
-                                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-                '400':
-                    description: Invalid request or missing refresh token
-                '401':
-                    description: Refresh token invalid or expired
+
     /auth/validate:
         post:
             tags:

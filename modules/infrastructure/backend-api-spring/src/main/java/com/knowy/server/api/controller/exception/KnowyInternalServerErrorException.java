@@ -1,7 +1,8 @@
-package com.knowy.server.api.exception;
+package com.knowy.server.api.controller.exception;
 
-public class KnowyInternalServerErrorException extends RuntimeException {
+import com.knowy.core.exception.KnowyRuntimeException;
 
+public class KnowyInternalServerErrorException extends KnowyRuntimeException {
 	public KnowyInternalServerErrorException(String message) {
 		super(message);
 	}

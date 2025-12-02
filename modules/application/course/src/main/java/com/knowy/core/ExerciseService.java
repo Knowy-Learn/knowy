@@ -1,7 +1,7 @@
 package com.knowy.core;
 
 import com.knowy.core.domain.UserExercise;
-import com.knowy.core.exception.KnowyDataAccessException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.port.ExerciseRepository;
 import com.knowy.core.port.UserExerciseRepository;

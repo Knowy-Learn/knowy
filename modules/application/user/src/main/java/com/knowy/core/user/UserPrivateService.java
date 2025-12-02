@@ -1,8 +1,17 @@
 package com.knowy.core.user;
 
 import com.knowy.core.port.ExternalNotificationDispatcher;
-import com.knowy.core.user.exception.*;
-import com.knowy.core.exception.KnowyMailDispatchException;
+import com.knowy.core.exception.mail.KnowyMailDispatchException;
+import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
+import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedEmailException;
+import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
+import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
+import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
 import com.knowy.core.user.port.*;
 import com.knowy.core.user.usercase.manage.DeactivateAccountCommand;
 import com.knowy.core.user.usercase.manage.DeactivateAccountUseCase;
@@ -100,7 +109,7 @@ public class UserPrivateService {
      * @throws KnowyPasswordFormatException If the password format is invalid.
      */
     public UserPrivate registerNewUser(UserSingUpCommand command)
-            throws KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException {
+		throws KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException {
         return userSignUpUseCase.execute(command);
     }
 

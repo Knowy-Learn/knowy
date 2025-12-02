@@ -1,7 +1,7 @@
 package com.knowy.core.port;
 
 import com.knowy.core.domain.LessonInfo;
-import com.knowy.core.exception.KnowyDataAccessException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 
 import java.util.Optional;
 

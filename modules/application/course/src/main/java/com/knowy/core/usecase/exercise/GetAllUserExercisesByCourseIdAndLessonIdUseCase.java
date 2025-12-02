@@ -1,7 +1,7 @@
 package com.knowy.core.usecase.exercise;
 
 import com.knowy.core.domain.UserExercise;
-import com.knowy.core.exception.KnowyDataAccessException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.port.UserExerciseRepository;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.domain.UserExercise;
 import com.knowy.core.exception.KnowyExerciseNotFoundException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserDao;

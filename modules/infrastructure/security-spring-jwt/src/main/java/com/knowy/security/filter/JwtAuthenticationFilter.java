@@ -1,8 +1,8 @@
 package com.knowy.security.filter;
 
 import com.knowy.core.user.domain.User;
-import com.knowy.core.user.exception.KnowyTokenException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.port.KnowyTokenTools;
 import com.knowy.core.user.port.UserPrivateRepository;
 

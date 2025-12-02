@@ -1,4 +1,4 @@
-package com.knowy.core.user.exception;
+package com.knowy.core.user.exception.security;
 
 import com.knowy.core.exception.KnowyException;
 

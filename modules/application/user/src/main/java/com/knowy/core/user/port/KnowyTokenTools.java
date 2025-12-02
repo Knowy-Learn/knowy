@@ -1,6 +1,6 @@
 package com.knowy.core.user.port;
 
-import com.knowy.core.user.exception.KnowyTokenException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
 
 public interface KnowyTokenTools {
 	<T> String encode(T obj, String secondaryKey, long tokenExpirationTime) throws KnowyTokenException;

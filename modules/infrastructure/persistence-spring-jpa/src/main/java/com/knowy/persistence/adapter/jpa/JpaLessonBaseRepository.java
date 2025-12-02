@@ -1,7 +1,7 @@
 package com.knowy.persistence.adapter.jpa;
 
 import com.knowy.core.domain.LessonInfo;
-import com.knowy.core.exception.KnowyDataAccessException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.port.LessonBaseRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.mapper.JpaLessonBaseMapper;

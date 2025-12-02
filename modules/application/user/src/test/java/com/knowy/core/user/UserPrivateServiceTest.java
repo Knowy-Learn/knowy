@@ -1,10 +1,16 @@
 package com.knowy.core.user;
 
 import com.knowy.core.exception.KnowyException;
-import com.knowy.core.exception.KnowyMailDispatchException;
+import com.knowy.core.exception.mail.KnowyMailDispatchException;
 import com.knowy.core.port.ExternalNotificationDispatcher;
 import com.knowy.core.user.domain.*;
-import com.knowy.core.user.exception.*;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedEmailException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
+import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
+import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
 import com.knowy.core.user.port.*;
 import com.knowy.core.user.usercase.manage.DeactivateAccountCommand;
 import com.knowy.core.user.usercase.register.UserSingUpCommand;

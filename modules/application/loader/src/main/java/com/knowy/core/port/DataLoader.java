@@ -1,6 +1,6 @@
 package com.knowy.core.port;
 
-import com.knowy.core.exception.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyValidationException;
 
 import java.io.IOException;
 import java.io.InputStream;

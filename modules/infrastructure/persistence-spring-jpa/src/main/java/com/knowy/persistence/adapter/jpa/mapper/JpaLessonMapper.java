@@ -1,7 +1,7 @@
 package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.domain.*;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.persistence.adapter.jpa.dao.JpaCourseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;

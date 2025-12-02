@@ -1,7 +1,7 @@
 package com.knowy.core.user.usercase.manage;
 
-import com.knowy.core.user.exception.KnowyTokenException;
-import com.knowy.core.user.exception.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.core.user.util.TokenUserPrivateTool;
 import com.knowy.core.user.domain.UserPrivate;

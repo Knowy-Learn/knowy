@@ -1,6 +1,6 @@
 package com.knowy.core.domain;
 
-import com.knowy.core.exception.KnowyIllegalArgumentRuntimeException;
+import com.knowy.core.exception.validation.KnowyIllegalArgumentRuntimeException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

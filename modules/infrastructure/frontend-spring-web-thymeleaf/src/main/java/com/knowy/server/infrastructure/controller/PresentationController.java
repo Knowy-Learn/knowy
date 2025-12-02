@@ -2,7 +2,7 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.CourseService;
 import com.knowy.core.domain.Pagination;
-import com.knowy.core.exception.KnowyInconsistentDataException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.server.infrastructure.controller.dto.NewsDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
