@@ -1,5 +1,7 @@
 ---
 import logo from "../assets/knowy.svg"
+import menu from "../assets/icons/menu.svg"
+import close from "../assets/icons/close.svg"
 import LinkButton from "./LinkButton.astro"
 ---
 
@@ -25,16 +27,16 @@ import LinkButton from "./LinkButton.astro"
 		{/* Button that open the menu */}
 		<button
 			id="menuButton"
-			class="bg-primary-600 text-accent-100 z-50 m-4 flex h-12 w-12 items-center justify-center rounded-md text-2xl shadow-lg transition-transform duration-200 active:scale-90"
-			aria-label="Abrir menú móvil"
+			class="bg-primary-600 text-accent-100 z-50 m-4 flex h-12 w-12 cursor-pointer items-center justify-center rounded-md text-2xl shadow-lg transition-transform duration-200 active:scale-90"
 		>
-			🏠
+			<img id="menuBtnIcon" src={menu.src} alt="menu button" />
+			<img id="menuBtnCloseIcon" src={close.src} alt="close menu button" class="hidden" />
 		</button>
 
 		{/* Menu content */}
 		<nav
 			id="mobileMenu"
-			class="bg-primary-500 fixed top-0 right-0 z-40 h-screen w-0 overflow-hidden transition-[width,background-color] duration-300"
+			class="bg-primary-500/50 border-primary-700/30 shadow-secondary-500 fixed top-0 right-0 z-40 h-screen w-0 overflow-hidden border shadow-xl backdrop-blur-md transition-[width,background-color] duration-300"
 		>
 			<ul class="text-accent-100 mt-20 flex flex-col gap-2 text-2xl font-medium">
 				<li>
@@ -57,22 +59,35 @@ import LinkButton from "./LinkButton.astro"
 		const btn = document.getElementById("menuButton") as HTMLButtonElement | null
 		const menu = document.getElementById("mobileMenu") as HTMLElement | null
 
-		let open = false
+		const menuBtnIcon = document.getElementById("menuBtnIcon") as HTMLElement | null
+		const menuCloseBtnIcon = document.getElementById("menuBtnCloseIcon") as HTMLElement | null
+
+		let isOpen = false
 
 		btn?.addEventListener("click", () => {
-			if (menu) {
-				open = !open
-
-				if (open) {
-					menu.style.width = "66%"
-					menu.classList.remove("bg-transparent")
-					menu.classList.add("bg-primary-500")
-					return
-				}
-				menu.style.width = "0"
-				menu.classList.remove("bg-primary-500")
-				menu.classList.add("bg-transparent")
-			}
+			isOpen = !isOpen
+			isOpen ? openMenu() : closeMenu()
 		})
+
+		function openMenu() {
+			if (!menu) return
+			menu.style.width = "66%"
+			menu.classList.remove("bg-transparent")
+			menu.classList.add("bg-primary-500")
+
+			menuBtnIcon?.classList.add("hidden")
+			menuCloseBtnIcon?.classList.remove("hidden")
+			return
+		}
+
+		function closeMenu() {
+			if (!menu) return
+			menu.style.width = "0"
+			menu.classList.remove("bg-primary-500")
+			menu.classList.add("bg-transparent")
+
+			menuBtnIcon?.classList.remove("hidden")
+			menuCloseBtnIcon?.classList.add("hidden")
+		}
 	})
 </script>

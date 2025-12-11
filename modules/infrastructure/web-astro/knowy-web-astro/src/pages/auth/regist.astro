@@ -21,10 +21,38 @@ import InputField from "../../components/InputField.astro"
 			</div>
 
 			<form class="flex w-full flex-col gap-5">
-				<h1 class="text-primary-700 w-full text-center text-3xl font-semibold">
-					Registro
-				</h1>
+				<h1 class="text-primary-700 w-full text-center text-3xl font-semibold">Registro</h1>
 
+				{/* Public fields */}
+				<div class="flex flex-col gap-4 sm:flex-row">
+					<InputField id="name" placeholder="knowy" label="Apodo / Nickname" type="text" />
+
+					<div class="flex flex-col gap-1">
+						<label for="gender" class="text-primary-700 font-medium">
+							Género:
+						</label>
+						<select
+							id="gender"
+							name="gender"
+							required
+							class="bg-background border-primary-300/80 text-secondary-500 focus:border-accent-600 w-full rounded-lg border-2 px-3 py-3 focus:border-2 focus:ring"
+						>
+							<option value="" disabled selected>Selecciona tu género</option>
+							<option value="male">Masculino</option>
+							<option value="female">Femenino</option>
+							<option value="other">Otro</option>
+							<option value="prefer_not_say">Prefiero no decirlo</option>
+						</select>
+					</div>
+
+				</div>
+
+				{/* Separator */}
+				<div class="w-full">
+					<div class="border-primary-700 flex-grow border-t"></div>
+				</div>
+
+				{/* Private fields */}
 				<InputField id="name" placeholder="knowy" label="Nombre de usuario" type="text" />
 
 				<InputField id="email" placeholder="knowy@knowy.com" label="Correo electrónico" type="email" />
@@ -34,7 +62,7 @@ import InputField from "../../components/InputField.astro"
 				<InputField id="password-repeat" placeholder="*******" label="Repetir contraseña" type="password" />
 
 				<button
-					class="rounded-md bg-primary-600 p-2 text-lg text-accent-100 shadow-md transition-all duration-200 hover:scale-105 hover:bg-primary-700 focus:ring-2 focus:ring-accent-600"
+					class="bg-primary-600 text-accent-100 hover:bg-primary-700 focus:ring-accent-600 rounded-md p-2 text-lg shadow-md transition-all duration-200 hover:scale-105 focus:ring-2"
 					type="submit"
 				>
 					Registrarse
@@ -43,22 +71,16 @@ import InputField from "../../components/InputField.astro"
 				<div class="mt-2 flex flex-col items-center gap-2 text-center text-sm">
 					<span class="text-secondary-500">
 						¿Ya tienes una cuenta?
-						<a href="/auth/login" class="font-semibold text-primary-600 hover:underline">
+						<a href="/auth/login" class="text-primary-600 font-semibold hover:underline">
 							Inicia sesión aquí
 						</a>
 					</span>
 
-					<a
-						href="/auth/guest"
-						class="text-secondary-500 hover:text-primary-600 transition hover:underline"
-					>
+					<a href="/auth/guest" class="text-secondary-500 hover:text-primary-600 transition hover:underline">
 						Probar con una cuenta temporal
 					</a>
 
-					<a
-						href="/"
-						class="mt-1 text-secondary-400 text-xs hover:text-secondary-600 hover:underline"
-					>
+					<a href="/" class="text-secondary-400 hover:text-secondary-600 mt-1 text-xs hover:underline">
 						← Volver a la web
 					</a>
 				</div>
