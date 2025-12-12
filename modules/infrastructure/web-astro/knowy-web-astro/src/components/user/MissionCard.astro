@@ -1,0 +1,38 @@
+---
+import LinkButton from "../LinkButton.astro";
+const missionsList = []
+
+const hasCourses = false
+---
+
+<section class="bg-background border-primary-300 w-full rounded-xl border-4 py-6 px-10 shadow-md">
+	<h3 class="text-2xl font-semibold text-gray-900">¡Partida rápida!</h3>
+	<p class="mt-1 text-sm text-gray-700">¡Juega a la ruleta Knowy para ejercicios aleatorios!</p>
+
+	<div class="mt-6 flex cursor-default flex-wrap justify-center gap-2">
+		<div
+			class="bg-accent-100 border-primary-200 flex w-11/12 max-w-xs items-center gap-3 rounded-xl border px-5 py-4 shadow-md transition-shadow hover:shadow-lg sm:w-4/6 lg:w-3/6"
+		>
+			<span class="text-2xl">⚡</span>
+			<span class="text-center text-sm text-gray-600">Modo de memorización rápida</span>
+		</div>
+
+		<div
+			class="bg-accent-100 border-primary-200 flex w-11/12 max-w-xs items-center gap-3 rounded-xl border px-5 py-4 shadow-md transition-shadow hover:shadow-lg sm:w-4/6 lg:w-3/6"
+		>
+			<span class="text-2xl">🎯</span>
+			<span class="text-center text-sm text-gray-600">Modo desafiante</span>
+		</div>
+
+		<div
+			class="bg-accent-100 border-primary-200 flex w-11/12 max-w-xs items-center gap-3 rounded-xl border px-5 py-4 shadow-md transition-shadow hover:shadow-lg sm:w-4/6 lg:w-3/6"
+		>
+			<span class="text-2xl">🎉</span>
+			<span class="text-center text-sm text-gray-600">Modo divertido</span>
+		</div>
+	</div>
+
+	<div class="mt-6 flex w-full justify-center p-4">
+		<LinkButton href="#" variant="primary">Partida Rápida</LinkButton>
+	</div>
+</section>

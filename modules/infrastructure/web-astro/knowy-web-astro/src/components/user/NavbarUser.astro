@@ -1,0 +1,144 @@
+---
+import logo from "../../assets/knowy.svg"
+import menu from "../../assets/icons/menu.svg"
+import close from "../../assets/icons/close.svg"
+import LinkButton from "../LinkButton.astro"
+---
+
+<header
+	class="from-primary-400 via-primary-600 to-primary-500 shadow-secondary-300 sticky top-0 right-0 z-50 flex h-16 w-full items-center bg-gradient-to-r shadow-md"
+>
+	<a
+		href="/public"
+		class="text-accent-100 flex h-full w-1/4 items-center gap-2 p-4 text-xl font-bold"
+		aria-label="Página principal"
+	>
+		<img src={logo.src} alt="Logo Knowy" class="h-11" />
+		<span>Knowy</span>
+	</a>
+
+	{/* Desktop navigation */}
+	<nav class="hidden w-2/4 items-center justify-center md:flex md:px-14">
+		<LinkButton href="/" variant="primaryGhost">Mis Cursos</LinkButton>
+		<LinkButton href="/auth/regist" variant="primaryGhost">Tienda</LinkButton>
+	</nav>
+
+	<div
+		class="group hidden h-full w-1/4 cursor-pointer items-center justify-end space-x-1 px-4 transition-all duration-300 md:flex"
+	>
+		<span class="text-accent-100 max-w-[120px] truncate text-lg font-medium group-hover:scale-105">
+			username_long
+		</span>
+
+		<img
+			class="border-accent-600 bg-background h-12 w-12 rounded-full border-2 p-1 group-hover:scale-105"
+			src={logo.src}
+			alt="Profile Icon"
+		/>
+	</div>
+
+	{/* Mobile navigation */}
+	<aside class="fixed top-0 right-0 z-50 flex h-16 w-full items-center justify-end bg-transparent md:hidden">
+		{/* Button that open the menu */}
+		<button
+			id="menuButton"
+			class="bg-primary-600 border-accent-600 shadow-secondary-600 text-accent-100 z-50 m-4 flex cursor-pointer items-center justify-center gap-2 rounded-md border p-2 text-2xl shadow-lg shadow-sm transition-transform duration-200 active:scale-90"
+		>
+			<span class="text-[0.75em] font-medium">Menu</span>
+			<img id="menuBtnIcon" src={menu.src} alt="menu button" />
+			<img id="menuBtnCloseIcon" src={close.src} alt="close menu button" class="hidden" />
+		</button>
+
+		{/* Menu content */}
+		<nav
+			id="mobileMenu"
+			class="from-primary-400 via-primary-500 to-primary-600 shadow-secondary-500 fixed top-0 right-0 z-40 h-screen w-0 overflow-hidden bg-gradient-to-r shadow-xl transition-[width,background-color] duration-300"
+		>
+			{/* User data */}
+			<section class="mt-20 flex flex-col items-center justify-center p-4">
+				<div
+					class="border-accent-500 relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-4 bg-white shadow-lg"
+				>
+					<img src={logo.src} alt="logo" class="h-full w-full object-cover" />
+				</div>
+				<span class="text-accent-100 mt-4 text-lg font-semibold">Nombre usuario</span>
+			</section>
+
+			{/* Separator */}
+			<div class="w-full px-8 py-2">
+				<div class="flex-grow border-t border-white"></div>
+			</div>
+
+			{/* Redirections list */}
+			<ul class="text-accent-100 flex flex-col gap-2 text-2xl font-medium">
+				<li>
+					<a href="#" class="hover:bg-primary-600 block p-4 pl-8 transition-colors duration-200">
+						Mis Cursos
+					</a>
+				</li>
+				<li>
+					<a href="#" class="hover:bg-primary-600 block p-4 pl-8 transition-colors duration-200"> Tienda</a>
+				</li>
+				<li>
+					<a href="#" class="hover:bg-primary-600 block p-4 pl-8 transition-colors duration-200">
+						Configuración
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		{/* Menu background of items */}
+		<div
+			id="mobileMenuBackground"
+			class="bg-secondary-800/30 pointer-events-none fixed top-0 right-0 z-35 h-full w-full opacity-0 transition-all duration-300"
+		>
+		</div>
+	</aside>
+</header>
+
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		const btn = document.getElementById("menuButton") as HTMLButtonElement | null
+		const menu = document.getElementById("mobileMenu") as HTMLElement | null
+		const menuBg = document.getElementById("mobileMenuBackground") as HTMLElement | null
+
+		const menuBtnIcon = document.getElementById("menuBtnIcon") as HTMLElement | null
+		const menuCloseBtnIcon = document.getElementById("menuBtnCloseIcon") as HTMLElement | null
+
+		let isOpen = false
+
+		btn?.addEventListener("click", () => {
+			isOpen = !isOpen
+			isOpen ? openMenu() : closeMenu()
+		})
+
+		function openMenu() {
+			if (!menu || !menuBg) return
+			menu.style.width = "66%"
+			menu.classList.remove("bg-transparent")
+			menu.classList.add("bg-primary-500")
+
+			menuBg.classList.remove("pointer-events-none")
+			menuBg.classList.remove("opacity-0")
+			menuBg.classList.add("opacity-100")
+
+			menuBtnIcon?.classList.add("hidden")
+			menuCloseBtnIcon?.classList.remove("hidden")
+			return
+		}
+
+		function closeMenu() {
+			if (!menu || !menuBg) return
+			menu.style.width = "0"
+			menu.classList.remove("bg-primary-500")
+			menu.classList.add("bg-transparent")
+
+			menuBg.classList.add("opacity-0")
+			menuBg.classList.remove("opacity-100")
+			menuBg.classList.add("pointer-events-none")
+
+			menuBtnIcon?.classList.remove("hidden")
+			menuCloseBtnIcon?.classList.add("hidden")
+		}
+	})
+</script>

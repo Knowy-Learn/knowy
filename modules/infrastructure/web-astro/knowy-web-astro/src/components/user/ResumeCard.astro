@@ -1,0 +1,31 @@
+---
+import LinkButton from "../LinkButton.astro"
+const user = {
+	username: "Juan Pérez",
+	greeting: "Bienvenido",
+	completedCourses: 3,
+	totalCourses: 10,
+	fractionProgress: (3 / 10) * 100
+}
+---
+
+<section
+	class="border-accent-600 from-primary-200 via-accent-300 to-primary-100 w-full rounded-lg border-4 bg-gradient-to-bl px-10 py-6 shadow-md"
+>
+	<h2 class="mb-2 text-2xl font-semibold text-gray-800">
+		{user.greeting}, {user.username}
+	</h2>
+
+	<div class="mb-2 flex justify-between font-medium text-gray-700">
+		<span>Cursos:</span>
+		<span>{user.completedCourses}/{user.totalCourses}</span>
+	</div>
+
+	<div class="mb-4 h-3 w-full overflow-hidden rounded-full bg-gray-200">
+		<div class="bg-primary-500 h-full" style={`width: ${user.fractionProgress}%`}></div>
+	</div>
+
+	<div class="flex w-full justify-center p-4">
+		<LinkButton href="#" variant="primary">Continuar Lección</LinkButton>
+	</div>
+</section>

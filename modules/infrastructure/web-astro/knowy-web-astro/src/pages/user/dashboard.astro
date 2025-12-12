@@ -1,0 +1,23 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import NavbarUser from "../../components/user/NavbarUser.astro"
+import ResumeCard from "../../components/user/ResumeCard.astro"
+import MissionCard from "../../components/user/MissionCard.astro"
+
+import ShopRedirection from "../../components/user/ShopRedirection.astro"
+import Footer from "../../components/Footer.astro"
+---
+
+<Layout>
+	<NavbarUser />
+
+	<main class="mx-auto flex flex-1 flex-col gap-6 overflow-auto px-8 py-8">
+		<ResumeCard />
+
+		<ShopRedirection href="" />
+
+		<MissionCard />
+	</main>
+
+	<Footer />
+</Layout>
