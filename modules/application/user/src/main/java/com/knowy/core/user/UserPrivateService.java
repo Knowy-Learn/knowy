@@ -10,6 +10,7 @@ import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
 import com.knowy.core.user.port.*;
@@ -109,7 +110,7 @@ public class UserPrivateService {
      * @throws KnowyPasswordFormatException If the password format is invalid.
      */
     public UserPrivate registerNewUser(UserSingUpCommand command)
-		throws KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException {
+		throws KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
         return userSignUpUseCase.execute(command);
     }
 

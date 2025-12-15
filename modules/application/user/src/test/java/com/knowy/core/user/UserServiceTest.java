@@ -1,6 +1,7 @@
 package com.knowy.core.user;
 
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
+import com.knowy.core.user.domain.Gender;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
@@ -47,6 +48,7 @@ class UserServiceTest {
 			User user = new User(
 				42,
 				"ExistNickname",
+				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -55,6 +57,7 @@ class UserServiceTest {
 			User newUser = new User(
 				42,
 				"ExistNickname",
+				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				newCategories
 			);
@@ -65,7 +68,7 @@ class UserServiceTest {
 				.thenReturn(newCategories);
 
 			assertDoesNotThrow(() -> userService.updateCategories(42, new String[]{"Java", "English"}));
-			Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.eq(newUser));
+			Mockito.verify(userRepository, Mockito.times(1)).save(newUser);
 		}
 
 		@Test
@@ -91,6 +94,7 @@ class UserServiceTest {
 			User user = new User(
 				10,
 				"ExistNickname",
+				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -117,6 +121,7 @@ class UserServiceTest {
 			User oldUser = new User(
 				1,
 				"OldNickname",
+				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -136,6 +141,7 @@ class UserServiceTest {
 			User otherUser = new User(
 				1,
 				"SameNickname",
+				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -153,6 +159,7 @@ class UserServiceTest {
 			User user = new User(
 				1,
 				"ExistNickname",
+				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -188,6 +195,7 @@ class UserServiceTest {
 			User user = new User(
 				1,
 				"ExistNickname",
+				Gender.OTHER,
 				new ProfileImage(6, "https://knowy/test-image.png"),
 				new HashSet<>()
 			);
@@ -196,6 +204,7 @@ class UserServiceTest {
 			User newUser = new User(
 				1,
 				"ExistNickname",
+				Gender.OTHER,
 				newProfileImage,
 				new HashSet<>()
 			);
@@ -223,6 +232,7 @@ class UserServiceTest {
 			User user = new User(
 				1,
 				"ExistNickname",
+				Gender.OTHER,
 				new ProfileImage(6, "https://knowy/test-image.png"),
 				new HashSet<>()
 			);
@@ -240,6 +250,7 @@ class UserServiceTest {
 			User user = new User(
 				1,
 				"ExistNickname",
+				Gender.OTHER,
 				new ProfileImage(6, "https://knowy/test-image.png"),
 				new HashSet<>()
 			);

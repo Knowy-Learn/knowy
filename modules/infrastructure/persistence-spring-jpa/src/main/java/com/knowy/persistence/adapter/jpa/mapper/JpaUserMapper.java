@@ -21,6 +21,7 @@ public class JpaUserMapper implements EntityMapper<User, PublicUserEntity> {
 		return new User(
 			entity.getId(),
 			entity.getNickname(),
+			entity.getGender(),
 			jpaProfileImageMapper.toDomain(entity.getProfileImage()),
 			entity.getLanguages().stream()
 				.map(jpaCategoryMapper::toDomain)

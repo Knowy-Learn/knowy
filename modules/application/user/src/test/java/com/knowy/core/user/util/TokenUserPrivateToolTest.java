@@ -1,13 +1,10 @@
 package com.knowy.core.user.util;
 
+import com.knowy.core.user.domain.*;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.port.KnowyTokenTools;
 import com.knowy.core.user.port.UserPrivateRepository;
-import com.knowy.core.user.domain.Email;
-import com.knowy.core.user.domain.Password;
-import com.knowy.core.user.domain.ProfileImage;
-import com.knowy.core.user.domain.UserPrivate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +39,7 @@ class TokenUserPrivateToolTest {
 		UserPrivate userPrivate = new UserPrivate(
 			11,
 			"TestNickname",
+			Gender.OTHER,
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
 			new Email("test@email.com"),
@@ -93,6 +91,7 @@ class TokenUserPrivateToolTest {
 		UserPrivate userPrivate = new UserPrivate(
 			11,
 			"TestNickname",
+			Gender.OTHER,
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
 			userEmail,
@@ -128,6 +127,7 @@ class TokenUserPrivateToolTest {
 		UserPrivate userPrivate = new UserPrivate(
 			11,
 			"TestNickname",
+			Gender.OTHER,
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
 			userEmail,

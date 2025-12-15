@@ -9,23 +9,26 @@ import java.util.Set;
 public class User implements Serializable {
 	private final Integer id;
 	private final String nickname;
+	private final Gender gender;
 	private final ProfileImage profileImage;
 	private final Set<Category> categories;
 
 	public User(
 		Integer id,
 		String nickname,
+		Gender gender,
 		ProfileImage profileImage,
 		Set<Category> categories
 	) {
 		this.id = id;
 		this.nickname = nickname;
+		this.gender = gender;
 		this.profileImage = profileImage;
 		this.categories = categories;
 	}
 
-	public User(User user) {
-		this(user.id(), user.nickname(), user.profileImage(), user.categories());
+	public User(User user, Gender gender) {
+		this(user.id(), user.nickname(), gender, user.profileImage(), user.categories());
 	}
 
 	public Integer id() {
@@ -34,6 +37,10 @@ public class User implements Serializable {
 
 	public String nickname() {
 		return nickname;
+	}
+
+	public Gender gender() {
+		return gender;
 	}
 
 	public ProfileImage profileImage() {

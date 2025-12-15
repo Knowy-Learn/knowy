@@ -11,6 +11,7 @@ import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.usercase.register.UserSingUpCommand;
 import com.knowy.core.user.usercase.update.password.UserUpdatePasswordCommand;
@@ -108,8 +109,12 @@ public class AccessController {
 
 			userSecurityDetailsHelper.autoLoginUserByEmail(userPrivate.email().value());
 			return "redirect:/home";
-		} catch (KnowyInvalidUserException | KnowyPasswordFormatException | KnowyEmailAlreadyTakenException |
-				 KnowyNicknameAlreadyTakenException e) {
+		} catch (KnowyInvalidUserException |
+				 KnowyPasswordFormatException |
+				 KnowyEmailAlreadyTakenException |
+				 KnowyInvalidUserGenderException |
+				 KnowyNicknameAlreadyTakenException e
+		) {
 			redirectAttributes.addFlashAttribute("user", user);
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, e.getMessage());
 			return "redirect:/register";

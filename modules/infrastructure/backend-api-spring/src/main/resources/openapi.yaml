@@ -8,11 +8,16 @@ tags:
         description: Authentication and login-related endpoints
     -   name: News
         description: Endpoints related to news
+    -   name: User
+        description: Endpoints related to user
 
 servers:
-    - url: http://localhost:8080/api/v1
-      description: Local development server
+    -   url: http://localhost:8080/api/v1
+        description: Local development server
 paths:
+    #################################
+    # Authentication
+    #################################
     /auth/login:
         post:
             tags:
@@ -50,9 +55,9 @@ paths:
                                         description: authentication token
                                         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
                 '400':
-                    description: Invalid request body
+                    $ref: '#/components/responses/BadRequestError'
                 '401':
-                    description: Authentication failed (wrong email or password)
+                    $ref: '#/components/responses/UnauthorizedError'
     /auth/register:
         post:
             tags:
@@ -66,14 +71,22 @@ paths:
                         schema:
                             type: object
                             required:
+                                - nickname
+                                - gender
                                 - email
-                                - username
                                 - password
                                 - passwordConfirm
                             properties:
-                                username:
+                                nickname:
                                     type: string
-                                    example: UserNameExample
+                                    example: nickNameExample
+                                gender:
+                                    type: string
+                                    enum:
+                                        - male
+                                        - female
+                                        - other
+                                    example: female
                                 email:
                                     type: string
                                     format: email
@@ -99,9 +112,18 @@ paths:
                                         description: JWT authentication token (if using JWT)
                                         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
                 '400':
-                    description: Invalid request body or passwords do not match
+                    $ref: '#/components/responses/UnauthorizedError'
                 '409':
-                    description: User with this email already exists
+                    description: Email already registered
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Email is already registered
+
 
     /auth/validate:
         post:
@@ -125,17 +147,11 @@ paths:
             responses:
                 '200':
                     description: The token is valid
-                '400':
-                    description: Invalid or expired token
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    error:
-                                        type: string
-                                        example: Invalid access token
-
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+    #################################
+    # News
+    #################################
     /news:
         get:
             tags:
@@ -188,11 +204,66 @@ paths:
                                     - totalPages
                                     - items
                 '400':
-                    description: Bad Request
-                    $ref: '#/components/responses/BadRequest'
+                    $ref: '#/components/responses/BadRequestError'
                 '500':
-                    description: Internal Server Error
                     $ref: '#/components/responses/InternalServerError'
+    #################################
+    # User
+    #################################
+    /user/navbar:
+        get:
+            tags:
+                - User
+            summary: Get navbar user data
+            description: Retrieve the data needed to display the user's navbar, such as name, avatar, and notifications.
+            responses:
+                '200':
+                    description: Navbar data retrieved successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    username:
+                                        type: string
+                                    avatarUrl:
+                                        type: string
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+
+    /user/resume:
+        get:
+            tags:
+                - User
+            summary: Get resume user data
+            description: Retrieve a summary of the user's profile, including basic information and course progress.
+            responses:
+                '200':
+                    description: Resume data retrieved successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    username:
+                                        type: string
+                                        example: knowyName
+                                    gender:
+                                        type: string
+                                        enum:
+                                            - male
+                                            - female
+                                            - other
+                                        example: other
+                                    totalCourses:
+                                        type: integer
+                                        example: 12
+                                    completedCourses:
+                                        type: number
+                                        format: float
+                                        example: 8.7
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
 
 components:
     schemas:
@@ -218,8 +289,9 @@ components:
                     type: string
                     format: date
                     example: "2025-11-24"
-
-        # Knowy Exceptions
+        #################################
+        # Knowy Error DTO
+        #################################
         KnowyErrorReportDto:
             type: object
             required:
@@ -237,16 +309,38 @@ components:
                     example: "Unexpected server error"
 
     responses:
-        # Knowy Exceptions Responses
-        BadRequest:
-            description: Bad Request
+        #################################
+        # Knowy Errors Responses
+        #################################
+        BadRequestError:
+            description: Bad Request. The request is invalid or cannot be processed.
             content:
                 application/json:
                     schema:
                         $ref: '#/components/schemas/KnowyErrorReportDto'
+                    example:
+                        status: 400
+                        error: "Bad Request"
+                        message: "The request payload is invalid or missing required fields."
+
         InternalServerError:
-            description: Internal Server Error
+            description: Internal Server Error. Something went wrong on the server.
             content:
                 application/json:
                     schema:
                         $ref: '#/components/schemas/KnowyErrorReportDto'
+                    example:
+                        status: 500
+                        error: "Internal Server Error"
+                        message: "An unexpected error occurred. Please try again later."
+
+        UnauthorizedError:
+            description: Access unauthorized. The request requires valid authentication credentials (e.g., a valid token).
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/KnowyErrorReportDto'
+                    example:
+                        status: 401
+                        error: "Unauthorized"
+                        message: "Invalid or missing authentication token."

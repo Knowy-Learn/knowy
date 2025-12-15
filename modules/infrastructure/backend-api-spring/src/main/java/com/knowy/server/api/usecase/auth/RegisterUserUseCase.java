@@ -7,6 +7,7 @@ import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.port.*;
 import com.knowy.core.user.usercase.KnowyUseCase;
@@ -41,7 +42,7 @@ public class RegisterUserUseCase implements KnowyUseCase<AuthRegisterPostRequest
 
 	@Override
 	public AuthRegisterPost201Response execute(AuthRegisterPostRequest request)
-		throws KnowyInvalidUserException, KnowyPasswordFormatException, KnowyImageNotFoundException, KnowyTokenException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException {
+		throws KnowyInvalidUserException, KnowyPasswordFormatException, KnowyImageNotFoundException, KnowyTokenException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
 
 		UserPrivate user = register(request);
 		String token = generateToken(user);
@@ -50,11 +51,11 @@ public class RegisterUserUseCase implements KnowyUseCase<AuthRegisterPostRequest
 	}
 
 	private UserPrivate register(AuthRegisterPostRequest request)
-		throws KnowyInvalidUserException, KnowyPasswordFormatException, KnowyImageNotFoundException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException {
+		throws KnowyInvalidUserException, KnowyPasswordFormatException, KnowyImageNotFoundException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
 
 		return userPrivateService.registerNewUser(
 			new UserSingUpCommand(
-				request.getUsername(),
+				request.getNickname(),
 				request.getEmail(),
 				request.getPassword()
 			)

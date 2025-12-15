@@ -1,8 +1,15 @@
+CREATE TABLE IF NOT EXISTS public.gender
+(
+    id   serial PRIMARY KEY,
+    name varchar(10) NOT NULL UNIQUE
+);
+
 CREATE TABLE IF NOT EXISTS public.public_user
 (
 	id               serial      NOT NULL,
 	id_profile_image integer     NOT NULL DEFAULT 1,
 	nickname         varchar(50) NOT NULL UNIQUE,
+	id_gender        integer	 NOT NULL DEFAULT 3,
 	PRIMARY KEY (id)
 );
 
@@ -151,7 +158,9 @@ CREATE TABLE IF NOT EXISTS public.news
 -- FK public_user
 ALTER TABLE IF EXISTS public.public_user
 	ADD FOREIGN KEY (id_profile_image)
-		REFERENCES public.profile_image (id);
+		REFERENCES public.profile_image (id),
+	ADD FOREIGN KEY (id_gender)
+		REFERENCES public.gender (id);
 
 -- FK private_user
 ALTER TABLE IF EXISTS public.private_user

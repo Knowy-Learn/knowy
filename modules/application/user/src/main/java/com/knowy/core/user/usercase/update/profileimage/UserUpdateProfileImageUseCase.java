@@ -48,7 +48,7 @@ public class UserUpdateProfileImageUseCase {
 		ProfileImage img = findProfileImageByIdOrThrow(newProfileImageId);
 		ensureProfileImageIsDifferent(user, img);
 
-		User newUser = new User(user.id(), user.nickname(), img, user.categories());
+		User newUser = new User(user.id(), user.nickname(), user.gender(), img, user.categories());
 		userRepository.save(newUser);
 	}
 

@@ -1,5 +1,6 @@
 package com.knowy.persistence.adapter.jpa.entity;
 
+import com.knowy.core.user.domain.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,10 @@ public class PublicUserEntity implements Serializable {
 
 	@Column(name = "nickname", nullable = false, length = 50)
 	private String nickname;
+
+	@Column(name = "gender", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")

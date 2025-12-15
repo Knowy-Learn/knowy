@@ -1,11 +1,11 @@
 package com.knowy.core.user.usercase.update.categories;
 
-import com.knowy.core.exception.data.KnowyInconsistentDataException;
-import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
-import com.knowy.core.port.CategoryRepository;
-import com.knowy.core.user.port.UserRepository;
 import com.knowy.core.domain.Category;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
+import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.user.domain.User;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.port.UserRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +55,7 @@ public class UserUpdateCategoriesUseCase {
 		Set<Category> persistedCategories = categoryRepository.findByNameInIgnoreCase(categories);
 		ensureCategoriesArePersisted(categories, persistedCategories);
 
-		User newUser = new User(user.id(), user.nickname(), user.profileImage(), persistedCategories);
+		User newUser = new User(user.id(), user.nickname(), user.gender(), user.profileImage(), persistedCategories);
 		userRepository.save(newUser);
 	}
 

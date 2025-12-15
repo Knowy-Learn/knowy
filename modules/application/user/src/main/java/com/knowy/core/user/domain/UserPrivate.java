@@ -14,20 +14,21 @@ public class UserPrivate extends User implements Serializable {
 	public UserPrivate(
 		Integer id,
 		String nickname,
+		Gender gender,
 		ProfileImage profileImage,
 		Set<Category> categories,
 		Email email,
 		Password password,
 		boolean active
 	) {
-		super(id, nickname, profileImage, categories);
+		super(id, nickname, gender, profileImage, categories);
 		this.email = email;
 		this.password = password;
 		this.active = active;
 	}
 
 	public UserPrivate(User user, Email email, Password password, boolean active) {
-		this(user.id(), user.nickname(), user.profileImage(), user.categories(), email, password, active);
+		this(user.id(), user.nickname(), user.gender(), user.profileImage(), user.categories(), email, password, active);
 	}
 
 	public UserPrivate(User user, Email email, Password password) {
@@ -47,7 +48,7 @@ public class UserPrivate extends User implements Serializable {
 	}
 
 	public User cropToUser() {
-		return new User(this.id(), this.nickname(), this.profileImage(), this.categories());
+		return new User(this.id(), this.nickname(), this.gender(), this.profileImage(), this.categories());
 	}
 
 	@Override
