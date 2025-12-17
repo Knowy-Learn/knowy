@@ -1,9 +1,9 @@
 package com.knowy.server.api.controller;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
-import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
@@ -117,7 +117,7 @@ public class AuthenticationController implements AuthApi {
 		} catch (KnowyInvalidUserGenderException e) {
 			throw new KnowyInternalServerErrorException("An error occurred while saving user gender", e);
 
-		}catch (KnowyEmailAlreadyTakenException e) {
+		} catch (KnowyEmailAlreadyTakenException e) {
 			throw new KnowyConflictRuntimeException("The email is already associated with an existing account.", e);
 
 		} catch (KnowyNicknameAlreadyTakenException e) {
@@ -128,6 +128,10 @@ public class AuthenticationController implements AuthApi {
 
 		} catch (KnowyImageNotFoundException e) {
 			throw new KnowyInternalServerErrorException("An unexpected error occurred while processing the profile image.", e);
+
+		} catch (KnowyDataAccessException e) {
+			throw new KnowyInternalServerErrorException("Unexpected error occurred while accessing the persistence layer", e);
+
 		}
 	}
 
@@ -142,7 +146,7 @@ public class AuthenticationController implements AuthApi {
 		try {
 			validateUserUseCase.execute(authValidatePostRequest.getAccessToken());
 			return ResponseEntity.ok().build();
-		} catch (KnowyTokenException | KnowyUserNotFoundException e) {
+		} catch (KnowyTokenException | KnowyDataAccessException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}

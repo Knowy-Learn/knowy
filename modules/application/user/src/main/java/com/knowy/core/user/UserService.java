@@ -1,5 +1,6 @@
 package com.knowy.core.user;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
@@ -55,8 +56,7 @@ public class UserService {
 	 * @throws KnowyInvalidUserNicknameException  If the nickname is blank or otherwise invalid.
 	 */
 	public void updateNickname(String newNickname, Integer userId)
-		throws KnowyUserNotFoundException, KnowyUnchangedNicknameException, KnowyNicknameAlreadyTakenException,
-		KnowyInvalidUserNicknameException {
+		throws KnowyDataAccessException, KnowyUnchangedNicknameException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserNicknameException {
 
 		userUpdateEmailUseCase.execute(newNickname, userId);
 	}
@@ -73,7 +73,7 @@ public class UserService {
 	 * @throws KnowyUnchangedImageException If the new image is the same as the current one.
 	 */
 	public void updateProfileImage(Integer newProfileImageId, Integer userId)
-		throws KnowyUnchangedImageException, KnowyImageNotFoundException, KnowyUserNotFoundException {
+		throws KnowyUnchangedImageException, KnowyDataAccessException {
 
 		userUpdateProfileImageUseCase.execute(newProfileImageId, userId);
 	}
@@ -88,7 +88,7 @@ public class UserService {
 	 *                   for no categories).
 	 * @throws KnowyInconsistentDataException If one or more of the specified categories do not exist.
 	 */
-	public void updateCategories(Integer userId, String[] categories) throws KnowyInconsistentDataException {
+	public void updateCategories(Integer userId, String[] categories) throws KnowyDataAccessException {
 		userUpdateCategoriesUseCase.execute(userId, categories);
 	}
 }

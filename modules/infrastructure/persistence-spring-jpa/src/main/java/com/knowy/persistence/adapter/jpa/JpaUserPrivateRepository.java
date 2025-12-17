@@ -1,6 +1,8 @@
 package com.knowy.persistence.adapter.jpa;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.domain.UserPrivate;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaGenderDao;
@@ -23,25 +25,53 @@ public class JpaUserPrivateRepository implements UserPrivateRepository {
 	}
 
 	@Override
-	public Optional<UserPrivate> findById(int id) {
+	public Optional<UserPrivate> findById(int id) throws KnowyDataAccessException {
 		JpaUserPrivateMapper jpaUserPrivateMapper = getJpaUserPrivateMapper();
 
-		return jpaUserPrivateDao.findById(id).map(jpaUserPrivateMapper::toDomain);
+		try {
+			Optional<PrivateUserEntity> privateUserEntity = jpaUserPrivateDao.findById(id);
+
+			if (privateUserEntity.isEmpty()) {
+				return Optional.empty();
+			}
+
+			UserPrivate userPrivate = jpaUserPrivateMapper.toDomain(privateUserEntity.get());
+			return Optional.of(userPrivate);
+
+		} catch (KnowyInvalidUserGenderException e) {
+			throw new KnowyDataAccessException(e);
+		}
 	}
 
 	@Override
-	public Optional<UserPrivate> findByEmail(String email) {
+	public Optional<UserPrivate> findByEmail(String email) throws KnowyDataAccessException {
 		JpaUserPrivateMapper jpaUserPrivateMapper = getJpaUserPrivateMapper();
 
-		return jpaUserPrivateDao.findByEmail(email).map(jpaUserPrivateMapper::toDomain);
+		try {
+			Optional<PrivateUserEntity> privateUserEntity = jpaUserPrivateDao.findByEmail(email);
+
+			if (privateUserEntity.isEmpty()) {
+				return Optional.empty();
+			}
+
+			UserPrivate userPrivate = jpaUserPrivateMapper.toDomain(privateUserEntity.get());
+			return Optional.of(userPrivate);
+		} catch (KnowyInvalidUserGenderException e) {
+			throw new KnowyDataAccessException(e);
+		}
 	}
 
 	@Override
-	public UserPrivate save(UserPrivate user) {
+	public UserPrivate save(UserPrivate user) throws KnowyDataAccessException {
 		JpaUserPrivateMapper jpaUserPrivateMapper = getJpaUserPrivateMapper();
 
-		PrivateUserEntity privateUserEntity = jpaUserPrivateDao.save(jpaUserPrivateMapper.toEntity(user));
-		return jpaUserPrivateMapper.toDomain(privateUserEntity);
+		try {
+			PrivateUserEntity privateUserEntity = jpaUserPrivateDao.save(jpaUserPrivateMapper.toEntity(user));
+			return jpaUserPrivateMapper.toDomain(privateUserEntity);
+
+		} catch (KnowyInvalidUserGenderException e) {
+			throw new KnowyDataAccessException(e);
+		}
 	}
 
 	private JpaUserPrivateMapper getJpaUserPrivateMapper() {

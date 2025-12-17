@@ -1,5 +1,6 @@
 package com.knowy.core.user;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.user.domain.Gender;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
@@ -44,7 +45,7 @@ class UserServiceTest {
 	@Nested
 	class UserUpdateCategoriesUseCaseTest {
 		@Test
-		void given_newCategories_when_updateCategories_saveNewUserWithNewCategories() throws KnowyInconsistentDataException {
+		void given_newCategories_when_updateCategories_saveNewUserWithNewCategories() throws KnowyDataAccessException {
 			User user = new User(
 				42,
 				"ExistNickname",
@@ -77,7 +78,7 @@ class UserServiceTest {
 		}
 
 		@Test
-		void given_invalidUserId_when_updateCategories_then_throwKnowyUserNotFoundException() {
+		void given_invalidUserId_when_updateCategories_then_throwKnowyUserNotFoundException() throws KnowyDataAccessException {
 			Mockito.when(userRepository.findById(232))
 				.thenReturn(Optional.empty());
 
@@ -88,7 +89,7 @@ class UserServiceTest {
 		}
 
 		@Test
-		void given_nonPersistedCategories_when_updateCategories_then_throwKnowyInconsistentDataException() throws KnowyInconsistentDataException {
+		void given_nonPersistedCategories_when_updateCategories_then_throwKnowyInconsistentDataException() throws KnowyDataAccessException {
 			User user = new User(
 				10,
 				"ExistNickname",
@@ -114,7 +115,7 @@ class UserServiceTest {
 	@Nested
 	class UserUpdateNicknameUseCaseTest {
 		@Test
-		void given_validNewNickname_when_updateNickname_then_updateNicknameIsCalled() {
+		void given_validNewNickname_when_updateNickname_then_updateNicknameIsCalled() throws KnowyDataAccessException {
 			User oldUser = new User(
 				1,
 				"OldNickname",
@@ -133,7 +134,7 @@ class UserServiceTest {
 		}
 
 		@Test
-		void given_sameNickname_when_updateNickname_then_throwKnowyUnchangedNicknameException() {
+		void given_sameNickname_when_updateNickname_then_throwKnowyUnchangedNicknameException() throws KnowyDataAccessException {
 			User otherUser = new User(
 				1,
 				"SameNickname",
@@ -150,7 +151,7 @@ class UserServiceTest {
 		}
 
 		@Test
-		void given_existingNickname_when_updateUser_then_throwKnowyException() {
+		void given_existingNickname_when_updateUser_then_throwKnowyException() throws KnowyDataAccessException {
 			User user = new User(
 				1,
 				"ExistNickname",
@@ -212,7 +213,7 @@ class UserServiceTest {
 		}
 
 		@Test
-		void given_invalidUserId_when_updateProfileImage_then_throwKnowyUserNotFoundException() {
+		void given_invalidUserId_when_updateProfileImage_then_throwKnowyUserNotFoundException() throws KnowyDataAccessException {
 			Mockito.when(userRepository.findById(Mockito.anyInt()))
 				.thenReturn(Optional.empty());
 
@@ -220,7 +221,7 @@ class UserServiceTest {
 		}
 
 		@Test
-		void given_invalidImageId_when_updateProfileImage_then_throwKnowyImageNotFoundException() {
+		void given_invalidImageId_when_updateProfileImage_then_throwKnowyImageNotFoundException() throws KnowyDataAccessException {
 			User user = new User(
 				1,
 				"ExistNickname",
@@ -237,7 +238,7 @@ class UserServiceTest {
 		}
 
 		@Test
-		void given_sameImageId_when_updateProfileImage_then_throwKnowyUnchangedImageException() {
+		void given_sameImageId_when_updateProfileImage_then_throwKnowyUnchangedImageException() throws KnowyDataAccessException {
 			User user = new User(
 				1,
 				"ExistNickname",

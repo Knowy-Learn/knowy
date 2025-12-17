@@ -1,5 +1,6 @@
 package com.knowy.core.user.usercase.update.nickname;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
@@ -35,8 +36,7 @@ public class UserUpdateNicknameUseCase {
 	 * @throws KnowyUserNotFoundException         If no user exists with the given ID.
 	 */
 	public void execute(String newNickname, Integer userId)
-		throws KnowyUnchangedNicknameException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserNicknameException,
-		KnowyUserNotFoundException {
+		throws KnowyDataAccessException, KnowyUnchangedNicknameException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserNicknameException {
 
 		assertNotBlankNickname(newNickname);
 		User user = findByIdOrThrow(userId);
@@ -46,7 +46,7 @@ public class UserUpdateNicknameUseCase {
 		userRepository.updateNickname(newNickname, userId);
 	}
 
-	private User findByIdOrThrow(int userId) throws KnowyUserNotFoundException {
+	private User findByIdOrThrow(int userId) throws KnowyDataAccessException {
 		return userRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
 	}
@@ -57,7 +57,7 @@ public class UserUpdateNicknameUseCase {
 		}
 	}
 
-	private void ensureNicknameIsAvailable(String newNickname) throws KnowyNicknameAlreadyTakenException {
+	private void ensureNicknameIsAvailable(String newNickname) throws KnowyNicknameAlreadyTakenException, KnowyDataAccessException {
 		if (userRepository.existsByNickname(newNickname)) {
 			throw new KnowyNicknameAlreadyTakenException("Nickname is already in use.");
 		}

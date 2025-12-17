@@ -1,7 +1,7 @@
 package com.knowy.core.user.usercase.register;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.domain.Email;
-import com.knowy.core.user.domain.Gender;
 import com.knowy.core.user.domain.Password;
 import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
@@ -62,7 +62,8 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 	 * @throws KnowyImageNotFoundException        If the default profile image cannot be found.
 	 */
 	public UserPrivate execute(UserSingUpCommand userSingUpCommand)
-		throws KnowyImageNotFoundException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException, KnowyInvalidUserException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
+		throws KnowyDataAccessException, KnowyImageNotFoundException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException,
+		KnowyInvalidUserException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
 
 		assertUserNickname(userSingUpCommand.nickname());
 		validateEmail(userSingUpCommand.email());
@@ -83,7 +84,7 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 		return userPrivateRepository.save(userPrivate);
 	}
 
-	private void assertUserNickname(String nickname) throws KnowyInvalidUserException, KnowyNicknameAlreadyTakenException {
+	private void assertUserNickname(String nickname) throws KnowyInvalidUserException, KnowyNicknameAlreadyTakenException, KnowyDataAccessException {
 		if (StringUtils.isBlank(nickname)) {
 			throw new KnowyInvalidUserNicknameException("Invalid nickname");
 		}
@@ -93,7 +94,7 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 		}
 	}
 
-	private void validateEmail(Email email) throws KnowyUserEmailFormatException, KnowyEmailAlreadyTakenException {
+	private void validateEmail(Email email) throws KnowyUserEmailFormatException, KnowyEmailAlreadyTakenException, KnowyDataAccessException {
 		Email.assertValid(email.value());
 		if (userPrivateRepository.findByEmail(email.value()).isPresent()) {
 			throw new KnowyEmailAlreadyTakenException("Email already exists");

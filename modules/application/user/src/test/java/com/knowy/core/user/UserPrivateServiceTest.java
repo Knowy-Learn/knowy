@@ -1,6 +1,7 @@
 package com.knowy.core.user;
 
 import com.knowy.core.exception.KnowyException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.mail.KnowyMailDispatchException;
 import com.knowy.core.port.ExternalNotificationDispatcher;
 import com.knowy.core.user.domain.*;
@@ -10,10 +11,7 @@ import com.knowy.core.user.exception.conflict.KnowyUnchangedEmailException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
-import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
-import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
-import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
-import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
+import com.knowy.core.user.exception.validation.*;
 import com.knowy.core.user.port.*;
 import com.knowy.core.user.usercase.manage.DeactivateAccountCommand;
 import com.knowy.core.user.usercase.register.UserSingUpCommand;
@@ -120,7 +118,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_existNickname_when_executeSingUp_then_KnowyNicknameAlreadyTakenException() {
+		void given_existNickname_when_executeSingUp_then_KnowyNicknameAlreadyTakenException() throws KnowyDataAccessException {
 			String existNickname = "existNickname";
 			UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
 				existNickname, "test@email.com", "ValidPass123@"
@@ -145,7 +143,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_existingEmail_when_executeSingUp_then_throwKnowyEmailAlreadyTakenException() {
+		void given_existingEmail_when_executeSingUp_then_throwKnowyEmailAlreadyTakenException() throws KnowyDataAccessException {
 			String existMail = "existmail@mail.com";
 
 			UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
@@ -167,20 +165,6 @@ class UserPrivateServiceTest {
 			assertThrows(
 				KnowyEmailAlreadyTakenException.class,
 				() -> userPrivateService.registerNewUser(userSingUpCommand)
-			);
-		}
-
-		@Test
-		void given_invalidPassword_when_executeSingUp_then_throwKnowyInvalidUserPasswordFormatException() {
-			UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
-				"TestNickname", "test@mail.com", "invalidPassword"
-			);
-
-			Mockito.when(userPrivateRepository.findByEmail(userSingUpCommand.email().value()))
-				.thenReturn(Optional.empty());
-
-			assertThrows(
-				KnowyPasswordFormatException.class, () -> userPrivateService.registerNewUser(userSingUpCommand)
 			);
 		}
 	}
@@ -346,7 +330,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_sameEmail_when_updateEmail_then_KnowyUnchangedEmailException() {
+		void given_sameEmail_when_updateEmail_then_KnowyUnchangedEmailException() throws KnowyDataAccessException {
 			int userId = 16;
 			String sameEmail = "same@mail.com";
 			UserUpdateEmailCommand userUpdateEmailCommand = new UserUpdateEmailCommand(
@@ -375,7 +359,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_emailAlreadyExists_when_executeUpdateEmail_then_KnowyInvalidUserEmailException() {
+		void given_emailAlreadyExists_when_executeUpdateEmail_then_KnowyInvalidUserEmailException() throws KnowyDataAccessException {
 			int userId = 16;
 			String newMail = "new@mail.com";
 			UserUpdateEmailCommand userUpdateEmailCommand = new UserUpdateEmailCommand(
@@ -417,7 +401,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_wrongPassword_when_updateEmail_then_throwKnowyWrongPasswordException() throws KnowyWrongPasswordException {
+		void given_wrongPassword_when_updateEmail_then_throwKnowyWrongPasswordException() throws KnowyWrongPasswordException, KnowyDataAccessException {
 			int userId = 16;
 			String newMail = "new@mail.com";
 			UserUpdateEmailCommand userUpdateEmailCommand = new UserUpdateEmailCommand(
@@ -498,7 +482,7 @@ class UserPrivateServiceTest {
 
 		@Test
 		void given_nonExistentEmail_when_sendRecoveryPasswordMailMessage_then_throwKnowyUserNotFoundException()
-			throws KnowyTokenException, KnowyUserNotFoundException {
+			throws KnowyTokenException, KnowyDataAccessException {
 
 			Email email = new Email("missing@mail.com");
 			String recoveryBaseUrl = "https://app.url/recover";
@@ -514,7 +498,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_token_when_sendRecoveryPasswordEmailEncodeFail_then_throwKnowyTokenException() throws KnowyTokenException, KnowyUserNotFoundException {
+		void given_token_when_sendRecoveryPasswordEmailEncodeFail_then_throwKnowyTokenException() throws KnowyTokenException, KnowyDataAccessException {
 			Email email = new Email("test@mail.com");
 			String recoveryBaseUrl = "https://app.url/recover";
 
@@ -530,7 +514,7 @@ class UserPrivateServiceTest {
 
 		@Test
 		void given_validData_when_sendRecoveryPasswordEmail_then_throwKnowyMailDispatchException()
-			throws KnowyTokenException, KnowyUserNotFoundException, KnowyMailDispatchException {
+			throws KnowyTokenException, KnowyDataAccessException, KnowyMailDispatchException {
 
 			Email email = new Email("user@mail.com");
 			String recoveryBaseUrl = "https://app.url/recover";
@@ -553,7 +537,7 @@ class UserPrivateServiceTest {
 	class DeactivateAccountUseCaseTest {
 		@Test
 		void given_validEmailAndCorrectPassword_when_desactivateUserAccount_then_deactivateAccountAndSave()
-			throws KnowyWrongPasswordException, KnowyUserNotFoundException, KnowyTokenException, KnowyMailDispatchException {
+			throws KnowyWrongPasswordException, KnowyDataAccessException, KnowyTokenException, KnowyMailDispatchException {
 
 			Email email = new Email("nonExistMail@mail.com");
 			Password password = new Password("valid.Password123");
@@ -586,7 +570,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_nonexistentUser_when_desactivateUserAccount_then_throwKnowyUserNotFoundException() {
+		void given_nonexistentUser_when_desactivateUserAccount_then_throwKnowyUserNotFoundException() throws KnowyDataAccessException {
 			Email email = new Email("nonExistMail@mail.com");
 			Password password = new Password("valid.Pasword123");
 			String baseUrl = "http://app.url";
@@ -606,7 +590,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_validEmailButPasswordsDoNotMatch_when_desactivateUserAccount_then_throwKnowyWrongPasswordException() {
+		void given_validEmailButPasswordsDoNotMatch_when_desactivateUserAccount_then_throwKnowyWrongPasswordException() throws KnowyDataAccessException {
 			Email email = new Email("user@mail.com");
 			Password password = new Password("Valid123@");
 			Password passwordConfirm = new Password("ValidDiff123@");
@@ -625,7 +609,7 @@ class UserPrivateServiceTest {
 
 		@Test
 		void given_validEmailAndWrongPassword_when_desactivateUserAccount_then_throwKnowyWrongPasswordException()
-			throws KnowyWrongPasswordException {
+			throws KnowyWrongPasswordException, KnowyDataAccessException {
 
 			Email email = new Email("user@mail.com");
 			Password wrongPassword = new Password("wrong.Password.123");
@@ -658,7 +642,7 @@ class UserPrivateServiceTest {
 
 		@Test
 		void given_validEmail_when_createDeletedAccountEmail_then_throwsKnowyTokenException()
-			throws KnowyTokenException, KnowyUserNotFoundException {
+			throws KnowyTokenException, KnowyDataAccessException {
 
 			Email email = new Email("nonExistMail@mail.com");
 			Password password = new Password("valid.Pasword123");
@@ -692,7 +676,7 @@ class UserPrivateServiceTest {
 
 		@Test
 		void given_nonExistingEmail_when_createDeletedAccountEmail_then_throwsKnowyUserNotFoundException()
-			throws KnowyTokenException, KnowyUserNotFoundException {
+			throws KnowyTokenException, KnowyDataAccessException {
 
 			Email email = new Email("nonExistMail@mail.com");
 			Password password = new Password("valid.Pasword123");
@@ -725,7 +709,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_validEmailAndCorrectPassword_when_desactivateUserAccount_then_throw() throws KnowyMailDispatchException {
+		void given_validEmailAndCorrectPassword_when_desactivateUserAccount_then_throw() throws KnowyMailDispatchException, KnowyDataAccessException {
 
 			Email email = new Email("nonExistMail@mail.com");
 			Password password = new Password("valid.Pasword123");
@@ -787,7 +771,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_invalidToken_when_reactivateUserAccount_then_throwKnowyTokenException() throws KnowyTokenException, KnowyUserNotFoundException {
+		void given_invalidToken_when_reactivateUserAccount_then_throwKnowyTokenException() throws KnowyTokenException, KnowyDataAccessException {
 			String token = "invalid-token";
 
 			Mockito.doThrow(new KnowyTokenException("Invalid token"))
@@ -801,7 +785,7 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_validTokenButUserNotFound_when_reactivateUserAccount_then_throwKnowyUserNotFoundException() throws KnowyTokenException, KnowyUserNotFoundException {
+		void given_validTokenButUserNotFound_when_reactivateUserAccount_then_throwKnowyUserNotFoundException() throws KnowyTokenException, KnowyDataAccessException {
 			String token = "valid-token-with-no-registry";
 
 

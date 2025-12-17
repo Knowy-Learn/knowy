@@ -1,6 +1,7 @@
 package com.knowy.core.user.usercase.update.categories;
 
 import com.knowy.core.domain.Category;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.user.domain.User;
@@ -44,7 +45,7 @@ public class UserUpdateCategoriesUseCase {
 	 *                   for no categories).
 	 * @throws KnowyInconsistentDataException If any provided category does not exist in the system.
 	 */
-	public void execute(Integer userId, String[] categories) throws KnowyInconsistentDataException {
+	public void execute(Integer userId, String[] categories) throws KnowyDataAccessException {
 		Objects.requireNonNull(
 			categories,
 			"A not null categories array is required, if no categories are selected use an empty array instead of null"
@@ -59,7 +60,7 @@ public class UserUpdateCategoriesUseCase {
 		userRepository.save(newUser);
 	}
 
-	private User findUserByIdOrThrow(int userId) throws KnowyUserNotFoundException {
+	private User findUserByIdOrThrow(int userId) throws KnowyDataAccessException {
 		return userRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + userId));
 	}

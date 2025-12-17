@@ -1,5 +1,7 @@
 package com.knowy.server.api.config;
 
+import com.knowy.core.exception.KnowyRuntimeException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.port.KnowyTokenTools;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.security.filter.JwtAuthenticationFilter;
@@ -32,9 +34,15 @@ public class SecurityConfiguration {
 
 	@Bean
 	public UserDetailsService userDetailsService(UserPrivateRepository userPrivateRepository) {
-		return username -> userPrivateRepository.findByEmail(username)
-			.map(UserPrivateSecurityDetails::new)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		return username -> {
+			try {
+				return userPrivateRepository.findByEmail(username)
+					.map(UserPrivateSecurityDetails::new)
+					.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+			} catch (KnowyDataAccessException e) {
+				throw new KnowyRuntimeException(e);
+			}
+		};
 	}
 
 	@Bean

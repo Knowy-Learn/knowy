@@ -1,5 +1,6 @@
 package com.knowy.core.user.usercase.manage;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.mail.KnowyMailDispatchException;
 import com.knowy.core.port.ExternalNotificationDispatcher.ExternalNotification;
 import com.knowy.core.user.exception.security.KnowyTokenException;
@@ -61,7 +62,7 @@ public class DeactivateAccountUseCase {
 	 *                                     password.
 	 */
 	public void execute(DeactivateAccountCommand command)
-		throws KnowyTokenException, KnowyUserNotFoundException, KnowyMailDispatchException, KnowyWrongPasswordException {
+		throws KnowyTokenException, KnowyDataAccessException, KnowyMailDispatchException, KnowyWrongPasswordException {
 
 		desactivateUserAccount(command.email(), command.password(), command.confirmPassword());
 		ExternalNotification externalNotification = createAccountRecoveryNotification(command.email(), command.recoveryBaseUrl());
@@ -69,7 +70,7 @@ public class DeactivateAccountUseCase {
 	}
 
 	private void desactivateUserAccount(Email email, Password password, Password confirmPassword)
-		throws KnowyUserNotFoundException, KnowyWrongPasswordException {
+		throws KnowyDataAccessException, KnowyWrongPasswordException {
 
 		if (!password.equals(confirmPassword)) {
 			throw new KnowyWrongPasswordException("Passwords do not match");
@@ -87,7 +88,7 @@ public class DeactivateAccountUseCase {
 	}
 
 	private ExternalNotification createAccountRecoveryNotification(Email email, String recoveryBaseUrl)
-		throws KnowyTokenException, KnowyUserNotFoundException {
+		throws KnowyTokenException, KnowyDataAccessException {
 
 		final long THIRTY_DAYS_IN_MILLIS = 30L * 24 * 60 * 60 * 1000;
 

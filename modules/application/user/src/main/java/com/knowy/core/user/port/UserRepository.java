@@ -1,7 +1,6 @@
 package com.knowy.core.user.port;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
-import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.user.domain.User;
 
 import java.util.Optional;

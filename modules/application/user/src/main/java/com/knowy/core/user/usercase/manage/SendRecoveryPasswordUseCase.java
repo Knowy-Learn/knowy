@@ -1,5 +1,6 @@
 package com.knowy.core.user.usercase.manage;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.mail.KnowyMailDispatchException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
@@ -43,7 +44,7 @@ public class SendRecoveryPasswordUseCase {
 	 * @throws KnowyMailDispatchException If the recovery email fails to send.
 	 */
 	public void execute(Email email, String recoveryBaseUrl)
-		throws KnowyUserNotFoundException, KnowyTokenException, KnowyMailDispatchException {
+		throws KnowyDataAccessException, KnowyTokenException, KnowyMailDispatchException {
 
 		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
 		String token = tokenUserPrivateTool.createUserTokenByEmail(email);

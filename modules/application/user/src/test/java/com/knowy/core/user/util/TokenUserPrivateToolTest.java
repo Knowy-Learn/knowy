@@ -1,5 +1,6 @@
 package com.knowy.core.user.util;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.domain.*;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
@@ -34,7 +35,7 @@ class TokenUserPrivateToolTest {
 
 	// method verificationToken
 	@Test
-	void given_validToken_when_validateToken_then_returnTrue() throws KnowyTokenException {
+	void given_validToken_when_validateToken_then_returnTrue() throws KnowyTokenException, KnowyDataAccessException {
 		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(11, "user@mail.com");
 		UserPrivate userPrivate = new UserPrivate(
 			11,
@@ -63,7 +64,7 @@ class TokenUserPrivateToolTest {
 
 
 	@Test
-	void given_invalidToken_when_validateToken_then_returnsFalse() throws KnowyTokenException, KnowyUserNotFoundException {
+	void given_invalidToken_when_validateToken_then_returnsFalse() throws KnowyTokenException, KnowyDataAccessException {
 		Mockito.doThrow(new KnowyTokenException("Invalid Token"))
 			.when(tokenUserPrivateTool)
 			.verifyPasswordToken("invalid-token");
@@ -74,7 +75,7 @@ class TokenUserPrivateToolTest {
 
 	@Test
 	void given_invalidTokenByUserNotFound_when_validateToken_then_returnsFalse()
-		throws KnowyTokenException, KnowyUserNotFoundException {
+		throws KnowyTokenException, KnowyDataAccessException {
 		Mockito.doThrow(new KnowyUserNotFoundException("Invalid Token"))
 			.when(tokenUserPrivateTool)
 			.verifyPasswordToken("invalid-token");
@@ -85,7 +86,7 @@ class TokenUserPrivateToolTest {
 
 	// method createUserTokenByEmail
 	@Test
-	void given_email_when_createUserToken_then_returnToken() throws KnowyTokenException {
+	void given_email_when_createUserToken_then_returnToken() throws KnowyTokenException, KnowyDataAccessException {
 		Email userEmail = new Email("test@email.com");
 		UserPrivate userPrivate = new UserPrivate(
 			11,
@@ -107,7 +108,7 @@ class TokenUserPrivateToolTest {
 	}
 
 	@Test
-	void given_email_when_createUserToken_then_throwKnowyUserNotFound() {
+	void given_email_when_createUserToken_then_throwKnowyUserNotFound() throws KnowyDataAccessException {
 		Email userEmail = new Email("test@email.com");
 
 		Mockito.when(userPrivateRepository.findByEmail(userEmail.value()))
@@ -120,7 +121,7 @@ class TokenUserPrivateToolTest {
 	}
 
 	@Test
-	void given_email_when_createUserToken_then_throwKnowyTokenException() throws KnowyTokenException {
+	void given_email_when_createUserToken_then_throwKnowyTokenException() throws KnowyTokenException, KnowyDataAccessException {
 		Email userEmail = new Email("test@email.com");
 		UserPrivate userPrivate = new UserPrivate(
 			11,

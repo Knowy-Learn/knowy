@@ -7,6 +7,10 @@ public class KnowyDataAccessException extends KnowyException {
 		super(message);
 	}
 
+	public KnowyDataAccessException(Throwable cause) {
+		super(cause);
+	}
+
 	public KnowyDataAccessException(String message, Throwable cause) {
 		super(message, cause);
 	}

@@ -1,5 +1,6 @@
 package com.knowy.security.filter;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.domain.User;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
@@ -45,7 +46,7 @@ public class JwtAuthenticationFilter implements Filter {
         try {
             String jwt = authHeader.substring(7);
             authenticateUser(jwt);
-        } catch (KnowyTokenException | KnowyUserNotFoundException e) {
+        } catch (KnowyTokenException | KnowyDataAccessException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -57,7 +58,7 @@ public class JwtAuthenticationFilter implements Filter {
         return header != null && header.startsWith("Bearer ");
     }
 
-	private void authenticateUser(String jwt) throws KnowyTokenException, KnowyUserNotFoundException {
+	private void authenticateUser(String jwt) throws KnowyTokenException, KnowyDataAccessException {
 		User user = tokenValidationService.validateUserToken(jwt);
 
 		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(

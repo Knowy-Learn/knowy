@@ -1,5 +1,7 @@
 package com.knowy.server.infrastructure.security;
 
+import com.knowy.core.exception.KnowyRuntimeException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.port.UserPrivateRepository;
 import jakarta.servlet.http.HttpSession;
@@ -58,7 +60,13 @@ public class UserSecurityDetailsHelper {
 	 * @throws UsernameNotFoundException if the user cannot be found using their internal ID
 	 */
 	public void refreshUserAuthenticationById() throws UsernameNotFoundException {
-		refreshAuthentication(user -> (UserSecurityDetails) loadUserById(user.getUser().id()));
+		refreshAuthentication(user -> {
+			try {
+				return (UserSecurityDetails) loadUserById(user.getUser().id());
+			} catch (KnowyDataAccessException e) {
+				throw new KnowyRuntimeException(e);
+			}
+		});
 	}
 
 	private void refreshAuthentication(UnaryOperator<UserSecurityDetails> reloadFunction) {
@@ -76,7 +84,7 @@ public class UserSecurityDetailsHelper {
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 	}
 
-	private UserDetails loadUserById(int id) throws UsernameNotFoundException {
+	private UserDetails loadUserById(int id) throws UsernameNotFoundException, KnowyDataAccessException {
 		UserPrivate userPrivate = privateUserRepository.findById(id)
 			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		return new UserSecurityDetails(userPrivate);

@@ -1,5 +1,6 @@
 package com.knowy.core.user.usercase.update.profileimage;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.conflict.KnowyUnchangedImageException;
@@ -42,7 +43,7 @@ public class UserUpdateProfileImageUseCase {
 	 * @throws KnowyUserNotFoundException   If no user exists with the given ID.
 	 */
 	public void execute(Integer newProfileImageId, Integer userId) throws KnowyUnchangedImageException,
-		KnowyImageNotFoundException, KnowyUserNotFoundException {
+		KnowyDataAccessException {
 
 		User user = findUserByIdOrThrow(userId);
 		ProfileImage img = findProfileImageByIdOrThrow(newProfileImageId);
@@ -52,7 +53,7 @@ public class UserUpdateProfileImageUseCase {
 		userRepository.save(newUser);
 	}
 
-	private User findUserByIdOrThrow(int userId) throws KnowyUserNotFoundException {
+	private User findUserByIdOrThrow(int userId) throws KnowyDataAccessException {
 		return userRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + userId));
 	}

@@ -1,5 +1,6 @@
 package com.knowy.core.user.util;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.port.KnowyTokenTools;
@@ -40,7 +41,7 @@ public class TokenUserPrivateTool {
 	 * @throws KnowyTokenException        If the token is invalid or tampered.
 	 * @throws KnowyUserNotFoundException If no user is found for the token's user ID.
 	 */
-	public UserPrivate verifyPasswordToken(String token) throws KnowyTokenException, KnowyUserNotFoundException {
+	public UserPrivate verifyPasswordToken(String token) throws KnowyTokenException, KnowyDataAccessException {
 		Objects.requireNonNull(token, "A not null token is required");
 
 		PasswordResetInfo passwordResetInfo = tokenTools.decodeUnverified(token, PasswordResetInfo.class);
@@ -59,12 +60,12 @@ public class TokenUserPrivateTool {
 		try {
 			verifyPasswordToken(token);
 			return true;
-		} catch (KnowyTokenException | KnowyUserNotFoundException e) {
+		} catch (KnowyTokenException | KnowyDataAccessException e) {
 			return false;
 		}
 	}
 
-	private UserPrivate getUserPrivateByIdOrThrow(int userId) throws KnowyUserNotFoundException {
+	private UserPrivate getUserPrivateByIdOrThrow(int userId) throws KnowyDataAccessException {
 		return userPrivateRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
 	}
@@ -79,7 +80,7 @@ public class TokenUserPrivateTool {
 	 * @throws KnowyTokenException        if token creation fails
 	 */
 	public String createUserTokenByEmail(Email email, long tokenExpirationTime)
-		throws KnowyUserNotFoundException, KnowyTokenException {
+		throws KnowyDataAccessException, KnowyTokenException {
 		UserPrivate userPrivate = getUserPrivateByEmailOrThrow(email);
 
 		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(userPrivate.id(), userPrivate.email().value());
@@ -95,11 +96,11 @@ public class TokenUserPrivateTool {
 	 * @throws KnowyUserNotFoundException if no user is found with the given email
 	 * @throws KnowyTokenException        if token creation fails
 	 */
-	public String createUserTokenByEmail(Email email) throws KnowyUserNotFoundException, KnowyTokenException {
+	public String createUserTokenByEmail(Email email) throws KnowyDataAccessException, KnowyTokenException {
 		return createUserTokenByEmail(email, 600_000);
 	}
 
-	private UserPrivate getUserPrivateByEmailOrThrow(Email email) throws KnowyUserNotFoundException {
+	private UserPrivate getUserPrivateByEmailOrThrow(Email email) throws KnowyDataAccessException {
 		return userPrivateRepository.findByEmail(email.value())
 			.orElseThrow(() -> new KnowyUserNotFoundException(String.format("The user with email %s was not found", email)));
 	}

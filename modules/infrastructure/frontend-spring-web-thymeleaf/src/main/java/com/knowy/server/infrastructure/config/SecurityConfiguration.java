@@ -1,5 +1,6 @@
 package com.knowy.server.infrastructure.config;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
@@ -17,8 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-	private final UserPrivateRepository userPrivateRepository;
 	private static final String LOGIN_URL = "/login";
+	private final UserPrivateRepository userPrivateRepository;
 
 	public SecurityConfiguration(UserPrivateRepository userPrivateRepository) {
 		this.userPrivateRepository = userPrivateRepository;
@@ -39,9 +40,13 @@ public class SecurityConfiguration {
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return email -> {
-			UserPrivate userPrivate = userPrivateRepository.findByEmail(email)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-			return new UserSecurityDetails(userPrivate);
+			try {
+				UserPrivate userPrivate = userPrivateRepository.findByEmail(email)
+					.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+				return new UserSecurityDetails(userPrivate);
+			} catch (KnowyDataAccessException e) {
+				throw new UsernameNotFoundException("User not found", e);
+			}
 		};
 	}
 

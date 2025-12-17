@@ -1,5 +1,6 @@
 package com.knowy.security.service;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.domain.User;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
@@ -15,7 +16,7 @@ public class TokenValidationService {
 		this.validateUserUseCase = new ValidateUserUseCase(knowyTokenTools, userPrivateRepository);
 	}
 
-	public User validateUserToken(String token) throws KnowyTokenException, KnowyUserNotFoundException {
+	public User validateUserToken(String token) throws KnowyTokenException, KnowyDataAccessException {
 		return validateUserUseCase.execute(token);
 	}
 }

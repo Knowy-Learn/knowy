@@ -3,6 +3,7 @@ package com.knowy.persistence.adapter.jpa.mapper;
 import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.Password;
 import com.knowy.core.user.domain.UserPrivate;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaGenderDao;
 import com.knowy.persistence.adapter.jpa.entity.PrivateUserEntity;
@@ -16,7 +17,7 @@ public class JpaUserPrivateMapper implements EntityMapper<UserPrivate, PrivateUs
 	}
 
 	@Override
-	public UserPrivate toDomain(PrivateUserEntity entity) {
+	public UserPrivate toDomain(PrivateUserEntity entity) throws KnowyInvalidUserGenderException {
 		return new UserPrivate(
 			jpaUserMapper.toDomain(entity.getPublicUserEntity()),
 			new Email(entity.getEmail()),

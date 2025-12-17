@@ -1,16 +1,17 @@
 package com.knowy.core.user.usercase.update.password;
 
-import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
+import com.knowy.core.user.domain.Password;
+import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
-import com.knowy.core.user.util.PasswordResetInfo;
+import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.port.KnowyTokenTools;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.core.user.usercase.KnowyUseCase;
-import com.knowy.core.user.domain.Password;
-import com.knowy.core.user.domain.UserPrivate;
+import com.knowy.core.user.util.PasswordResetInfo;
 
 import java.util.Objects;
 
@@ -55,7 +56,7 @@ public class UserUpdatePasswordUseCase implements KnowyUseCase<UserUpdatePasswor
 	 */
 	@Override
 	public UserPrivate execute(UserUpdatePasswordCommand command)
-		throws KnowyPasswordFormatException, KnowyTokenException, KnowyUserNotFoundException, KnowyWrongPasswordException {
+		throws KnowyDataAccessException, KnowyPasswordFormatException, KnowyTokenException, KnowyUserNotFoundException, KnowyWrongPasswordException {
 
 		Objects.requireNonNull(command.password(), "A password should be specified");
 		Password.assertPasswordFormatIsRight(command.password());
@@ -77,14 +78,14 @@ public class UserUpdatePasswordUseCase implements KnowyUseCase<UserUpdatePasswor
 		}
 	}
 
-	private UserPrivate verifyPasswordToken(String token) throws KnowyTokenException, KnowyUserNotFoundException {
+	private UserPrivate verifyPasswordToken(String token) throws KnowyTokenException, KnowyDataAccessException {
 		PasswordResetInfo passwordResetInfo = tokenTools.decodeUnverified(token, PasswordResetInfo.class);
 		UserPrivate userPrivate = getUserByIdOrThrow(passwordResetInfo.userId());
 		tokenTools.decode(userPrivate.password().value(), token, PasswordResetInfo.class);
 		return userPrivate;
 	}
 
-	private UserPrivate getUserByIdOrThrow(int userId) throws KnowyUserNotFoundException {
+	private UserPrivate getUserByIdOrThrow(int userId) throws KnowyDataAccessException {
 		return userPrivateRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + userId));
 	}

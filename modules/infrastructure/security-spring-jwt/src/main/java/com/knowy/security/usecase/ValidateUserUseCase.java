@@ -1,5 +1,6 @@
 package com.knowy.security.usecase;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.domain.User;
 import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.exception.security.KnowyTokenException;
@@ -20,7 +21,7 @@ public class ValidateUserUseCase implements KnowyUseCase<String, User> {
 		this.userPrivateRepository = userPrivateRepository;
 	}
 
-	public User execute(String token) throws KnowyTokenException, KnowyUserNotFoundException {
+	public User execute(String token) throws KnowyTokenException, KnowyDataAccessException {
 		UserSecurityDto userSecurityDto = knowyTokenTools.decodeUnverified(token, UserSecurityDto.class);
 		UserPrivate userPrivate = getUserPrivateByIdOrThrow(userSecurityDto.id());
 		knowyTokenTools.decode(userPrivate.password().value(), token, PasswordResetInfo.class);
@@ -28,7 +29,7 @@ public class ValidateUserUseCase implements KnowyUseCase<String, User> {
 		return userPrivate.cropToUser();
 	}
 
-	private UserPrivate getUserPrivateByIdOrThrow(int userId) throws KnowyUserNotFoundException {
+	private UserPrivate getUserPrivateByIdOrThrow(int userId) throws KnowyDataAccessException {
 		return userPrivateRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
 	}

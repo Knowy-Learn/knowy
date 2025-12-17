@@ -1,5 +1,6 @@
 package com.knowy.core.user.usercase.manage;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.port.UserPrivateRepository;
@@ -37,7 +38,7 @@ public class ReactivateAccountUseCase {
 	 * @throws KnowyTokenException        If the token is invalid or expired.
 	 * @throws KnowyUserNotFoundException If no user is associated with the token.
 	 */
-	public void execute(String token) throws KnowyTokenException, KnowyUserNotFoundException {
+	public void execute(String token) throws KnowyTokenException, KnowyDataAccessException {
 		UserPrivate userPrivate = tokenUserPrivateTool.verifyPasswordToken(token);
 		if (userPrivate.active()) {
 			return;

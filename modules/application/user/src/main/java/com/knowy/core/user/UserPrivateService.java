@@ -1,5 +1,6 @@
 package com.knowy.core.user;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.port.ExternalNotificationDispatcher;
 import com.knowy.core.exception.mail.KnowyMailDispatchException;
 import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
@@ -110,7 +111,8 @@ public class UserPrivateService {
      * @throws KnowyPasswordFormatException If the password format is invalid.
      */
     public UserPrivate registerNewUser(UserSingUpCommand command)
-		throws KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
+		throws KnowyDataAccessException, KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException,
+		KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
         return userSignUpUseCase.execute(command);
     }
 
@@ -125,7 +127,7 @@ public class UserPrivateService {
      * @throws KnowyUserNotFoundException   If the user associated with the token does not exist.
      */
     public UserPrivate updatePassword(UserUpdatePasswordCommand command)
-            throws KnowyTokenException, KnowyPasswordFormatException, KnowyWrongPasswordException, KnowyUserNotFoundException {
+		throws KnowyTokenException, KnowyPasswordFormatException, KnowyWrongPasswordException, KnowyDataAccessException {
         return userUpdatePasswordUseCase.execute(command);
     }
 
@@ -140,7 +142,7 @@ public class UserPrivateService {
      * @throws KnowyUserNotFoundException     If no user is found with the given ID.
      */
     public void updateEmail(UserUpdateEmailCommand command)
-            throws KnowyUnchangedEmailException, KnowyWrongPasswordException, KnowyUserEmailFormatException, KnowyUserNotFoundException {
+		throws KnowyUnchangedEmailException, KnowyWrongPasswordException, KnowyUserEmailFormatException, KnowyDataAccessException {
         userUpdateEmailUseCase.execute(command);
     }
 
@@ -164,7 +166,7 @@ public class UserPrivateService {
      * @throws KnowyUserNotFoundException If no user exists with the provided email.
      */
     public void sendRecoveryPasswordEmail(Email email, String recoveryBaseUrl)
-            throws KnowyTokenException, KnowyMailDispatchException, KnowyUserNotFoundException {
+		throws KnowyTokenException, KnowyMailDispatchException, KnowyDataAccessException {
         sendRecoveryPasswordUseCase.execute(email, recoveryBaseUrl);
     }
 
@@ -179,7 +181,7 @@ public class UserPrivateService {
      * @throws KnowyUserNotFoundException  If no user exists with the provided email.
      */
     public void desactivateUserAccount(DeactivateAccountCommand command)
-            throws KnowyTokenException, KnowyMailDispatchException, KnowyWrongPasswordException, KnowyUserNotFoundException {
+		throws KnowyTokenException, KnowyMailDispatchException, KnowyWrongPasswordException, KnowyDataAccessException {
         deactivateAccountUseCase.execute(command);
     }
 
@@ -190,7 +192,7 @@ public class UserPrivateService {
      * @throws KnowyTokenException        If the token is invalid or expired.
      * @throws KnowyUserNotFoundException If no user exists for the given token.
      */
-    public void reactivateUserAccount(String token) throws KnowyTokenException, KnowyUserNotFoundException {
+    public void reactivateUserAccount(String token) throws KnowyTokenException, KnowyDataAccessException {
         reactivateAccountUseCase.execute(token);
     }
 }

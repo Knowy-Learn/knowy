@@ -1,5 +1,6 @@
 package com.knowy.core.user.usercase.update.email;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
 import com.knowy.core.user.exception.conflict.KnowyUnchangedEmailException;
@@ -48,7 +49,7 @@ public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailComma
 	 */
 	@Override
 	public UserPrivate execute(UserUpdateEmailCommand command)
-		throws KnowyUnchangedEmailException, KnowyUserEmailFormatException, KnowyWrongPasswordException, KnowyUserNotFoundException {
+		throws KnowyUnchangedEmailException, KnowyUserEmailFormatException, KnowyWrongPasswordException, KnowyDataAccessException {
 
 		UserPrivate userPrivate = getByIdOrThrow(command.userId());
 
@@ -60,7 +61,7 @@ public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailComma
 		return userPrivateRepository.save(newUserPrivate);
 	}
 
-	private UserPrivate getByIdOrThrow(int userId) throws KnowyUserNotFoundException {
+	private UserPrivate getByIdOrThrow(int userId) throws KnowyDataAccessException {
 		return userPrivateRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with ID: " + userId));
 	}
@@ -73,7 +74,7 @@ public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailComma
 		}
 	}
 
-	private void validateEmailIsNotTaken(String email) throws KnowyUserEmailFormatException {
+	private void validateEmailIsNotTaken(String email) throws KnowyUserEmailFormatException, KnowyDataAccessException {
 		if (userPrivateRepository.findByEmail(email).isPresent()) {
 			throw new KnowyUserEmailFormatException(
 				"The provided email is already associated with an existing account."

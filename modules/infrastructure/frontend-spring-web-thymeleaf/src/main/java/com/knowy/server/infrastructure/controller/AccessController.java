@@ -1,5 +1,6 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.mail.KnowyMailDispatchException;
 import com.knowy.core.user.UserPrivateService;
 import com.knowy.core.user.domain.Email;
@@ -109,11 +110,8 @@ public class AccessController {
 
 			userSecurityDetailsHelper.autoLoginUserByEmail(userPrivate.email().value());
 			return "redirect:/home";
-		} catch (KnowyInvalidUserException |
-				 KnowyPasswordFormatException |
-				 KnowyEmailAlreadyTakenException |
-				 KnowyInvalidUserGenderException |
-				 KnowyNicknameAlreadyTakenException e
+		} catch (KnowyInvalidUserException | KnowyPasswordFormatException | KnowyEmailAlreadyTakenException |
+				 KnowyInvalidUserGenderException | KnowyNicknameAlreadyTakenException | KnowyDataAccessException e
 		) {
 			redirectAttributes.addFlashAttribute("user", user);
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, e.getMessage());
@@ -149,7 +147,7 @@ public class AccessController {
 			userPrivateService.sendRecoveryPasswordEmail(new Email(userEmailFormDto.getEmail()),
 				getPasswordChangeUrl(httpServletRequest));
 			return LOGIN_REDIRECT_URL;
-		} catch (KnowyUserNotFoundException | KnowyTokenException | KnowyMailDispatchException e) {
+		} catch (KnowyTokenException | KnowyMailDispatchException | KnowyDataAccessException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Se ha producido un error al enviar el email. Intente lo más tarde");
 			return "redirect:/password-change/email";
 		}
@@ -210,7 +208,7 @@ public class AccessController {
 				token, userPasswordFormDto.getPassword(), userPasswordFormDto.getConfirmPassword()
 			));
 			return LOGIN_REDIRECT_URL;
-		} catch (KnowyUserNotFoundException | KnowyTokenException e) {
+		} catch (KnowyTokenException | KnowyDataAccessException e) {
 			redirectAttributes.addAttribute(ERROR_MODEL_ATTRIBUTE, "Se ha producido un error al actualizar la contraseña");
 			return LOGIN_REDIRECT_URL;
 		} catch (KnowyPasswordFormatException e) {

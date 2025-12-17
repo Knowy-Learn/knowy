@@ -1,5 +1,6 @@
 package com.knowy.server.api.usecase.auth;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.UserPrivateService;
 import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.Gender;
@@ -45,7 +46,7 @@ public class RegisterUserUseCase implements KnowyUseCase<AuthRegisterPostRequest
 
 	@Override
 	public AuthRegisterPost201Response execute(AuthRegisterPostRequest request)
-		throws KnowyInvalidUserException, KnowyPasswordFormatException, KnowyImageNotFoundException, KnowyTokenException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
+		throws KnowyInvalidUserException, KnowyPasswordFormatException, KnowyDataAccessException, KnowyTokenException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
 
 		UserPrivate user = register(request);
 		String token = generateToken(user);
@@ -54,7 +55,8 @@ public class RegisterUserUseCase implements KnowyUseCase<AuthRegisterPostRequest
 	}
 
 	private UserPrivate register(AuthRegisterPostRequest request)
-		throws KnowyInvalidUserException, KnowyPasswordFormatException, KnowyImageNotFoundException, KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
+		throws KnowyDataAccessException, KnowyInvalidUserException, KnowyPasswordFormatException,
+		KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
 
 		return userPrivateService.registerNewUser(
 			new UserSingUpCommand(

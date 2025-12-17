@@ -1,6 +1,7 @@
 package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.CategoryService;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.user.UserPrivateService;
 import com.knowy.core.user.UserService;
 import com.knowy.core.exception.KnowyException;
@@ -114,7 +115,7 @@ public class UserConfigController {
 
 			userSecurityDetailsHelper.refreshUserAuthenticationById();
 			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Email actualizado con éxito.");
-		} catch (KnowyUserNotFoundException e) {
+		} catch (KnowyDataAccessException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
 		} catch (KnowyUnchangedEmailException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo correo debe ser diferente al actual.");
@@ -194,7 +195,7 @@ public class UserConfigController {
 		} catch (KnowyTokenException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Error al recuperar el token");
 			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
-		} catch (KnowyUserNotFoundException e) {
+		} catch (KnowyDataAccessException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
 		}
@@ -228,7 +229,7 @@ public class UserConfigController {
 		} catch (KnowyTokenException e) {
 			model.addAttribute(ERROR_MODEL_ATTRIBUTE, "El token ha expirado o no es válido");
 			return "error/error";
-		} catch (KnowyUserNotFoundException e) {
+		} catch (KnowyDataAccessException e) {
 			model.addAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 			return "error/error";
 		}
@@ -301,7 +302,7 @@ public class UserConfigController {
 			try {
 				userService.updateNickname(newNickname, userId);
 				redirectAttributes.addFlashAttribute(USERNAME_MODEL_ATTRIBUTE, newNickname);
-			} catch (KnowyUserNotFoundException e) {
+			} catch (KnowyDataAccessException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
 			} catch (KnowyUnchangedNicknameException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo nombre debe ser diferente al actual.");
@@ -327,7 +328,7 @@ public class UserConfigController {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Aún no existe una imagen de perfil");
 			} catch (KnowyUnchangedImageException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La imagen debe ser diferente a la actual.");
-			} catch (KnowyUserNotFoundException e) {
+			} catch (KnowyDataAccessException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 			}
 		}
