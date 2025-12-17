@@ -3,6 +3,7 @@ package com.knowy.persistence.adapter.jpa;
 import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
+import com.knowy.persistence.adapter.jpa.dao.JpaGenderDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserPrivateDao;
 import com.knowy.persistence.adapter.jpa.entity.PrivateUserEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserPrivateMapper;
@@ -13,10 +14,12 @@ public class JpaUserPrivateRepository implements UserPrivateRepository {
 
 	private final JpaUserPrivateDao jpaUserPrivateDao;
 	private final JpaCategoryDao jpaCategoryDao;
+	private final JpaGenderDao jpaGenderDao;
 
-	public JpaUserPrivateRepository(JpaUserPrivateDao jpaUserPrivateDao, JpaCategoryDao jpaCategoryDao) {
+	public JpaUserPrivateRepository(JpaUserPrivateDao jpaUserPrivateDao, JpaCategoryDao jpaCategoryDao, JpaGenderDao jpaGenderDao) {
 		this.jpaUserPrivateDao = jpaUserPrivateDao;
 		this.jpaCategoryDao = jpaCategoryDao;
+		this.jpaGenderDao = jpaGenderDao;
 	}
 
 	@Override
@@ -42,6 +45,6 @@ public class JpaUserPrivateRepository implements UserPrivateRepository {
 	}
 
 	private JpaUserPrivateMapper getJpaUserPrivateMapper() {
-		return new JpaUserPrivateMapper(jpaCategoryDao);
+		return new JpaUserPrivateMapper(jpaCategoryDao, jpaGenderDao);
 	}
 }

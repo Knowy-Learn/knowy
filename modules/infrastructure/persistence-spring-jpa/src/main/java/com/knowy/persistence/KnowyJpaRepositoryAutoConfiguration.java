@@ -94,15 +94,15 @@ public class KnowyJpaRepositoryAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public UserPrivateRepository jpaUserPrivateRepository(
-		JpaUserPrivateDao jpaUserPrivateDao, JpaCategoryDao jpaCategoryDao
+		JpaUserPrivateDao jpaUserPrivateDao, JpaCategoryDao jpaCategoryDao, JpaGenderDao jpaGenderDao
 	) {
-		return new JpaUserPrivateRepository(jpaUserPrivateDao, jpaCategoryDao);
+		return new JpaUserPrivateRepository(jpaUserPrivateDao, jpaCategoryDao, jpaGenderDao);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public UserRepository jpaUserRepository(JpaUserDao jpaUserDao, JpaCategoryDao jpaCategoryDao) {
-		return new JpaUserRepository(jpaUserDao, jpaCategoryDao);
+	public UserRepository jpaUserRepository(JpaUserDao jpaUserDao, JpaCategoryDao jpaCategoryDao, JpaGenderDao jpaGenderDao) {
+		return new JpaUserRepository(jpaUserDao, jpaCategoryDao, jpaGenderDao);
 	}
 
 	@Bean

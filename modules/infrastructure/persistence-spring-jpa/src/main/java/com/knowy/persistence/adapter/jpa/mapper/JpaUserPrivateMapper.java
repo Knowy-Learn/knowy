@@ -4,14 +4,15 @@ import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.Password;
 import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
+import com.knowy.persistence.adapter.jpa.dao.JpaGenderDao;
 import com.knowy.persistence.adapter.jpa.entity.PrivateUserEntity;
 
 public class JpaUserPrivateMapper implements EntityMapper<UserPrivate, PrivateUserEntity> {
 
 	private final JpaUserMapper jpaUserMapper;
 
-	public JpaUserPrivateMapper(JpaCategoryDao jpaCategoryDao) {
-		this.jpaUserMapper = new JpaUserMapper(jpaCategoryDao);
+	public JpaUserPrivateMapper(JpaCategoryDao jpaCategoryDao, JpaGenderDao jpaGenderDao) {
+		this.jpaUserMapper = new JpaUserMapper(jpaCategoryDao, jpaGenderDao);
 	}
 
 	@Override
