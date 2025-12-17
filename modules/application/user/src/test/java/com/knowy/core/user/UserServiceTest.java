@@ -48,7 +48,6 @@ class UserServiceTest {
 			User user = new User(
 				42,
 				"ExistNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -57,7 +56,6 @@ class UserServiceTest {
 			User newUser = new User(
 				42,
 				"ExistNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				newCategories
 			);
@@ -94,7 +92,6 @@ class UserServiceTest {
 			User user = new User(
 				10,
 				"ExistNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -121,7 +118,6 @@ class UserServiceTest {
 			User oldUser = new User(
 				1,
 				"OldNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -141,7 +137,6 @@ class UserServiceTest {
 			User otherUser = new User(
 				1,
 				"SameNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -159,7 +154,6 @@ class UserServiceTest {
 			User user = new User(
 				1,
 				"ExistNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -195,7 +189,6 @@ class UserServiceTest {
 			User user = new User(
 				1,
 				"ExistNickname",
-				Gender.OTHER,
 				new ProfileImage(6, "https://knowy/test-image.png"),
 				new HashSet<>()
 			);
@@ -204,7 +197,6 @@ class UserServiceTest {
 			User newUser = new User(
 				1,
 				"ExistNickname",
-				Gender.OTHER,
 				newProfileImage,
 				new HashSet<>()
 			);
@@ -232,7 +224,6 @@ class UserServiceTest {
 			User user = new User(
 				1,
 				"ExistNickname",
-				Gender.OTHER,
 				new ProfileImage(6, "https://knowy/test-image.png"),
 				new HashSet<>()
 			);
@@ -250,7 +241,6 @@ class UserServiceTest {
 			User user = new User(
 				1,
 				"ExistNickname",
-				Gender.OTHER,
 				new ProfileImage(6, "https://knowy/test-image.png"),
 				new HashSet<>()
 			);

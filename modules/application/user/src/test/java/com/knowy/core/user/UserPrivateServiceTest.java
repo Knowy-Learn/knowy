@@ -81,12 +81,12 @@ class UserPrivateServiceTest {
 		@Test
 		void given_userSignUpCommand_when_executeSignUp_then_registerNewUser() throws KnowyException, KnowyInvalidUserGenderException {
 			UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
-				"TestNickname", "OTHER", "test@email.com", "ValidPass123@"
+				"TestNickname", Gender.UNKNOWN, new Email("test@email.com"), new Password("ValidPass123@")
 			);
 			UserPrivate userPrivateResult = new UserPrivate(
 				1,
 				"TestNickname",
-				Gender.OTHER,
+				Gender.UNKNOWN,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("test@email.com"),
@@ -94,9 +94,9 @@ class UserPrivateServiceTest {
 				true
 			);
 
-			Mockito.when(userPrivateRepository.findByEmail(userSingUpCommand.email()))
+			Mockito.when(userPrivateRepository.findByEmail(userSingUpCommand.email().value()))
 				.thenReturn(Optional.empty());
-			Mockito.when(knowyPasswordEncoder.encode(userSingUpCommand.password()))
+			Mockito.when(knowyPasswordEncoder.encode(userSingUpCommand.password().value()))
 				.thenReturn("Encoded.Password.123");
 			Mockito.when(profileImageRepository.findById(1))
 				.thenReturn(Optional.of(new ProfileImage(1, "https://knowy/image.png")));
@@ -110,7 +110,7 @@ class UserPrivateServiceTest {
 		@Test
 		void given_blankNickname_when_executeSingUp_then_KnowyInvalidUserNicknameException() {
 			UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
-				"   ", "OTHER", "test@email.com", "ValidPass123@"
+				"   ", "test@email.com", "ValidPass123@"
 			);
 
 			assertThrows(
@@ -123,12 +123,11 @@ class UserPrivateServiceTest {
 		void given_existNickname_when_executeSingUp_then_KnowyNicknameAlreadyTakenException() {
 			String existNickname = "existNickname";
 			UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
-				existNickname, "OTHER", "test@email.com", "ValidPass123@"
+				existNickname, "test@email.com", "ValidPass123@"
 			);
 			UserPrivate userPrivateResult = new UserPrivate(
 				1,
 				existNickname,
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("test@email.com"),
@@ -150,12 +149,11 @@ class UserPrivateServiceTest {
 			String existMail = "existmail@mail.com";
 
 			UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
-				"TestNickname", "OTHER", existMail, "ValidPass123@"
+				"TestNickname", existMail, "ValidPass123@"
 			);
 			UserPrivate userPrivate = new UserPrivate(
 				1,
 				"OtherTestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email(existMail),
@@ -175,10 +173,10 @@ class UserPrivateServiceTest {
 		@Test
 		void given_invalidPassword_when_executeSingUp_then_throwKnowyInvalidUserPasswordFormatException() {
 			UserSingUpCommand userSingUpCommand = new UserSingUpCommand(
-				"TestNickname", "OTHER", "test@mail.com", "invalidPassword"
+				"TestNickname", "test@mail.com", "invalidPassword"
 			);
 
-			Mockito.when(userPrivateRepository.findByEmail(userSingUpCommand.email()))
+			Mockito.when(userPrivateRepository.findByEmail(userSingUpCommand.email().value()))
 				.thenReturn(Optional.empty());
 
 			assertThrows(
@@ -200,7 +198,6 @@ class UserPrivateServiceTest {
 			User user = new User(
 				11,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>()
 			);
@@ -291,7 +288,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				16,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("test@email.com"),
@@ -327,7 +323,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				16,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("old@email.com"),
@@ -363,7 +358,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivateResult = new UserPrivate(
 				userId,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email(sameEmail),
@@ -394,7 +388,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivateResult = new UserPrivate(
 				userId,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("old@mail.com"),
@@ -405,7 +398,6 @@ class UserPrivateServiceTest {
 			UserPrivate otherUserPrivate = new UserPrivate(
 				24,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("other@email.com"),
@@ -437,7 +429,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				userId,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("old@email.com"),
@@ -575,7 +566,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				11,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("user@mail.com"),
@@ -648,7 +638,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				11,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				email,
@@ -682,7 +671,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				11,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("user@mail.com"),
@@ -717,7 +705,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				11,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("user@mail.com"),
@@ -751,7 +738,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				11,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("user@mail.com"),
@@ -781,7 +767,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				11,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("user@mail.com"),
@@ -837,7 +822,6 @@ class UserPrivateServiceTest {
 			UserPrivate userPrivate = new UserPrivate(
 				11,
 				"TestNickname",
-				Gender.OTHER,
 				new ProfileImage(1, "https://knowy/image.png"),
 				new HashSet<>(),
 				new Email("user@mail.com"),

@@ -27,6 +27,25 @@ public class UserPrivate extends User implements Serializable {
 		this.active = active;
 	}
 
+	/**
+	 * @deprecated since 1.2, Implemented gender on user values
+	 */
+	@Deprecated(since = "1.2")
+	public UserPrivate(
+		Integer id,
+		String nickname,
+		ProfileImage profileImage,
+		Set<Category> categories,
+		Email email,
+		Password password,
+		boolean active
+	) {
+		super(id, nickname, Gender.UNKNOWN, profileImage, categories);
+		this.email = email;
+		this.password = password;
+		this.active = active;
+	}
+
 	public UserPrivate(User user, Email email, Password password, boolean active) {
 		this(user.id(), user.nickname(), user.gender(), user.profileImage(), user.categories(), email, password, active);
 	}

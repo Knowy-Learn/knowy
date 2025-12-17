@@ -66,17 +66,17 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 
 		assertUserNickname(userSingUpCommand.nickname());
 		validateEmail(userSingUpCommand.email());
-		Password.assertPasswordFormatIsRight(userSingUpCommand.password());
+		Password.assertPasswordFormatIsRight(userSingUpCommand.password().value());
 
-		String encodedPassword = passwordEncoder.encode(userSingUpCommand.password());
+		String encodedPassword = passwordEncoder.encode(userSingUpCommand.password().value());
 		UserPrivate userPrivate = new UserPrivate(
 			null,
 			userSingUpCommand.nickname(),
-			assertParseGender(userSingUpCommand.gender()),
+			userSingUpCommand.gender(),
 			profileImageRepository.findById(1)
 				.orElseThrow(() -> new KnowyImageNotFoundException("Not found profile image")),
 			new HashSet<>(),
-			new Email(userSingUpCommand.email()),
+			userSingUpCommand.email(),
 			new Password(encodedPassword),
 			true
 		);
@@ -93,22 +93,10 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 		}
 	}
 
-	private void validateEmail(String email) throws KnowyUserEmailFormatException, KnowyEmailAlreadyTakenException {
-		Email.assertValid(email);
-		if (userPrivateRepository.findByEmail(email).isPresent()) {
+	private void validateEmail(Email email) throws KnowyUserEmailFormatException, KnowyEmailAlreadyTakenException {
+		Email.assertValid(email.value());
+		if (userPrivateRepository.findByEmail(email.value()).isPresent()) {
 			throw new KnowyEmailAlreadyTakenException("Email already exists");
-		}
-	}
-
-	private Gender assertParseGender(String gender) throws KnowyInvalidUserGenderException {
-		if (gender == null || gender.isBlank()) {
-			throw new KnowyInvalidUserGenderException("Gender cannot be null or empty");
-		}
-
-		try {
-			return Gender.valueOf(gender.toUpperCase());
-		} catch (IllegalArgumentException e) {
-			throw new KnowyInvalidUserGenderException("Invalid gender value" + gender, e);
 		}
 	}
 }

@@ -27,6 +27,19 @@ public class User implements Serializable {
 		this.categories = categories;
 	}
 
+	/**
+	 * @deprecated since 1.2, Implemented gender on user values
+	 */
+	@Deprecated(since = "1.2")
+	public User(
+		Integer id,
+		String nickname,
+		ProfileImage profileImage,
+		Set<Category> categories
+	) {
+		this(id, nickname, Gender.UNKNOWN, profileImage, categories);
+	}
+
 	public User(User user, Gender gender) {
 		this(user.id(), user.nickname(), gender, user.profileImage(), user.categories());
 	}

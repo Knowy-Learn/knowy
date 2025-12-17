@@ -39,7 +39,6 @@ class TokenUserPrivateToolTest {
 		UserPrivate userPrivate = new UserPrivate(
 			11,
 			"TestNickname",
-			Gender.OTHER,
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
 			new Email("test@email.com"),
@@ -91,7 +90,6 @@ class TokenUserPrivateToolTest {
 		UserPrivate userPrivate = new UserPrivate(
 			11,
 			"TestNickname",
-			Gender.OTHER,
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
 			userEmail,
@@ -127,7 +125,6 @@ class TokenUserPrivateToolTest {
 		UserPrivate userPrivate = new UserPrivate(
 			11,
 			"TestNickname",
-			Gender.OTHER,
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
 			userEmail,
