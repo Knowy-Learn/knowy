@@ -1,6 +1,9 @@
 package com.knowy.server.api.usecase.auth;
 
 import com.knowy.core.user.UserPrivateService;
+import com.knowy.core.user.domain.Email;
+import com.knowy.core.user.domain.Gender;
+import com.knowy.core.user.domain.Password;
 import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
@@ -56,8 +59,9 @@ public class RegisterUserUseCase implements KnowyUseCase<AuthRegisterPostRequest
 		return userPrivateService.registerNewUser(
 			new UserSingUpCommand(
 				request.getNickname(),
-				request.getEmail(),
-				request.getPassword()
+				Gender.fromValue(request.getGender().getValue()),
+				new Email(request.getEmail()),
+				new Password(request.getPassword())
 			)
 		);
 	}
