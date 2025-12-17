@@ -1,6 +1,7 @@
 package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.user.domain.User;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaGenderDao;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserEntity;
@@ -20,7 +21,7 @@ public class JpaUserMapper implements EntityMapper<User, PublicUserEntity> {
 	}
 
 	@Override
-	public User toDomain(PublicUserEntity entity) {
+	public User toDomain(PublicUserEntity entity) throws KnowyInvalidUserGenderException {
 		return new User(
 			entity.getId(),
 			entity.getNickname(),

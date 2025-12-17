@@ -1,11 +1,16 @@
 package com.knowy.persistence.adapter.jpa;
 
+import com.knowy.core.exception.data.KnowyDataAccessException;
+import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.user.domain.User;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.port.UserRepository;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaGenderDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaUserDao;
+import com.knowy.persistence.adapter.jpa.entity.PublicUserEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserMapper;
+import org.springframework.dao.DataAccessException;
 
 import java.util.Optional;
 
@@ -22,34 +27,77 @@ public class JpaUserRepository implements UserRepository {
 	}
 
 	@Override
-	public Optional<User> findById(Integer id) {
+	public Optional<User> findById(Integer id) throws KnowyDataAccessException {
 		JpaUserMapper jpaUserMapper = new JpaUserMapper(jpaCategoryDao, jpaGenderDao);
 
-		return jpaUserDao.findById(id).map(jpaUserMapper::toDomain);
+		try {
+			Optional<PublicUserEntity> publicUser = jpaUserDao.findById(id);
+			if (publicUser.isEmpty()) {
+				return Optional.empty();
+			}
+
+			User user = jpaUserMapper.toDomain(publicUser.get());
+			return Optional.of(user);
+
+		} catch (KnowyInvalidUserGenderException e) {
+			throw new KnowyInconsistentDataException("Error mapping PublicUserEntity to User", e);
+
+		} catch (DataAccessException e) {
+			throw new KnowyDataAccessException("Error accessing data from database", e);
+
+		}
+	}
+
+
+	@Override
+	public void updateNickname(String nickname, int id) throws KnowyDataAccessException {
+		try {
+			jpaUserDao.updateNickname(nickname, id);
+		} catch (DataAccessException e) {
+			throw new KnowyDataAccessException("Error accessing data from database", e);
+		}
 	}
 
 	@Override
-	public void updateNickname(String nickname, int id) {
-		jpaUserDao.updateNickname(nickname, id);
-	}
-
-	@Override
-	public User save(User user) {
+	public User save(User user) throws KnowyDataAccessException {
 		JpaUserMapper jpaUserMapper = new JpaUserMapper(jpaCategoryDao, jpaGenderDao);
 
-		jpaUserDao.save(jpaUserMapper.toEntity(user));
-		return user;
+		try {
+			jpaUserDao.save(jpaUserMapper.toEntity(user));
+			return user;
+		} catch (DataAccessException e) {
+			throw new KnowyDataAccessException("Error accessing data from database", e);
+		}
 	}
 
 	@Override
-	public Optional<User> findByNickname(String nickname) {
+	public Optional<User> findByNickname(String nickname) throws KnowyDataAccessException {
 		JpaUserMapper jpaUserMapper = new JpaUserMapper(jpaCategoryDao, jpaGenderDao);
 
-		return jpaUserDao.findByNickname(nickname).map(jpaUserMapper::toDomain);
+		try {
+			Optional<PublicUserEntity> publicUser = jpaUserDao.findByNickname(nickname);
+
+			if (publicUser.isEmpty()) {
+				return Optional.empty();
+			}
+
+			User user = jpaUserMapper.toDomain(publicUser.get());
+			return Optional.of(user);
+
+		} catch (KnowyInvalidUserGenderException e) {
+			throw new KnowyInconsistentDataException("Error mapping PublicUserEntity to User", e);
+
+		} catch (DataAccessException e) {
+			throw new KnowyDataAccessException("Error accessing data from database", e);
+		}
 	}
 
 	@Override
-	public boolean existsByNickname(String nickname) {
-		return jpaUserDao.existsByNickname(nickname);
+	public boolean existsByNickname(String nickname) throws KnowyDataAccessException {
+		try {
+			return jpaUserDao.existsByNickname(nickname);
+		} catch (DataAccessException e) {
+			throw new KnowyDataAccessException("Error accessing data from database", e);
+		}
 	}
 }
