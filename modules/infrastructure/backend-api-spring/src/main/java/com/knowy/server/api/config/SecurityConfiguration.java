@@ -80,6 +80,7 @@ public class SecurityConfiguration {
 			)
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/auth/**").permitAll()
+				.requestMatchers("/news/**").permitAll()
 				.anyRequest().authenticated()
 			)
 			.authenticationProvider(authenticationProvider)

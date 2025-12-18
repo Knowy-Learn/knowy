@@ -74,8 +74,7 @@ public class GlobalErrorHandlerController {
 	}
 
 	/**
-	 * Handles KnowyConflictRuntimeException and returns a 409 Conflict
-	 * response with error details.
+	 * Handles KnowyConflictRuntimeException and returns a 409 Conflict response with error details.
 	 *
 	 * @param ex      the thrown exception
 	 * @param request the HTTP request that caused the exception
@@ -92,8 +91,7 @@ public class GlobalErrorHandlerController {
 	}
 
 	/**
-	 * Handles KnowyUnauthorizedException and returns a 401 Unauthorized
-	 * response with error details.
+	 * Handles KnowyUnauthorizedException and returns a 401 Unauthorized response with error details.
 	 *
 	 * @param ex      the thrown exception
 	 * @param request the HTTP request that caused the exception
@@ -109,7 +107,7 @@ public class GlobalErrorHandlerController {
 		);
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-			.body(new KnowyErrorReportDto(ex.getExceptionUUID(), ex.getMessage()));
+			.body(new KnowyErrorReportDto(ex.getExceptionUUID(), "Unauthorized"));
 	}
 
 	/**

@@ -24,6 +24,7 @@ paths:
                 - Authentication
             summary: Authenticate a user with email and password
             description: Returns a JWT token if the credentials are valid.
+            security: []
             requestBody:
                 required: true
                 content:
@@ -64,6 +65,7 @@ paths:
                 - Authentication
             summary: Register a new user
             description: Create a new user account with email, username, and password. Returns an authentication token on success.
+            security: []
             requestBody:
                 required: true
                 content:
@@ -81,12 +83,7 @@ paths:
                                     type: string
                                     example: nickNameExample
                                 gender:
-                                    type: string
-                                    enum:
-                                        - male
-                                        - female
-                                        - other
-                                    example: female
+                                    $ref: '#/components/schemas/GenderEnum'
                                 email:
                                     type: string
                                     format: email
@@ -131,6 +128,7 @@ paths:
                 - Authentication
             summary: Validate access token
             description: Endpoint to validate an access token. Returns 200 if the token is valid.
+            security: []
             requestBody:
                 required: true
                 content:
@@ -157,6 +155,7 @@ paths:
             tags:
                 - News
             summary: Get the latest news
+            security: []
             parameters:
                 -   name: Accept-Language
                     in: header
@@ -249,12 +248,7 @@ paths:
                                         type: string
                                         example: knowyName
                                     gender:
-                                        type: string
-                                        enum:
-                                            - male
-                                            - female
-                                            - other
-                                        example: other
+                                        $ref: '#/components/schemas/GenderEnum'
                                     totalCourses:
                                         type: integer
                                         example: 12
@@ -266,7 +260,23 @@ paths:
                     $ref: '#/components/responses/UnauthorizedError'
 
 components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+
     schemas:
+        GenderEnum:
+            type: string
+            enum:
+                - male
+                - female
+                - other
+                - unknown
+            description: User gender
+            example: other
+
         NewsDto:
             type: object
             required:
