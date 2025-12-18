@@ -54,6 +54,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>xml-data-loader</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.knowy</groupId>
+			<artifactId>xml-knowy-schemes</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -93,7 +101,7 @@
 			<version>6.4.12</version>
 			<scope>compile</scope>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

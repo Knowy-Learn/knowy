@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<courses xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:noNamespaceSchemaLocation="../../../../../xml-knowy-schemes/src/main/resources/schemas/course.xsd">
+    <course>
+        <title>Java Básico</title>
+        <description>Curso introductorio para aprender los fundamentos de Java.</description>
+        <image>java_basico.png</image>
+        <author>Juan Pérez</author>
+        <categories>
+            <category>Programación</category>
+            <category>Java</category>
+        </categories>
+        <lessons>
+            <lesson>
+                <title>Introducción a Java</title>
+                <explanation>En esta lección se presenta la historia y usos del lenguaje Java.</explanation>
+                <documentations>
+                    <documentation>
+                        <title>Documentación Oficial de Java</title>
+                        <link>https://docs.oracle.com/javase/tutorial/</link>
+                    </documentation>
+                </documentations>
+                <exercises>
+                    <exercise>
+                        <statement>¿Quién desarrolló inicialmente Java?</statement>
+                        <options>
+                            <option>
+                                <value>Microsoft</value>
+                                <isValid>false</isValid>
+                            </option>
+                            <option>
+                                <value>Sun Microsystems</value>
+                                <isValid>true</isValid>
+                            </option>
+                            <option>
+                                <value>IBM</value>
+                                <isValid>false</isValid>
+                            </option>
+                        </options>
+                    </exercise>
+                </exercises>
+            </lesson>
+            <lesson>
+                <title>Tipos de Datos</title>
+                <explanation>Se explican los tipos primitivos en Java y cómo se declaran.</explanation>
+                <exercises>
+                    <exercise>
+                        <statement>¿Cuál de los siguientes es un tipo primitivo en Java?</statement>
+                        <options>
+                            <option>
+                                <value>int</value>
+                                <isValid>true</isValid>
+                            </option>
+                            <option>
+                                <value>String</value>
+                                <isValid>false</isValid>
+                            </option>
+                            <option>
+                                <value>boolean</value>
+                                <isValid>true</isValid>
+                            </option>
+                        </options>
+                    </exercise>
+                </exercises>
+            </lesson>
+        </lessons>
+    </course>
+    <course>
+        <title>Java Avanzado</title>
+        <description>Curso para profundizar en conceptos avanzados de Java.</description>
+        <image>java_avanzado.png</image>
+        <author>María López</author>
+        <categories>
+            <category>Programación</category>
+            <category>Java</category>
+            <category>Avanzado</category>
+        </categories>
+        <lessons>
+            <lesson>
+                <title>Programación Genérica</title>
+                <explanation>Se introducen los conceptos de Generics en Java.</explanation>
+                <documentations>
+                    <documentation>
+                        <title>Tutorial sobre Generics</title>
+                        <link>https://docs.oracle.com/javase/tutorial/java/generics/</link>
+                    </documentation>
+                </documentations>
+                <exercises>
+                    <exercise>
+                        <statement>¿Qué ventaja principal ofrecen los Generics?</statement>
+                        <options>
+                            <option>
+                                <value>Mayor rendimiento</value>
+                                <isValid>false</isValid>
+                            </option>
+                            <option>
+                                <value>Seguridad de tipos en tiempo de compilación</value>
+                                <isValid>true</isValid>
+                            </option>
+                            <option>
+                                <value>Compatibilidad con C++</value>
+                                <isValid>false</isValid>
+                            </option>
+                        </options>
+                    </exercise>
+                </exercises>
+            </lesson>
+            <lesson>
+                <title>Programación Concurrente</title>
+                <explanation>Se abordan hilos, concurrencia y manejo de sincronización en Java.</explanation>
+                <exercises>
+                    <exercise>
+                        <statement>¿Qué palabra clave se utiliza para sincronizar un método en Java?</statement>
+                        <options>
+                            <option>
+                                <value>lock</value>
+                                <isValid>false</isValid>
+                            </option>
+                            <option>
+                                <value>synchronized</value>
+                                <isValid>true</isValid>
+                            </option>
+                            <option>
+                                <value>threadsafe</value>
+                                <isValid>false</isValid>
+                            </option>
+                        </options>
+                    </exercise>
+                </exercises>
+            </lesson>
+        </lessons>
+    </course>
+
+</courses>
