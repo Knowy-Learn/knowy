@@ -1,12 +1,12 @@
 package com.knowy.core.user.util;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
-import com.knowy.core.user.exception.security.KnowyTokenException;
-import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
-import com.knowy.core.user.port.KnowyTokenTools;
-import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.UserPrivate;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.port.KnowyTokenTools;
+import com.knowy.core.user.port.UserPrivateRepository;
 
 import java.util.Objects;
 
@@ -39,6 +39,7 @@ public class TokenUserPrivateTool {
 	 * @return The {@link UserPrivate} entity associated with the token.
 	 * @throws NullPointerException       If the token is null.
 	 * @throws KnowyTokenException        If the token is invalid or tampered.
+	 * @throws KnowyDataAccessException   If an error occurs during the persistence or retrieval of data.
 	 * @throws KnowyUserNotFoundException If no user is found for the token's user ID.
 	 */
 	public UserPrivate verifyPasswordToken(String token) throws KnowyTokenException, KnowyDataAccessException {
@@ -76,8 +77,9 @@ public class TokenUserPrivateTool {
 	 * @param email               the user's email address
 	 * @param tokenExpirationTime the token expiration time in milliseconds
 	 * @return the encoded password reset token
-	 * @throws KnowyUserNotFoundException if no user is found with the given email
 	 * @throws KnowyTokenException        if token creation fails
+	 * @throws KnowyDataAccessException   If an error occurs during the persistence or retrieval of data.
+	 * @throws KnowyUserNotFoundException if no user is found with the given email
 	 */
 	public String createUserTokenByEmail(Email email, long tokenExpirationTime)
 		throws KnowyDataAccessException, KnowyTokenException {
@@ -93,8 +95,9 @@ public class TokenUserPrivateTool {
 	 *
 	 * @param email the user's email address
 	 * @return the encoded password reset token
-	 * @throws KnowyUserNotFoundException if no user is found with the given email
 	 * @throws KnowyTokenException        if token creation fails
+	 * @throws KnowyDataAccessException   If an error occurs during the persistence or retrieval of data.
+	 * @throws KnowyUserNotFoundException if no user is found with the given email
 	 */
 	public String createUserTokenByEmail(Email email) throws KnowyDataAccessException, KnowyTokenException {
 		return createUserTokenByEmail(email, 600_000);
