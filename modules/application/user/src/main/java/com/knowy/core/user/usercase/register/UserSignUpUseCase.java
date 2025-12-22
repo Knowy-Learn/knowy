@@ -1,6 +1,7 @@
 package com.knowy.core.user.usercase.register;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.Password;
 import com.knowy.core.user.domain.UserPrivate;
@@ -54,7 +55,7 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 	 * @param userSingUpCommand Command containing the user registration data such as nickname, email, password, and
 	 *                          gender.
 	 * @return The newly created and persisted {@link UserPrivate} entity.
-	 * @throws KnowyInvalidUserException          If the user data is invalid.
+	 * @throws KnowyInvalidDataException          If the user data is invalid.
 	 * @throws KnowyNicknameAlreadyTakenException If the nickname is already in use.
 	 * @throws KnowyEmailAlreadyTakenException    If the email is already registered.
 	 * @throws KnowyPasswordFormatException       If the password format is invalid.
@@ -64,7 +65,7 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 	 */
 	public UserPrivate execute(UserSingUpCommand userSingUpCommand)
 		throws KnowyDataAccessException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException,
-		KnowyInvalidUserException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
+		KnowyInvalidDataException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
 
 		assertUserNickname(userSingUpCommand.nickname());
 		validateEmail(userSingUpCommand.email());
@@ -85,7 +86,7 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 		return userPrivateRepository.save(userPrivate);
 	}
 
-	private void assertUserNickname(String nickname) throws KnowyInvalidUserException, KnowyNicknameAlreadyTakenException, KnowyDataAccessException {
+	private void assertUserNickname(String nickname) throws KnowyInvalidDataException, KnowyNicknameAlreadyTakenException, KnowyDataAccessException {
 		if (StringUtils.isBlank(nickname)) {
 			throw new KnowyInvalidUserNicknameException("Invalid nickname");
 		}

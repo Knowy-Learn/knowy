@@ -3,7 +3,7 @@ package com.knowy.core.usecase.importer;
 import com.knowy.core.Importer;
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
-import com.knowy.core.exception.validation.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.DataLoader;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ class CoursesImporterUseCaseTest {
 	private CoursesImporterUseCase coursesImporterUseCase;
 
 	@Test
-	void given_validCourseData_when_execute_then_mapsToCourseData() throws KnowyInconsistentDataException, IOException, KnowyValidationException {
+	void given_validCourseData_when_execute_then_mapsToCourseData() throws KnowyInconsistentDataException, IOException, KnowyInvalidDataException {
 		Map<String, Object> mockMap = getMockedMap();
 		Course courseMock = Mockito.mock(Course.class);
 
@@ -140,7 +140,7 @@ class CoursesImporterUseCaseTest {
 	}
 
 	@Test
-	void given_courseDataWithInvalidTags_when_execute_then_throwsKnowySourceParsingException() throws IOException, KnowyValidationException {
+	void given_courseDataWithInvalidTags_when_execute_then_throwsKnowySourceParsingException() throws IOException, KnowyInvalidDataException {
 		Map<String, Object> mockMap = getMockedInvalidMap();
 
 		Mockito.when(dataLoader.loadData(Mockito.any(InputStream.class), Mockito.any(URL.class)))

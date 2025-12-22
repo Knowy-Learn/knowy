@@ -5,7 +5,7 @@ import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
-import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
@@ -111,7 +111,7 @@ public class AuthenticationController implements AuthApi {
 		} catch (KnowyPasswordFormatException e) {
 			throw new KnowyBadRequestRuntimeException("The password does not meet the required format.", e);
 
-		} catch (KnowyInvalidUserException e) {
+		} catch (KnowyInvalidDataException e) {
 			throw new KnowyBadRequestRuntimeException("The user data provided is incomplete or invalid.", e);
 
 		} catch (KnowyInvalidUserGenderException e) {

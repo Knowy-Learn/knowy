@@ -1,7 +1,7 @@
 package com.knowy.server;
 
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
-import com.knowy.core.exception.validation.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.DataLoader;
 import com.knowy.core.usecase.importer.CoursesImporterUseCase;
@@ -39,12 +39,11 @@ public class KnowyDataLoader {
 	 * <p>
 	 * This method is triggered by the {@link ApplicationReadyEvent}.
 	 *
-	 * @throws KnowyValidationException       if the XML data does not conform to the schema
 	 * @throws KnowyInconsistentDataException if the data is inconsistent with expected rules
 	 * @throws IOException                    if an I/O error occurs while reading the files
 	 */
 	@EventListener(ApplicationReadyEvent.class)
-	public void loadCourses() throws KnowyValidationException, KnowyInconsistentDataException, IOException {
+	public void loadCourses() throws KnowyInconsistentDataException, IOException, KnowyInvalidDataException {
 		var coursesImporter = new CoursesImporterUseCase(dataLoader, courseRepository);
 
 		coursesImporter.execute(

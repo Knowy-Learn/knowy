@@ -1,6 +1,8 @@
 package com.knowy.core.user.exception.validation;
 
-public class KnowyUserEmailFormatException extends KnowyInvalidUserException {
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
+
+public class KnowyUserEmailFormatException extends KnowyInvalidDataException {
 	public KnowyUserEmailFormatException(String message) {
 		super(message);
 	}

@@ -2,7 +2,7 @@ package com.knowy;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.knowy.core.exception.validation.KnowyIllegalArgumentRuntimeException;
-import com.knowy.core.exception.validation.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.port.DataLoader;
 
 import java.io.*;
@@ -34,12 +34,11 @@ public class XmlDataLoader implements DataLoader {
 	 * @param inputStream the input stream containing the XML data
 	 * @param schema      the URL of the XML schema for validation
 	 * @return a map containing the XML data as key-value pairs
-	 * @throws KnowyValidationException if the XML does not conform to the schema
-	 * @throws IOException              if an I/O error occurs while reading the input stream
+	 * @throws KnowyInvalidDataException if the XML does not conform to the schema
+	 * @throws IOException               if an I/O error occurs while reading the input stream
 	 */
 	@Override
-	public Map<String, Object> loadData(InputStream inputStream, URL schema) throws KnowyValidationException,
-		IOException {
+	public Map<String, Object> loadData(InputStream inputStream, URL schema) throws KnowyInvalidDataException, IOException {
 		try (InputStream markedStream = mark(inputStream)) {
 			xmlValidation.validate(markedStream, schema);
 			markedStream.reset();

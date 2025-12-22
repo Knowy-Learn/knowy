@@ -1,6 +1,6 @@
 package com.knowy;
 
-import com.knowy.core.exception.validation.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
@@ -28,16 +28,16 @@ class XmlValidation {
 	 *
 	 * @param xml the input stream containing the XML data
 	 * @param xsd the URL of the XSD schema for validation
-	 * @throws KnowyValidationException if the XML does not comply with the schema
-	 * @throws IOException              if an I/O error occurs while reading the XML or schema
+	 * @throws KnowyInvalidDataException if the XML does not comply with the schema
+	 * @throws IOException               if an I/O error occurs while reading the XML or schema
 	 */
-	public void validate(InputStream xml, URL xsd) throws KnowyValidationException, IOException {
+	public void validate(InputStream xml, URL xsd) throws KnowyInvalidDataException, IOException {
 		try {
 			Schema schema = createSchema(xsd);
 			Validator validator = schema.newValidator();
 			validator.validate(new StreamSource(xml));
 		} catch (SAXException e) {
-			throw new KnowyValidationException("The XML does not comply with the XSD: " + e.getMessage(), e);
+			throw new KnowyInvalidDataException("The XML does not comply with the XSD: " + e.getMessage(), e);
 		}
 	}
 

@@ -1,7 +1,7 @@
 package com.knowy.core;
 
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
-import com.knowy.core.exception.validation.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,18 +20,17 @@ public interface Importer<T> {
 	 * @param inputStream the input stream containing the data to be imported
 	 * @param schema      the URL of the schema used for validation
 	 * @return the imported object of type {@code T}
-	 * @throws KnowyImporterParseException    if the input cannot be parsed or validated
 	 * @throws KnowyInconsistentDataException if the data is inconsistent with expected rules
 	 * @throws IOException                    if an I/O error occurs while reading the input stream
-	 * @throws KnowyValidationException       if the data fails validation against the schema
+	 * @throws KnowyInvalidDataException      if the data fails validation against the schema
 	 */
 	T execute(InputStream inputStream, URL schema)
-		throws KnowyInconsistentDataException, IOException, KnowyValidationException;
+		throws KnowyInconsistentDataException, IOException, KnowyInvalidDataException;
 
 	/**
 	 * Exception thrown when an error occurs while parsing or validating input data.
 	 */
-	class KnowyImporterParseException extends KnowyValidationException {
+	class KnowyImporterParseException extends KnowyInvalidDataException {
 
 		public KnowyImporterParseException(String message) {
 			super(message);

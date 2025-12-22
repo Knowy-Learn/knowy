@@ -12,7 +12,7 @@ import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
-import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
@@ -118,7 +118,7 @@ public class UserPrivateService {
 	 * @param command The {@link UserSingUpCommand} containing the user's registration details, including nickname,
 	 *                email, password, and gender.
 	 * @return The created {@link UserPrivate} entity representing the newly registered user.
-	 * @throws KnowyInvalidUserException          if the nickname or email format is invalid.
+	 * @throws KnowyInvalidDataException          if the nickname or email format is invalid.
 	 * @throws KnowyImageNotFoundException        if the default profile image cannot be found in the repository.
 	 * @throws KnowyPasswordFormatException       if the password does not meet the required security criteria.
 	 * @throws KnowyEmailAlreadyTakenException    if the provided email is already registered in the system.
@@ -127,7 +127,7 @@ public class UserPrivateService {
 	 * @throws KnowyDataAccessException           if an error occurs during the persistence or retrieval of data.
 	 */
 	public UserPrivate registerNewUser(UserSingUpCommand command)
-		throws KnowyDataAccessException, KnowyInvalidUserException, KnowyImageNotFoundException, KnowyPasswordFormatException,
+		throws KnowyDataAccessException, KnowyInvalidDataException, KnowyImageNotFoundException, KnowyPasswordFormatException,
 		KnowyEmailAlreadyTakenException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
 		return userSignUpUseCase.execute(command);
 	}

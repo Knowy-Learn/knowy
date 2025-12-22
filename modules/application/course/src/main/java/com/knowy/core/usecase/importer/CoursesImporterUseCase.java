@@ -4,7 +4,7 @@ import com.knowy.core.Importer;
 import com.knowy.core.ImporterHelper;
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
-import com.knowy.core.exception.validation.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.DataLoader;
 
@@ -48,7 +48,7 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 	 */
 	@Override
 	public List<Course> execute(InputStream inputStream, URL schema)
-		throws KnowyValidationException, KnowyInconsistentDataException, IOException {
+		throws KnowyInconsistentDataException, IOException, KnowyInvalidDataException {
 
 		Map<String, Object> courses = dataLoader.loadData(inputStream, schema);
 

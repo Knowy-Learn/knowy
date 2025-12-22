@@ -8,10 +8,9 @@ import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
-import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
-import com.knowy.core.user.exception.validation.KnowyInvalidUserException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.usercase.register.UserSingUpCommand;
@@ -110,7 +109,7 @@ public class AccessController {
 
 			userSecurityDetailsHelper.autoLoginUserByEmail(userPrivate.email().value());
 			return "redirect:/home";
-		} catch (KnowyInvalidUserException | KnowyPasswordFormatException | KnowyEmailAlreadyTakenException |
+		} catch (KnowyInvalidDataException | KnowyPasswordFormatException | KnowyEmailAlreadyTakenException |
 				 KnowyInvalidUserGenderException | KnowyNicknameAlreadyTakenException | KnowyDataAccessException e
 		) {
 			redirectAttributes.addFlashAttribute("user", user);

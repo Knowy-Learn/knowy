@@ -1,6 +1,8 @@
 package com.knowy.core.user.exception.validation;
 
-public class KnowyInvalidUserNicknameException extends KnowyInvalidUserException {
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
+
+public class KnowyInvalidUserNicknameException extends KnowyInvalidDataException {
 	public KnowyInvalidUserNicknameException(String message) {
 		super(message);
 	}

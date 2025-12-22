@@ -1,6 +1,6 @@
 package com.knowy;
 
-import com.knowy.core.exception.validation.KnowyValidationException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -49,12 +49,12 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void given_invalidXmlFile_when_loadData_then_throwKnowyValidationException() {
+	void given_invalidXmlFile_when_loadData_then_throwKnowyInvalidDataException() {
 		InputStream xml = ClassLoader.getSystemClassLoader().getResourceAsStream("invaliddata.xml");
 		URL xsd = ClassLoader.getSystemClassLoader().getResource("data.xsd");
 
 		assertThrows(
-			KnowyValidationException.class,
+			KnowyInvalidDataException.class,
 			() -> xmlDataLoader.loadData(Objects.requireNonNull(xml), Objects.requireNonNull(xsd))
 		);
 	}
