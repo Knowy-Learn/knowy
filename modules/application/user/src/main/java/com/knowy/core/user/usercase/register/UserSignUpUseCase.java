@@ -8,12 +8,15 @@ import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
-import com.knowy.core.user.exception.validation.*;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
+import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
+import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.port.ProfileImageRepository;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.core.user.port.UserRepository;
-import com.knowy.core.user.usercase.KnowyUseCase;
+import com.knowy.core.util.KnowyUseCase;
 import com.knowy.core.util.StringUtils;
 
 import java.util.HashSet;
@@ -55,17 +58,17 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 	 * @param userSingUpCommand Command containing the user registration data such as nickname, email, password, and
 	 *                          gender.
 	 * @return The newly created and persisted {@link UserPrivate} entity.
-	 * @throws KnowyInvalidDataException          If the user data is invalid.
 	 * @throws KnowyNicknameAlreadyTakenException If the nickname is already in use.
 	 * @throws KnowyEmailAlreadyTakenException    If the email is already registered.
 	 * @throws KnowyPasswordFormatException       If the password format is invalid.
+	 * @throws KnowyInvalidDataException          If the user data is invalid.
 	 * @throws KnowyInvalidUserGenderException    If the provided gender is invalid.
 	 * @throws KnowyDataAccessException           If an error occurs during the persistence or retrieval of data.
 	 * @throws KnowyImageNotFoundException        If the default profile image cannot be found.
 	 */
 	public UserPrivate execute(UserSingUpCommand userSingUpCommand)
 		throws KnowyDataAccessException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException,
-		KnowyInvalidDataException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
+		KnowyInvalidDataException, KnowyNicknameAlreadyTakenException {
 
 		assertUserNickname(userSingUpCommand.nickname());
 		validateEmail(userSingUpCommand.email());

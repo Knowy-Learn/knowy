@@ -2,7 +2,7 @@ package com.knowy.server.api.usecase.auth;
 
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.port.KnowyTokenTools;
-import com.knowy.core.user.usercase.KnowyUseCase;
+import com.knowy.core.util.KnowyUseCase;
 import com.knowy.server.api.dto.AuthLoginPost200Response;
 import com.knowy.server.api.dto.AuthLoginPostRequest;
 import com.knowy.security.model.UserPrivateSecurityDetails;

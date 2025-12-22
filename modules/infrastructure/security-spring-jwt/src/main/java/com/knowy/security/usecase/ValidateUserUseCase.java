@@ -7,7 +7,7 @@ import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.port.KnowyTokenTools;
 import com.knowy.core.user.port.UserPrivateRepository;
-import com.knowy.core.user.usercase.KnowyUseCase;
+import com.knowy.core.util.KnowyUseCase;
 import com.knowy.core.user.util.PasswordResetInfo;
 import com.knowy.security.model.UserSecurityDto;
 

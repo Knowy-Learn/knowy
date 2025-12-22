@@ -1,12 +1,11 @@
 package com.knowy.server.api.controller;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
-import com.knowy.core.exception.validation.KnowyInvalidDataException;
-import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.exception.validation.KnowyUserEmailFormatException;
 import com.knowy.core.user.port.*;
@@ -113,9 +112,6 @@ public class AuthenticationController implements AuthApi {
 
 		} catch (KnowyInvalidDataException e) {
 			throw new KnowyBadRequestRuntimeException("The user data provided is incomplete or invalid.", e);
-
-		} catch (KnowyInvalidUserGenderException e) {
-			throw new KnowyInternalServerErrorException("An error occurred while saving user gender", e);
 
 		} catch (KnowyEmailAlreadyTakenException e) {
 			throw new KnowyConflictRuntimeException("The email is already associated with an existing account.", e);

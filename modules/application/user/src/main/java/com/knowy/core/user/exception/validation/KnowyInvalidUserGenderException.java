@@ -1,6 +1,8 @@
 package com.knowy.core.user.exception.validation;
 
-public class KnowyInvalidUserGenderException extends Exception {
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
+
+public class KnowyInvalidUserGenderException extends KnowyInvalidDataException {
 	public KnowyInvalidUserGenderException(String message) {
 		super(message);
 	}

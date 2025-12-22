@@ -4,7 +4,7 @@ import com.knowy.core.NewsService;
 import com.knowy.core.domain.News;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.port.NewsRepository;
-import com.knowy.core.user.usercase.KnowyUseCase;
+import com.knowy.core.util.KnowyUseCase;
 import com.knowy.server.api.dto.NewsDto;
 
 import java.util.List;

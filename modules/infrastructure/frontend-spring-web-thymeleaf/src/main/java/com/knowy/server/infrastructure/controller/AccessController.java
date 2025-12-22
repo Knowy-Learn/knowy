@@ -2,16 +2,14 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.mail.KnowyMailDispatchException;
+import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.user.UserPrivateService;
 import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.exception.conflict.KnowyEmailAlreadyTakenException;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
-import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
 import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
-import com.knowy.core.exception.validation.KnowyInvalidDataException;
-import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.usercase.register.UserSingUpCommand;
 import com.knowy.core.user.usercase.update.password.UserUpdatePasswordCommand;
@@ -98,7 +96,7 @@ public class AccessController {
 	public String processRegisterForm(
 		@ModelAttribute UserRegisterFormDto user,
 		RedirectAttributes redirectAttributes
-	) throws KnowyImageNotFoundException {
+	) {
 		try {
 			UserPrivate userPrivate = userPrivateService.registerNewUser(new UserSingUpCommand(
 					user.getNickname(),
@@ -110,7 +108,7 @@ public class AccessController {
 			userSecurityDetailsHelper.autoLoginUserByEmail(userPrivate.email().value());
 			return "redirect:/home";
 		} catch (KnowyInvalidDataException | KnowyPasswordFormatException | KnowyEmailAlreadyTakenException |
-				 KnowyInvalidUserGenderException | KnowyNicknameAlreadyTakenException | KnowyDataAccessException e
+				 KnowyNicknameAlreadyTakenException | KnowyDataAccessException e
 		) {
 			redirectAttributes.addFlashAttribute("user", user);
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, e.getMessage());

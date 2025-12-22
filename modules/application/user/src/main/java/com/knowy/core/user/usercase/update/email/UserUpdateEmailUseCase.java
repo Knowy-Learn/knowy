@@ -7,7 +7,7 @@ import com.knowy.core.user.exception.conflict.KnowyUnchangedEmailException;
 import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.port.UserPrivateRepository;
-import com.knowy.core.user.usercase.KnowyUseCase;
+import com.knowy.core.util.KnowyUseCase;
 import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.UserPrivate;
 

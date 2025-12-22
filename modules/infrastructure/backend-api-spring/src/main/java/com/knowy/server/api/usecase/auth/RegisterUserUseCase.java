@@ -13,7 +13,7 @@ import com.knowy.core.exception.validation.KnowyInvalidDataException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserGenderException;
 import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.port.*;
-import com.knowy.core.user.usercase.KnowyUseCase;
+import com.knowy.core.util.KnowyUseCase;
 import com.knowy.core.user.usercase.register.UserSingUpCommand;
 import com.knowy.security.model.UserSecurityDto;
 import com.knowy.server.api.dto.AuthRegisterPost201Response;
