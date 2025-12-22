@@ -59,10 +59,11 @@ public class UserSignUpUseCase implements KnowyUseCase<UserSingUpCommand, UserPr
 	 * @throws KnowyEmailAlreadyTakenException    If the email is already registered.
 	 * @throws KnowyPasswordFormatException       If the password format is invalid.
 	 * @throws KnowyInvalidUserGenderException    If the provided gender is invalid.
+	 * @throws KnowyDataAccessException           If an error occurs during the persistence or retrieval of data.
 	 * @throws KnowyImageNotFoundException        If the default profile image cannot be found.
 	 */
 	public UserPrivate execute(UserSingUpCommand userSingUpCommand)
-		throws KnowyDataAccessException, KnowyImageNotFoundException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException,
+		throws KnowyDataAccessException, KnowyPasswordFormatException, KnowyEmailAlreadyTakenException,
 		KnowyInvalidUserException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserGenderException {
 
 		assertUserNickname(userSingUpCommand.nickname());
