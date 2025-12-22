@@ -1,11 +1,11 @@
 package com.knowy.core.user.usercase.manage;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
-import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.domain.UserPrivate;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
 import com.knowy.core.user.port.UserPrivateRepository;
 import com.knowy.core.user.util.TokenUserPrivateTool;
-import com.knowy.core.user.domain.UserPrivate;
 
 /**
  * Use case responsible for reactivating a deactivated user account.
@@ -36,6 +36,7 @@ public class ReactivateAccountUseCase {
 	 *
 	 * @param token The recovery token used to verify the user identity.
 	 * @throws KnowyTokenException        If the token is invalid or expired.
+	 * @throws KnowyDataAccessException   If an error occurs during the persistence or retrieval of data.
 	 * @throws KnowyUserNotFoundException If no user is associated with the token.
 	 */
 	public void execute(String token) throws KnowyTokenException, KnowyDataAccessException {

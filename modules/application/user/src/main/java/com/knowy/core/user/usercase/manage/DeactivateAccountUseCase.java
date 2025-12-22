@@ -2,17 +2,17 @@ package com.knowy.core.user.usercase.manage;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.mail.KnowyMailDispatchException;
-import com.knowy.core.port.ExternalNotificationDispatcher.ExternalNotification;
-import com.knowy.core.user.exception.security.KnowyTokenException;
-import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
 import com.knowy.core.port.ExternalNotificationDispatcher;
-import com.knowy.core.user.port.KnowyPasswordEncoder;
-import com.knowy.core.user.port.UserPrivateRepository;
-import com.knowy.core.user.util.TokenUserPrivateTool;
+import com.knowy.core.port.ExternalNotificationDispatcher.ExternalNotification;
 import com.knowy.core.user.domain.Email;
 import com.knowy.core.user.domain.Password;
 import com.knowy.core.user.domain.UserPrivate;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.exception.security.KnowyWrongPasswordException;
+import com.knowy.core.user.port.KnowyPasswordEncoder;
+import com.knowy.core.user.port.UserPrivateRepository;
+import com.knowy.core.user.util.TokenUserPrivateTool;
 
 /**
  * Use case responsible for deactivating a user's account.
@@ -31,10 +31,10 @@ public class DeactivateAccountUseCase {
 	/**
 	 * Constructs a new {@code DeactivateAccountUseCase} with the required dependencies.
 	 *
-	 * @param tokenUserPrivateTool  Utility for generating and verifying user tokens.
-	 * @param externalNotificationDispatcher  Email client for sending recovery messages.
-	 * @param knowyPasswordEncoder  Adapter for verifying user passwords.
-	 * @param userPrivateRepository Repository for accessing and persisting private user data.
+	 * @param tokenUserPrivateTool           Utility for generating and verifying user tokens.
+	 * @param externalNotificationDispatcher Email client for sending recovery messages.
+	 * @param knowyPasswordEncoder           Adapter for verifying user passwords.
+	 * @param userPrivateRepository          Repository for accessing and persisting private user data.
 	 */
 	public DeactivateAccountUseCase(
 		TokenUserPrivateTool tokenUserPrivateTool,
@@ -56,10 +56,10 @@ public class DeactivateAccountUseCase {
 	 *
 	 * @param command Command containing the email, password, confirmation password, and recovery base URL.
 	 * @throws KnowyTokenException         If there is an error generating the recovery token.
-	 * @throws KnowyUserNotFoundException  If no user exists with the provided email.
 	 * @throws KnowyMailDispatchException  If the recovery email could not be sent.
 	 * @throws KnowyWrongPasswordException If the provided password is incorrect or does not match the confirmation
-	 *                                     password.
+	 * @throws KnowyDataAccessException    If an error occurs during the persistence or retrieval of data.
+	 * @throws KnowyUserNotFoundException  If no user exists with the provided email. password.
 	 */
 	public void execute(DeactivateAccountCommand command)
 		throws KnowyTokenException, KnowyDataAccessException, KnowyMailDispatchException, KnowyWrongPasswordException {

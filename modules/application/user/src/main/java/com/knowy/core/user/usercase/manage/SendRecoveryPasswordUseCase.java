@@ -2,12 +2,12 @@ package com.knowy.core.user.usercase.manage;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.mail.KnowyMailDispatchException;
-import com.knowy.core.user.exception.security.KnowyTokenException;
-import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.port.ExternalNotificationDispatcher;
 import com.knowy.core.port.ExternalNotificationDispatcher.ExternalNotification;
-import com.knowy.core.user.util.TokenUserPrivateTool;
 import com.knowy.core.user.domain.Email;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.security.KnowyTokenException;
+import com.knowy.core.user.util.TokenUserPrivateTool;
 
 /**
  * Use case responsible for initiating the password recovery process.
@@ -23,7 +23,7 @@ public class SendRecoveryPasswordUseCase {
 	/**
 	 * Constructs a new {@code SendRecoveryPasswordUseCase} with the specified dependencies.
 	 *
-	 * @param tokenUserPrivateTool Utility for generating and verifying user tokens.
+	 * @param tokenUserPrivateTool           Utility for generating and verifying user tokens.
 	 * @param externalNotificationDispatcher Email client used to send recovery messages.
 	 */
 	public SendRecoveryPasswordUseCase(TokenUserPrivateTool tokenUserPrivateTool, ExternalNotificationDispatcher externalNotificationDispatcher) {
@@ -39,9 +39,10 @@ public class SendRecoveryPasswordUseCase {
 	 *
 	 * @param email           The user's email address to send the recovery link to.
 	 * @param recoveryBaseUrl The base URL used to build the recovery link.
-	 * @throws KnowyUserNotFoundException If no user exists with the provided email.
 	 * @throws KnowyTokenException        If an error occurs while generating the recovery token.
 	 * @throws KnowyMailDispatchException If the recovery email fails to send.
+	 * @throws KnowyDataAccessException   If an error occurs during the persistence or retrieval of data.
+	 * @throws KnowyUserNotFoundException If no user exists with the provided email.
 	 */
 	public void execute(Email email, String recoveryBaseUrl)
 		throws KnowyDataAccessException, KnowyTokenException, KnowyMailDispatchException {
