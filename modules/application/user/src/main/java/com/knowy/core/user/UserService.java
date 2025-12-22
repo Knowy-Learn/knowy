@@ -1,14 +1,13 @@
 package com.knowy.core.user;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
-import com.knowy.core.exception.data.KnowyInconsistentDataException;
-import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
-import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
+import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
 import com.knowy.core.user.exception.conflict.KnowyUnchangedImageException;
 import com.knowy.core.user.exception.conflict.KnowyUnchangedNicknameException;
-import com.knowy.core.port.CategoryRepository;
+import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
 import com.knowy.core.user.port.ProfileImageRepository;
 import com.knowy.core.user.port.UserRepository;
 import com.knowy.core.user.usercase.update.categories.UserUpdateCategoriesUseCase;
@@ -50,10 +49,11 @@ public class UserService {
 	 *
 	 * @param newNickname The new nickname to assign.
 	 * @param userId      The ID of the user whose nickname will be updated.
-	 * @throws KnowyUserNotFoundException         If the user with the given ID does not exist.
 	 * @throws KnowyUnchangedNicknameException    If the new nickname is the same as the current one.
 	 * @throws KnowyNicknameAlreadyTakenException If the new nickname is already in use by another user.
 	 * @throws KnowyInvalidUserNicknameException  If the nickname is blank or otherwise invalid.
+	 * @throws KnowyDataAccessException           If an error occurs during the persistence or retrieval of data.
+	 * @throws KnowyUserNotFoundException         If the user with the given ID does not exist.
 	 */
 	public void updateNickname(String newNickname, Integer userId)
 		throws KnowyDataAccessException, KnowyUnchangedNicknameException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserNicknameException {
@@ -68,9 +68,10 @@ public class UserService {
 	 *
 	 * @param newProfileImageId The ID of the new profile image to assign.
 	 * @param userId            The ID of the user whose profile image will be updated.
-	 * @throws KnowyUserNotFoundException   If no user exists with the given ID.
-	 * @throws KnowyImageNotFoundException  If no profile image exists with the given ID.
 	 * @throws KnowyUnchangedImageException If the new image is the same as the current one.
+	 * @throws KnowyDataAccessException     If an error occurs during the persistence or retrieval of data.
+	 * @throws KnowyImageNotFoundException  If no profile image exists with the given ID.
+	 * @throws KnowyUserNotFoundException   If no user exists with the given ID.
 	 */
 	public void updateProfileImage(Integer newProfileImageId, Integer userId)
 		throws KnowyUnchangedImageException, KnowyDataAccessException {
@@ -86,7 +87,7 @@ public class UserService {
 	 * @param userId     The ID of the user whose categories will be updated.
 	 * @param categories An array of category names to assign to the user. Must not be {@code null} (use an empty array
 	 *                   for no categories).
-	 * @throws KnowyInconsistentDataException If one or more of the specified categories do not exist.
+	 * @throws KnowyDataAccessException If one or more of the specified categories do not exist.
 	 */
 	public void updateCategories(Integer userId, String[] categories) throws KnowyDataAccessException {
 		userUpdateCategoriesUseCase.execute(userId, categories);
