@@ -10,8 +10,8 @@ import com.knowy.core.user.exception.validation.KnowyPasswordFormatException;
 import com.knowy.core.user.port.KnowyPasswordEncoder;
 import com.knowy.core.user.port.KnowyTokenTools;
 import com.knowy.core.user.port.UserPrivateRepository;
-import com.knowy.core.util.KnowyUseCase;
 import com.knowy.core.user.util.PasswordResetInfo;
+import com.knowy.core.util.KnowyUseCase;
 
 import java.util.Objects;
 
@@ -51,12 +51,13 @@ public class UserUpdatePasswordUseCase implements KnowyUseCase<UserUpdatePasswor
 	 * @return The updated {@link UserPrivate} entity.
 	 * @throws KnowyPasswordFormatException If the new password format is invalid.
 	 * @throws KnowyTokenException          If the password reset token is invalid or expired.
-	 * @throws KnowyUserNotFoundException   If the user referenced by the token does not exist.
 	 * @throws KnowyWrongPasswordException  If the new password and confirmation password do not match.
+	 * @throws KnowyDataAccessException     If an error occurs during the persistence or retrieval of data.
+	 * @throws KnowyUserNotFoundException   If the user referenced by the token does not exist.
 	 */
 	@Override
 	public UserPrivate execute(UserUpdatePasswordCommand command)
-		throws KnowyDataAccessException, KnowyPasswordFormatException, KnowyTokenException, KnowyUserNotFoundException, KnowyWrongPasswordException {
+		throws KnowyDataAccessException, KnowyPasswordFormatException, KnowyTokenException, KnowyWrongPasswordException {
 
 		Objects.requireNonNull(command.password(), "A password should be specified");
 		Password.assertPasswordFormatIsRight(command.password());

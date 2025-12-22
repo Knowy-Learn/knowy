@@ -39,11 +39,16 @@ public class UserUpdateCategoriesUseCase {
 
 	/**
 	 * Updates the categories assigned to a given user.
+	 * <p>
+	 * This method performs a lookup for the user, validates that all input category names exist in the database
+	 * (case-insensitive), and replaces the current user categories with the new set.
 	 *
-	 * @param userId     The ID of the user whose categories will be updated.
-	 * @param categories An array of category names to assign to the user. Must not be {@code null} (use an empty array
-	 *                   for no categories).
-	 * @throws KnowyInconsistentDataException If any provided category does not exist in the system.
+	 * @param userId     the unique identifier of the user to update.
+	 * @param categories an array of category names to assign. Must not be {@code null}.
+	 * @throws KnowyUserNotFoundException     if no user is found with the provided {@code userId}.
+	 * @throws KnowyInconsistentDataException if one or more provided category names do not exist.
+	 * @throws KnowyDataAccessException       if an error occurs during repository access.
+	 * @throws NullPointerException           if {@code categories} is {@code null}.
 	 */
 	public void execute(Integer userId, String[] categories) throws KnowyDataAccessException {
 		Objects.requireNonNull(

@@ -1,13 +1,13 @@
 package com.knowy.core.user.usercase.update.profileimage;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
-import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
-import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.conflict.KnowyUnchangedImageException;
-import com.knowy.core.user.port.ProfileImageRepository;
-import com.knowy.core.user.port.UserRepository;
 import com.knowy.core.user.domain.ProfileImage;
 import com.knowy.core.user.domain.User;
+import com.knowy.core.user.exception.conflict.KnowyUnchangedImageException;
+import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.port.ProfileImageRepository;
+import com.knowy.core.user.port.UserRepository;
 
 /**
  * Use case responsible for updating a user's profile image.
@@ -39,6 +39,7 @@ public class UserUpdateProfileImageUseCase {
 	 * @param newProfileImageId The ID of the new profile image to assign to the user.
 	 * @param userId            The ID of the user whose profile image will be updated.
 	 * @throws KnowyUnchangedImageException If the new image is the same as the current one.
+	 * @throws KnowyDataAccessException     If an error occurs during the persistence or retrieval of data.
 	 * @throws KnowyImageNotFoundException  If no profile image exists with the given ID.
 	 * @throws KnowyUserNotFoundException   If no user exists with the given ID.
 	 */

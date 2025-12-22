@@ -1,13 +1,13 @@
 package com.knowy.core.user.usercase.update.nickname;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
-import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
-import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
+import com.knowy.core.user.domain.User;
 import com.knowy.core.user.exception.conflict.KnowyNicknameAlreadyTakenException;
 import com.knowy.core.user.exception.conflict.KnowyUnchangedNicknameException;
+import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
+import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;
 import com.knowy.core.user.port.UserRepository;
 import com.knowy.core.util.StringUtils;
-import com.knowy.core.user.domain.User;
 
 /**
  * Use case responsible for updating a user's nickname.
@@ -33,6 +33,7 @@ public class UserUpdateNicknameUseCase {
 	 * @throws KnowyUnchangedNicknameException    If the new nickname is the same as the current one.
 	 * @throws KnowyNicknameAlreadyTakenException If the new nickname is already in use by another user.
 	 * @throws KnowyInvalidUserNicknameException  If the new nickname is blank or invalid.
+	 * @throws KnowyDataAccessException           If an error occurs during the persistence or retrieval of data.
 	 * @throws KnowyUserNotFoundException         If no user exists with the given ID.
 	 */
 	public void execute(String newNickname, Integer userId)
