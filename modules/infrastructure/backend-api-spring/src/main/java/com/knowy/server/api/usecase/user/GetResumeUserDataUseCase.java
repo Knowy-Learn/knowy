@@ -15,10 +15,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
+/**
+ * Use case responsible for retrieving a summarized view of the authenticated user's data.
+ * <p>
+ * This class aggregates user profile information with courses progress data calculated across all enrolled courses to
+ * provide a "resume" or dashboard-level overview.
+ */
 public class GetResumeUserDataUseCase {
 
 	private final CourseService courseService;
 
+	/**
+	 * Constructs a new {@code GetResumeUserDataUseCase} by initializing the required {@code CourseService}.
+	 *
+	 * @param courseRepository     the repository for accessing course data.
+	 * @param lessonRepository     the repository for accessing lesson data.
+	 * @param userLessonRepository the repository for tracking user-specific lesson progress.
+	 */
 	public GetResumeUserDataUseCase(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
@@ -27,19 +40,26 @@ public class GetResumeUserDataUseCase {
 		this.courseService = new CourseService(courseRepository, lessonRepository, userLessonRepository);
 	}
 
-	// TODO:
+	/**
+	 * Executes the logic to fetch and calculate the resume data for the currently authenticated user.
+	 *
+	 * @return a {@link UserResumeGet200Response} containing the username, gender, total courses, and overall average
+	 * progress.
+	 * @throws KnowyUnauthorizedException     if no authenticated user is found in the security context.
+	 * @throws KnowyInconsistentDataException if there is a mismatch or error in the retrieved progress data.
+	 */
 	public UserResumeGet200Response execute() throws KnowyInconsistentDataException {
 
 		User user = getUserByAuthentication();
 		List<GetAllCoursesWithProgressResult> values = courseService.getAllCourseProgress(user.id());
 
-		getTotalProgress(values);
+		getAverageProgress(values);
 
 		return new UserResumeGet200Response()
 			.username(user.nickname())
 			.gender(GenderEnum.fromValue(user.gender().toString().toLowerCase()))
 			.totalCourses(values.size())
-			.completedCourses((float) getTotalProgress(values));
+			.completedCourses((float) getAverageProgress(values));
 	}
 
 	private User getUserByAuthentication() {
@@ -54,7 +74,7 @@ public class GetResumeUserDataUseCase {
 		return user;
 	}
 
-	private double getTotalProgress(List<GetAllCoursesWithProgressResult> courses) {
+	private double getAverageProgress(List<GetAllCoursesWithProgressResult> courses) {
 		return courses.stream()
 			.mapToDouble(GetAllCoursesWithProgressResult::progress)
 			.average()
