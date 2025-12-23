@@ -54,9 +54,9 @@ public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailComma
 
 		UserPrivate userPrivate = getByIdOrThrow(command.userId());
 
-		validateEmailIsDifferent(command.email(), userPrivate.email().value());
+		validateEmailIsDifferent(command.email(), userPrivate.email());
 		validateEmailIsNotTaken(command.email());
-		knowyPasswordEncoder.assertHasPassword(userPrivate, command.password());
+		knowyPasswordEncoder.assertHasPassword(userPrivate, command.password().value());
 
 		UserPrivate newUserPrivate = buildUpdateUser(userPrivate, command.email());
 		return userPrivateRepository.save(newUserPrivate);
@@ -67,7 +67,7 @@ public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailComma
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with ID: " + userId));
 	}
 
-	private void validateEmailIsDifferent(String newEmail, String currentEmail) throws KnowyUnchangedEmailException {
+	private void validateEmailIsDifferent(Email newEmail, Email currentEmail) throws KnowyUnchangedEmailException {
 		if (Objects.equals(newEmail, currentEmail)) {
 			throw new KnowyUnchangedEmailException(
 				"Email must be different from the current one."
@@ -75,18 +75,18 @@ public class UserUpdateEmailUseCase implements KnowyUseCase<UserUpdateEmailComma
 		}
 	}
 
-	private void validateEmailIsNotTaken(String email) throws KnowyUserEmailFormatException, KnowyDataAccessException {
-		if (userPrivateRepository.findByEmail(email).isPresent()) {
+	private void validateEmailIsNotTaken(Email email) throws KnowyUserEmailFormatException, KnowyDataAccessException {
+		if (userPrivateRepository.findByEmail(email.value()).isPresent()) {
 			throw new KnowyUserEmailFormatException(
 				"The provided email is already associated with an existing account."
 			);
 		}
 	}
 
-	private UserPrivate buildUpdateUser(UserPrivate user, String email) {
+	private UserPrivate buildUpdateUser(UserPrivate user, Email email) {
 		return new UserPrivate(
 			user.cropToUser(),
-			new Email(email),
+			email,
 			user.password()
 		);
 	}

@@ -216,20 +216,6 @@ class UserPrivateServiceTest {
 		}
 
 		@Test
-		void given_invalidPasswordFormat_when_resetPassword_then_KnowyPasswordFormatException() {
-			UserUpdatePasswordCommand userUpdatePasswordCommand = new UserUpdatePasswordCommand(
-				"some-token",
-				"invalidPassword",
-				"invalidPassword"
-			);
-
-			assertThrows(
-				KnowyPasswordFormatException.class,
-				() -> userPrivateService.updatePassword(userUpdatePasswordCommand)
-			);
-		}
-
-		@Test
 		void given_mismatchedPasswords_when_resetPassword_then_KnowyTokenException() {
 			UserUpdatePasswordCommand userUpdatePasswordCommand = new UserUpdatePasswordCommand(
 				"some-token",
@@ -301,7 +287,7 @@ class UserPrivateServiceTest {
 			UserUpdateEmailCommand userUpdateEmailCommand = new UserUpdateEmailCommand(
 				16,
 				"new@mail.com",
-				"RAW_PASS"
+				"RAW_pass.123"
 			);
 
 			UserPrivate userPrivate = new UserPrivate(
@@ -336,7 +322,7 @@ class UserPrivateServiceTest {
 			UserUpdateEmailCommand userUpdateEmailCommand = new UserUpdateEmailCommand(
 				userId,
 				sameEmail,
-				"RAW_PASS"
+				"RAW_pass.123"
 			);
 
 			UserPrivate userPrivateResult = new UserPrivate(
@@ -365,7 +351,7 @@ class UserPrivateServiceTest {
 			UserUpdateEmailCommand userUpdateEmailCommand = new UserUpdateEmailCommand(
 				userId,
 				newMail,
-				"RAW_PASS"
+				"RAW_pass.123"
 			);
 
 
@@ -407,7 +393,7 @@ class UserPrivateServiceTest {
 			UserUpdateEmailCommand userUpdateEmailCommand = new UserUpdateEmailCommand(
 				userId,
 				newMail,
-				"RAW_PASS"
+				"RAW_pass.123"
 			);
 
 			UserPrivate userPrivate = new UserPrivate(
@@ -426,7 +412,7 @@ class UserPrivateServiceTest {
 				.thenReturn(Optional.empty());
 			Mockito.doThrow(new KnowyWrongPasswordException("Invalid password"))
 				.when(knowyPasswordEncoder)
-				.assertHasPassword(userPrivate, "RAW_PASS");
+				.assertHasPassword(userPrivate, "RAW_pass.123");
 
 			assertThrows(
 				KnowyWrongPasswordException.class,

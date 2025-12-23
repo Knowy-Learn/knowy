@@ -60,11 +60,10 @@ public class UserUpdatePasswordUseCase implements KnowyUseCase<UserUpdatePasswor
 		throws KnowyDataAccessException, KnowyPasswordFormatException, KnowyTokenException, KnowyWrongPasswordException {
 
 		Objects.requireNonNull(command.password(), "A password should be specified");
-		Password.assertPasswordFormatIsRight(command.password());
 		validateRawPasswordsMatch(command.password(), command.confirmPassword());
 
 		UserPrivate userPrivate = verifyPasswordToken(command.token());
-		String encodedPassword = knowyPasswordEncoder.encode(command.password());
+		String encodedPassword = knowyPasswordEncoder.encode(command.password().value());
 		UserPrivate newUserPrivate = new UserPrivate(
 			userPrivate.cropToUser(),
 			userPrivate.email(),
@@ -73,7 +72,7 @@ public class UserUpdatePasswordUseCase implements KnowyUseCase<UserUpdatePasswor
 		return userPrivateRepository.save(newUserPrivate);
 	}
 
-	private void validateRawPasswordsMatch(String password, String confirmPassword) throws KnowyWrongPasswordException {
+	private void validateRawPasswordsMatch(Password password, Password confirmPassword) throws KnowyWrongPasswordException {
 		if (!password.equals(confirmPassword)) {
 			throw new KnowyWrongPasswordException("Passwords do not match");
 		}
