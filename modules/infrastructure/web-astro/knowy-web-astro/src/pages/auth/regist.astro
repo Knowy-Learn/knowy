@@ -25,7 +25,7 @@ import InputField from "../../components/InputField.astro"
 
 				{/* Public fields */}
 				<div class="flex flex-col gap-4 sm:flex-row">
-					<InputField id="name" placeholder="knowy" label="Apodo / Nickname" type="text" />
+					<InputField id="nickname" placeholder="knowy" label="Apodo / Nickname" type="text" />
 
 					<div class="flex flex-col gap-1">
 						<label for="gender" class="text-primary-700 font-medium">
@@ -41,7 +41,6 @@ import InputField from "../../components/InputField.astro"
 							<option value="male">Masculino</option>
 							<option value="female">Femenino</option>
 							<option value="other">Otro</option>
-							<option value="prefer_not_say">Prefiero no decirlo</option>
 						</select>
 					</div>
 
@@ -53,8 +52,6 @@ import InputField from "../../components/InputField.astro"
 				</div>
 
 				{/* Private fields */}
-				<InputField id="name" placeholder="knowy" label="Nombre de usuario" type="text" />
-
 				<InputField id="email" placeholder="knowy@knowy.com" label="Correo electrónico" type="email" />
 
 				<InputField id="password" placeholder="*******" label="Contraseña" type="password" />

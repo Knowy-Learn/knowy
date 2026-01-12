@@ -2,7 +2,7 @@
 import logo from "../assets/knowy.svg"
 import menu from "../assets/icons/menu.svg"
 import close from "../assets/icons/close.svg"
-import LinkButton from "./LinkButton.astro"
+import ButtonLink from "./ButtonLink.astro"
 ---
 
 <header class="bg-primary-500 sticky z-50 flex h-16 w-full items-center">
@@ -18,8 +18,8 @@ import LinkButton from "./LinkButton.astro"
 	{/* Desktop navigation */}
 	<nav class="hidden w-1/2 items-end justify-end gap-3 px-10 py-4 md:grid md:grid-cols-2 lg:grid-cols-3">
 		<div class="not-lg:hidden"></div>
-		<LinkButton href="/auth/login" variant="primary">Inicio Sesión</LinkButton>
-		<LinkButton href="/auth/regist" variant="secondary">Registrarse</LinkButton>
+		<ButtonLink href="/auth/login" variant="primary">Inicio Sesión</ButtonLink>
+		<ButtonLink href="/auth/regist" variant="secondary">Registrarse</ButtonLink>
 	</nav>
 
 	{/* Mobile navigation */}

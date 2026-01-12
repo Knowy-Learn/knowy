@@ -1,0 +1,51 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import NavbarUser from "../../components/user/NavbarUser.astro"
+import Footer from "../../components/Footer.astro"
+import CourseCard from "../../components/CourseCard.astro"
+import Filter from "../../components/Filter.astro";
+---
+
+<Layout>
+	<NavbarUser />
+
+	<main class="flex flex-1 flex-col gap-6 overflow-auto px-8 py-8 md:mx-[5%]">
+		<Filter></Filter>
+
+		<div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
+			<div class="lg:col-span-3">
+				<h2 class="mb-6 text-2xl font-bold text-[#4CAF50]">Mis cursos</h2>
+				<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+					<CourseCard
+						title="Introducción a Java"
+						author="Manuel Rodriguez"
+						date="25/07/2025"
+						progress={40}
+						image="bg-orange-700"
+					/>
+					<CourseCard
+						title="Introducción a HTML5"
+						author="Sofía Díaz"
+						date="25/07/2025"
+						progress={0}
+						image="bg-orange-400"
+					/>
+				</div>
+			</div>
+
+			<div class="lg:col-span-1">
+				<h2 class="mb-6 text-xl font-bold text-purple-600">Recomendaciones</h2>
+				<div class="rounded-xl bg-orange-800 p-4 text-white">
+					<div class="mb-4 flex h-32 items-center justify-center border-b border-white/20">
+						<span class="text-3xl font-bold">JAVA</span>
+					</div>
+					<p class="text-sm font-medium">Sofía Santiago</p>
+					<p class="text-xs opacity-70">25/07/2025</p>
+					<h3 class="mt-2 font-bold">Java Avanzado</h3>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<Footer />
+</Layout>

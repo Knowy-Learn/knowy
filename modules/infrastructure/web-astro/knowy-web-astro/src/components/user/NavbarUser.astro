@@ -2,7 +2,7 @@
 import logo from "../../assets/knowy.svg"
 import menu from "../../assets/icons/menu.svg"
 import close from "../../assets/icons/close.svg"
-import LinkButton from "../LinkButton.astro"
+import ButtonLink from "../ButtonLink.astro"
 ---
 
 <header
@@ -19,8 +19,8 @@ import LinkButton from "../LinkButton.astro"
 
 	{/* Desktop navigation */}
 	<nav class="hidden w-2/4 items-center justify-center md:flex md:px-14">
-		<LinkButton href="/" variant="primaryGhost">Mis Cursos</LinkButton>
-		<LinkButton href="/auth/regist" variant="primaryGhost">Tienda</LinkButton>
+		<ButtonLink href="/" variant="primaryGhost">Mis Cursos</ButtonLink>
+		<ButtonLink href="/auth/regist" variant="primaryGhost">Tienda</ButtonLink>
 	</nav>
 
 	<div

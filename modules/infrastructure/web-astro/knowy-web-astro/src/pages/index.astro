@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import Navbar from "../components/Navbar.astro"
-import LinkButton from "../components/LinkButton.astro"
+import ButtonLink from "../components/ButtonLink.astro"
 import InfoCard from "../components/InfoCard.astro"
 
 import logo from "../assets/knowy.svg"
@@ -22,9 +22,9 @@ import Footer from "../components/Footer.astro"
 				{/* Access buttons */}
 				<div class="mt-4 flex flex-col items-center justify-center gap-1">
 					<div class="grid grid-rows-1 gap-2 sm:grid-cols-2">
-						<LinkButton href="/auth/login" variant="primary"> Inicio Sesión </LinkButton>
+						<ButtonLink href="/auth/login" variant="primary"> Inicio Sesión </ButtonLink>
 
-						<LinkButton href="/auth/regist" variant="secondary"> Registrarse </LinkButton>
+						<ButtonLink href="/auth/regist" variant="secondary"> Registrarse </ButtonLink>
 					</div>
 
 					{/* Separator */}
@@ -34,7 +34,7 @@ import Footer from "../components/Footer.astro"
 						<div class="border-secondary-700 flex-grow border-t"></div>
 					</div>
 
-					<LinkButton href="/auth/guest" variant="secondary"> Entrar como invitado </LinkButton>
+					<ButtonLink href="/auth/guest" variant="secondary"> Entrar como invitado </ButtonLink>
 				</div>
 			</div>
 
