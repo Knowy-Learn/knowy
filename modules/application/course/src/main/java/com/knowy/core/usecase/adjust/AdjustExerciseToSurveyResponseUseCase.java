@@ -67,7 +67,7 @@ class AdjustExerciseToSurveyResponseUseCase {
 	private UserExercise easySelect(UserExercise userExercise) {
 		int updatedRate = userExercise.rate() + 45;
 
-		LocalDateTime updatedNextReview = LocalDateTime.now().plus(userExercise.rate() >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(15));
+		LocalDateTime updatedNextReview = LocalDateTime.now().plus(updatedRate >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(15));
 
 		return createUpdatedUserExercise(userExercise, updatedRate, updatedNextReview);
 	}
@@ -75,7 +75,7 @@ class AdjustExerciseToSurveyResponseUseCase {
 	private UserExercise mediumSelect(UserExercise userExercise) {
 		int updatedRate = userExercise.rate() + 20;
 
-		LocalDateTime updatedNextReview = LocalDateTime.now().plus(userExercise.rate() >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(7));
+		LocalDateTime updatedNextReview = LocalDateTime.now().plus(updatedRate >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(7));
 
 		return createUpdatedUserExercise(userExercise, updatedRate, updatedNextReview);
 	}
