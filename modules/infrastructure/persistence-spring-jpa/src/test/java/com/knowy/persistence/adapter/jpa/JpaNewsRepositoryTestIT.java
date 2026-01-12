@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @ContextConfiguration(classes = KnowyJpaTestConfiguration.class)
 @Testcontainers
-class JpaNewsRepositoryTest {
+class JpaNewsRepositoryTestIT {
 
 	@Container
 	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17");

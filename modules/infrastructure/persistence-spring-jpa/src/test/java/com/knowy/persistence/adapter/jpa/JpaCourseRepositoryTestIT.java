@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Testcontainers
 @ContextConfiguration(classes = KnowyJpaTestConfiguration.class)
-class JpaCourseRepositoryTest {
+class JpaCourseRepositoryTestIT {
 
 	private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2000, 1, 1, 0, 0);
 
