@@ -15,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -76,10 +78,13 @@ class AdjustExerciseToSurveyResponseUseCaseTest {
 		Mockito.verify(userExerciseRepository, Mockito.times(1)).save(captor.capture());
 		UserExercise saved = captor.getValue();
 
+		var nearPast = LocalDateTime.now().minusSeconds(10);
+		var nearFuture = LocalDateTime.now().plusSeconds(1);
 		assertAll(
 			() -> assertEquals(userExercise.userId(), saved.userId()),
 			() -> assertEquals(expectedRate, saved.rate()),
-			() -> assertTrue(saved.nextReview().isBefore(LocalDateTime.now().plus(expectedNextReviewDelta)))
+			() -> assertTrue(saved.nextReview().isBefore(nearFuture.plus(expectedNextReviewDelta))),
+			() -> assertTrue(saved.nextReview().isAfter(nearPast.plus(expectedNextReviewDelta)))
 		);
 		Mockito.clearInvocations(userExerciseRepository);
 	}

@@ -40,10 +40,6 @@ public class User implements Serializable {
 		this(id, nickname, Gender.UNKNOWN, profileImage, categories);
 	}
 
-	public User(User user, Gender gender) {
-		this(user.id(), user.nickname(), gender, user.profileImage(), user.categories());
-	}
-
 	public Integer id() {
 		return id;
 	}
