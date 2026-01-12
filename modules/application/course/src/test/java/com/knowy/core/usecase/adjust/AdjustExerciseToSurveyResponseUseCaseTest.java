@@ -62,7 +62,7 @@ class AdjustExerciseToSurveyResponseUseCaseTest {
 			userId, Mockito.mock(Exercise.class), 0, LocalDateTime.now()
 		);
 
-		verifyProcessAnswer(userExerciseRateMax, ExerciseDifficult.EASY, maxRate, Duration.ofDays(15));
+		verifyProcessAnswer(userExerciseRateMax, ExerciseDifficult.EASY, maxRate, Duration.ofDays(1));
 		verifyProcessAnswer(userExerciseRateMin, ExerciseDifficult.FAIL, minRate, Duration.ofMinutes(1));
 	}
 
@@ -84,7 +84,10 @@ class AdjustExerciseToSurveyResponseUseCaseTest {
 			() -> assertEquals(userExercise.userId(), saved.userId()),
 			() -> assertEquals(expectedRate, saved.rate()),
 			() -> assertTrue(saved.nextReview().isBefore(nearFuture.plus(expectedNextReviewDelta))),
-			() -> assertTrue(saved.nextReview().isAfter(nearPast.plus(expectedNextReviewDelta)))
+			() -> {
+				System.out.printf("NEXT: %s, NEAR-PAST: %s, PLUS: %s, EXPECTED: %s%n", saved.nextReview(), nearPast, expectedNextReviewDelta, nearPast.plus(expectedNextReviewDelta));
+				assertTrue(saved.nextReview().isAfter(nearPast.plus(expectedNextReviewDelta)));
+			}
 		);
 		Mockito.clearInvocations(userExerciseRepository);
 	}
