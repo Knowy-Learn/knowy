@@ -1,0 +1,36 @@
+---
+interface Props {
+	title: string
+	instructor: string
+	date: string
+	image?: string
+}
+
+const { title, instructor, date, image } = Astro.props
+---
+
+<div
+	class="bg-primary-500 text-accent-100 relative flex aspect-[4/5] w-full flex-col justify-between overflow-x-scroll rounded-2xl p-5 shadow-lg transition-all duration-300 hover:scale-[1.03]"
+>
+	<div class="absolute inset-0">
+		{image && <img src={image} alt={title} class="h-full w-full object-cover opacity-50" />}
+		<div class="from-primary-600/80 to-primary-600/40 absolute inset-0 bg-gradient-to-t via-transparent"></div>
+	</div>
+
+	<div class="relative z-10">
+		<h3 class="text-accent-100 text-lg leading-tight font-black tracking-tight drop-shadow-md">
+			{title}
+		</h3>
+		<div class="bg-accent-600 mt-1 h-1 w-8 rounded-full"></div>
+	</div>
+
+	<div class="relative z-10 pt-4">
+		<div class="border-accent-100/10 mb-2 border-t pt-3">
+			<p class="text-secondary-200 text-[9px] font-bold tracking-[0.1em] uppercase">Instructor</p>
+			<p class="text-sm leading-tight font-bold">{instructor}</p>
+		</div>
+		<div class="flex items-center justify-between opacity-60">
+			<span class="text-[9px] font-medium">{date}</span>
+		</div>
+	</div>
+</div>

@@ -3,45 +3,84 @@ import Layout from "../../layouts/Layout.astro"
 import NavbarUser from "../../components/user/NavbarUser.astro"
 import Footer from "../../components/Footer.astro"
 import CourseCard from "../../components/CourseCard.astro"
-import Filter from "../../components/Filter.astro";
+import Filter from "../../components/Filter.astro"
+import CourseRecomendationCard from "../../components/CourseRecomendationCard.astro"
+import Pagination from "../../components/Pagination.astro"
 ---
 
 <Layout>
 	<NavbarUser />
 
 	<main class="flex flex-1 flex-col gap-6 overflow-auto px-8 py-8 md:mx-[5%]">
-		<Filter></Filter>
+		<Filter />
 
-		<div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
+		<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-4">
 			<div class="lg:col-span-3">
 				<h2 class="mb-6 text-2xl font-bold text-[#4CAF50]">Mis cursos</h2>
-				<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+				<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 					<CourseCard
 						title="Introducción a Java"
 						author="Manuel Rodriguez"
 						date="25/07/2025"
 						progress={40}
 						image="bg-orange-700"
+						categories={["Java", "POO", "Spring Boot"]}
 					/>
 					<CourseCard
-						title="Introducción a HTML5"
-						author="Sofía Díaz"
+						title="Introducción a Java"
+						author="Manuel Rodriguez"
 						date="25/07/2025"
-						progress={0}
-						image="bg-orange-400"
+						progress={40}
+						image="bg-orange-700"
+						categories={["Java", "POO", "Spring Boot"]}
+					/>
+					<CourseCard
+						title="Introducción a Java"
+						author="Manuel Rodriguez"
+						date="25/07/2025"
+						progress={40}
+						image="bg-orange-700"
+						categories={["Java", "POO", "Spring Boot"]}
+					/>
+					<CourseCard
+						title="Introducción a Java"
+						author="Manuel Rodriguez"
+						date="25/07/2025"
+						progress={40}
+						image="bg-orange-700"
+						categories={["Java", "POO", "Spring Boot"]}
 					/>
 				</div>
+
+				<Pagination baseUrl="" currentPage={0} totalPages={10}/>
 			</div>
 
-			<div class="lg:col-span-1">
-				<h2 class="mb-6 text-xl font-bold text-purple-600">Recomendaciones</h2>
-				<div class="rounded-xl bg-orange-800 p-4 text-white">
-					<div class="mb-4 flex h-32 items-center justify-center border-b border-white/20">
-						<span class="text-3xl font-bold">JAVA</span>
-					</div>
-					<p class="text-sm font-medium">Sofía Santiago</p>
-					<p class="text-xs opacity-70">25/07/2025</p>
-					<h3 class="mt-2 font-bold">Java Avanzado</h3>
+			<div class="flex flex-col lg:items-end">
+				<h2
+					class="text-primary-500 mb-4 w-full max-w-[250px] text-start font-sans text-xl font-bold lg:text-center"
+				>
+					Recomendaciones
+				</h2>
+
+				<div
+					class="scrollbar-hide flex w-full flex-row gap-4 overflow-x-auto p-4 lg:max-w-[250px] lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:pb-0"
+					style="max-height: 650px;"
+				>
+					<CourseRecomendationCard
+						title="Java Avanzado para Microservicios"
+						instructor="Sofía Santiago"
+						date="25 Jul, 2025"
+					/>
+					<CourseRecomendationCard
+						title="Spring Security 6"
+						instructor="Manuel Rodriguez"
+						date="15 Ago, 2025"
+					/>
+					<CourseRecomendationCard
+						title="Arquitectura Limpia"
+						instructor="Sofía Santiago"
+						date="02 Sep, 2025"
+					/>
 				</div>
 			</div>
 		</div>
