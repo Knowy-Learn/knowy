@@ -278,13 +278,26 @@ paths:
                     schema:
                         type: integer
                         default: 0
+                -   name: size
+                    in: query
+                    description: The size of element to retrieve
+                    schema:
+                        type: integer
+                        default: 0
                 -   name: order
                     in: query
                     description: Sort order for the courses (e.g., 'az', 'za', 'newest').
                     required: false
                     schema:
                         type: string
-                        enum: [ alpha_asc, alpha_desc, progress_asc, progress_desc, date_asc, date_desc ]
+                        enum: [ alphabetic, progress, date ]
+                -   name: direction
+                    in: query
+                    description: Sort order direction for the courses.
+                    required: false
+                    schema:
+                        type: string
+                        enum: [ asc, desc ]
                 -   name: category
                     in: query
                     description: Filter courses by category language.
@@ -429,7 +442,7 @@ components:
                     description: "The date the course was assigned or created for the user."
                 categories:
                     type: array
-                    $ref: '#/components/schemas/ImageDto'
+                    $ref: '#/components/schemas/CategoryDto'
                 progress:
                     type: number
                     format: float
