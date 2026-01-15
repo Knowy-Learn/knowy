@@ -24,7 +24,7 @@ paths:
                 - Authentication
             summary: Authenticate a user with email and password
             description: Returns a JWT token if the credentials are valid.
-            security: []
+            security: [ ]
             requestBody:
                 required: true
                 content:
@@ -65,7 +65,7 @@ paths:
                 - Authentication
             summary: Register a new user
             description: Create a new user account with email, username, and password. Returns an authentication token on success.
-            security: []
+            security: [ ]
             requestBody:
                 required: true
                 content:
@@ -128,7 +128,7 @@ paths:
                 - Authentication
             summary: Validate access token
             description: Endpoint to validate an access token. Returns 200 if the token is valid.
-            security: []
+            security: [ ]
             requestBody:
                 required: true
                 content:
@@ -155,7 +155,7 @@ paths:
             tags:
                 - News
             summary: Get the latest news
-            security: []
+            security: [ ]
             parameters:
                 -   name: Accept-Language
                     in: header
@@ -215,6 +215,8 @@ paths:
                 - User
             summary: Get navbar user data
             description: Retrieve the data needed to display the user's navbar, such as name, avatar, and notifications.
+            security:
+                -   BearerAuth: [ ]
             responses:
                 '200':
                     description: Navbar data retrieved successfully
@@ -236,6 +238,8 @@ paths:
                 - User
             summary: Get resume user data
             description: Retrieve a summary of the user's profile, including basic information and course progress.
+            security:
+                -   BearerAuth: [ ]
             responses:
                 '200':
                     description: Resume data retrieved successfully
@@ -258,6 +262,98 @@ paths:
                                         example: 8.7
                 '401':
                     $ref: '#/components/responses/UnauthorizedError'
+    /user/learn/courses:
+        get:
+            tags:
+                - User
+            summary: Get filtered courses with pagination
+            description: Fetches the user's course collection. Supports pagination, filtering by category, and custom sorting.
+            security:
+                -   BearerAuth: [ ]
+            parameters:
+                -   name: page
+                    in: query
+                    description: The page number to retrieve (starting from 0).
+                    required: false
+                    schema:
+                        type: integer
+                        default: 0
+                -   name: order
+                    in: query
+                    description: Sort order for the courses (e.g., 'az', 'za', 'newest').
+                    required: false
+                    schema:
+                        type: string
+                        enum: [ alpha_asc, alpha_desc, progress_asc, progress_desc, date_asc, date_desc ]
+                -   name: category
+                    in: query
+                    description: Filter courses by category language.
+                    required: false
+                    schema:
+                        type: string
+            responses:
+                '200':
+                    description: A paginated list of courses.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    info:
+                                        type: object
+                                        description: Pagination metadata.
+                                        properties:
+                                            total:
+                                                type: integer
+                                                description: The total number of courses found with the current filters.
+                                                example: 100
+                                            pages:
+                                                type: integer
+                                                description: The total number of pages (total / size) - 1.
+                                                example: 10
+                                            size:
+                                                type: integer
+                                                description: The number of items requested per page.
+                                                example: 10
+                                            page:
+                                                type: integer
+                                                description: The current page index.
+                                                example: 0
+                                    results:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/CourseCardDto'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+
+    /user/recommendations:
+        get:
+            tags:
+                - User
+            summary: Get course recommendations for the current user
+            description: Returns a personalized list of courses based on the user's interests, past enrollments, and browsing history.
+            security:
+                -   BearerAuth: [ ]
+            responses:
+                '200':
+                    description: A list of recommended courses
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    results:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/CourseCardDto'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
 
 components:
     securitySchemes:
@@ -299,6 +395,79 @@ components:
                     type: string
                     format: date
                     example: "2025-11-24"
+        CourseCardDto:
+            type: object
+            required:
+                - id
+                - title
+                - description
+                - image
+                - author
+                - creationDate
+                - categories
+                - progress
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                    example: 123
+                title:
+                    type: string
+                    example: "Introduction to Java"
+                description:
+                    type: string
+                    example: "Learn the basics of Java programming from scratch."
+                image:
+                    $ref: '#/components/schemas/ImageDto'
+                author:
+                    type: string
+                    example: "Sophie Hilton"
+                creationDate:
+                    type: string
+                    format: date-time
+                    example: "2024-03-15T10:00:00Z"
+                    description: "The date the course was assigned or created for the user."
+                categories:
+                    type: array
+                    $ref: '#/components/schemas/ImageDto'
+                progress:
+                    type: number
+                    format: float
+                    minimum: 0
+                    maximum: 100
+                    example: 45.5
+                    description: "Completion percentage of the course."
+        ImageDto:
+            type: object
+            required:
+                - url
+                - alt
+            properties:
+                url:
+                    type: string
+                    format: uri
+                    description: The absolute URL of the image resource.
+                    example: "https://cdn.example.com/images/java-course.jpg"
+                alt:
+                    type: string
+                    description: A brief textual description of the image for accessibility (Alt text).
+                    example: "Java logo and code on a screen"
+        CategoryDto:
+            type: object
+            required:
+                - id
+                - name
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                    description: The unique identifier for the category.
+                    example: 123
+                name:
+                    type: string
+                    description: The display name of the category.
+                    example: "TypeScript"
+
         #################################
         # Knowy Error DTO
         #################################
