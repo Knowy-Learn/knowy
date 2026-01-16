@@ -1,33 +1,15 @@
 package com.knowy.core.domain;
 
-import com.knowy.core.exception.validation.KnowyIllegalArgumentRuntimeException;
-
-
-public record Pagination(int page, int size) {
-
-	/**
-	 * Represents pagination information with a page number and page size.
-	 * <p>
-	 * Ensures that the page number is non-negative and the page size is positive.
-	 * </p>
-	 *
-	 * @param page the current page number, starting from 0
-	 * @param size the number of items per page, must be greater than 0
-	 */
-	public Pagination {
-		validatePage(page);
-		validateSize(size);
-	}
-
-	private static void validatePage(int page) {
-		if (page < 0) {
-			throw new KnowyIllegalArgumentRuntimeException("Page cannot be negative: " + page);
-		}
-	}
-
-	private static void validateSize(int size) {
-		if (size <= 0) {
-			throw new KnowyIllegalArgumentRuntimeException("Size must be positive: " + size);
-		}
-	}
+/**
+ * A composite record that encapsulates both pagination and sorting configuration.
+ * <p>
+ * This object is typically used as a request parameter to define how a data set should be partitioned and ordered in a
+ * single operation.
+ * </p>
+ *
+ * @param <T>   the type of the properties used for sorting criteria
+ * @param page  the pagination settings (index and size)
+ * @param order the sorting settings (properties, strategy, and direction)
+ */
+public record Pagination<T>(Page page, Order<T> order) {
 }
