@@ -1,6 +1,8 @@
 package com.knowy.core;
 
 import com.knowy.core.domain.News;
+import com.knowy.core.domain.Order;
+import com.knowy.core.domain.Page;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.port.NewsRepository;
 import org.junit.jupiter.api.Nested;
@@ -30,7 +32,7 @@ public class NewsServiceTest {
 
 		@Test
 		void given_newsExists_when_findingLastNewsByPagination_then_returnsNews() {
-			Pagination mockPagination = new Pagination(0, 3);
+			Pagination<> mockPagination = new Pagination<>(new Page(0, 3), new Order<>(null, Order.SortStrategy.DATE, null));
 			News news1 = new News(1, "Breaking News", "Something happened today.", LocalDate.of(2025, 11, 13));
 			News news2 = new News(2, "Tech Update", "New framework released.", LocalDate.of(2025, 11, 12));
 			News news3 = new News(3, "Sports Result", "Team A won against Team B.", LocalDate.of(2025, 11, 11));

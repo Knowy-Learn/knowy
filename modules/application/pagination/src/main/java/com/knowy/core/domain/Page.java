@@ -9,15 +9,16 @@ import com.knowy.core.exception.validation.KnowyIllegalArgumentRuntimeException;
  * strictly positive page sizes.
  * </p>
  *
- * @param number the zero-based index of the page to retrieve.
- * @param size   the maximum number of records to include in a single page.
+ * @param number the zero-based index of the page to retrieve (must be {@code >= 0}).
+ * @param size   the maximum number of records to include in a single page (must be {@code > 0}).
  */
 public record Page(int number, int size) {
 
 	/**
-	 * Compact constructor to validate pagination constraints.
+	 * Compact constructor to validate pagination constraints. * @param number the zero-based index of the page.
 	 *
-	 * @throws KnowyIllegalArgumentRuntimeException if number is negative or size is less than 1
+	 * @param size the maximum number of records per page.
+	 * @throws KnowyIllegalArgumentRuntimeException if {@code number} is negative or {@code size} is less than 1.
 	 */
 	public Page {
 		validatePage(number);

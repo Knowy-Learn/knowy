@@ -37,6 +37,7 @@
 		<module>modules/application/loader</module>
 		<module>modules/infrastructure/frontend-spring-web-astro</module>
 		<module>builds/knowy-astro-compose</module>
+		<module>modules/application/pagination</module>
 	</modules>
 
 	<dependencyManagement>
@@ -65,6 +66,11 @@
 			<dependency>
 				<groupId>com.knowy</groupId>
 				<artifactId>news-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.knowy</groupId>
+				<artifactId>pagination-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<!-- infrastructure -->

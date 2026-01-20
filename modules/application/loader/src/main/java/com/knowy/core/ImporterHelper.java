@@ -79,7 +79,7 @@ public class ImporterHelper {
 	/**
 	 * Creates a {@link PropertyExtractor} for the given container map.
 	 *
-	 * @param container the map containing properties
+	 * @param container the map containing fields
 	 * @return a {@link PropertyExtractor} instance
 	 */
 	public static PropertyExtractor extractorFor(Map<String, Object> container) {
@@ -100,7 +100,7 @@ public class ImporterHelper {
 
 
 	/**
-	 * Helper class for extracting and mapping properties from a container map.
+	 * Helper class for extracting and mapping fields from a container map.
 	 */
 	public static class PropertyExtractor {
 		private final Map<String, Object> container;
