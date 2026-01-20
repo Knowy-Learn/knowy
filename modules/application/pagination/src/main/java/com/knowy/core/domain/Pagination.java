@@ -1,6 +1,7 @@
 package com.knowy.core.domain;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A container for all data retrieval modifiers, including pagination, sorting, and filtering.
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public record Pagination(
 	Page page,
-	Order order,
+	Optional<Order> order,
 	List<Filter> filters
 ) {
 }
