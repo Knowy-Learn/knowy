@@ -1,6 +1,7 @@
 package com.knowy.core.port;
 
 import com.knowy.core.domain.News;
+import com.knowy.core.domain.PagedResult;
 import com.knowy.core.domain.Pagination;
 
 /**
@@ -14,5 +15,5 @@ public interface NewsRepository {
 	 * @param pagination the pagination information specifying which subset of news to retrieve
 	 * @return an iterable containing the latest news items
 	 */
-	Iterable<News> findLastNews(Pagination pagination);
+	PagedResult<News> findLastNews(Pagination pagination);
 }

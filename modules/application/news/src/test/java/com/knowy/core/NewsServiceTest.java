@@ -1,9 +1,6 @@
 package com.knowy.core;
 
-import com.knowy.core.domain.News;
-import com.knowy.core.domain.Order;
-import com.knowy.core.domain.Page;
-import com.knowy.core.domain.Pagination;
+import com.knowy.core.domain.*;
 import com.knowy.core.port.NewsRepository;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -32,13 +30,17 @@ public class NewsServiceTest {
 
 		@Test
 		void given_newsExists_when_findingLastNewsByPagination_then_returnsNews() {
-			Pagination<> mockPagination = new Pagination<>(new Page(0, 3), new Order<>(null, Order.SortStrategy.DATE, null));
+			Page page = new Page(0, 3);
+			Order order = new Order("date", null);
+
+			Pagination mockPagination = new Pagination(page, Optional.of(order), List.of());
 			News news1 = new News(1, "Breaking News", "Something happened today.", LocalDate.of(2025, 11, 13));
 			News news2 = new News(2, "Tech Update", "New framework released.", LocalDate.of(2025, 11, 12));
 			News news3 = new News(3, "Sports Result", "Team A won against Team B.", LocalDate.of(2025, 11, 11));
 
+			PagedResult<News> mockResult = new PagedResult<>(page, List.of(news1, news2, news3), -1);
 			Mockito.when(newsRepository.findLastNews(mockPagination))
-				.thenReturn(List.of(news1, news2, news3));
+				.thenReturn(mockResult);
 
 			assertDoesNotThrow(
 				() -> newsService.findLastNews(mockPagination)

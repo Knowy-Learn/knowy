@@ -1,7 +1,9 @@
 package com.knowy.core.usecase;
 
 import com.knowy.core.domain.News;
+import com.knowy.core.domain.PagedResult;
 import com.knowy.core.domain.Pagination;
+import com.knowy.core.exception.data.KnowyInconsistentDataRuntimeException;
 import com.knowy.core.port.NewsRepository;
 
 import java.util.Collection;
@@ -13,7 +15,6 @@ import java.util.List;
 public class FindLastNewsUseCase {
 
 	private final NewsRepository newsRepository;
-
 
 	/**
 	 * Constructs a FindLastNewsUseCase.
@@ -30,8 +31,13 @@ public class FindLastNewsUseCase {
 	 * @param pagination the pagination information specifying which subset of news to retrieve
 	 * @return a list containing the latest news items
 	 */
-	public List<News> execute(Pagination pagination) {
-		Iterable<News> iterable = newsRepository.findLastNews(pagination);
-		return List.copyOf((Collection<News>) iterable);
+	public PagedResult<News> execute(Pagination pagination) {
+		PagedResult<News> newsPagedResult = newsRepository.findLastNews(pagination);
+		Collection<News> collection = newsPagedResult.collection();
+
+		if (!(collection instanceof List)) {
+			throw new KnowyInconsistentDataRuntimeException("The result must be a List.class");
+		}
+		return newsPagedResult;
 	}
 }

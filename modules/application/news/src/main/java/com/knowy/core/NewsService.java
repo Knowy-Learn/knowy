@@ -1,6 +1,7 @@
 package com.knowy.core;
 
 import com.knowy.core.domain.News;
+import com.knowy.core.domain.PagedResult;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.port.NewsRepository;
 import com.knowy.core.usecase.FindLastNewsUseCase;
@@ -29,7 +30,7 @@ public class NewsService {
 	 * @param pagination the pagination information specifying which subset of news to retrieve
 	 * @return a list of the latest news items
 	 */
-	public List<News> findLastNews(Pagination pagination) {
+	public PagedResult<News> findLastNews(Pagination pagination) {
 		return findLastNewsUseCase.execute(pagination);
 	}
 }
