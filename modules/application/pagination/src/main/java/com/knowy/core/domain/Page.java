@@ -29,6 +29,9 @@ public record Page(int number, int size) {
 		if (page < 0) {
 			throw new KnowyIllegalArgumentRuntimeException("Page cannot be negative: " + page);
 		}
+		if (page >= 100_000) {
+			throw new KnowyIllegalArgumentRuntimeException("Page exceeds the maximum limit of 100,000: " + page);
+		}
 	}
 
 	private static void validateSize(int size) {

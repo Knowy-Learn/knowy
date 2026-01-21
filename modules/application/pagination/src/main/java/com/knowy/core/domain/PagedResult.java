@@ -1,6 +1,8 @@
 package com.knowy.core.domain;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A container for a paginated subset of data along with its associated metadata.
@@ -9,15 +11,16 @@ import java.util.Collection;
  * @param page       the pagination parameters used to fetch this result
  * @param collection the actual data subset for the current page
  */
-public record PagedResult<T>(Page page, Collection<T> collection) {
+public record PagedResult<T>(Page page, Collection<T> collection, long totalItems) {
 
 	/**
-	 * Returns the number of elements present in the current page.
+	 * Constructs a new {@code PagedResult}.
 	 *
-	 * @return the size of the current collection
+	 * @param collection the collection of elements; if {@code null}, defaults to an empty immutable list.
 	 */
-	public int count() {
-		return collection.size();
+	public PagedResult {
+		Objects.requireNonNull(page, "page parameters must not be null");
+		collection = Objects.requireNonNullElse(collection, List.of());
 	}
 
 	/**
@@ -26,6 +29,6 @@ public record PagedResult<T>(Page page, Collection<T> collection) {
 	 * @return the total number of pages (rounded up)
 	 */
 	public int pages() {
-		return (int) Math.ceil((double) count() / page.size());
+		return (int) Math.ceil((double) totalItems() / page.size());
 	}
 }
