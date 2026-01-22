@@ -8,7 +8,6 @@ import com.knowy.core.util.KnowyUseCase;
 import com.knowy.server.api.dto.NewsDto;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 public class GetLatestNewsUseCase implements KnowyUseCase<Pagination, List<NewsDto>> {
 
@@ -20,9 +19,7 @@ public class GetLatestNewsUseCase implements KnowyUseCase<Pagination, List<NewsD
 
 	@Override
 	public List<NewsDto> execute(Pagination pagination) {
-		Iterable<News> newsIterable = newsService.findLastNews(pagination);
-
-		return StreamSupport.stream(newsIterable.spliterator(), false)
+		return newsService.findLastNews(pagination).collection().stream()
 			.map(this::toDto)
 			.toList();
 	}

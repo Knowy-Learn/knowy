@@ -4,7 +4,9 @@ import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
+import com.knowy.server.api.dto.UserLearnCoursesGet200Response;
 import com.knowy.server.api.dto.UserNavbarGet200Response;
+import com.knowy.server.api.dto.UserRecommendationsGet200Response;
 import com.knowy.server.api.dto.UserResumeGet200Response;
 import com.knowy.server.api.usecase.user.GetNavbarUserDataUseCase;
 import com.knowy.server.api.usecase.user.GetResumeUserDataUseCase;
@@ -27,6 +29,25 @@ public class UserController implements UserApi {
 	}
 
 	/**
+	 * GET /user/learn/courses : Get filtered courses with pagination Fetches the user&#39;s course collection. Supports
+	 * pagination, filtering by category, and custom sorting.
+	 *
+	 * @param page      The page number to retrieve (starting from 0). (optional, default to 0)
+	 * @param size      The size of element to retrieve (optional, default to 0)
+	 * @param order     Sort order for the courses (e.g., &#39;az&#39;, &#39;za&#39;, &#39;newest&#39;). (optional)
+	 * @param direction Sort order direction for the courses. (optional)
+	 * @param category  Filter courses by category language. (optional)
+	 * @return A paginated list of courses. (status code 200) or Bad Request. The request is invalid or cannot be
+	 * processed. (status code 400) or Access unauthorized. The request requires valid authentication credentials (e.g.,
+	 * a valid token). (status code 401) or Internal Server Error. Something went wrong on the server. (status code
+	 * 500)
+	 */
+	@Override
+	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(Integer page, Integer size, String order, String direction, String category) {
+		return null; //TODO
+	}
+
+	/**
 	 * GET /user/navbar : Get navbar user data Retrieve the data needed to display the user&#39;s navbar, such as name,
 	 * avatar, and notifications.
 	 *
@@ -36,6 +57,19 @@ public class UserController implements UserApi {
 	@Override
 	public ResponseEntity<UserNavbarGet200Response> userNavbarGet() {
 		return ResponseEntity.ok(getNavbarUserDataUseCase.execute());
+	}
+
+	/**
+	 * GET /user/recommendations : Get course recommendations for the current user Returns a personalized list of
+	 * courses based on the user&#39;s interests, past enrollments, and browsing history.
+	 *
+	 * @return A list of recommended courses (status code 200) or Access unauthorized. The request requires valid
+	 * authentication credentials (e.g., a valid token). (status code 401) or Internal Server Error. Something went
+	 * wrong on the server. (status code 500)
+	 */
+	@Override
+	public ResponseEntity<UserRecommendationsGet200Response> userRecommendationsGet() {
+		return null; //TODO
 	}
 
 	/**
