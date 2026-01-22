@@ -1,6 +1,7 @@
 package com.knowy.core.usecase.course;
 
 import com.knowy.core.domain.Course;
+import com.knowy.core.domain.PagedResult;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.port.CourseRepository;
@@ -30,7 +31,7 @@ public class GetAllCoursesUseCase {
 	 * @return a list of courses
 	 * @throws KnowyCourseNotFound if no courses are found
 	 */
-	public List<Course> execute(Pagination pagination) throws KnowyCourseNotFound {
+	public PagedResult<Course> execute(Pagination pagination) throws KnowyCourseNotFound {
 		return courseRepository.findAll(pagination);
 	}
 }

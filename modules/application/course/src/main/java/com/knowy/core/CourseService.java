@@ -2,6 +2,7 @@ package com.knowy.core;
 
 import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
+import com.knowy.core.domain.PagedResult;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
@@ -110,7 +111,7 @@ public class CourseService {
 	 * @return a list of courses
 	 * @throws KnowyCourseNotFound if no courses are found
 	 */
-	public List<Course> getAllCourses(Pagination pagination) throws KnowyCourseNotFound {
+	public PagedResult<Course> getAllCourses(Pagination pagination) throws KnowyCourseNotFound {
 		return getAllCoursesUseCase.execute(pagination);
 	}
 

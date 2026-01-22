@@ -1,9 +1,6 @@
 package com.knowy.core.port;
 
-import com.knowy.core.domain.Category;
-import com.knowy.core.domain.Course;
-import com.knowy.core.domain.CourseUnidentifiedData;
-import com.knowy.core.domain.Pagination;
+import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 
@@ -16,7 +13,7 @@ public interface CourseRepository {
 
 	List<Course> findAllById(List<Integer> ids) throws KnowyInconsistentDataException;
 
-	List<Course> findAll(Pagination pagination) throws KnowyCourseNotFound;
+	PagedResult<Course> findAll(Pagination pagination) throws KnowyCourseNotFound;
 
 	Set<Course> findInRandomOrder(int numOfRecords) throws KnowyInconsistentDataException;
 
