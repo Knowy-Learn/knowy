@@ -1,6 +1,8 @@
 package com.knowy.persistence.adapter.jpa;
 
 import com.knowy.core.domain.News;
+import com.knowy.core.domain.Page;
+import com.knowy.core.domain.PagedResult;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.port.NewsRepository;
 import com.knowy.persistence.KnowyJpaTestConfiguration;
@@ -22,7 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.StreamSupport;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,19 +67,20 @@ class JpaNewsRepositoryTestIT {
 
 	@Test
 	void given_newsAndPagination_when_findLastNews_then_returnNews() {
-		Pagination pagination = new Pagination(0, 3);
+		Page page = new Page(0, 3);
+		Pagination pagination = new Pagination(page, Optional.empty(), List.of());
 
-		Iterable<News> result = assertDoesNotThrow(
+		PagedResult<News> result = assertDoesNotThrow(
 			() -> jpaNewsRepository.findLastNews(pagination)
 		);
-		List<News> newsList = StreamSupport.stream(result.spliterator(), false)
-			.toList();
+
+		List<News> newsListResult = result.collection().stream().toList();
 
 		assertAll(
-			() -> assertEquals(3, newsList.size()),
+			() -> assertEquals(3, newsListResult.size(), "Should return exactly 3 items"),
 			() -> assertTrue(
-				newsList.getFirst().date().isAfter(newsList.getLast().date()),
-				"The first news item should be more recent than the last one"
+				newsListResult.getFirst().date().isAfter(newsListResult.getLast().date()),
+				"Results should be sorted by date descending"
 			)
 		);
 	}
