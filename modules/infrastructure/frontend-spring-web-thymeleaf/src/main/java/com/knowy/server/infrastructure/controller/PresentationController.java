@@ -1,6 +1,7 @@
 package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.CourseService;
+import com.knowy.core.domain.Page;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.server.infrastructure.controller.dto.NewsDto;
@@ -9,6 +10,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PresentationController {
@@ -21,10 +23,9 @@ public class PresentationController {
 
 	@GetMapping("/")
 	public String viewLandingPage(ModelMap interfaceScreen) throws KnowyInconsistentDataException {
-		Pagination pagination = new Pagination(0, 3);
+		Pagination pagination = new Pagination(new Page(0, 3), Optional.empty(), List.of());
 
-		List<NewsDto> newsList = courseService.getAllCourses(pagination)
-			.stream()
+		List<NewsDto> newsList = courseService.getAllCourses(pagination).collection().stream()
 			.map(NewsDto::fromDomain)
 			.toList();
 

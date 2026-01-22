@@ -4,6 +4,7 @@ import com.knowy.core.CategoryService;
 import com.knowy.core.CourseService;
 import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
+import com.knowy.core.domain.Page;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/store")
@@ -46,7 +48,8 @@ public class CoursesStoreController {
 	) throws KnowyInconsistentDataException {
 
 		try {
-			List<Course> allCourses = courseService.getAllCourses(new Pagination(page, 8));
+			Pagination pagination = new Pagination(new Page(page, 8), Optional.empty(), List.of());
+			List<Course> allCourses = courseService.getAllCourses(pagination).collection().stream().toList();
 
 			List<Integer> myCourseIds = courseService.findAllByUserId(userDetails.getUser().id())
 				.stream()
