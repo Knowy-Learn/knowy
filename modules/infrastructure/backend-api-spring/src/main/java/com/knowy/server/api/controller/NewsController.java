@@ -3,7 +3,6 @@ package com.knowy.server.api.controller;
 import com.knowy.core.domain.Page;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.port.NewsRepository;
-import com.knowy.server.api.dto.NewsDto;
 import com.knowy.server.api.dto.NewsGet200Response;
 import com.knowy.server.api.usecase.news.GetLatestNewsUseCase;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +24,7 @@ public class NewsController implements NewsApi {
 	public ResponseEntity<NewsGet200Response> newsGet(String acceptLanguage, Integer page, Integer pageSize) {
 		Pagination pagination = new Pagination(new Page(page, pageSize), Optional.empty(), List.of());
 
-		List<NewsDto> items = getLatestNewsUseCase.execute(pagination);
-
-		var response = new NewsGet200Response(page, pageSize, items);
+		NewsGet200Response response = getLatestNewsUseCase.execute(pagination);
 		return ResponseEntity.ok(response);
 	}
 }

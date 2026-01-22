@@ -188,19 +188,15 @@ paths:
                             schema:
                                 type: object
                                 properties:
-                                    page:
-                                        type: integer
-                                    pageSize:
-                                        type: integer
+                                    info:
+                                        $ref: '#/components/schemas/PaginationMetadata'
                                     items:
                                         type: array
                                         description: List of new items
                                         items:
                                             $ref: '#/components/schemas/NewsDto'
                                 required:
-                                    - page
-                                    - pageSize
-                                    - totalPages
+                                    - info
                                     - items
                 '400':
                     $ref: '#/components/responses/BadRequestError'
@@ -313,25 +309,7 @@ paths:
                                 type: object
                                 properties:
                                     info:
-                                        type: object
-                                        description: Pagination metadata.
-                                        properties:
-                                            total:
-                                                type: integer
-                                                description: The total number of courses found with the current filters.
-                                                example: 100
-                                            pages:
-                                                type: integer
-                                                description: The total number of pages (total / size) - 1.
-                                                example: 10
-                                            size:
-                                                type: integer
-                                                description: The number of items requested per page.
-                                                example: 10
-                                            page:
-                                                type: integer
-                                                description: The current page index.
-                                                example: 0
+                                        $ref: '#/components/schemas/PaginationMetadata'
                                     results:
                                         type: array
                                         items:
@@ -385,6 +363,28 @@ components:
                 - unknown
             description: User gender
             example: other
+
+        PaginationMetadata:
+            type: object
+            description: Pagination metadata.
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                    description: The total number of courses found with the current filters.
+                    example: 100
+                pages:
+                    type: integer
+                    description: The total number of pages (total / size) - 1.
+                    example: 10
+                size:
+                    type: integer
+                    description: The number of items requested per page.
+                    example: 10
+                page:
+                    type: integer
+                    description: The current page index.
+                    example: 0
 
         NewsDto:
             type: object
