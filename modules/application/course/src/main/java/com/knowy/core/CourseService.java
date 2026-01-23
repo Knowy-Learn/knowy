@@ -1,14 +1,13 @@
 package com.knowy.core;
 
-import com.knowy.core.domain.Category;
-import com.knowy.core.domain.Course;
-import com.knowy.core.domain.PagedResult;
-import com.knowy.core.domain.Pagination;
+import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
+import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.usecase.course.*;
 
@@ -25,11 +24,13 @@ public class CourseService {
 	private final GetAllCoursesWithProgressUseCase getAllCoursesWithProgressUseCase;
 	private final GetCourseByIdUseCase getCourseByIdUseCase;
 	private final SubscribeUserToCourseUseCase subscribeUserToCourseUseCase;
+	private final GetAllUserCoursesByUserIdUseCase getAllUserCoursesByUserIdUseCase;
 
 	public CourseService(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
-		UserLessonRepository userLessonRepository
+		UserLessonRepository userLessonRepository,
+		UserCourseRepository userCourseRepository
 	) {
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
@@ -41,6 +42,7 @@ public class CourseService {
 		this.getAllCoursesWithProgressUseCase = new GetAllCoursesWithProgressUseCase(userLessonRepository);
 		this.getCourseByIdUseCase = new GetCourseByIdUseCase(courseRepository);
 		this.subscribeUserToCourseUseCase = new SubscribeUserToCourseUseCase(lessonRepository, userLessonRepository);
+		this.getAllUserCoursesByUserIdUseCase = new GetAllUserCoursesByUserIdUseCase(userCourseRepository);
 	}
 
 	/**
@@ -158,5 +160,18 @@ public class CourseService {
 	 */
 	public List<GetAllCoursesWithProgressResult> getAllCourseProgress(int userId) throws KnowyInconsistentDataException {
 		return getAllCoursesWithProgressUseCase.execute(userId);
+	}
+
+	/**
+	 * Retrieves a paginated list of courses associated with a specific user by delegating to the appropriate use case.
+	 *
+	 * @param userId     the unique identifier of the user
+	 * @param pagination the pagination parameters to apply to the result set
+	 * @return a {@link PagedResult} containing the list of {@link UserCourse} records and metadata
+	 * @throws KnowyDataAccessException if any error occurs while retrieving or processing data from the repository,
+	 *                                  including connectivity issues, retrieval failures, or data integrity violations
+	 */
+	public PagedResult<List<UserCourse>> getAllUserCoursesByUserId(int userId, Pagination pagination) throws KnowyDataAccessException {
+		return getAllUserCoursesByUserIdUseCase.execute(userId, pagination);
 	}
 }
