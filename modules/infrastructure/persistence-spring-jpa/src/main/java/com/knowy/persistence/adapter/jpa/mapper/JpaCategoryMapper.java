@@ -1,7 +1,7 @@
 package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.domain.Category;
-import com.knowy.core.domain.CategoryData;
+import com.knowy.core.domain.CategoryUnidentifiedData;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.persistence.adapter.jpa.dao.JpaCategoryDao;
 import com.knowy.persistence.adapter.jpa.entity.CategoryEntity;
@@ -31,7 +31,7 @@ public class JpaCategoryMapper implements EntityMapper<Category, CategoryEntity>
 		return categoryEntity;
 	}
 
-	public <T extends CategoryData> CategoryEntity toEntity(T domain) throws KnowyInconsistentDataException {
+	public <T extends CategoryUnidentifiedData> CategoryEntity toEntity(T domain) throws KnowyInconsistentDataException {
 		CategoryEntity newCategory = new CategoryEntity();
 		newCategory.setName(domain.name());
 

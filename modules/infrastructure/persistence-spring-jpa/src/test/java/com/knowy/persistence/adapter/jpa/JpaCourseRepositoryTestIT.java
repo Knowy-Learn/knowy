@@ -112,10 +112,10 @@ class JpaCourseRepositoryTestIT {
 	}
 
 	private CourseUnidentifiedData createInputCourse(int courseId, List<Integer> lessonsId) {
-		CategoryData category1 = new CategoryData.InmutableCategoryData("Category " + courseId);
-		CategoryData category2 = new CategoryData.InmutableCategoryData("Category " + (courseId + 1));
+		CategoryUnidentifiedData category1 = new CategoryUnidentifiedData.InmutableCategoryUnidentifiedData("Category " + courseId);
+		CategoryUnidentifiedData category2 = new CategoryUnidentifiedData.InmutableCategoryUnidentifiedData("Category " + (courseId + 1));
 
-		return new CourseData.InmutableCourseData(
+		return new CourseUnidentifiedData.InmutableCourseData(
 			"Course Title " + courseId,
 			"Course Description " + courseId,
 			"Course Image " + courseId,

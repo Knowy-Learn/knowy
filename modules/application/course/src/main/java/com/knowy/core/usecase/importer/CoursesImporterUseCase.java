@@ -70,15 +70,15 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 		Map<String, Object> categoriesData = (Map<String, Object>) courseMap.get("categories");
 
 		List<String> categoryData = (List<String>) categoriesData.get("category");
-		Set<CategoryData> categories = categoryData.stream()
-			.map(CategoryData.InmutableCategoryData::new)
+		Set<CategoryUnidentifiedData> categories = categoryData.stream()
+			.map(CategoryUnidentifiedData.InmutableCategoryUnidentifiedData::new)
 			.collect(Collectors.toSet());
 
 		PropertyExtractor coursePropertyExtractor = extractorFor((Map<String, Object>) courseMap.get("lessons"));
 		Set<LessonUnidentifiedData> lesson = coursePropertyExtractor
 			.extract("lesson", this::createLesson, LinkedHashSet::new);
 
-		return new CourseData.InmutableCourseData(title, description, image, author, creationDate, categories, lesson);
+		return new CourseUnidentifiedData.InmutableCourseData(title, description, image, author, creationDate, categories, lesson);
 	}
 
 	private LessonUnidentifiedData createLesson(Map<String, Object> lessonMap) throws KnowyImporterParseException {

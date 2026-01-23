@@ -2,7 +2,6 @@ package com.knowy.core.user;
 
 import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
-import com.knowy.core.user.domain.Gender;
 import com.knowy.core.user.exception.resource.KnowyImageNotFoundException;
 import com.knowy.core.user.exception.resource.KnowyUserNotFoundException;
 import com.knowy.core.user.exception.validation.KnowyInvalidUserNicknameException;

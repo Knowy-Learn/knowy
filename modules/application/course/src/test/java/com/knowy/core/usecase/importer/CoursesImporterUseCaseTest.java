@@ -101,7 +101,7 @@ class CoursesImporterUseCaseTest {
 		return mockMap;
 	}
 
-	private List<CourseData.InmutableCourseData> getMockedCourseUnidentifiedData() {
+	private List<CourseUnidentifiedData.InmutableCourseData> getMockedCourseUnidentifiedData() {
 
 		ExerciseData.InmutableExerciseData exercise = new ExerciseData.InmutableExerciseData(
 			"¿Cuál de los siguientes es un tipo primitivo en Java?",
@@ -123,15 +123,15 @@ class CoursesImporterUseCaseTest {
 			Set.of(exercise)
 		);
 
-		CourseData.InmutableCourseData course = new CourseData.InmutableCourseData(
+		CourseUnidentifiedData.InmutableCourseData course = new CourseUnidentifiedData.InmutableCourseData(
 			"Java Básico",
 			"Curso introductorio para aprender los fundamentos de Java.",
 			"java_basico.png",
 			"Juan Pérez",
 			FIXED_DATE,
 			Set.of(
-				new CategoryData.InmutableCategoryData("Programación"),
-				new CategoryData.InmutableCategoryData("Java")
+				new CategoryUnidentifiedData.InmutableCategoryUnidentifiedData("Programación"),
+				new CategoryUnidentifiedData.InmutableCategoryUnidentifiedData("Java")
 			),
 			Set.of(lesson)
 		);

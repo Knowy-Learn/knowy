@@ -70,7 +70,7 @@ public class JpaCourseMapper implements EntityMapper<Course, CourseEntity> {
 		CourseEntity course = new CourseEntity();
 
 		List<CategoryEntity> categories = new ArrayList<>();
-		for (CategoryData categoryData : domain.categories()) {
+		for (CategoryUnidentifiedData categoryData : domain.categories()) {
 			CategoryEntity entity = jpaCategoryMapper.toEntity(categoryData);
 			categories.add(entity);
 		}
