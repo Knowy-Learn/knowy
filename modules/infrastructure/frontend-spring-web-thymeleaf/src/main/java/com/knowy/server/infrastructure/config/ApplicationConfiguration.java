@@ -129,8 +129,9 @@ public class ApplicationConfiguration {
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
 		UserLessonRepository userLessonRepository,
-		CategoryRepository categoryRepository
+		CategoryRepository categoryRepository,
+		UserCourseRepository userCourseRepository
 	) {
-		return new CourseService(courseRepository, lessonRepository, userLessonRepository);
+		return new CourseService(courseRepository, lessonRepository, userLessonRepository, userCourseRepository);
 	}
 }

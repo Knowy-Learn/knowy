@@ -3,6 +3,7 @@ package com.knowy.server.api.controller;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
+import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.server.api.dto.UserLearnCoursesGet200Response;
 import com.knowy.server.api.dto.UserNavbarGet200Response;
@@ -22,10 +23,16 @@ public class UserController implements UserApi {
 	public UserController(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
-		UserLessonRepository userLessonRepository
+		UserLessonRepository userLessonRepository,
+		UserCourseRepository userCourseRepository
 	) {
 		this.getNavbarUserDataUseCase = new GetNavbarUserDataUseCase();
-		this.getResumeUserDataUseCase = new GetResumeUserDataUseCase(courseRepository, lessonRepository, userLessonRepository);
+		this.getResumeUserDataUseCase = new GetResumeUserDataUseCase(
+			courseRepository,
+			lessonRepository,
+			userLessonRepository,
+			userCourseRepository
+		);
 	}
 
 	/**

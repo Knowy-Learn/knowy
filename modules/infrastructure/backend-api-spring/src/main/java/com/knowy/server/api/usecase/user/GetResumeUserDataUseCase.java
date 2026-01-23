@@ -4,6 +4,7 @@ import com.knowy.core.CourseService;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
+import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.usecase.course.GetAllCoursesWithProgressResult;
 import com.knowy.core.user.domain.User;
@@ -35,9 +36,15 @@ public class GetResumeUserDataUseCase {
 	public GetResumeUserDataUseCase(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
-		UserLessonRepository userLessonRepository
+		UserLessonRepository userLessonRepository,
+		UserCourseRepository userCourseRepository
 	) {
-		this.courseService = new CourseService(courseRepository, lessonRepository, userLessonRepository);
+		this.courseService = new CourseService(
+			courseRepository,
+			lessonRepository,
+			userLessonRepository,
+			userCourseRepository
+		);
 	}
 
 	/**
