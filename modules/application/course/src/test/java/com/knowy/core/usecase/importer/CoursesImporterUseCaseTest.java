@@ -103,20 +103,20 @@ class CoursesImporterUseCaseTest {
 
 	private List<CourseUnidentifiedData.InmutableCourseData> getMockedCourseUnidentifiedData() {
 
-		ExerciseData.InmutableExerciseData exercise = new ExerciseData.InmutableExerciseData(
+		ExerciseUnidentifiedData.InmutableExerciseData exercise = new ExerciseUnidentifiedData.InmutableExerciseData(
 			"¿Cuál de los siguientes es un tipo primitivo en Java?",
 			List.of(
-				new OptionData.InmutableOptionData("Microsoft", false),
-				new OptionData.InmutableOptionData("Sun Microsystems", true),
-				new OptionData.InmutableOptionData("IBM", false)
+				new OptionUnidentifiedData.InmutableOptionUnidentifiedData("Microsoft", false),
+				new OptionUnidentifiedData.InmutableOptionUnidentifiedData("Sun Microsystems", true),
+				new OptionUnidentifiedData.InmutableOptionUnidentifiedData("IBM", false)
 			)
 		);
 
-		LessonData.InmutableLessonData lesson = new LessonData.InmutableLessonData(
+		LessonUnidentifiedData.InmutableLessonData lesson = new LessonUnidentifiedData.InmutableLessonData(
 			"Introducción a Java",
 			"En esta lección se presenta la historia y usos del lenguaje Java.",
 			Set.of(
-				new DocumentationData.InmutableDocumentationData(
+				new DocumentationUnidentifiedData.InmutableDocumentationUnidentifiedData(
 					"Documentación Oficial de Java",
 					"https://docs.oracle.com/javase/tutorial/")
 			),

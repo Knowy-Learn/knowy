@@ -81,29 +81,29 @@ class JpaCourseRepositoryTestIT {
 	}
 
 	private ExerciseUnidentifiedData createInputExercise(int num) {
-		OptionData option1 = new OptionData.InmutableOptionData("Option value " + num, true);
-		OptionData option2 = new OptionData.InmutableOptionData("Option value " + (num + 1), false);
+		OptionUnidentifiedData option1 = new OptionUnidentifiedData.InmutableOptionUnidentifiedData("Option value " + num, true);
+		OptionUnidentifiedData option2 = new OptionUnidentifiedData.InmutableOptionUnidentifiedData("Option value " + (num + 1), false);
 
-		return new ExerciseData.InmutableExerciseData(
+		return new ExerciseUnidentifiedData.InmutableExerciseData(
 			"Exercise statement " + num,
 			List.of(option1, option2)
 		);
 	}
 
 	private LessonUnidentifiedData createInputLesson(int num) {
-		DocumentationData documentation1 = new DocumentationData.InmutableDocumentationData(
+		DocumentationUnidentifiedData documentation1 = new DocumentationUnidentifiedData.InmutableDocumentationUnidentifiedData(
 			"Documentation title " + num,
 			"Documentation link " + num
 		);
-		DocumentationData documentation2 = new DocumentationData.InmutableDocumentationData(
+		DocumentationUnidentifiedData documentation2 = new DocumentationUnidentifiedData.InmutableDocumentationUnidentifiedData(
 			"Documentation title " + (num + 1),
 			"Documentation link " + (num + 1)
 		);
-		Set<DocumentationData> documentations = new LinkedHashSet<>();
+		Set<DocumentationUnidentifiedData> documentations = new LinkedHashSet<>();
 		documentations.add(documentation1);
 		documentations.add(documentation2);
 
-		return new LessonData.InmutableLessonData(
+		return new LessonUnidentifiedData.InmutableLessonData(
 			"Lesson title " + num,
 			"Lesson explanation " + num,
 			documentations,

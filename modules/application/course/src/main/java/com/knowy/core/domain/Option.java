@@ -4,8 +4,8 @@ public record Option(
 	int id,
 	String value,
 	boolean isValid
-) implements OptionIdentifier, OptionData {
-	public Option(int id, OptionData optionData) {
+) implements OptionIdentifier, OptionUnidentifiedData {
+	public Option(int id, OptionUnidentifiedData optionData) {
 		this(id, optionData.value(), optionData.isValid());
 	}
 }

@@ -1,7 +1,7 @@
 package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.domain.Documentation;
-import com.knowy.core.domain.DocumentationData;
+import com.knowy.core.domain.DocumentationUnidentifiedData;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
 import com.knowy.persistence.adapter.jpa.entity.DocumentationEntity;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
@@ -31,7 +31,7 @@ public class JpaDocumentationMapper implements EntityMapper<Documentation, Docum
 		);
 	}
 
-	public <T extends DocumentationData> DocumentationEntity toEntity(T domain, LessonEntity lesson) {
+	public <T extends DocumentationUnidentifiedData> DocumentationEntity toEntity(T domain, LessonEntity lesson) {
 		return new DocumentationEntity(
 			null,
 			domain.title(),

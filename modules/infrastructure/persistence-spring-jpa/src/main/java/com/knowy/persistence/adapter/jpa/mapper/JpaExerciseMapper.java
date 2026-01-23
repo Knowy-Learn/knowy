@@ -3,7 +3,7 @@ package com.knowy.persistence.adapter.jpa.mapper;
 import com.knowy.core.domain.Exercise;
 import com.knowy.core.domain.ExerciseUnidentifiedData;
 import com.knowy.core.domain.Option;
-import com.knowy.core.domain.OptionData;
+import com.knowy.core.domain.OptionUnidentifiedData;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.dao.JpaLessonDao;
@@ -62,7 +62,7 @@ public class JpaExerciseMapper implements EntityMapper<Exercise, ExerciseEntity>
 		exercise.setQuestion(domain.statement());
 
 		List<OptionEntity> optionEntities = new ArrayList<>();
-		for (OptionData option : domain.options()) {
+		for (OptionUnidentifiedData option : domain.options()) {
 			optionEntities.add(jpaOptionMapper.toEntity(option, exercise));
 		}
 		exercise.setOptions(optionEntities);

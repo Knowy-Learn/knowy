@@ -90,7 +90,7 @@ public class JpaLessonMapper implements EntityMapper<Lesson, LessonEntity> {
 		lesson.setExplanation(domain.explanation());
 
 		List<DocumentationEntity> documentationEntities = new ArrayList<>();
-		for (DocumentationData doc : domain.documentations()) {
+		for (DocumentationUnidentifiedData doc : domain.documentations()) {
 			documentationEntities.add(jpaDocumentationMapper.toEntity(doc, lesson));
 		}
 		lesson.setDocumentations(documentationEntities);

@@ -1,7 +1,7 @@
 package com.knowy.persistence.adapter.jpa.mapper;
 
 import com.knowy.core.domain.Option;
-import com.knowy.core.domain.OptionData;
+import com.knowy.core.domain.OptionUnidentifiedData;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.persistence.adapter.jpa.dao.JpaExerciseDao;
 import com.knowy.persistence.adapter.jpa.entity.ExerciseEntity;
@@ -37,7 +37,7 @@ public class JpaOptionMapper implements EntityMapper<Option, OptionEntity> {
 		);
 	}
 
-	public <T extends OptionData> OptionEntity toEntity(T domain, ExerciseEntity exercise) {
+	public <T extends OptionUnidentifiedData> OptionEntity toEntity(T domain, ExerciseEntity exercise) {
 		OptionEntity option = new OptionEntity();
 		option.setId(null);
 		option.setOptionText(domain.value());

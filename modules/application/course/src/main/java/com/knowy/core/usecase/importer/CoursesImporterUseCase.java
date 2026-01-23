@@ -86,7 +86,7 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 		String explanation = ImporterHelper.getRequiredString(lessonMap, "explanation");
 
 		var documentationData = (Map<String, Object>) lessonMap.get("documentations");
-		Set<DocumentationData> documentations = new HashSet<>();
+		Set<DocumentationUnidentifiedData> documentations = new HashSet<>();
 		if (documentationData != null) {
 			PropertyExtractor documentationPropertyExtractor = extractorFor(documentationData);
 			documentations = documentationPropertyExtractor.extract(
@@ -99,29 +99,29 @@ public class CoursesImporterUseCase implements Importer<List<Course>> {
 			"exercise", this::createExercise, HashSet::new
 		);
 
-		return new LessonData.InmutableLessonData(title, explanation, documentations, exercises);
+		return new LessonUnidentifiedData.InmutableLessonData(title, explanation, documentations, exercises);
 	}
 
-	private DocumentationData createDocumentation(Map<String, Object> documentationMap) throws KnowyImporterParseException {
+	private DocumentationUnidentifiedData createDocumentation(Map<String, Object> documentationMap) throws KnowyImporterParseException {
 		String title = ImporterHelper.getRequiredString(documentationMap, TAG_TITLE);
 		String link = ImporterHelper.getRequiredString(documentationMap, "link");
 
-		return new DocumentationData.InmutableDocumentationData(title, link);
+		return new DocumentationUnidentifiedData.InmutableDocumentationUnidentifiedData(title, link);
 	}
 
 	private ExerciseUnidentifiedData createExercise(Map<String, Object> exerciseMap) throws KnowyImporterParseException {
 		String statement = ImporterHelper.getRequiredString(exerciseMap, "statement");
 
 		PropertyExtractor optionPropertyExtractor = extractorFor((Map<String, Object>) exerciseMap.get("options"));
-		List<OptionData> options = optionPropertyExtractor.extract("option", this::createOption, ArrayList::new);
+		List<OptionUnidentifiedData> options = optionPropertyExtractor.extract("option", this::createOption, ArrayList::new);
 
-		return new ExerciseData.InmutableExerciseData(statement, options);
+		return new ExerciseUnidentifiedData.InmutableExerciseData(statement, options);
 	}
 
-	private OptionData createOption(Map<String, Object> optionMap) throws KnowyImporterParseException {
+	private OptionUnidentifiedData createOption(Map<String, Object> optionMap) throws KnowyImporterParseException {
 		String value = ImporterHelper.getRequiredString(optionMap, "value");
 		String stringIsValid = ImporterHelper.getRequiredString(optionMap, "isValid");
 
-		return new OptionData.InmutableOptionData(value, Boolean.parseBoolean(stringIsValid));
+		return new OptionUnidentifiedData.InmutableOptionUnidentifiedData(value, Boolean.parseBoolean(stringIsValid));
 	}
 }
