@@ -4,8 +4,25 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Contract for course data that has not yet been assigned a unique identity.
+ * <p>
+ * This interface is primarily used during the creation process or for templates, enforcing the presence of all core
+ * attributes without requiring an ID.
+ */
 public interface CourseUnidentifiedData extends CourseData<CategoryUnidentifiedData, LessonUnidentifiedData> {
 
+	/**
+	 * An immutable implementation of unidentified course data with built-in validation.
+	 *
+	 * @param title        The display title.
+	 * @param description  The detailed summary.
+	 * @param image        The cover image reference.
+	 * @param author       The content creator.
+	 * @param creationDate Initial publication timestamp.
+	 * @param categories   The set of associated categories (unidentified).
+	 * @param lessons      The set of associated lessons (unidentified).
+	 */
 	record InmutableCourseData(
 		String title,
 		String description,
@@ -15,6 +32,12 @@ public interface CourseUnidentifiedData extends CourseData<CategoryUnidentifiedD
 		Set<CategoryUnidentifiedData> categories,
 		Set<LessonUnidentifiedData> lessons
 	) implements CourseUnidentifiedData {
+
+		/**
+		 * Validates that all course components are non-null upon instantiation.
+		 *
+		 * @throws NullPointerException if any required field is null.
+		 */
 		public InmutableCourseData(
 			String title,
 			String description,

@@ -91,7 +91,7 @@ public class UserController implements UserApi {
 		try {
 			return ResponseEntity.ok(getResumeUserDataUseCase.execute());
 		} catch (KnowyInconsistentDataException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e); // TODO
 		}
 	}
 }
