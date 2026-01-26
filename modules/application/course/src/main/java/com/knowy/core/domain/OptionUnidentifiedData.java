@@ -2,6 +2,12 @@ package com.knowy.core.domain;
 
 import java.util.Objects;
 
+/**
+ * Content Contract for Exercise Options (Identity-less).
+ * <p>
+ * Defines the essential state of an answer choice. This interface is used primarily for creating new options before
+ * they are assigned a persistent ID.
+ */
 public interface OptionUnidentifiedData {
 
 	String value();
