@@ -5,6 +5,14 @@ import com.knowy.core.exception.KnowyUnsupportedOperationRuntimeException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Represents the interaction and progress of a user within a specific lesson. * @param userId    The unique identifier
+ * of the learner.
+ *
+ * @param lesson    The domain entity representing the lesson content.
+ * @param startDate The date when the user first accessed the lesson.
+ * @param status    The current lifecycle state of the lesson for this user.
+ */
 public record UserLesson(
 	int userId,
 	Lesson lesson,
@@ -34,6 +42,12 @@ public record UserLesson(
 		return averageRate / 100;
 	}
 
+	/**
+	 * Represents the lifecycle stages of a lesson from a user's perspective.
+	 * <p>
+	 * This enum governs the progression logic, allowing the system to track whether a user has started, is currently
+	 * working on, or has finished a specific educational unit.
+	 */
 	public enum ProgressStatus {
 		PENDING,
 		IN_PROGRESS,
