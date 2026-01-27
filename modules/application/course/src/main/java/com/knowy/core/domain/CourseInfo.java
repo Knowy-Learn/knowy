@@ -9,7 +9,7 @@ import java.util.Set;
  * Combines both {@link CourseIdentifier} and {@link CourseMinData} to provide a complete identified summary of a
  * course.
  */
-public interface CourseInfo extends CourseIdentifier, CourseMinData<CategoryUnidentifiedData> {
+public interface CourseInfo<C extends CategoryUnidentifiedData> extends CourseIdentifier, CourseMinData<C> {
 
 	/**
 	 * Immutable implementation of course summary data.
@@ -32,7 +32,7 @@ public interface CourseInfo extends CourseIdentifier, CourseMinData<CategoryUnid
 		String author,
 		LocalDateTime creationDate,
 		Set<CategoryUnidentifiedData> categories
-	) implements CourseIdentifier, CourseMinData<CategoryUnidentifiedData> {
+	) implements CourseInfo<CategoryUnidentifiedData> {
 
 		/**
 		 * Transformation constructor.
