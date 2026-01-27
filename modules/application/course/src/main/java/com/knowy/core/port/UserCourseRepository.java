@@ -5,8 +5,6 @@ import com.knowy.core.domain.Pagination;
 import com.knowy.core.domain.UserCourse;
 import com.knowy.core.exception.data.KnowyDataAccessException;
 
-import java.util.List;
-
 /**
  * Repository interface defining the contract for managing and retrieving {@link UserCourse} data. This port should be
  * implemented by infrastructure adapters to interact with the database.
@@ -31,5 +29,5 @@ public interface UserCourseRepository {
 	 * @return a {@link PagedResult} containing the list of {@link UserCourse} records
 	 * @throws KnowyDataAccessException if there is an error accessing to the data or processing the paginated request
 	 */
-	PagedResult<List<UserCourse>> findAllByUserId(int userId, Pagination pagination) throws KnowyDataAccessException;
+	PagedResult<UserCourse> findAllByUserId(int userId, Pagination pagination) throws KnowyDataAccessException;
 }

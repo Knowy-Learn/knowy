@@ -11,8 +11,7 @@ import com.knowy.core.user.domain.User;
 import com.knowy.server.api.controller.exception.KnowyUnauthorizedException;
 import com.knowy.server.api.dto.GenderEnum;
 import com.knowy.server.api.dto.UserResumeGet200Response;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.knowy.server.api.util.SecurityHelper;
 
 import java.util.List;
 
@@ -56,8 +55,7 @@ public class GetResumeUserDataUseCase {
 	 * @throws KnowyInconsistentDataException if there is a mismatch or error in the retrieved progress data.
 	 */
 	public UserResumeGet200Response execute() throws KnowyInconsistentDataException {
-
-		User user = getUserByAuthentication();
+		User user = new SecurityHelper().getAuthenticatedUser();
 		List<GetAllCoursesWithProgressResult> values = courseService.getAllCourseProgress(user.id());
 
 		getAverageProgress(values);
@@ -67,18 +65,6 @@ public class GetResumeUserDataUseCase {
 			.gender(GenderEnum.fromValue(user.gender().toString().toLowerCase()))
 			.totalCourses(values.size())
 			.completedCourses((float) getAverageProgress(values));
-	}
-
-	private User getUserByAuthentication() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Object principal = auth.getPrincipal();
-
-		if (!(principal instanceof User user)) {
-			String principalClass = principal != null ? principal.getClass().getName() : "null";
-			throw new KnowyUnauthorizedException("Expected principal of type User, but got: " + principalClass);
-		}
-
-		return user;
 	}
 
 	private double getAverageProgress(List<GetAllCoursesWithProgressResult> courses) {

@@ -6,8 +6,6 @@ import com.knowy.core.domain.UserCourse;
 import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.port.UserCourseRepository;
 
-import java.util.List;
-
 /**
  * Use case responsible for retrieving all courses associated with a specific user. This class handles the logic of
  * fetching user-specific course data with support for pagination.
@@ -32,7 +30,7 @@ public class GetAllUserCoursesByUserIdUseCase {
 	 * @param pagination the pagination parameters (page number, size, etc.)
 	 * @return a {@link PagedResult} containing a list of {@link UserCourse} objects and metadata
 	 */
-	public PagedResult<List<UserCourse>> execute(int userId, Pagination pagination) throws KnowyDataAccessException {
+	public PagedResult<UserCourse> execute(int userId, Pagination pagination) throws KnowyDataAccessException {
 		return userCourseRepository.findAllByUserId(userId, pagination);
 	}
 }

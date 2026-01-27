@@ -442,7 +442,8 @@ components:
                     description: "The date the course was assigned or created for the user."
                 categories:
                     type: array
-                    $ref: '#/components/schemas/CategoryDto'
+                    items:
+                        $ref: '#/components/schemas/CategoryDto'
                 progress:
                     type: number
                     format: float
@@ -453,7 +454,6 @@ components:
         ImageDto:
             type: object
             required:
-                - url
                 - alt
             properties:
                 url:
@@ -468,7 +468,6 @@ components:
         CategoryDto:
             type: object
             required:
-                - id
                 - name
             properties:
                 id:

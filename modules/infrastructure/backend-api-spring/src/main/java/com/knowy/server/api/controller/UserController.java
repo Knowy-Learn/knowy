@@ -1,5 +1,9 @@
 package com.knowy.server.api.controller;
 
+import com.knowy.core.domain.Filter;
+import com.knowy.core.domain.Order;
+import com.knowy.core.domain.Page;
+import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
@@ -9,16 +13,21 @@ import com.knowy.server.api.dto.UserLearnCoursesGet200Response;
 import com.knowy.server.api.dto.UserNavbarGet200Response;
 import com.knowy.server.api.dto.UserRecommendationsGet200Response;
 import com.knowy.server.api.dto.UserResumeGet200Response;
+import com.knowy.server.api.usecase.user.GetLearnCoursesDataUseCase;
 import com.knowy.server.api.usecase.user.GetNavbarUserDataUseCase;
 import com.knowy.server.api.usecase.user.GetResumeUserDataUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserController implements UserApi {
 
 	private final GetNavbarUserDataUseCase getNavbarUserDataUseCase;
 	private final GetResumeUserDataUseCase getResumeUserDataUseCase;
+	private final GetLearnCoursesDataUseCase getLearnCoursesDataUseCase;
 
 	public UserController(
 		CourseRepository courseRepository,
@@ -28,6 +37,12 @@ public class UserController implements UserApi {
 	) {
 		this.getNavbarUserDataUseCase = new GetNavbarUserDataUseCase();
 		this.getResumeUserDataUseCase = new GetResumeUserDataUseCase(
+			courseRepository,
+			lessonRepository,
+			userLessonRepository,
+			userCourseRepository
+		);
+		this.getLearnCoursesDataUseCase = new GetLearnCoursesDataUseCase(
 			courseRepository,
 			lessonRepository,
 			userLessonRepository,
@@ -49,9 +64,16 @@ public class UserController implements UserApi {
 	 * a valid token). (status code 401) or Internal Server Error. Something went wrong on the server. (status code
 	 * 500)
 	 */
+	// TODO
 	@Override
 	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(Integer page, Integer size, String order, String direction, String category) {
-		return null; //TODO
+		var pagination = new Pagination(
+			new Page(page, size),
+			Optional.of(new Order(category, Order.SortDirection.valueOf(direction))),
+			List.of()
+		);
+
+		return ResponseEntity.ok(getLearnCoursesDataUseCase.execute(pagination));
 	}
 
 	/**

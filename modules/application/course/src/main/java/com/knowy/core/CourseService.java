@@ -171,7 +171,7 @@ public class CourseService {
 	 * @throws KnowyDataAccessException if any error occurs while retrieving or processing data from the repository,
 	 *                                  including connectivity issues, retrieval failures, or data integrity violations
 	 */
-	public PagedResult<List<UserCourse>> getAllUserCoursesByUserId(int userId, Pagination pagination) throws KnowyDataAccessException {
+	public PagedResult<UserCourse> getAllUserCoursesByUserId(int userId, Pagination pagination) throws KnowyDataAccessException {
 		return getAllUserCoursesByUserIdUseCase.execute(userId, pagination);
 	}
 }
