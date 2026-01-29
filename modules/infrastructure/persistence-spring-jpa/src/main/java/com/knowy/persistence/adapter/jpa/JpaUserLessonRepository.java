@@ -7,6 +7,7 @@ import com.knowy.persistence.adapter.jpa.dao.*;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonIdEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserLessonMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +26,8 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 		JpaUserLessonDao jpaUserLessonDao,
 		JpaLessonDao jpaLessonDao,
 		JpaExerciseDao jpaExerciseDao,
-		JpaCourseDao jpaCourseDao, JpaUserDao jpaUserDao
+		JpaCourseDao jpaCourseDao,
+		JpaUserDao jpaUserDao
 	) {
 		this.jpaUserLessonDao = jpaUserLessonDao;
 		this.jpaLessonDao = jpaLessonDao;

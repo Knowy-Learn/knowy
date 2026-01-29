@@ -69,7 +69,7 @@ public class UserController implements UserApi {
 	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(Integer page, Integer size, String order, String direction, String category) {
 		var pagination = new Pagination(
 			new Page(page, size),
-			Optional.of(new Order(category, Order.SortDirection.valueOf(direction))),
+			Optional.of(new Order(category, Order.SortDirection.ASCENDING)), // TODO: Implemente correctly
 			List.of()
 		);
 

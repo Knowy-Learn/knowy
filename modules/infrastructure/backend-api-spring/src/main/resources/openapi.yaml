@@ -468,6 +468,7 @@ components:
         CategoryDto:
             type: object
             required:
+                - id
                 - name
             properties:
                 id:

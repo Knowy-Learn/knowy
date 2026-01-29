@@ -1,6 +1,8 @@
 package com.knowy.persistence.adapter.jpa.dao;
 
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +19,16 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 
 	@Query("SELECT c FROM CourseEntity c ORDER BY function('RANDOM')")
 	Stream<CourseEntity> findAllRandom();
+
+	@Query("""
+		SELECT c
+		FROM CourseEntity c
+		    JOIN c.lessons l
+		    JOIN PublicUserLessonEntity pul
+		        ON pul.lessonEntity = l
+		WHERE pul.userId = :userId
+		""")
+	Page<CourseEntity> findAllByUserId(@Param("userId") int userId, Pageable pageable);
 
 	@Query("""
 		SELECT c

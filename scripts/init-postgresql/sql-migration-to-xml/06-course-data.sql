@@ -48,3 +48,5 @@ VALUES
 	(31, 'Ruby para Desarrollo Web', 'Aprende Ruby y su uso para crear aplicaciones web con Ruby on Rails.', 'María Jiménez', '/images/languages/ruby.png'),
 
 	(32, 'Swift Básico', 'Curso de introducción a Swift para desarrollo de apps iOS.', 'José Ramírez', '/images/languages/swift.png');
+
+SELECT setval(pg_get_serial_sequence('course', 'id'), COALESCE(max(id), 0) + 1, false) FROM course;

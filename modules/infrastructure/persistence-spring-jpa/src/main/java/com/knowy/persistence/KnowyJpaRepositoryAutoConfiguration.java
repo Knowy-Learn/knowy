@@ -86,7 +86,8 @@ public class KnowyJpaRepositoryAutoConfiguration {
 		JpaUserLessonDao jpaUserLessonDao,
 		JpaLessonDao jpaLessonDao,
 		JpaExerciseDao jpaExerciseDao,
-		JpaCourseDao jpaCourseDao, JpaUserDao jpaUserDao
+		JpaCourseDao jpaCourseDao,
+		JpaUserDao jpaUserDao
 	) {
 		return new JpaUserLessonRepository(jpaUserLessonDao, jpaLessonDao, jpaExerciseDao, jpaCourseDao, jpaUserDao);
 	}
@@ -109,6 +110,26 @@ public class KnowyJpaRepositoryAutoConfiguration {
 	@ConditionalOnMissingBean
 	public NewsRepository jpaNewsRepository(JpaNewsDao jpaNewsDao) {
 		return new JpaNewsRepository(jpaNewsDao);
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public UserCourseRepository jpaUserCourseRepository(
+		JpaCourseDao jpaCourseDao,
+		JpaUserLessonDao jpaUserLessonDao,
+		JpaCategoryDao jpaCategoryDao,
+		JpaUserDao jpaUserDao,
+		JpaLessonDao jpaLessonDao,
+		JpaExerciseDao jpaExerciseDao
+	) {
+		return new JpaUserCourseRepository(
+			jpaCourseDao,
+			jpaUserLessonDao,
+			jpaCategoryDao,
+			jpaUserDao,
+			jpaLessonDao,
+			jpaExerciseDao
+		);
 	}
 }
 

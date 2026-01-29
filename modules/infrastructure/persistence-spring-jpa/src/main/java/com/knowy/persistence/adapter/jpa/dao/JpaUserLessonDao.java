@@ -1,8 +1,11 @@
 package com.knowy.persistence.adapter.jpa.dao;
 
-import com.knowy.core.domain.UserLesson;
+import com.knowy.core.domain.CourseIdentifiedInfo;
+import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonIdEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -54,6 +57,14 @@ public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, 
 		FROM PublicUserLessonEntity pul
 		    JOIN pul.lessonEntity l
 		WHERE pul.userId = :userId
+		""")
+	Page<PublicUserLessonEntity> findAllByUserId(@Param("userId") int userId, Pageable pageable);
+
+	@Query("""
+		SELECT pul
+		FROM PublicUserLessonEntity pul
+		    JOIN pul.lessonEntity l
+		WHERE pul.userId = :userId
 		    AND l.course.id = :courseId
 		""")
 	List<PublicUserLessonEntity> findAllByUserIdAndCourseId(@Param("userId") int userId, @Param("courseId") int courseId);
@@ -65,4 +76,19 @@ public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, 
 		WHERE pul.userId = :userId
 		""")
 	List<PublicUserLessonEntity> findAllWhereUserIsSubscribed(@Param("userId") int userId);
+
+	@Query("""
+		SELECT
+		    new com.knowy.persistence.adapter.jpa.dao.JpaUserLessonDao$UserLessonCourseInfo(c,pul)
+		FROM CourseEntity c
+		    INNER JOIN c.lessons l
+		    INNER JOIN PublicUserLessonEntity pul
+		        ON pul.lessonEntity.id = l.id
+		    INNER JOIN FETCH c.languages
+		WHERE c.id IN :coursesId
+		""")
+	List<UserLessonCourseInfo> findAllWithCourseInfoByCoursesId(@Param("coursesId") List<Integer> coursesId);
+
+	record UserLessonCourseInfo(CourseEntity courseEntity, PublicUserLessonEntity userLessonEntity) {
+	}
 }
