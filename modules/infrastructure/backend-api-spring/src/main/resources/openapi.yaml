@@ -282,18 +282,16 @@ paths:
                         default: 0
                 -   name: order
                     in: query
-                    description: Sort order for the courses (e.g., 'az', 'za', 'newest').
+                    description: Sort order for the courses (e.g., 'alphabetic', 'progress', 'date').
                     required: false
                     schema:
-                        type: string
-                        enum: [ alphabetic, progress, date ]
+                        $ref: '#/components/schemas/OrderEnum'
                 -   name: direction
                     in: query
                     description: Sort order direction for the courses.
                     required: false
                     schema:
-                        type: string
-                        enum: [ asc, desc ]
+                        $ref: '#/components/schemas/DirectionEnum'
                 -   name: category
                     in: query
                     description: Filter courses by category language.
@@ -354,6 +352,25 @@ components:
             bearerFormat: JWT
 
     schemas:
+        #################################
+        # Knowy Enums
+        #################################
+        OrderEnum:
+            type: string
+            description: Available sorting criteria for courses.
+            enum:
+                - alphabetic
+                - author
+                - createdAt
+                - completed
+                - inProgress
+                - pending
+        DirectionEnum:
+            type: string
+            description: Direction of the sort (ascending or descending).
+            enum:
+                - asc
+                - desc
         GenderEnum:
             type: string
             enum:
@@ -364,6 +381,9 @@ components:
             description: User gender
             example: other
 
+        #################################
+        # Knowy Data
+        #################################
         PaginationMetadata:
             type: object
             description: Pagination metadata.
@@ -385,6 +405,9 @@ components:
                     type: integer
                     description: The current page index.
                     example: 0
+        #################################
+        # Knowy Data DTO
+        #################################
 
         NewsDto:
             type: object

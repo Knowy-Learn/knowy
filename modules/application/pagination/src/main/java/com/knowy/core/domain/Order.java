@@ -1,5 +1,7 @@
 package com.knowy.core.domain;
 
+import com.knowy.core.exception.validation.KnowyIllegalArgumentRuntimeException;
+
 import java.util.Objects;
 
 /**
@@ -27,6 +29,14 @@ public record Order(
 	 */
 	public enum SortDirection {
 		ASCENDING,
-		DESCENDING
+		DESCENDING;
+
+		public static SortDirection fromString(String value) {
+			return switch (value.toUpperCase()) {
+				case "ASC", "ASCENDING" -> ASCENDING;
+				case "DESC", "DESCENDING" -> DESCENDING;
+				default -> throw new KnowyIllegalArgumentRuntimeException("Invalid order direction: " + value);
+			};
+		}
 	}
 }

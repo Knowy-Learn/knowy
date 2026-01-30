@@ -81,10 +81,10 @@ public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, 
 		SELECT
 		    new com.knowy.persistence.adapter.jpa.dao.JpaUserLessonDao$UserLessonCourseInfo(c,pul)
 		FROM CourseEntity c
-		    INNER JOIN c.lessons l
-		    INNER JOIN PublicUserLessonEntity pul
+		    LEFT JOIN c.lessons l
+		    LEFT JOIN PublicUserLessonEntity pul
 		        ON pul.lessonEntity.id = l.id
-		    INNER JOIN FETCH c.languages
+		    LEFT JOIN FETCH c.languages
 		WHERE c.id IN :coursesId
 		""")
 	List<UserLessonCourseInfo> findAllWithCourseInfoByCoursesId(@Param("coursesId") List<Integer> coursesId);

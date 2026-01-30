@@ -32,7 +32,8 @@ public record Filter(
 	 * integrity.
 	 */
 	public enum Operator {
-		IN(Collection.class::isInstance);
+		IN(Collection.class::isInstance),
+		EQUALS(java.util.Objects::nonNull);
 
 		private final Predicate<Object> predicate;
 

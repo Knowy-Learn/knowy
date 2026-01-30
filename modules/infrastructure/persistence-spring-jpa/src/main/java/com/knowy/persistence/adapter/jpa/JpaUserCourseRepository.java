@@ -11,6 +11,7 @@ import com.knowy.persistence.adapter.jpa.mapper.JpaUserLessonMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Map;
@@ -77,13 +78,23 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 	public PagedResult<UserCourse> findAllByUserId(int userId, Pagination pagination) throws KnowyDataAccessException {
 		Pageable pageable = PageRequest.of(
 			pagination.page().number(),
-			pagination.page().size()
+			pagination.page().size(),
+			pagination.order().map(this::toSpringSort)
+				.orElse(Sort.unsorted())
 		);
 
-		Page<CourseEntity> userLessonsPage = jpaCourseDao.findAllByUserId(userId, pageable);
-		List<UserCourse> userCourses = toUserCourses(userId, userLessonsPage.getContent());
+		Page<CourseEntity> courseEntitiesPage = jpaCourseDao.findAllByUserId(userId, pageable);
+		List<UserCourse> userCourses = toUserCourses(userId, courseEntitiesPage.getContent());
 
-		return new PagedResult<>(pagination.page(), userCourses, userLessonsPage.getTotalElements());
+		return new PagedResult<>(pagination.page(), userCourses, courseEntitiesPage.getTotalElements());
+	}
+
+	private Sort toSpringSort(Order order) {
+		Sort.Direction direction = order.direction() == Order.SortDirection.ASCENDING
+			? Sort.Direction.ASC
+			: Sort.Direction.DESC;
+
+		return Sort.by(direction, order.field());
 	}
 
 	private List<UserCourse> toUserCourses(int userId, List<CourseEntity> courseEntities) {

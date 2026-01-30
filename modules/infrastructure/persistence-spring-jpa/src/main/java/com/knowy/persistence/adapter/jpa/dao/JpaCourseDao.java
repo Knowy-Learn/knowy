@@ -27,6 +27,13 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 		    JOIN PublicUserLessonEntity pul
 		        ON pul.lessonEntity = l
 		WHERE pul.userId = :userId
+		GROUP BY c
+		ORDER BY AVG(CASE
+		    WHEN pul.status = 'completed' THEN 3
+		    WHEN pul.status = 'in_progress' THEN 2
+		    WHEN pul.status = 'pending' THEN 1
+		    ELSE 0
+		END) DESC
 		""")
 	Page<CourseEntity> findAllByUserId(@Param("userId") int userId, Pageable pageable);
 

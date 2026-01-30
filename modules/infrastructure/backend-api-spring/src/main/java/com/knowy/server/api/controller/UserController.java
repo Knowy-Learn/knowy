@@ -9,10 +9,7 @@ import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
-import com.knowy.server.api.dto.UserLearnCoursesGet200Response;
-import com.knowy.server.api.dto.UserNavbarGet200Response;
-import com.knowy.server.api.dto.UserRecommendationsGet200Response;
-import com.knowy.server.api.dto.UserResumeGet200Response;
+import com.knowy.server.api.dto.*;
 import com.knowy.server.api.usecase.user.GetLearnCoursesDataUseCase;
 import com.knowy.server.api.usecase.user.GetNavbarUserDataUseCase;
 import com.knowy.server.api.usecase.user.GetResumeUserDataUseCase;
@@ -50,13 +47,15 @@ public class UserController implements UserApi {
 		);
 	}
 
+
 	/**
 	 * GET /user/learn/courses : Get filtered courses with pagination Fetches the user&#39;s course collection. Supports
 	 * pagination, filtering by category, and custom sorting.
 	 *
 	 * @param page      The page number to retrieve (starting from 0). (optional, default to 0)
 	 * @param size      The size of element to retrieve (optional, default to 0)
-	 * @param order     Sort order for the courses (e.g., &#39;az&#39;, &#39;za&#39;, &#39;newest&#39;). (optional)
+	 * @param order     Sort order for the courses (e.g., &#39;alphabetic&#39;, &#39;progress&#39;, &#39;date&#39;).
+	 *                  (optional)
 	 * @param direction Sort order direction for the courses. (optional)
 	 * @param category  Filter courses by category language. (optional)
 	 * @return A paginated list of courses. (status code 200) or Bad Request. The request is invalid or cannot be
@@ -64,16 +63,39 @@ public class UserController implements UserApi {
 	 * a valid token). (status code 401) or Internal Server Error. Something went wrong on the server. (status code
 	 * 500)
 	 */
-	// TODO
 	@Override
-	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(Integer page, Integer size, String order, String direction, String category) {
+	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(
+		Integer page,
+		Integer size,
+		OrderEnum order,
+		DirectionEnum direction,
+		String category
+	) {
 		var pagination = new Pagination(
 			new Page(page, size),
-			Optional.of(new Order(category, Order.SortDirection.ASCENDING)), // TODO: Implemente correctly
-			List.of()
+			Optional.of(getPaginationOrder(order, direction)),
+			getPaginationFilters(category)
 		);
 
 		return ResponseEntity.ok(getLearnCoursesDataUseCase.execute(pagination));
+	}
+
+	private Order getPaginationOrder(OrderEnum orderEnum, DirectionEnum directionEnum) {
+		Order.SortDirection sortDirection = Optional.ofNullable(directionEnum)
+			.map(dir -> Order.SortDirection.fromString(dir.toString()))
+			.orElse(Order.SortDirection.ASCENDING);
+
+		return switch (orderEnum != null ? orderEnum : OrderEnum.ALPHABETIC) {
+			case DATE -> new Order("creation_date", sortDirection);
+			case AUTHOR -> new Order("author", sortDirection);
+			default -> new Order("title", sortDirection);
+		};
+	}
+
+	private List<Filter> getPaginationFilters(String category) {
+		return (category != null && !category.isBlank())
+			? List.of(new Filter("category", Filter.Operator.EQUALS, category))
+			: List.of();
 	}
 
 	/**
