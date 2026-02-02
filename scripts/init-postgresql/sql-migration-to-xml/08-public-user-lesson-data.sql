@@ -16,28 +16,28 @@ VALUES (1, 1, '2025-06-10', 'completed'),
 INSERT INTO public.public_user_lesson (id_public_user, id_lesson, start_date, status)
 VALUES (2, 11, '2025-06-10', 'completed'),
 	   (2, 12, '2025-06-10', 'in_progress'),
-	   -- 2
+	   -- 2 = 0.5
 	   (2, 13, '2025-06-11', 'completed'),
 	   (2, 14, '2025-06-12', 'completed'),
-	   -- 3
+	   -- 3 = 1
 	   (2, 15, '2025-06-13', 'completed'),
 	   (2, 16, '2025-06-14', 'completed'),
-	   -- 4
+	   -- 4 = 1
 	   (2, 17, '2025-06-15', 'completed'),
 	   (2, 18, '2025-06-16', 'in_progress'),
-	   -- 5
+	   -- 5 = 0.5
 	   (2, 19, '2025-06-17', 'pending'),
 	   (2, 20, '2025-06-18', 'pending'),
-	   -- 6
+	   -- 6 = 0
 	   (2, 21, '2025-06-19', 'pending'),
 	   (2, 22, '2025-06-20', 'pending'),
-	   -- 7
+	   -- 7 = 0
 	   (2, 23, '2025-06-21', 'pending'),
 	   (2, 24, '2025-06-23', 'pending'),
-	   -- 8
+	   -- 8 = 0
 	   (2, 25, '2025-06-24', 'pending'),
 	   (2, 26, '2025-06-25', 'pending');
-	   -- 9
+	   -- 9 = 0
 
 -- Usuario 3
 INSERT INTO public.public_user_lesson (id_public_user, id_lesson, start_date, status)

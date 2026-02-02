@@ -28,10 +28,16 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 		        ON pul.lessonEntity = l
 		WHERE pul.userId = :userId
 		GROUP BY c
+		HAVING AVG(CASE
+		    WHEN pul.status = 'completed' THEN 1
+		    WHEN pul.status = 'in_progress' THEN 0.5
+		    WHEN pul.status = 'pending' THEN 0
+		    ELSE 0
+		END) != 1
 		ORDER BY AVG(CASE
-		    WHEN pul.status = 'completed' THEN 3
-		    WHEN pul.status = 'in_progress' THEN 2
-		    WHEN pul.status = 'pending' THEN 1
+		    WHEN pul.status = 'completed' THEN 1
+		    WHEN pul.status = 'in_progress' THEN 0.5
+		    WHEN pul.status = 'pending' THEN 0
 		    ELSE 0
 		END) DESC
 		""")

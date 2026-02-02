@@ -28,18 +28,17 @@ public record UserCourse(int userId, CourseInfo courseInfo, List<UserLesson> use
 			return 0.0;
 		}
 
-		double totalProgress = userLessons.stream()
+		return userLessons.stream()
 			.map(UserLesson::status)
 			.mapToDouble(this::statusToWeight)
-			.sum();
-
-		return totalProgress / userLessons.size();
+			.average()
+			.orElse(0.0);
 	}
 
 	private double statusToWeight(UserLesson.ProgressStatus status) {
 		return switch (status) {
 			case COMPLETED -> 1.0;
-			case PENDING -> 0.5;
+			case IN_PROGRESS -> 0.5;
 			default -> 0.0;
 		};
 	}

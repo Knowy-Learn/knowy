@@ -362,9 +362,6 @@ components:
                 - alphabetic
                 - author
                 - createdAt
-                - completed
-                - inProgress
-                - pending
         DirectionEnum:
             type: string
             description: Direction of the sort (ascending or descending).

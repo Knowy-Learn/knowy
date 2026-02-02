@@ -86,7 +86,7 @@ public class UserController implements UserApi {
 			.orElse(Order.SortDirection.ASCENDING);
 
 		return switch (orderEnum != null ? orderEnum : OrderEnum.ALPHABETIC) {
-			case DATE -> new Order("creation_date", sortDirection);
+			case CREATED_AT -> new Order("creationDate", sortDirection);
 			case AUTHOR -> new Order("author", sortDirection);
 			default -> new Order("title", sortDirection);
 		};
