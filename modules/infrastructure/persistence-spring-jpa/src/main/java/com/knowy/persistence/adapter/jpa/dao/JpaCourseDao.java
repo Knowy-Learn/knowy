@@ -10,6 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Repository
@@ -21,27 +22,36 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 	Stream<CourseEntity> findAllRandom();
 
 	@Query("""
-		SELECT c
-		FROM CourseEntity c
-		    JOIN c.lessons l
-		    JOIN PublicUserLessonEntity pul
-		        ON pul.lessonEntity = l
-		WHERE pul.userId = :userId
-		GROUP BY c
-		HAVING AVG(CASE
-		    WHEN pul.status = 'completed' THEN 1
-		    WHEN pul.status = 'in_progress' THEN 0.5
-		    WHEN pul.status = 'pending' THEN 0
-		    ELSE 0
-		END) != 1
-		ORDER BY AVG(CASE
-		    WHEN pul.status = 'completed' THEN 1
-		    WHEN pul.status = 'in_progress' THEN 0.5
-		    WHEN pul.status = 'pending' THEN 0
-		    ELSE 0
-		END) DESC
+		    SELECT c
+		    FROM CourseEntity c
+		        JOIN c.lessons l
+		        JOIN PublicUserLessonEntity pul
+		            ON pul.lessonEntity = l
+		    WHERE pul.userId = :userId
+		    GROUP BY c
+		    HAVING
+		        CASE AVG(
+		            CASE pul.status
+		                WHEN 'completed' THEN 1
+		                WHEN 'pending' THEN 0
+		                ELSE 0.5
+		            END
+		        )
+		        WHEN 0 THEN 0 /* PENDING */
+		        WHEN 1 THEN 1 /* COMPLETED */
+		        ELSE 2        /* IN_PROGRESS */
+		    END IN (:courseStatusIds)
+		    ORDER BY AVG(CASE pul.status
+		        WHEN 'completed' THEN 1
+		        WHEN 'pending' THEN 0
+		        ELSE 0.5
+		    END) DESC
 		""")
-	Page<CourseEntity> findAllByUserId(@Param("userId") int userId, Pageable pageable);
+	Page<CourseEntity> findAllByUserId(
+		@Param("userId") int userId,
+		@Param("courseStatusIds") Set<Integer> courseStatusIds,
+		Pageable pageable
+	);
 
 	@Query("""
 		SELECT c

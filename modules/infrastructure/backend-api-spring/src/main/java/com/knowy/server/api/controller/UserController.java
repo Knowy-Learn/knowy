@@ -1,9 +1,6 @@
 package com.knowy.server.api.controller;
 
-import com.knowy.core.domain.Filter;
-import com.knowy.core.domain.Order;
-import com.knowy.core.domain.Page;
-import com.knowy.core.domain.Pagination;
+import com.knowy.core.domain.*;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
@@ -18,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 public class UserController implements UserApi {
@@ -47,37 +46,32 @@ public class UserController implements UserApi {
 		);
 	}
 
-
 	/**
 	 * GET /user/learn/courses : Get filtered courses with pagination Fetches the user&#39;s course collection. Supports
-	 * pagination, filtering by category, and custom sorting.
+	 * pagination and custom sorting.
 	 *
-	 * @param page      The page number to retrieve (starting from 0). (optional, default to 0)
-	 * @param size      The size of element to retrieve (optional, default to 0)
-	 * @param order     Sort order for the courses (e.g., &#39;alphabetic&#39;, &#39;progress&#39;, &#39;date&#39;).
-	 *                  (optional)
-	 * @param direction Sort order direction for the courses. (optional)
-	 * @param category  Filter courses by category language. (optional)
+	 * @param paging       Pagination and sorting criteria (page, size, order, direction). (optional)
+	 * @param category     Filter by category language (e.g., &#39;java&#39;). (optional)
+	 * @param courseStatus Filter by one or more progress statuses (no duplicates). (optional)
 	 * @return A paginated list of courses. (status code 200) or Bad Request. The request is invalid or cannot be
 	 * processed. (status code 400) or Access unauthorized. The request requires valid authentication credentials (e.g.,
 	 * a valid token). (status code 401) or Internal Server Error. Something went wrong on the server. (status code
 	 * 500)
 	 */
 	@Override
-	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(
-		Integer page,
-		Integer size,
-		OrderEnum order,
-		DirectionEnum direction,
-		String category
-	) {
-		var pagination = new Pagination(
-			new Page(page, size),
-			Optional.of(getPaginationOrder(order, direction)),
+	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(PaginationData paging, String category, Set<CourseStatusEnum> courseStatus) {
+		var paginationRequest = new Pagination(
+			new Page(paging.getPage(), paging.getSize()),
+			Optional.of(getPaginationOrder(paging.getOrder(), paging.getDirection())),
 			getPaginationFilters(category)
 		);
-
-		return ResponseEntity.ok(getLearnCoursesDataUseCase.execute(pagination));
+		return ResponseEntity.ok(getLearnCoursesDataUseCase.execute(
+			Optional.ofNullable(courseStatus)
+				.orElse(Set.of())
+				.stream()
+				.map(status -> CourseStatus.fromString(status.toString()))
+				.collect(Collectors.toSet()),
+			paginationRequest));
 	}
 
 	private Order getPaginationOrder(OrderEnum orderEnum, DirectionEnum directionEnum) {

@@ -263,41 +263,31 @@ paths:
             tags:
                 - User
             summary: Get filtered courses with pagination
-            description: Fetches the user's course collection. Supports pagination, filtering by category, and custom sorting.
+            description: Fetches the user's course collection. Supports pagination and custom sorting.
             security:
                 -   BearerAuth: [ ]
             parameters:
-                -   name: page
+                -   name: paging
                     in: query
-                    description: The page number to retrieve (starting from 0).
-                    required: false
+                    description: Pagination and sorting criteria (page, size, order, direction).
+                    style: form
+                    explode: true
+                    required: true
                     schema:
-                        type: integer
-                        default: 0
-                -   name: size
-                    in: query
-                    description: The size of element to retrieve
-                    schema:
-                        type: integer
-                        default: 0
-                -   name: order
-                    in: query
-                    description: Sort order for the courses (e.g., 'alphabetic', 'progress', 'date').
-                    required: false
-                    schema:
-                        $ref: '#/components/schemas/OrderEnum'
-                -   name: direction
-                    in: query
-                    description: Sort order direction for the courses.
-                    required: false
-                    schema:
-                        $ref: '#/components/schemas/DirectionEnum'
+                        $ref: '#/components/schemas/PaginationData'
                 -   name: category
                     in: query
-                    description: Filter courses by category language.
-                    required: false
+                    description: Filter by category language (e.g., 'java').
                     schema:
                         type: string
+                -   name: courseStatus
+                    in: query
+                    description: Filter by one or more progress statuses (no duplicates).
+                    schema:
+                        type: array
+                        uniqueItems: true
+                        items:
+                            $ref: '#/components/schemas/CourseStatusEnum'
             responses:
                 '200':
                     description: A paginated list of courses.
@@ -361,7 +351,7 @@ components:
             enum:
                 - alphabetic
                 - author
-                - createdAt
+                - created_at
         DirectionEnum:
             type: string
             description: Direction of the sort (ascending or descending).
@@ -377,6 +367,13 @@ components:
                 - unknown
             description: User gender
             example: other
+        CourseStatusEnum:
+            type: string
+            description: Status of the course for the user.
+            enum:
+                - not_started
+                - in_progress
+                - completed
 
         #################################
         # Knowy Data
@@ -402,6 +399,29 @@ components:
                     type: integer
                     description: The current page index.
                     example: 0
+        PaginationData:
+            type: object
+            description: Pagination input data for requests
+            required:
+                - page
+                - size
+            properties:
+                page:
+                    type: integer
+                    description: The page number to retrieve (starting from 0).
+                    default: 0
+                size:
+                    type: integer
+                    description: The size of element to retrieve.
+                    default: 10
+                order:
+                    $ref: '#/components/schemas/OrderEnum'
+                direction:
+                    $ref: '#/components/schemas/DirectionEnum'
+                category:
+                    type: string
+                    description: Filter courses by category language.
+
         #################################
         # Knowy Data DTO
         #################################

@@ -1,10 +1,13 @@
 package com.knowy.core.usecase.course;
 
+import com.knowy.core.domain.CourseStatus;
 import com.knowy.core.domain.PagedResult;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.domain.UserCourse;
 import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.port.UserCourseRepository;
+
+import java.util.Set;
 
 /**
  * Use case responsible for retrieving all courses associated with a specific user. This class handles the logic of
@@ -30,7 +33,13 @@ public class GetAllUserCoursesByUserIdUseCase {
 	 * @param pagination the pagination parameters (page number, size, etc.)
 	 * @return a {@link PagedResult} containing a list of {@link UserCourse} objects and metadata
 	 */
-	public PagedResult<UserCourse> execute(int userId, Pagination pagination) throws KnowyDataAccessException {
-		return userCourseRepository.findAllByUserId(userId, pagination);
+	public PagedResult<UserCourse> execute(int userId, Set<CourseStatus> courseStatusIds, Pagination pagination) throws KnowyDataAccessException {
+		return userCourseRepository.findAllByUserId(userId, ensureNotEmpty(courseStatusIds), pagination);
+	}
+
+	private Set<CourseStatus> ensureNotEmpty(Set<CourseStatus> courseStatuses) {
+		return (courseStatuses == null || courseStatuses.isEmpty())
+			? Set.of(CourseStatus.IN_PROGRESS, CourseStatus.NOT_STARTED)
+			: courseStatuses;
 	}
 }

@@ -1,6 +1,7 @@
 package com.knowy.server.api.usecase.user;
 
 import com.knowy.core.CourseService;
+import com.knowy.core.domain.CourseStatus;
 import com.knowy.core.domain.PagedResult;
 import com.knowy.core.domain.Pagination;
 import com.knowy.core.domain.UserCourse;
@@ -20,6 +21,7 @@ import com.knowy.server.api.util.SecurityHelper;
 
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Set;
 
 // JAVADOC
 public class GetLearnCoursesDataUseCase {
@@ -35,11 +37,11 @@ public class GetLearnCoursesDataUseCase {
 		this.courseService = new CourseService(courseRepository, lessonRepository, userLessonRepository, userCourseRepository);
 	}
 
-	public UserLearnCoursesGet200Response execute(Pagination pagination) {
+	public UserLearnCoursesGet200Response execute(Set<CourseStatus> coursesStatusIds, Pagination pagination) {
 		User user = new SecurityHelper().getAuthenticatedUser();
 
 		try {
-			PagedResult<UserCourse> pagedResult = courseService.getAllUserCoursesByUserId(user.id(), pagination);
+			PagedResult<UserCourse> pagedResult = courseService.getAllUserCoursesByUserId(user.id(), coursesStatusIds, pagination);
 
 			var paginationMetadata = new PaginationMetadata()
 				.total(pagedResult.totalItems())

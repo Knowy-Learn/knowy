@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 	 * @throws KnowyDataAccessException if there is an error accessing to the data or processing the paginated request
 	 */
 	@Override
-	public PagedResult<UserCourse> findAllByUserId(int userId, Pagination pagination) throws KnowyDataAccessException {
+	public PagedResult<UserCourse> findAllByUserId(int userId, Set<CourseStatus> coursesStatusIds, Pagination pagination) throws KnowyDataAccessException {
 		Pageable pageable = PageRequest.of(
 			pagination.page().number(),
 			pagination.page().size(),
@@ -83,7 +84,11 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 				.orElse(Sort.unsorted())
 		);
 
-		Page<CourseEntity> courseEntitiesPage = jpaCourseDao.findAllByUserId(userId, pageable);
+		Page<CourseEntity> courseEntitiesPage = jpaCourseDao.findAllByUserId(
+			userId,
+			coursesStatusIds.stream().map(this::statusToInt).collect(Collectors.toSet()),
+			pageable
+		);
 		List<UserCourse> userCourses = toUserCourses(userId, courseEntitiesPage.getContent());
 
 		return new PagedResult<>(pagination.page(), userCourses, courseEntitiesPage.getTotalElements());
@@ -95,6 +100,14 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 			: Sort.Direction.DESC;
 
 		return Sort.by(direction, order.field());
+	}
+
+	private int statusToInt(CourseStatus courseStatus) {
+		return switch (courseStatus) {
+			case NOT_STARTED -> 0;
+			case COMPLETED -> 1;
+			case IN_PROGRESS -> 2;
+		};
 	}
 
 	private List<UserCourse> toUserCourses(int userId, List<CourseEntity> courseEntities) {
