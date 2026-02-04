@@ -349,7 +349,7 @@ components:
             type: string
             description: Available sorting criteria for courses.
             enum:
-                - alphabetic
+                - title
                 - author
                 - created_at
         DirectionEnum:
@@ -482,6 +482,7 @@ components:
                     description: "The date the course was assigned or created for the user."
                 categories:
                     type: array
+                    uniqueItems: true
                     items:
                         $ref: '#/components/schemas/CategoryDto'
                 progress:

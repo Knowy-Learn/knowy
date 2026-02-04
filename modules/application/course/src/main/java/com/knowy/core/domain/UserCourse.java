@@ -9,7 +9,7 @@ import java.util.List;
  * @param courseInfo  general metadata and details about the course
  * @param userLessons the list of individual lesson progress records for this user
  */
-public record UserCourse(int userId, CourseInfo courseInfo, List<UserLesson> userLessons) {
+public record UserCourse(int userId, CourseInfo<Category> courseInfo, List<UserLesson> userLessons) {
 
 	/**
 	 * Calculates the overall progress of the course as a normalized value between 0.0 and 1.0.

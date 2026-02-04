@@ -1,6 +1,5 @@
 package com.knowy.server.api.controller;
 
-import com.knowy.core.domain.*;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
@@ -13,10 +12,7 @@ import com.knowy.server.api.usecase.user.GetResumeUserDataUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 public class UserController implements UserApi {
@@ -59,37 +55,12 @@ public class UserController implements UserApi {
 	 * 500)
 	 */
 	@Override
-	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(PaginationData paging, String category, Set<CourseStatusEnum> courseStatus) {
-		var paginationRequest = new Pagination(
-			new Page(paging.getPage(), paging.getSize()),
-			Optional.of(getPaginationOrder(paging.getOrder(), paging.getDirection())),
-			getPaginationFilters(category)
-		);
-		return ResponseEntity.ok(getLearnCoursesDataUseCase.execute(
-			Optional.ofNullable(courseStatus)
-				.orElse(Set.of())
-				.stream()
-				.map(status -> CourseStatus.fromString(status.toString()))
-				.collect(Collectors.toSet()),
-			paginationRequest));
-	}
-
-	private Order getPaginationOrder(OrderEnum orderEnum, DirectionEnum directionEnum) {
-		Order.SortDirection sortDirection = Optional.ofNullable(directionEnum)
-			.map(dir -> Order.SortDirection.fromString(dir.toString()))
-			.orElse(Order.SortDirection.ASCENDING);
-
-		return switch (orderEnum != null ? orderEnum : OrderEnum.ALPHABETIC) {
-			case CREATED_AT -> new Order("creationDate", sortDirection);
-			case AUTHOR -> new Order("author", sortDirection);
-			default -> new Order("title", sortDirection);
-		};
-	}
-
-	private List<Filter> getPaginationFilters(String category) {
-		return (category != null && !category.isBlank())
-			? List.of(new Filter("category", Filter.Operator.EQUALS, category))
-			: List.of();
+	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(
+		PaginationData paging,
+		String category,
+		Set<CourseStatusEnum> courseStatus
+	) {
+		return ResponseEntity.ok(getLearnCoursesDataUseCase.execute(paging, courseStatus, category));
 	}
 
 	/**
