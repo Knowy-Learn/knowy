@@ -5,6 +5,7 @@ import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
+import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
 import com.knowy.server.api.dto.*;
 import com.knowy.server.api.usecase.user.GetLearnCoursesDataUseCase;
 import com.knowy.server.api.usecase.user.GetNavbarUserDataUseCase;
@@ -100,7 +101,7 @@ public class UserController implements UserApi {
 		try {
 			return ResponseEntity.ok(getResumeUserDataUseCase.execute());
 		} catch (KnowyInconsistentDataException e) {
-			throw new RuntimeException(e); // TODO
+			throw new KnowyInternalServerErrorException("Data inconsistency detected while fetching user resume", e);
 		}
 	}
 }
