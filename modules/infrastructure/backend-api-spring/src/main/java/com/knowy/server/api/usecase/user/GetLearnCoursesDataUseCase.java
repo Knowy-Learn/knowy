@@ -20,7 +20,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-// JAVADOC
+/**
+ * Use case for retrieving paginated course data for the authenticated user's learning section. It handles filtering by
+ * status and category, pagination, and mapping results to DTOs.
+ */
 public class GetLearnCoursesDataUseCase {
 
 	private final CourseService courseService;
@@ -28,6 +31,14 @@ public class GetLearnCoursesDataUseCase {
 	private final CourseStatusEnumMapper statusMapper = new CourseStatusEnumMapper();
 	private final OrderMapper orderMapper = new OrderMapper();
 
+	/**
+	 * Initializes the use case with the required infrastructure repositories.
+	 *
+	 * @param courseRepository     the repository for general course data.
+	 * @param lessonRepository     the repository for lesson details.
+	 * @param userLessonRepository the repository for tracking user progress in lessons.
+	 * @param userCourseRepository the repository for user-specific course associations.
+	 */
 	public GetLearnCoursesDataUseCase(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
@@ -37,6 +48,15 @@ public class GetLearnCoursesDataUseCase {
 		this.courseService = new CourseService(courseRepository, lessonRepository, userLessonRepository, userCourseRepository);
 	}
 
+	/**
+	 * Executes the process of fetching and mapping user courses based on the provided filters and pagination.
+	 *
+	 * @param paging          the pagination and sorting criteria.
+	 * @param coursesStatuses the set of statuses to filter the courses.
+	 * @param category        an optional category filter.
+	 * @return a response object containing paginated course DTOs and metadata.
+	 * @throws KnowyInternalServerErrorException if a data access error occurs during execution.
+	 */
 	public UserLearnCoursesGet200Response execute(
 		PaginationData paging,
 		Set<CourseStatusEnum> coursesStatuses,
