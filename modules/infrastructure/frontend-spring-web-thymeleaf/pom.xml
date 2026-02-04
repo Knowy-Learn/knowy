@@ -44,6 +44,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.knowy</groupId>
+			<artifactId>news-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.knowy</groupId>
 			<artifactId>persistence-spring-jpa</artifactId>
 		</dependency>
 		<dependency>

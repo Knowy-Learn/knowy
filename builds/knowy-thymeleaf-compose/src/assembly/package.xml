@@ -6,7 +6,7 @@
 	<dependencySets>
 		<dependencySet>
 			<includes>
-				<include>com.knowy:frontend-web-spring:jar:*</include>
+				<include>com.knowy:frontend-spring-web-thymeleaf:jar:*</include>
 			</includes>
 			<outputFileNameMapping>server.jar</outputFileNameMapping>
 			<outputDirectory>server</outputDirectory>
@@ -19,6 +19,10 @@
 		</fileSet>
 		<fileSet>
 			<directory>../../scripts/init-postgresql/sql</directory>
+			<outputDirectory>sql/init</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../../scripts/init-postgresql/sql-migration-to-xml</directory>
 			<outputDirectory>sql/init</outputDirectory>
 		</fileSet>
 	</fileSets>
