@@ -10,6 +10,7 @@ import com.knowy.server.api.dto.*;
 import com.knowy.server.api.usecase.user.GetLearnCoursesDataUseCase;
 import com.knowy.server.api.usecase.user.GetNavbarUserDataUseCase;
 import com.knowy.server.api.usecase.user.GetResumeUserDataUseCase;
+import com.knowy.server.api.usecase.user.GetUserRecommendation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,7 @@ public class UserController implements UserApi {
 	private final GetNavbarUserDataUseCase getNavbarUserDataUseCase;
 	private final GetResumeUserDataUseCase getResumeUserDataUseCase;
 	private final GetLearnCoursesDataUseCase getLearnCoursesDataUseCase;
+	private final GetUserRecommendation getUserRecommendation;
 
 	public UserController(
 		CourseRepository courseRepository,
@@ -28,6 +30,12 @@ public class UserController implements UserApi {
 		UserLessonRepository userLessonRepository,
 		UserCourseRepository userCourseRepository
 	) {
+		this.getUserRecommendation = new GetUserRecommendation(
+			courseRepository,
+			lessonRepository,
+			userLessonRepository,
+			userCourseRepository
+		);
 		this.getNavbarUserDataUseCase = new GetNavbarUserDataUseCase();
 		this.getResumeUserDataUseCase = new GetResumeUserDataUseCase(
 			courseRepository,
@@ -85,8 +93,8 @@ public class UserController implements UserApi {
 	 * wrong on the server. (status code 500)
 	 */
 	@Override
-	public ResponseEntity<UserRecommendationsGet200Response> userRecommendationsGet() {
-		return null; //TODO
+	public ResponseEntity<UserRecommendationsGet200Response> userRecommendationsGet(PaginationData paginationData) {
+		return ResponseEntity.ok(getUserRecommendation.execute(paginationData));
 	}
 
 	/**

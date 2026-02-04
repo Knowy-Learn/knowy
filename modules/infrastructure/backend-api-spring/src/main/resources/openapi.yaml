@@ -317,6 +317,15 @@ paths:
             description: Returns a personalized list of courses based on the user's interests, past enrollments, and browsing history.
             security:
                 -   BearerAuth: [ ]
+            parameters:
+                -   name: paging
+                    in: query
+                    description: Pagination and sorting criteria (page, size, order, direction).
+                    style: form
+                    explode: true
+                    required: true
+                    schema:
+                        $ref: '#/components/schemas/PaginationData'
             responses:
                 '200':
                     description: A list of recommended courses

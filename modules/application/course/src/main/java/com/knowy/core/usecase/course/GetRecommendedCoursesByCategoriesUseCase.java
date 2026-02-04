@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 /**
  * Use case for retrieving a recommended list of courses based on a set of categories.
  */
+@Deprecated
 public class GetRecommendedCoursesByCategoriesUseCase {
 
 	private final CourseRepository courseRepository;

@@ -19,6 +19,7 @@ public class CourseService {
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
 	private final GetRecommendedCoursesByCategoriesUseCase getRecommendedCoursesByCategoriesUseCase;
+	private final GetRecommendCoursesUseCase getRecommendCoursesUseCase;
 	private final GetAllCoursesUseCase getAllCoursesUseCase;
 	private final GetCourseWithProgressUseCase getCourseWithProgressUseCase;
 	private final GetAllCoursesWithProgressUseCase getAllCoursesWithProgressUseCase;
@@ -35,6 +36,7 @@ public class CourseService {
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
 		this.getRecommendedCoursesByCategoriesUseCase = new GetRecommendedCoursesByCategoriesUseCase(courseRepository);
+		this.getRecommendCoursesUseCase = new GetRecommendCoursesUseCase(courseRepository);
 		this.getAllCoursesUseCase = new GetAllCoursesUseCase(courseRepository);
 		this.getCourseWithProgressUseCase = new GetCourseWithProgressUseCase(
 			courseRepository, userLessonRepository
@@ -85,8 +87,14 @@ public class CourseService {
 	 * @return a list of {@link Course} entities recommended for the user
 	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
 	 */
+	@Deprecated
 	public List<Course> getRecommendedCourses(int userId, Set<Category> categories) throws KnowyInconsistentDataException {
 		return getRecommendedCoursesByCategoriesUseCase.execute(userId, categories);
+	}
+
+	// JAVADOC
+	public PagedResult<Course> getRecommendedCourses(int userId, Pagination pagination) throws KnowyDataAccessException {
+		return getRecommendCoursesUseCase.execute(new GetRecommendCoursesCommand(userId, pagination));
 	}
 
 	/**
