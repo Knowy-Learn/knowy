@@ -7,11 +7,18 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-// JAVADOC
+/**
+ * Mapper utility to convert image URL strings into ImageDto objects.
+ */
 public class ImageDtoMapper {
 	private static final Logger logger = LoggerFactory.getLogger(ImageDtoMapper.class);
 
-	// JAVADOC
+	/**
+	 * Maps a string URL to an ImageDto.
+	 *
+	 * @param imageUrl the URL string to be converted.
+	 * @return an ImageDto with the parsed URI, or null URL if the input is invalid or empty.
+	 */
 	public ImageDto toDto(String imageUrl) {
 		ImageDto dto = new ImageDto().alt("Course thumbnail");
 

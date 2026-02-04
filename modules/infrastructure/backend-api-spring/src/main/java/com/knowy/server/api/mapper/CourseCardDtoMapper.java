@@ -6,8 +6,18 @@ import com.knowy.server.api.dto.CourseCardDto;
 import java.time.ZoneOffset;
 import java.util.Objects;
 
+/**
+ * Mapper for converting UserCourse domain objects into CourseCardDto objects.
+ */
 public class CourseCardDtoMapper {
 
+	/**
+	 * Maps a UserCourse to a CourseCardDto including nested image and category data.
+	 *
+	 * @param userCourse the domain entity to map.
+	 * @return the mapped CourseCardDto.
+	 * @throws NullPointerException if userCourse is null.
+	 */
 	public CourseCardDto toDto(UserCourse userCourse) {
 		Objects.requireNonNull(userCourse);
 
