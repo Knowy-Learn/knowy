@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class PresentationController {
@@ -23,7 +24,7 @@ public class PresentationController {
 
 	@GetMapping("/")
 	public String viewLandingPage(ModelMap interfaceScreen) throws KnowyInconsistentDataException {
-		Pagination pagination = new Pagination(new Page(0, 3), Optional.empty(), List.of());
+		Pagination pagination = new Pagination(new Page(0, 3), Optional.empty(), Set.of());
 
 		List<NewsDto> newsList = courseService.getAllCourses(pagination).collection().stream()
 			.map(NewsDto::fromDomain)

@@ -114,14 +114,10 @@ public class JpaCourseRepository implements CourseRepository {
 		return new PagedResult<>(pagination.page(), courses, courseEntities.getTotalElements());
 	}
 
-	private Set<Integer> extractCategoryIds(List<Filter> filters) {
+	private Set<Integer> extractCategoryIds(Set<Filter> filters) {
 		return filters.stream()
-			.filter(filter -> "category".equals(filter.fieldName()))
-			.map(filter -> filter.value() instanceof Set<?> res
-				? res
-				: Set.of()
-			)
-			.flatMap(Set::stream)
+			.filter(f -> "category".equals(f.fieldName()))
+			.flatMap(f -> f.value() instanceof Set<?> s ? s.stream() : Stream.empty())
 			.filter(Category.class::isInstance)
 			.map(Category.class::cast)
 			.map(Category::id)

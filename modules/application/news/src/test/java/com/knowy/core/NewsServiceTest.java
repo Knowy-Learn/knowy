@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -33,7 +34,7 @@ public class NewsServiceTest {
 			Page page = new Page(0, 3);
 			Order order = new Order("date", null);
 
-			Pagination mockPagination = new Pagination(page, Optional.of(order), List.of());
+			Pagination mockPagination = new Pagination(page, Optional.of(order), Set.of());
 			News news1 = new News(1, "Breaking News", "Something happened today.", LocalDate.of(2025, 11, 13));
 			News news2 = new News(2, "Tech Update", "New framework released.", LocalDate.of(2025, 11, 12));
 			News news3 = new News(3, "Sports Result", "Team A won against Team B.", LocalDate.of(2025, 11, 11));

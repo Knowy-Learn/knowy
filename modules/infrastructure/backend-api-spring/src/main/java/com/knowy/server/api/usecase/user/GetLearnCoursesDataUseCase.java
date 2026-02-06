@@ -84,8 +84,8 @@ public class GetLearnCoursesDataUseCase {
 	private Pagination createPagination(PaginationData paging, String category) {
 		var order = Optional.of(orderMapper.toDomain(paging.getOrder(), paging.getDirection()));
 		var filters = (category == null || category.isBlank())
-			? List.<Filter>of()
-			: List.of(new Filter("category", Filter.Operator.EQUALS, category));
+			? Set.<Filter>of()
+			: Set.of(new Filter("category", Filter.Operator.EQUALS, category));
 
 		return new Pagination(
 			new Page(paging.getPage(), paging.getSize()),

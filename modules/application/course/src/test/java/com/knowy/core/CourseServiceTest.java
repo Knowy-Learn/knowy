@@ -342,7 +342,7 @@ class CourseServiceTest {
 		void given_validPaginationData_when_getAllCourses_then_returnListOfCourses() throws KnowyInconsistentDataException {
 			Page page = new Page(1, 4);
 
-			Pagination pagination = new Pagination(page, Optional.empty(), List.of());
+			Pagination pagination = new Pagination(page, Optional.empty(), Set.of());
 			Course course5 = Mockito.mock(Course.class);
 			Course course6 = Mockito.mock(Course.class);
 			Course course7 = Mockito.mock(Course.class);
@@ -360,7 +360,7 @@ class CourseServiceTest {
 		void given_invalidPaginationData_when_getAllCourses_then_throw() throws KnowyInconsistentDataException {
 			Page page = new Page(1, 4);
 
-			Pagination pagination = new Pagination(page, Optional.empty(), List.of());
+			Pagination pagination = new Pagination(page, Optional.empty(), Set.of());
 
 			Mockito.when(courseRepository.findAll(pagination))
 				.thenThrow(KnowyCourseNotFound.class);

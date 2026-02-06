@@ -3,6 +3,7 @@ package com.knowy.core.domain;
 import com.knowy.core.exception.validation.KnowyIllegalArgumentRuntimeException;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -52,5 +53,17 @@ public record Filter(
 				throw new KnowyIllegalArgumentRuntimeException("Invalid value for operator " + this.name());
 			}
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		Filter filter = (Filter) o;
+		return Objects.equals(fieldName, filter.fieldName) && operator == filter.operator;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(fieldName, operator);
 	}
 }

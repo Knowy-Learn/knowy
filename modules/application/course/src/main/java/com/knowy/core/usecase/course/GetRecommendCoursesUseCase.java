@@ -9,6 +9,8 @@ import com.knowy.core.exception.validation.KnowyIllegalArgumentRuntimeException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.util.KnowyUseCase;
 
+import java.util.Optional;
+
 // JAVADOC
 public class GetRecommendCoursesUseCase implements KnowyUseCase<GetRecommendCoursesCommand, PagedResult<Course>> {
 
@@ -27,17 +29,20 @@ public class GetRecommendCoursesUseCase implements KnowyUseCase<GetRecommendCour
 	}
 
 	private void checkCategoryFilterOperator(Pagination pagination) {
-		pagination.filters().stream()
+		findCategoryFilter(pagination)
+			.ifPresent(this::validateOperator);
+	}
+
+	private Optional<Filter> findCategoryFilter(Pagination pagination) {
+		return pagination.filters().stream()
 			.filter(f -> "category".equals(f.value()))
-			.reduce((first, second) -> {
-				// TODO: Tenes que hacer que la lista este ordenada pero sin filtros repetibles.
-				throw new KnowyIllegalArgumentRuntimeException("Multiple 'category' filters are not allowed.");
-			})
-			.ifPresent(filter -> {
-				if (filter.operator() != Filter.Operator.IN) {
-					throw new KnowyIllegalArgumentRuntimeException("Category filter must use 'IN' operator.");
-				}
-			});
+			.findFirst();
+	}
+
+	private void validateOperator(Filter filter) {
+		if (filter.operator() != Filter.Operator.IN) {
+			throw new KnowyIllegalArgumentRuntimeException("Category filter must use 'IN' operator.");
+		}
 	}
 }
 

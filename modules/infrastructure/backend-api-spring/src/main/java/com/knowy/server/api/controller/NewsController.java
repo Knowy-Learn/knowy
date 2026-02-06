@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class NewsController implements NewsApi {
@@ -22,7 +23,7 @@ public class NewsController implements NewsApi {
 
 	@Override
 	public ResponseEntity<NewsGet200Response> newsGet(String acceptLanguage, Integer page, Integer pageSize) {
-		Pagination pagination = new Pagination(new Page(page, pageSize), Optional.empty(), List.of());
+		Pagination pagination = new Pagination(new Page(page, pageSize), Optional.empty(), Set.of());
 
 		NewsGet200Response response = getLatestNewsUseCase.execute(pagination);
 		return ResponseEntity.ok(response);

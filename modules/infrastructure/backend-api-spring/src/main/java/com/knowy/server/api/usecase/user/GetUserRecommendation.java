@@ -54,8 +54,8 @@ public class GetUserRecommendation implements KnowyUseCase<PaginationData, UserR
 	private Pagination createPagination(PaginationData paginationData, Set<Category> category) {
 		var order = Optional.of(orderMapper.toDomain(paginationData.getOrder(), paginationData.getDirection()));
 		var filters = (category == null || category.isEmpty())
-			? List.<Filter>of()
-			: List.of(new Filter("category", Filter.Operator.IN, category));
+			? Set.<Filter>of()
+			: Set.of(new Filter("category", Filter.Operator.IN, category));
 
 		return new Pagination(
 			new Page(paginationData.getPage(), paginationData.getSize()),

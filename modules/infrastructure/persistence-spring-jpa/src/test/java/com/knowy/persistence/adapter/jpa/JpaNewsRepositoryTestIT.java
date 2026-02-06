@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,7 +69,7 @@ class JpaNewsRepositoryTestIT {
 	@Test
 	void given_newsAndPagination_when_findLastNews_then_returnNews() {
 		Page page = new Page(0, 3);
-		Pagination pagination = new Pagination(page, Optional.empty(), List.of());
+		Pagination pagination = new Pagination(page, Optional.empty(), Set.of());
 
 		PagedResult<News> result = assertDoesNotThrow(
 			() -> jpaNewsRepository.findLastNews(pagination)

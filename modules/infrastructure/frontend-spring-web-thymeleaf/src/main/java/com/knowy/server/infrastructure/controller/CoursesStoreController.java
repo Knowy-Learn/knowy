@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/store")
@@ -48,7 +45,7 @@ public class CoursesStoreController {
 	) throws KnowyInconsistentDataException {
 
 		try {
-			Pagination pagination = new Pagination(new Page(page, 8), Optional.empty(), List.of());
+			Pagination pagination = new Pagination(new Page(page, 8), Optional.empty(), Set.of());
 			List<Course> allCourses = courseService.getAllCourses(pagination).collection().stream().toList();
 
 			List<Integer> myCourseIds = courseService.findAllByUserId(userDetails.getUser().id())
