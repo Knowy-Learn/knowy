@@ -3,8 +3,8 @@ package com.knowy.core;
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
-import com.knowy.core.port.CategoryRepository;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
@@ -20,10 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,9 +36,6 @@ class CourseServiceTest {
 
 	@Mock
 	private UserLessonRepository userLessonRepository;
-
-	@Mock
-	private CategoryRepository categoryRepository;
 
 	@InjectMocks
 	private CourseService courseService;
@@ -155,10 +149,13 @@ class CourseServiceTest {
 	class GetRecommendedCoursesByCategoriesUseCase {
 
 		@Test
-		void given_userCategories_when_getUserRecommendedCourses_then_returnFirstPreferenceCourses() throws KnowyInconsistentDataException {
+		void given_userCategories_when_getUserRecommendedCourses_then_returnFirstPreferenceCourses() throws KnowyDataAccessException {
 
 			int userId = 1;
 			Set<Category> categories = Set.of(new Category(3, "Photography"));
+			Filter filter = new Filter("category", Filter.Operator.IN, categories);
+
+			Pagination mockPagination = new Pagination(new Page(0, 3), Optional.empty(), Set.of(filter));
 
 			Course course1 = new Course(
 				1, "Title", "Desc", "img", "Autor", LocalDateTime.now(),
@@ -171,31 +168,28 @@ class CourseServiceTest {
 				new HashSet<>()
 			);
 			Course course3 = new Course(
-				3, "Title", "Desc", "img", "Autor", LocalDateTime.now(),
-				Set.of(new Category(3, "Sociology"), new Category(4, "Economics")),
-				new HashSet<>()
-			);
-			Course course4 = new Course(
-				4, "Title", "Desc", "img", "Autor", LocalDateTime.now(),
-				Set.of(new Category(5, "Physics"), new Category(6, "Mathematics")),
-				new HashSet<>()
-			);
-			Course course5 = new Course(
 				5, "Title", "Desc", "img", "Autor", LocalDateTime.now(),
 				Set.of(new Category(3, "Photography")),
 				new HashSet<>()
 			);
-			Stream<Course> courseStream = Stream.of(course5, course2, course1, course3, course4);
+			List<Course> courseStream = List.of(course3, course2, course1);
+			PagedResult<Course> coursePagedResult = new PagedResult<>(
+				mockPagination.page(),
+				courseStream,
+				10
+			);
 
-			Mockito.when(courseRepository.findByCategoriesStreamingInRandomOrder(categories))
-				.thenReturn(courseStream);
-			Mockito.when(courseRepository.findAllWhereUserIsSubscribed(userId))
-				.thenReturn(Set.of(course3));
+			Mockito.when(courseRepository.findAllRandomUnsubscribedUsers(userId, mockPagination))
+				.thenReturn(coursePagedResult);
 
-			List<Course> result = assertDoesNotThrow(() -> courseService.getRecommendedCourses(userId, categories));
+			List<Course> result = assertDoesNotThrow(
+				() -> courseService.getRecommendedCourses(userId, mockPagination)
+			).collection()
+				.stream()
+				.toList();
 			assertAll(
 				() -> assertEquals(3, result.size()),
-				() -> assertIterableEquals(List.of(course5, course2, course1), result),
+				() -> assertIterableEquals(List.of(course3, course2, course1), result),
 				() -> assertTrue(result.getFirst().categories().contains(new Category(3, "Photography"))),
 				() -> assertTrue(result.get(1).categories().contains(new Category(3, "Photography"))),
 				() -> assertFalse(result.get(2).categories().contains(new Category(3, "Photography")))
@@ -203,42 +197,51 @@ class CourseServiceTest {
 		}
 
 		@Test
-		void given_userWithoutCategories_when_getUserRecommendedCourses_then_returnCourses() throws KnowyInconsistentDataException {
+		void given_userWithoutCategories_when_getUserRecommendedCourses_then_returnCourses() throws KnowyDataAccessException {
+			Pagination mockPagination = new Pagination(new Page(0, 3), Optional.empty(), Set.of());
 
 			int userId = 1;
 			Course course1 = Mockito.mock(Course.class);
 			Course course2 = Mockito.mock(Course.class);
 			Course course3 = Mockito.mock(Course.class);
-			Course course4 = Mockito.mock(Course.class);
-			Course course5 = Mockito.mock(Course.class);
 
-			Stream<Course> courseStream = Stream.of(course3, course1, course5, course2, course4);
+			Collection<Course> courseStream = List.of(course1, course3, course2);
+			PagedResult<Course> coursePagedResult = new PagedResult<>(
+				mockPagination.page(),
+				courseStream,
+				10
+			);
 
-			Mockito.when(courseRepository.findByCategoriesStreamingInRandomOrder(Set.of()))
-				.thenReturn(courseStream);
-			Mockito.when(courseRepository.findAllWhereUserIsSubscribed(userId))
-				.thenReturn(Set.of(course3));
+			Mockito.when(courseRepository.findAllRandomUnsubscribedUsers(userId, mockPagination))
+				.thenReturn(coursePagedResult);
 
-			List<Course> result = assertDoesNotThrow(() -> courseService.getRecommendedCourses(userId, Set.of()));
+			Collection<Course> result = assertDoesNotThrow(
+				() -> courseService.getRecommendedCourses(userId, mockPagination)
+			).collection()
+				.stream()
+				.toList();
 			assertAll(
 				() -> assertEquals(3, result.size()),
-				() -> assertIterableEquals(List.of(course1, course5, course2), result)
+				() -> assertIterableEquals(List.of(course1, course3, course2), result)
 			);
 		}
 
 		@Test
 		void given_inconsistentData_when_getUserRecommendedCourses_then_throwKnowyInconsistentDataException()
-			throws KnowyInconsistentDataException {
+			throws KnowyDataAccessException {
 
 			int userId = 1;
 			Set<Category> categories = Set.of(new Category(3, "Photography"));
+			Filter filter = new Filter("category", Filter.Operator.IN, categories);
 
-			Mockito.when(courseRepository.findAllWhereUserIsSubscribed(userId))
+			Pagination mockPagination = new Pagination(new Page(0, 4), Optional.empty(), Set.of(filter));
+
+			Mockito.when(courseRepository.findAllRandomUnsubscribedUsers(userId, mockPagination))
 				.thenThrow(new KnowyInconsistentDataException("Inconsistent Data of courses"));
 
 			assertThrows(
 				KnowyInconsistentDataException.class,
-				() -> courseService.getRecommendedCourses(userId, categories)
+				() -> courseService.getRecommendedCourses(userId, mockPagination)
 			);
 		}
 	}

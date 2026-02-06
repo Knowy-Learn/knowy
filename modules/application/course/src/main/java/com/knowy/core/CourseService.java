@@ -18,7 +18,6 @@ public class CourseService {
 
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
-	private final GetRecommendedCoursesByCategoriesUseCase getRecommendedCoursesByCategoriesUseCase;
 	private final GetRecommendCoursesUseCase getRecommendCoursesUseCase;
 	private final GetAllCoursesUseCase getAllCoursesUseCase;
 	private final GetCourseWithProgressUseCase getCourseWithProgressUseCase;
@@ -35,7 +34,6 @@ public class CourseService {
 	) {
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
-		this.getRecommendedCoursesByCategoriesUseCase = new GetRecommendedCoursesByCategoriesUseCase(courseRepository);
 		this.getRecommendCoursesUseCase = new GetRecommendCoursesUseCase(courseRepository);
 		this.getAllCoursesUseCase = new GetAllCoursesUseCase(courseRepository);
 		this.getCourseWithProgressUseCase = new GetCourseWithProgressUseCase(
@@ -73,24 +71,6 @@ public class CourseService {
 	 */
 	public List<Course> findAllInRandomOrder() throws KnowyInconsistentDataException {
 		return getAllCoursesRandomized.execute();
-	}
-
-	/**
-	 * Retrieves a list of recommended courses for a specific user based on the provided categories.
-	 *
-	 * <p>This method delegates to the use case {@link GetRecommendedCoursesByCategoriesUseCase} to
-	 * fetch and prioritize courses relevant to the given categories. The result is tailored for the specific user and
-	 * limited to the most relevant courses.</p>
-	 *
-	 * @param userId     the ID of the user for whom the recommendations are generated
-	 * @param categories a set of {@link Category} entities to guide the course recommendations
-	 * @return a list of {@link Course} entities recommended for the user
-	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
-	 */
-	// TODO: DEPRECATED
-	@Deprecated
-	public List<Course> getRecommendedCourses(int userId, Set<Category> categories) throws KnowyInconsistentDataException {
-		return getRecommendedCoursesByCategoriesUseCase.execute(userId, categories);
 	}
 
 	/**
