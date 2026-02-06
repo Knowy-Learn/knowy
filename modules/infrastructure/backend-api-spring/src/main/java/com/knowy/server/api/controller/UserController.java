@@ -10,7 +10,7 @@ import com.knowy.server.api.dto.*;
 import com.knowy.server.api.usecase.user.GetLearnCoursesDataUseCase;
 import com.knowy.server.api.usecase.user.GetNavbarUserDataUseCase;
 import com.knowy.server.api.usecase.user.GetResumeUserDataUseCase;
-import com.knowy.server.api.usecase.user.GetUserRecommendation;
+import com.knowy.server.api.usecase.user.GetUserRecommendationUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +22,7 @@ public class UserController implements UserApi {
 	private final GetNavbarUserDataUseCase getNavbarUserDataUseCase;
 	private final GetResumeUserDataUseCase getResumeUserDataUseCase;
 	private final GetLearnCoursesDataUseCase getLearnCoursesDataUseCase;
-	private final GetUserRecommendation getUserRecommendation;
+	private final GetUserRecommendationUseCase getUserRecommendationUseCase;
 
 	public UserController(
 		CourseRepository courseRepository,
@@ -30,7 +30,7 @@ public class UserController implements UserApi {
 		UserLessonRepository userLessonRepository,
 		UserCourseRepository userCourseRepository
 	) {
-		this.getUserRecommendation = new GetUserRecommendation(
+		this.getUserRecommendationUseCase = new GetUserRecommendationUseCase(
 			courseRepository,
 			lessonRepository,
 			userLessonRepository,
@@ -94,7 +94,7 @@ public class UserController implements UserApi {
 	 */
 	@Override
 	public ResponseEntity<PaginatedCourseResponseWrapper> userRecommendationsGet(PaginationData paginationData) {
-		return ResponseEntity.ok(getUserRecommendation.execute(paginationData));
+		return ResponseEntity.ok(getUserRecommendationUseCase.execute(paginationData));
 	}
 
 	/**

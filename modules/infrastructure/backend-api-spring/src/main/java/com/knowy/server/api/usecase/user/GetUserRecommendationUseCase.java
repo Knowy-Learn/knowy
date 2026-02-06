@@ -21,14 +21,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-// JAVADOC
-public class GetUserRecommendation implements KnowyUseCase<PaginationData, PaginatedCourseResponseWrapper> {
+/**
+ * Use case for retrieving a paginated list of recommended courses for the authenticated user. Recommendations are
+ * generated based on the user's preferred categories and requested pagination criteria (sorting, page size, etc.).
+ */
+public class GetUserRecommendationUseCase implements KnowyUseCase<PaginationData, PaginatedCourseResponseWrapper> {
 
 	private final CourseService courseService;
-	private final CourseMapper courseMapper = new CourseMapper();
 	private final OrderMapper orderMapper = new OrderMapper();
 
-	public GetUserRecommendation(
+	/**
+	 * Constructs the use case and initializes the internal CourseService.
+	 *
+	 * @param courseRepository     the repository for course data.
+	 * @param lessonRepository     the repository for lesson data.
+	 * @param userLessonRepository the repository for user-specific lesson progress.
+	 * @param userCourseRepository the repository for user-specific course enrollment.
+	 */
+	public GetUserRecommendationUseCase(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
 		UserLessonRepository userLessonRepository,
@@ -37,6 +47,13 @@ public class GetUserRecommendation implements KnowyUseCase<PaginationData, Pagin
 		this.courseService = new CourseService(courseRepository, lessonRepository, userLessonRepository, userCourseRepository);
 	}
 
+	/**
+	 * Executes the recommendation logic for the currently authenticated user.
+	 *
+	 * @param paginationData the pagination, sorting, and ordering parameters.
+	 * @return a wrapper containing the list of recommended courses and pagination metadata.
+	 * @throws KnowyInternalServerErrorException if there is an error during data retrieval.
+	 */
 	@Override
 	public PaginatedCourseResponseWrapper execute(PaginationData paginationData) {
 		User user = new SecurityHelper().getAuthenticatedUser();
