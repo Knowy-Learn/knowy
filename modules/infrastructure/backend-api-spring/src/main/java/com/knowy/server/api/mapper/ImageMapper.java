@@ -10,8 +10,8 @@ import java.net.URISyntaxException;
 /**
  * Mapper utility to convert image URL strings into ImageDto objects.
  */
-public class ImageDtoMapper {
-	private static final Logger logger = LoggerFactory.getLogger(ImageDtoMapper.class);
+public class ImageMapper {
+	private static final Logger logger = LoggerFactory.getLogger(ImageMapper.class);
 
 	/**
 	 * Maps a string URL to an ImageDto.
@@ -19,7 +19,7 @@ public class ImageDtoMapper {
 	 * @param imageUrl the URL string to be converted.
 	 * @return an ImageDto with the parsed URI, or null URL if the input is invalid or empty.
 	 */
-	public ImageDto toDto(String imageUrl) {
+	public ImageDto toImageDto(String imageUrl) {
 		ImageDto dto = new ImageDto().alt("Course thumbnail");
 
 		if (imageUrl == null || imageUrl.isBlank()) {

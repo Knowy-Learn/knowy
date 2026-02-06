@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * Mapper utility to convert CourseStatus DTO enums to Domain entities.
  */
-public class CourseStatusEnumMapper {
+public class CourseStatusMapper {
 
 	/**
 	 * Converts a set of DTO status enums to an unmodifiable set of domain status entities.

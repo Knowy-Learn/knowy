@@ -23,44 +23,56 @@ public class CourseMapper {
 	public CourseCardDto toCourseCardDto(UserCourse userCourse) {
 		Objects.requireNonNull(userCourse);
 
-		var imageDtoMapper = new ImageDtoMapper();
-		var categoryDtoMapper = new CategoryDtoMapper();
+		var imageDtoMapper = new ImageMapper();
+		var categoryDtoMapper = new CategoryMapper();
 
 		var info = userCourse.courseInfo();
 		return new CourseCardDto(
 			info.id(),
 			info.title(),
 			info.description(),
-			imageDtoMapper.toDto(info.image()),
+			imageDtoMapper.toImageDto(info.image()),
 			info.author(),
 			info.creationDate().atOffset(ZoneOffset.UTC),
-			categoryDtoMapper.toDto(info.categories()),
+			categoryDtoMapper.toCategoryDto(info.categories()),
 			(float) userCourse.courseProgress()
 		);
 	}
 
-	// JAVADOC
+	/**
+	 * Maps a list of Course entities to a list of CourseCardDto objects.
+	 *
+	 * @param courses the list of domain entities to map.
+	 * @return a list of mapped CourseCardDto objects.
+	 */
 	public List<CourseCardDto> toCourseCardDto(List<Course> courses) {
 		return courses.stream()
 			.map(this::toCourseCardDto)
 			.toList();
 	}
 
-	// JAVADOC
+	/**
+	 * Maps a Course domain entity to a CourseCardDto. Sets a default progress of 0.0F as it is not a user-specific
+	 * record.
+	 *
+	 * @param course the domain entity to map.
+	 * @return the mapped CourseCardDto.
+	 * @throws NullPointerException if course is null.
+	 */
 	public CourseCardDto toCourseCardDto(Course course) {
 		Objects.requireNonNull(course);
 
-		var imageDtoMapper = new ImageDtoMapper();
-		var categoryDtoMapper = new CategoryDtoMapper();
+		var imageDtoMapper = new ImageMapper();
+		var categoryDtoMapper = new CategoryMapper();
 
 		return new CourseCardDto(
 			course.id(),
 			course.title(),
 			course.description(),
-			imageDtoMapper.toDto(course.image()),
+			imageDtoMapper.toImageDto(course.image()),
 			course.author(),
 			course.creationDate().atOffset(ZoneOffset.UTC),
-			categoryDtoMapper.toDto(course.categories()),
+			categoryDtoMapper.toCategoryDto(course.categories()),
 			0.0F
 		);
 	}

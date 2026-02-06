@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Mapper utility to convert Category entities to DTOs.
  */
-public class CategoryDtoMapper {
+public class CategoryMapper {
 
 	/**
 	 * Converts a set of Category entities to a set of CategoryDto objects.
@@ -18,13 +18,13 @@ public class CategoryDtoMapper {
 	 * @param categories the set of categories to map.
 	 * @return a set of mapped DTOs, or an empty set if input is null or empty.
 	 */
-	public Set<CategoryDto> toDto(Set<Category> categories) {
+	public Set<CategoryDto> toCategoryDto(Set<Category> categories) {
 		if (categories == null || categories.isEmpty()) {
 			return Set.of();
 		}
 
 		return categories.stream()
-			.map(this::toDto)
+			.map(this::toCategoryDto)
 			.collect(Collectors.toSet());
 	}
 
@@ -35,7 +35,7 @@ public class CategoryDtoMapper {
 	 * @return the mapped CategoryDto.
 	 * @throws NullPointerException if the category is null.
 	 */
-	public CategoryDto toDto(Category category) {
+	public CategoryDto toCategoryDto(Category category) {
 		Objects.requireNonNull(category);
 		return new CategoryDto(category.id(), category.name());
 	}

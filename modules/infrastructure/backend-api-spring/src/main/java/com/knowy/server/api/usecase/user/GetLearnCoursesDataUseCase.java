@@ -11,7 +11,7 @@ import com.knowy.core.user.domain.User;
 import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
 import com.knowy.server.api.dto.*;
 import com.knowy.server.api.mapper.CourseMapper;
-import com.knowy.server.api.mapper.CourseStatusEnumMapper;
+import com.knowy.server.api.mapper.CourseStatusMapper;
 import com.knowy.server.api.mapper.OrderMapper;
 import com.knowy.server.api.util.SecurityHelper;
 
@@ -28,7 +28,7 @@ public class GetLearnCoursesDataUseCase {
 
 	private final CourseService courseService;
 	private final CourseMapper courseMapper = new CourseMapper();
-	private final CourseStatusEnumMapper statusMapper = new CourseStatusEnumMapper();
+	private final CourseStatusMapper statusMapper = new CourseStatusMapper();
 	private final OrderMapper orderMapper = new OrderMapper();
 
 	/**
