@@ -5,6 +5,7 @@ import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Filter;
 import com.knowy.core.domain.Page;
 import com.knowy.core.domain.Pagination;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
@@ -64,11 +65,10 @@ public class GetUserRecommendation implements KnowyUseCase<PaginationData, UserR
 
 	private List<CourseCardDto> getCourseCardDto(User user, Pagination pagination) {
 		try {
-			return courseService.getRecommendedCourses(user.id(), user.categories()).stream()
-				.limit(3)
+			return courseService.getRecommendedCourses(user.id(), pagination).collection().stream()
 				.map(courseCardDtoMapper::toDto)
 				.toList();
-		} catch (KnowyInconsistentDataException e) {
+		} catch (KnowyDataAccessException e) {
 			throw new KnowyInternalServerErrorException("Failed to fetch paginated user course data", e);
 		}
 	}

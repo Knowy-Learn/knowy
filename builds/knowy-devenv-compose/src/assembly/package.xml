@@ -12,5 +12,9 @@
 			<directory>../../scripts/init-postgresql/sql</directory>
 			<outputDirectory>sql</outputDirectory>
 		</fileSet>
+		<fileSet>
+			<directory>../../scripts/init-postgresql/sql-migration-to-xml</directory>
+			<outputDirectory>sql</outputDirectory>
+		</fileSet>
 	</fileSets>
 </assembly>

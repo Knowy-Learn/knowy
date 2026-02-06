@@ -9,6 +9,7 @@ import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaCourseMapper;
+import com.knowy.persistence.adapter.spring.mapper.SpringPaginationMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.knowy.core.util.CommonUtils.nonEmptyElse;
 
 public class JpaCourseRepository implements CourseRepository {
 
@@ -90,6 +93,39 @@ public class JpaCourseRepository implements CourseRepository {
 			pageResult.map(getJpaCourseMapper()::toDomain).getContent(),
 			pageResult.getTotalElements()
 		);
+	}
+
+	@Override
+	public PagedResult<Course> findAllRandomUnsubscribedUsers(int userId, Pagination pagination) {
+		var courseMapper = new JpaCourseMapper(jpaCategoryDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao);
+
+		Pageable pageable = new SpringPaginationMapper().toPageable(pagination);
+		Set<Integer> categoryIds = extractCategoryIds(pagination.filters());
+
+		Page<CourseEntity> courseEntities = jpaCourseDao.findAllRandomUnsubscribedUsers(
+			userId,
+			nonEmptyElse(categoryIds, null),
+			pageable
+		);
+		List<Course> courses = courseEntities.getContent().stream()
+			.map(courseMapper::toDomain)
+			.toList();
+
+		return new PagedResult<>(pagination.page(), courses, courseEntities.getTotalElements());
+	}
+
+	private Set<Integer> extractCategoryIds(List<Filter> filters) {
+		return filters.stream()
+			.filter(filter -> "category".equals(filter.fieldName()))
+			.map(filter -> filter.value() instanceof Set<?> res
+				? res
+				: Set.of()
+			)
+			.flatMap(Set::stream)
+			.filter(Category.class::isInstance)
+			.map(Category.class::cast)
+			.map(Category::id)
+			.collect(Collectors.toSet());
 	}
 
 	@Override

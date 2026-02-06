@@ -75,6 +75,7 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 	 * @return a {@link PagedResult} containing the list of {@link UserCourse} records
 	 * @throws KnowyDataAccessException if there is an error accessing to the data or processing the paginated request
 	 */
+	// TODO: Implement Filters correctly
 	@Override
 	public PagedResult<UserCourse> findAllByUserId(int userId, Set<CourseStatus> coursesStatusIds, Pagination pagination) throws KnowyDataAccessException {
 		Pageable pageable = PageRequest.of(
