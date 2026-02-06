@@ -2,9 +2,9 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.CategoryService;
 import com.knowy.core.CourseService;
-import com.knowy.core.domain.Category;
-import com.knowy.core.domain.Course;
+import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.dto.ToastDto;
@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/my-courses")
@@ -61,7 +59,7 @@ public class CourseController {
 		@RequestParam(name = "order", required = false) String order,
 		@RequestParam(name = "page", defaultValue = "1") int page,
 		@AuthenticationPrincipal UserSecurityDetails userDetails
-	) throws KnowyInconsistentDataException {
+	) throws KnowyDataAccessException {
 
 		List<CourseCardDTO> courses = new ArrayList<>();
 		for (Course course : courseService.findAllByUserId(userDetails.getUser().id())) {
@@ -110,7 +108,12 @@ public class CourseController {
 		}
 
 		List<CourseCardDTO> recommendations = new ArrayList<>();
-		for (Course course : courseService.getRecommendedCourses(userDetails.getUser().id(), userDetails.getUser().categories())) {
+		Pagination pagination = new Pagination(
+			new Page(0, 1000),
+			Optional.empty(),
+			Set.of(new Filter("category", Filter.Operator.EQUALS, userDetails.getUser().categories()))
+		);
+		for (Course course : courseService.getRecommendedCourses(userDetails.getUser().id(), pagination).collection()) {
 			CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
 				course,
 				0.0f,
