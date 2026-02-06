@@ -87,12 +87,23 @@ public class CourseService {
 	 * @return a list of {@link Course} entities recommended for the user
 	 * @throws KnowyInconsistentDataException if inconsistencies occur when retrieving course data
 	 */
+	// TODO: DEPRECATED
 	@Deprecated
 	public List<Course> getRecommendedCourses(int userId, Set<Category> categories) throws KnowyInconsistentDataException {
 		return getRecommendedCoursesByCategoriesUseCase.execute(userId, categories);
 	}
 
-	// JAVADOC
+	/**
+	 * Retrieves a paginated list of recommended courses for a specific user.
+	 * <p>
+	 * This method delegates the logic to {@link GetRecommendCoursesUseCase}, which filters out courses the user is
+	 * already enrolled in and provides a randomized selection based on the provided pagination and filtering criteria.
+	 *
+	 * @param userId     the unique identifier of the user.
+	 * @param pagination the object containing page size, current page, sorting, and filters.
+	 * @return a {@link PagedResult} containing the recommended {@link Course} entities.
+	 * @throws KnowyDataAccessException if there is an error during the retrieval process.
+	 */
 	public PagedResult<Course> getRecommendedCourses(int userId, Pagination pagination) throws KnowyDataAccessException {
 		return getRecommendCoursesUseCase.execute(new GetRecommendCoursesCommand(userId, pagination));
 	}

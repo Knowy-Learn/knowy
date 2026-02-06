@@ -11,16 +11,37 @@ import com.knowy.core.util.KnowyUseCase;
 
 import java.util.Optional;
 
-// JAVADOC
+/**
+ * Use case for retrieving a randomized, paginated list of course recommendations for a specific user, excluding courses
+ * the user is already enrolled in.
+ * <p>
+ * It enforces business rules regarding filtering, specifically ensuring that category-based filters use the correct
+ * logical operators.
+ */
 public class GetRecommendCoursesUseCase implements KnowyUseCase<GetRecommendCoursesCommand, PagedResult<Course>> {
 
 	private final CourseRepository courseRepository;
 
+	/**
+	 * Constructs the use case with the necessary repository.
+	 *
+	 * @param courseRepository the repository used to fetch course data.
+	 */
 	public GetRecommendCoursesUseCase(CourseRepository courseRepository) {
 		this.courseRepository = courseRepository;
 	}
 
-
+	/**
+	 * Executes the recommendation logic.
+	 * <p>
+	 * First, it validates that the category filters in the pagination criteria are well-formed. Then, it queries the
+	 * repository for random courses that the user has not yet subscribed to.
+	 *
+	 * @param command the command object containing the user ID and pagination settings.
+	 * @return a {@link PagedResult} containing the recommended {@link Course} entities.
+	 * @throws KnowyDataAccessException             if an error occurs during data retrieval.
+	 * @throws KnowyIllegalArgumentRuntimeException if the provided filters are invalid.
+	 */
 	@Override
 	public PagedResult<Course> execute(GetRecommendCoursesCommand command) throws KnowyDataAccessException {
 		checkCategoryFilterOperator(command.pagination());
