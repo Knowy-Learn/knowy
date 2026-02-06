@@ -64,7 +64,7 @@ public class UserController implements UserApi {
 	 * 500)
 	 */
 	@Override
-	public ResponseEntity<UserLearnCoursesGet200Response> userLearnCoursesGet(
+	public ResponseEntity<PaginatedCourseResponseWrapper> userLearnCoursesGet(
 		PaginationData paging,
 		String category,
 		Set<CourseStatusEnum> courseStatus
@@ -93,7 +93,7 @@ public class UserController implements UserApi {
 	 * wrong on the server. (status code 500)
 	 */
 	@Override
-	public ResponseEntity<UserRecommendationsGet200Response> userRecommendationsGet(PaginationData paginationData) {
+	public ResponseEntity<PaginatedCourseResponseWrapper> userRecommendationsGet(PaginationData paginationData) {
 		return ResponseEntity.ok(getUserRecommendation.execute(paginationData));
 	}
 

@@ -5,12 +5,13 @@ import com.knowy.core.domain.UserCourse;
 import com.knowy.server.api.dto.CourseCardDto;
 
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Mapper for converting UserCourse domain objects into CourseCardDto objects.
  */
-public class CourseCardDtoMapper {
+public class CourseMapper {
 
 	/**
 	 * Maps a UserCourse to a CourseCardDto including nested image and category data.
@@ -19,7 +20,7 @@ public class CourseCardDtoMapper {
 	 * @return the mapped CourseCardDto.
 	 * @throws NullPointerException if userCourse is null.
 	 */
-	public CourseCardDto toDto(UserCourse userCourse) {
+	public CourseCardDto toCourseCardDto(UserCourse userCourse) {
 		Objects.requireNonNull(userCourse);
 
 		var imageDtoMapper = new ImageDtoMapper();
@@ -39,7 +40,14 @@ public class CourseCardDtoMapper {
 	}
 
 	// JAVADOC
-	public CourseCardDto toDto(Course course) {
+	public List<CourseCardDto> toCourseCardDto(List<Course> courses) {
+		return courses.stream()
+			.map(this::toCourseCardDto)
+			.toList();
+	}
+
+	// JAVADOC
+	public CourseCardDto toCourseCardDto(Course course) {
 		Objects.requireNonNull(course);
 
 		var imageDtoMapper = new ImageDtoMapper();

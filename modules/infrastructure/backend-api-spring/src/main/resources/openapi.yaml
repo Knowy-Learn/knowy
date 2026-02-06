@@ -290,18 +290,7 @@ paths:
                             $ref: '#/components/schemas/CourseStatusEnum'
             responses:
                 '200':
-                    description: A paginated list of courses.
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    info:
-                                        $ref: '#/components/schemas/PaginationMetadata'
-                                    results:
-                                        type: array
-                                        items:
-                                            $ref: '#/components/schemas/CourseCardDto'
+                    $ref: '#/components/responses/PaginatedCourseResponse'
                 '400':
                     $ref: '#/components/responses/BadRequestError'
                 '401':
@@ -328,16 +317,7 @@ paths:
                         $ref: '#/components/schemas/PaginationData'
             responses:
                 '200':
-                    description: A list of recommended courses
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    results:
-                                        type: array
-                                        items:
-                                            $ref: '#/components/schemas/CourseCardDto'
+                    $ref: '#/components/responses/PaginatedCourseResponse'
                 '401':
                     $ref: '#/components/responses/UnauthorizedError'
                 '500':
@@ -549,8 +529,36 @@ components:
                     type: string
                     description: Description of the error
                     example: "Unexpected server error"
+        
+        #################################
+        # Knowy Responses Wrapper
+        #################################        
+        PaginatedCourseResponseWrapper:
+            type: object
+            description: Standard paginated response wrapper for course collections.
+            required:
+                - info
+                - results
+            properties:
+                info:
+                    $ref: '#/components/schemas/PaginationMetadata'
+                results:
+                    type: array
+                    description: List of courses matching the query. Returns an empty array if no matches are found.
+                    items:
+                        $ref: '#/components/schemas/CourseCardDto'
 
     responses:
+        #################################
+        # Knowy Responses
+        #################################
+        PaginatedCourseResponse:
+            description: A paginated list of courses was successfully retrieved.
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/PaginatedCourseResponseWrapper'
+        
         #################################
         # Knowy Errors Responses
         #################################

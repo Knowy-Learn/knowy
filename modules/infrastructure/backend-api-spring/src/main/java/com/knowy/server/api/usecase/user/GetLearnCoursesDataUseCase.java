@@ -10,7 +10,7 @@ import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.user.domain.User;
 import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
 import com.knowy.server.api.dto.*;
-import com.knowy.server.api.mapper.CourseCardDtoMapper;
+import com.knowy.server.api.mapper.CourseMapper;
 import com.knowy.server.api.mapper.CourseStatusEnumMapper;
 import com.knowy.server.api.mapper.OrderMapper;
 import com.knowy.server.api.util.SecurityHelper;
@@ -27,7 +27,7 @@ import java.util.Set;
 public class GetLearnCoursesDataUseCase {
 
 	private final CourseService courseService;
-	private final CourseCardDtoMapper courseMapper = new CourseCardDtoMapper();
+	private final CourseMapper courseMapper = new CourseMapper();
 	private final CourseStatusEnumMapper statusMapper = new CourseStatusEnumMapper();
 	private final OrderMapper orderMapper = new OrderMapper();
 
@@ -57,7 +57,7 @@ public class GetLearnCoursesDataUseCase {
 	 * @return a response object containing paginated course DTOs and metadata.
 	 * @throws KnowyInternalServerErrorException if a data access error occurs during execution.
 	 */
-	public UserLearnCoursesGet200Response execute(
+	public PaginatedCourseResponseWrapper execute(
 		PaginationData paging,
 		Set<CourseStatusEnum> coursesStatuses,
 		String category
@@ -72,7 +72,7 @@ public class GetLearnCoursesDataUseCase {
 				paginationRequest
 			);
 
-			return new UserLearnCoursesGet200Response()
+			return new PaginatedCourseResponseWrapper()
 				.info(extractMetadata(pagedResult))
 				.results(mapToDtoList(pagedResult.collection()));
 
@@ -102,6 +102,6 @@ public class GetLearnCoursesDataUseCase {
 	}
 
 	private List<CourseCardDto> mapToDtoList(Collection<UserCourse> collection) {
-		return collection.stream().map(courseMapper::toDto).toList();
+		return collection.stream().map(courseMapper::toCourseCardDto).toList();
 	}
 }
