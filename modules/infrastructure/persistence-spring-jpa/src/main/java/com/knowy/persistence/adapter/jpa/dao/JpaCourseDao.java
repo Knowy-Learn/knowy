@@ -46,9 +46,9 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 		        JOIN c.lessons l
 		        JOIN PublicUserLessonEntity pul
 		            ON pul.lessonEntity = l
-				JOIN c.languages lang
+		        JOIN c.languages lang
 		    WHERE pul.userId = :userId
-		        AND (:categories IS NULL OR lang.id IN :categories)
+		        AND (:categories IS NULL OR lang.name IN :categories)
 		    GROUP BY c
 		    HAVING
 		        CASE AVG(
@@ -71,7 +71,7 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 	Page<CourseEntity> findAllByUserId(
 		@Param("userId") int userId,
 		@Param("courseStatusIds") Set<Integer> courseStatusIds,
-		@Param("categories") @Nullable Set<Integer> categories,
+		@Param("categories") @Nullable Set<String> categories,
 		Pageable pageable
 	);
 

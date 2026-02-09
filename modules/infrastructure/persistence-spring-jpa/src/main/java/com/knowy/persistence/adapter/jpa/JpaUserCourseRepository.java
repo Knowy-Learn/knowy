@@ -83,9 +83,9 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 		);
 		Pageable pageable = new SpringPaginationMapper().toPageable(pagination);
 
-		Set<Integer> categoryIds = extractCategoryIds(pagination.filters());
+		Set<String> categoryNames = extractCategoryNames(pagination.filters());
 		Page<CourseEntity> courseEntitiesPage = jpaCourseDao.findAllByUserId(
-			userId, extractStatusIds(courseStatuses), nonEmptyElse(categoryIds, null), pageable
+			userId, extractStatusIds(courseStatuses), nonEmptyElse(categoryNames, null), pageable
 		);
 
 		return new PagedResult<>(
@@ -101,13 +101,13 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 			.collect(Collectors.toSet());
 	}
 
-	private Set<Integer> extractCategoryIds(Set<Filter> filters) {
+	private Set<String> extractCategoryNames(Set<Filter> filters) {
 		return filters.stream()
 			.filter(filter -> "category".equals(filter.fieldName()))
 			.flatMap(filter -> filter.value() instanceof Set<?> s ? s.stream() : Stream.empty())
-			.filter(Category.class::isInstance)
-			.map(Category.class::cast)
-			.map(Category::id)
+			.filter(CategoryUnidentifiedData.InmutableCategoryUnidentifiedData.class::isInstance)
+			.map(CategoryUnidentifiedData.InmutableCategoryUnidentifiedData.class::cast)
+			.map(CategoryUnidentifiedData.InmutableCategoryUnidentifiedData::name)
 			.collect(Collectors.toSet());
 	}
 }
