@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper class to transform JPA entities and DAO data into UserCourse domain objects.
+ */
 public class JpaUserCourseMapper {
 
 	private final JpaUserDao jpaUserDao;
@@ -18,6 +21,16 @@ public class JpaUserCourseMapper {
 	private final JpaUserLessonDao jpaUserLessonDao;
 	private final JpaCategoryDao jpaCategoryDao;
 
+	/**
+	 * Initializes the mapper with the required DAOs for data retrieval.
+	 *
+	 * @param jpaUserDao       Data access for user information.
+	 * @param jpaLessonDao     Data access for lesson details.
+	 * @param jpaCourseDao     Data access for general course data.
+	 * @param jpaExerciseDao   Data access for exercise records.
+	 * @param jpaUserLessonDao Data access for the relationship between users and lessons.
+	 * @param jpaCategoryDao   Data access for course categories.
+	 */
 	public JpaUserCourseMapper(
 		JpaUserDao jpaUserDao,
 		JpaLessonDao jpaLessonDao,
@@ -34,6 +47,14 @@ public class JpaUserCourseMapper {
 		this.jpaCategoryDao = jpaCategoryDao;
 	}
 
+	/**
+	 * Converts a list of CourseEntity objects into a list of UserCourse domain models. It fetches related user lesson
+	 * information in bulk to optimize performance.
+	 *
+	 * @param userId         The ID of the user.
+	 * @param courseEntities List of course entities to map.
+	 * @return List of mapped UserCourse domain objects.
+	 */
 	public List<UserCourse> toUserCourses(int userId, List<CourseEntity> courseEntities) {
 		List<Integer> coursesId = getCoursesId(courseEntities);
 		Map<Integer, List<JpaUserLessonDao.UserLessonCourseInfo>> userLessonCourseInfos = jpaUserLessonDao
