@@ -10,6 +10,7 @@ import com.knowy.persistence.adapter.jpa.mapper.JpaCourseInfoMapper;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserCourseMapper;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserLessonMapper;
 import com.knowy.persistence.adapter.spring.mapper.SpringPaginationMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -83,16 +84,20 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 		);
 		Pageable pageable = new SpringPaginationMapper().toPageable(pagination);
 
-		Set<String> categoryNames = extractCategoryNames(pagination.filters());
-		Page<CourseEntity> courseEntitiesPage = jpaCourseDao.findAllByUserId(
-			userId, extractStatusIds(courseStatuses), nonEmptyElse(categoryNames, null), pageable
-		);
+		try {
+			Set<String> categoryNames = extractCategoryNames(pagination.filters());
+			Page<CourseEntity> courseEntitiesPage = jpaCourseDao.findAllByUserId(
+				userId, extractStatusIds(courseStatuses), nonEmptyElse(categoryNames, null), pageable
+			);
 
-		return new PagedResult<>(
-			pagination.page(),
-			userCourseMapper.toUserCourses(userId, courseEntitiesPage.getContent()),
-			courseEntitiesPage.getTotalElements()
-		);
+			return new PagedResult<>(
+				pagination.page(),
+				userCourseMapper.toUserCourses(userId, courseEntitiesPage.getContent()),
+				courseEntitiesPage.getTotalElements()
+			);
+		} catch (DataAccessException e) {
+			throw new KnowyDataAccessException("Error while try to fetch user courses", e);
+		}
 	}
 
 	private Set<Integer> extractStatusIds(Set<CourseStatus> courseStatuses) {

@@ -1,6 +1,5 @@
 package com.knowy.persistence.adapter.jpa.dao;
 
-import com.knowy.persistence.adapter.jpa.entity.CategoryEntity;
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
