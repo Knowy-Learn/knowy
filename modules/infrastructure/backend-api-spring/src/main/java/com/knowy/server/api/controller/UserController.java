@@ -12,8 +12,10 @@ import com.knowy.server.api.usecase.user.GetNavbarUserDataUseCase;
 import com.knowy.server.api.usecase.user.GetResumeUserDataUseCase;
 import com.knowy.server.api.usecase.user.GetUserRecommendationUseCase;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -55,21 +57,17 @@ public class UserController implements UserApi {
 	 * GET /user/learn/courses : Get filtered courses with pagination Fetches the user&#39;s course collection. Supports
 	 * pagination and custom sorting.
 	 *
-	 * @param paging       Pagination and sorting criteria (page, size, order, direction). (optional)
-	 * @param category     Filter by category language (e.g., &#39;java&#39;). (optional)
+	 * @param paging       Pagination and sorting criteria (page, size, order, direction). (required)
+	 * @param categories   Filter by category languages (e.g., &#39;java&#39;, &#39;python&#39;). (optional)
 	 * @param courseStatus Filter by one or more progress statuses (no duplicates). (optional)
-	 * @return A paginated list of courses. (status code 200) or Bad Request. The request is invalid or cannot be
-	 * processed. (status code 400) or Access unauthorized. The request requires valid authentication credentials (e.g.,
-	 * a valid token). (status code 401) or Internal Server Error. Something went wrong on the server. (status code
-	 * 500)
+	 * @return A paginated list of courses was successfully retrieved. (status code 200) or Bad Request. The request is
+	 * invalid or cannot be processed. (status code 400) or Access unauthorized. The request requires valid
+	 * authentication credentials (e.g., a valid token). (status code 401) or Internal Server Error. Something went
+	 * wrong on the server. (status code 500)
 	 */
 	@Override
-	public ResponseEntity<PaginatedCourseResponseWrapper> userLearnCoursesGet(
-		PaginationData paging,
-		String category,
-		Set<CourseStatusEnum> courseStatus
-	) {
-		return ResponseEntity.ok(getLearnCoursesDataUseCase.execute(paging, courseStatus, category));
+	public ResponseEntity<PaginatedCourseResponseWrapper> userLearnCoursesGet(PaginationData paging, @Nullable List<String> categories, @Nullable Set<CourseStatusEnum> courseStatus) {
+		return ResponseEntity.ok(getLearnCoursesDataUseCase.execute(paging, courseStatus, categories));
 	}
 
 	/**

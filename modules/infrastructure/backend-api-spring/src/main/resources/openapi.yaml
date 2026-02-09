@@ -275,11 +275,14 @@ paths:
                     required: true
                     schema:
                         $ref: '#/components/schemas/PaginationData'
-                -   name: category
+                -   name: categories
                     in: query
-                    description: Filter by category language (e.g., 'java').
+                    description: Filter by category languages (e.g., 'java', 'python').
                     schema:
-                        type: string
+                        type: array
+                        items:
+                            type: string
+                    style: form
                 -   name: courseStatus
                     in: query
                     description: Filter by one or more progress statuses (no duplicates).

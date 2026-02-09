@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Use case for retrieving paginated course data for the authenticated user's learning section. It handles filtering by
@@ -53,17 +54,17 @@ public class GetLearnCoursesDataUseCase {
 	 *
 	 * @param paging          the pagination and sorting criteria.
 	 * @param coursesStatuses the set of statuses to filter the courses.
-	 * @param category        an optional category filter.
+	 * @param categories        an optional category filter.
 	 * @return a response object containing paginated course DTOs and metadata.
 	 * @throws KnowyInternalServerErrorException if a data access error occurs during execution.
 	 */
 	public PaginatedCourseResponseWrapper execute(
 		PaginationData paging,
 		Set<CourseStatusEnum> coursesStatuses,
-		String category
+		List<String> categories
 	) {
 		User user = new SecurityHelper().getAuthenticatedUser();
-		Pagination paginationRequest = createPagination(paging, category);
+		Pagination paginationRequest = createPagination(paging, categories);
 
 		try {
 			PagedResult<UserCourse> pagedResult = courseService.getAllUserCoursesByUserId(
@@ -81,12 +82,11 @@ public class GetLearnCoursesDataUseCase {
 		}
 	}
 
-	private Pagination createPagination(PaginationData paging, String category) {
+	private Pagination createPagination(PaginationData paging, List<String> categories) {
 		var order = Optional.of(orderMapper.toDomain(paging.getOrder(), paging.getDirection()));
-		var filters = (category == null || category.isBlank())
+		var filters = (categories == null || categories.isEmpty())
 			? Set.<Filter>of()
-			: Set.of(
-			new Filter("category", Filter.Operator.EQUALS, maptoCategory(category)));
+			: Set.of(new Filter("category", Filter.Operator.EQUALS, mapToCategory(categories)));
 
 		return new Pagination(
 			new Page(paging.getPage(), paging.getSize()),
@@ -94,10 +94,10 @@ public class GetLearnCoursesDataUseCase {
 			filters);
 	}
 
-	private Set<CategoryUnidentifiedData.InmutableCategoryUnidentifiedData> maptoCategory(String category) {
-		return Set.of(
-			new CategoryUnidentifiedData.InmutableCategoryUnidentifiedData(category)
-		);
+	private Set<CategoryUnidentifiedData.InmutableCategoryUnidentifiedData> mapToCategory(List<String> category) {
+		return category.stream()
+			.map(CategoryUnidentifiedData.InmutableCategoryUnidentifiedData::new)
+			.collect(Collectors.toSet());
 	}
 
 	private PaginationMetadata extractMetadata(PagedResult<UserCourse> result) {
