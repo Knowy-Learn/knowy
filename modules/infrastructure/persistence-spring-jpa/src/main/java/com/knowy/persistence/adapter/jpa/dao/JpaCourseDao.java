@@ -46,7 +46,9 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 		        JOIN c.lessons l
 		        JOIN PublicUserLessonEntity pul
 		            ON pul.lessonEntity = l
+				JOIN c.languages lang
 		    WHERE pul.userId = :userId
+		        AND (:categories IS NULL OR lang.id IN :categories)
 		    GROUP BY c
 		    HAVING
 		        CASE AVG(
@@ -56,9 +58,9 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 		                ELSE 0.5
 		            END
 		        )
-		        WHEN 0 THEN 0 /* PENDING */
-		        WHEN 1 THEN 1 /* COMPLETED */
-		        ELSE 2        /* IN_PROGRESS */
+		        WHEN 0 THEN 2 /* PENDING */
+		        WHEN 1 THEN 0 /* COMPLETED */
+		        ELSE 1        /* IN_PROGRESS */
 		    END IN (:courseStatusIds)
 		    ORDER BY AVG(CASE pul.status
 		        WHEN 'completed' THEN 1
@@ -69,6 +71,7 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 	Page<CourseEntity> findAllByUserId(
 		@Param("userId") int userId,
 		@Param("courseStatusIds") Set<Integer> courseStatusIds,
+		@Param("categories") @Nullable Set<Integer> categories,
 		Pageable pageable
 	);
 

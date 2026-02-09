@@ -7,17 +7,18 @@ import com.knowy.persistence.adapter.jpa.dao.*;
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaCourseInfoMapper;
+import com.knowy.persistence.adapter.jpa.mapper.JpaUserCourseMapper;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserLessonMapper;
+import com.knowy.persistence.adapter.spring.mapper.SpringPaginationMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.knowy.core.util.CommonUtils.nonEmptyElse;
 
 public class JpaUserCourseRepository implements UserCourseRepository {
 
@@ -75,75 +76,38 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 	 * @return a {@link PagedResult} containing the list of {@link UserCourse} records
 	 * @throws KnowyDataAccessException if there is an error accessing to the data or processing the paginated request
 	 */
-	// TODO: Implement Filters correctly
 	@Override
-	public PagedResult<UserCourse> findAllByUserId(int userId, Set<CourseStatus> coursesStatusIds, Pagination pagination) throws KnowyDataAccessException {
-		Pageable pageable = PageRequest.of(
-			pagination.page().number(),
-			pagination.page().size(),
-			pagination.order().map(this::toSpringSort)
-				.orElse(Sort.unsorted())
+	public PagedResult<UserCourse> findAllByUserId(int userId, Set<CourseStatus> courseStatuses, Pagination pagination) throws KnowyDataAccessException {
+		var userCourseMapper = new JpaUserCourseMapper(
+			jpaUserDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao, jpaUserLessonDao, jpaCategoryDao
 		);
+		Pageable pageable = new SpringPaginationMapper().toPageable(pagination);
 
+		Set<Integer> categoryIds = extractCategoryIds(pagination.filters());
 		Page<CourseEntity> courseEntitiesPage = jpaCourseDao.findAllByUserId(
-			userId,
-			coursesStatusIds.stream().map(this::statusToInt).collect(Collectors.toSet()),
-			pageable
+			userId, extractStatusIds(courseStatuses), nonEmptyElse(categoryIds, null), pageable
 		);
-		List<UserCourse> userCourses = toUserCourses(userId, courseEntitiesPage.getContent());
 
-		return new PagedResult<>(pagination.page(), userCourses, courseEntitiesPage.getTotalElements());
-	}
-
-	private Sort toSpringSort(Order order) {
-		Sort.Direction direction = order.direction() == Order.SortDirection.ASCENDING
-			? Sort.Direction.ASC
-			: Sort.Direction.DESC;
-
-		return Sort.by(direction, order.field());
-	}
-
-	private int statusToInt(CourseStatus courseStatus) {
-		return switch (courseStatus) {
-			case NOT_STARTED -> 0;
-			case COMPLETED -> 1;
-			case IN_PROGRESS -> 2;
-		};
-	}
-
-	private List<UserCourse> toUserCourses(int userId, List<CourseEntity> courseEntities) {
-		List<Integer> coursesId = getCoursesId(courseEntities);
-		Map<Integer, List<JpaUserLessonDao.UserLessonCourseInfo>> userLessonCourseInfos = jpaUserLessonDao
-			.findAllWithCourseInfoByCoursesId(coursesId).stream()
-			.collect(Collectors.groupingBy(
-				userLessonCourseInfo -> userLessonCourseInfo.courseEntity().getId())
-			);
-
-		return courseEntities.stream()
-			.map(mappingToUserCourse(userId, userLessonCourseInfos))
-			.toList();
-	}
-
-	private Function<CourseEntity, UserCourse> mappingToUserCourse(
-		int userId,
-		Map<Integer, List<JpaUserLessonDao.UserLessonCourseInfo>> userLessonCourseInfos
-	) {
-		var userLessonMapper = new JpaUserLessonMapper(jpaUserDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao);
-		var courseInfoMapper = new JpaCourseInfoMapper(jpaCategoryDao);
-
-		return courseEntity -> new UserCourse(
-			userId,
-			courseInfoMapper.toDomain(courseEntity),
-			userLessonCourseInfos.get(courseEntity.getId()).stream()
-				.map(JpaUserLessonDao.UserLessonCourseInfo::userLessonEntity)
-				.map(userLessonMapper::toDomain)
-				.toList()
+		return new PagedResult<>(
+			pagination.page(),
+			userCourseMapper.toUserCourses(userId, courseEntitiesPage.getContent()),
+			courseEntitiesPage.getTotalElements()
 		);
 	}
 
-	private List<Integer> getCoursesId(List<CourseEntity> courseEntities) {
-		return courseEntities.stream()
-			.map(CourseEntity::getId)
-			.toList();
+	private Set<Integer> extractStatusIds(Set<CourseStatus> courseStatuses) {
+		return courseStatuses.stream()
+			.map(CourseStatus::ordinal)
+			.collect(Collectors.toSet());
+	}
+
+	private Set<Integer> extractCategoryIds(Set<Filter> filters) {
+		return filters.stream()
+			.filter(filter -> "category".equals(filter.fieldName()))
+			.flatMap(filter -> filter.value() instanceof Set<?> s ? s.stream() : Stream.empty())
+			.filter(Category.class::isInstance)
+			.map(Category.class::cast)
+			.map(Category::id)
+			.collect(Collectors.toSet());
 	}
 }
