@@ -85,12 +85,19 @@ public class GetLearnCoursesDataUseCase {
 		var order = Optional.of(orderMapper.toDomain(paging.getOrder(), paging.getDirection()));
 		var filters = (category == null || category.isBlank())
 			? Set.<Filter>of()
-			: Set.of(new Filter("category", Filter.Operator.EQUALS, category));
+			: Set.of(
+			new Filter("category", Filter.Operator.EQUALS, maptoCategory(category)));
 
 		return new Pagination(
 			new Page(paging.getPage(), paging.getSize()),
 			order,
 			filters);
+	}
+
+	private Set<CategoryUnidentifiedData.InmutableCategoryUnidentifiedData> maptoCategory(String category) {
+		return Set.of(
+			new CategoryUnidentifiedData.InmutableCategoryUnidentifiedData(category)
+		);
 	}
 
 	private PaginationMetadata extractMetadata(PagedResult<UserCourse> result) {
