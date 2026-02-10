@@ -1,0 +1,52 @@
+---
+import chvronDownIcon from "@icons/chevron-down.svg"
+
+interface Props {
+	id: string
+	name: string
+}
+
+const { id, name } = Astro.props
+---
+
+<div class="form-select-container group">
+	<label for={id} class="sr-only">Seleccionar categoría</label>
+
+	<select id={id} name={name} class="form-select form-select--color">
+		<slot />
+	</select>
+
+	<div class="form-select__icon-container">
+		<img src={chvronDownIcon.src} alt="" aria-hidden="true" class="form-select__icon" />
+	</div>
+</div>
+
+<style>
+	@reference "../styles/global.css";
+
+	.form-select-container {
+		@apply relative w-full;
+	}
+
+	.form-select {
+		@apply w-full cursor-pointer appearance-none;
+		@apply rounded-lg border px-4 py-2.5;
+		@apply text-sm font-medium;
+		@apply transition-all duration-200;
+		@apply focus:shadow-md focus:ring-2 focus:outline-none;
+	}
+
+	.form-select--color {
+		@apply text-secondary-600 border-secondary-100 bg-white;
+		@apply hover:border-accent-400;
+		@apply focus:border-primary-400 focus:ring-primary-100/50;
+	}
+
+	.form-select__icon-container {
+		@apply pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3;
+	}
+
+	.form-select__icon {
+		@apply h-4 w-4 opacity-50 transition-transform duration-300 group-focus-within:rotate-180;
+	}
+</style>

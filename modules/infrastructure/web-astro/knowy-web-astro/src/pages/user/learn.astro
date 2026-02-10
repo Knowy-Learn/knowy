@@ -3,16 +3,16 @@ import Layout from "../../layouts/Layout.astro"
 import NavbarUser from "../../components/user/NavbarUser.astro"
 import Footer from "../../components/Footer.astro"
 import CourseCard from "../../components/CourseCard.astro"
-import Filter from "../../components/Filter.astro"
-import CourseRecomendationCard from "../../components/CourseRecomendationCard.astro"
+import CourseRecommendationCard from "../../components/CourseRecomendationCard.astro"
 import Pagination from "../../components/Pagination.astro"
+import UserCourseFilter from "src/components/user/UserCourseFilter.astro"
 ---
 
 <Layout>
 	<NavbarUser />
 
 	<main class="flex flex-1 flex-col gap-6 overflow-auto px-8 py-8 md:mx-[5%]">
-		<Filter />
+		<UserCourseFilter />
 
 		<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-4">
 			<div class="lg:col-span-3">
@@ -52,7 +52,7 @@ import Pagination from "../../components/Pagination.astro"
 					/>
 				</div>
 
-				<Pagination baseUrl="" currentPage={0} totalPages={10}/>
+				<Pagination baseUrl="" currentPage={0} totalPages={10} />
 			</div>
 
 			<div class="flex flex-col lg:items-end">
@@ -66,17 +66,17 @@ import Pagination from "../../components/Pagination.astro"
 					class="scrollbar-hide flex w-full flex-row gap-4 overflow-x-auto p-4 lg:max-w-[250px] lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:pb-0"
 					style="max-height: 650px;"
 				>
-					<CourseRecomendationCard
+					<CourseRecommendationCard
 						title="Java Avanzado para Microservicios"
 						instructor="Sofía Santiago"
 						date="25 Jul, 2025"
 					/>
-					<CourseRecomendationCard
+					<CourseRecommendationCard
 						title="Spring Security 6"
 						instructor="Manuel Rodriguez"
 						date="15 Ago, 2025"
 					/>
-					<CourseRecomendationCard
+					<CourseRecommendationCard
 						title="Arquitectura Limpia"
 						instructor="Sofía Santiago"
 						date="02 Sep, 2025"
