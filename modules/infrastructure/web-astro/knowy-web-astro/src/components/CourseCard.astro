@@ -1,6 +1,5 @@
 ---
-// src/components/CourseCard.astro
-
+// TODO: Refactor to BEM with tailwind method using @apply in main.css for cleaner HTML markup.
 import ButtonLink from "./ButtonLink.astro"
 interface Props {
 	title: string
@@ -8,53 +7,60 @@ interface Props {
 	date: string
 	progress: number
 	image: string
-	categories : string[]
+	categories: string[]
 }
 
 const { title, author, date, progress, image, categories = [] } = Astro.props
 ---
 
-<div class="flex flex-col overflow-hidden rounded-xl border border-secondary-100 bg-background shadow-sm h-full">
+<div class="border-secondary-100 bg-background flex h-full flex-col overflow-hidden rounded-xl border shadow-sm">
 	<div class={`${image} h-28 flex items-center justify-center relative overflow-hidden group`}>
-		<div class="absolute inset-0 bg-gradient-to-t from-secondary-900/15 to-transparent"></div>
+		<div class="from-secondary-900/15 absolute inset-0 bg-gradient-to-t to-transparent"></div>
 
-		<div class="absolute top-2 left-2 flex flex-wrap gap-1 z-20 overflow-hidden">
-			{categories.slice(0, 3).map((cat) => (
-				<span class="px-2 py-0.5 bg-white/20 backdrop-blur-md border border-white/30 text-accent-100 text-[10px] font-bold uppercase tracking-wider rounded-full shadow-sm whitespace-nowrap">
-               {cat}
-           </span>
-			))}
+		<div class="absolute top-2 left-2 z-20 flex flex-wrap gap-1 overflow-hidden">
+			{
+				categories
+					.slice(0, 3)
+					.map((cat) => (
+						<span class="text-accent-100 rounded-full border border-white/30 bg-white/20 px-2 py-0.5 text-[10px] font-bold tracking-wider whitespace-nowrap uppercase shadow-sm backdrop-blur-md">
+							{cat}
+						</span>
+					))
+			}
 		</div>
 	</div>
 
-	<div class="flex flex-grow flex-col p-5 gap-3">
-
+	<div class="flex flex-grow flex-col gap-3 p-5">
 		<div class="flex items-center gap-2">
-			<span class="text-primary-600 text-xs font-bold uppercase tracking-wide">{author}</span>
+			<span class="text-primary-600 text-xs font-bold tracking-wide uppercase">{author}</span>
 			<span class="text-secondary-300 text-xs">•</span>
 			<span class="text-secondary-500 text-xs">{date}</span>
 		</div>
 
-		<h3 class="text-secondary-800 text-md font-bold leading-snug"
-			style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+		<h3
+			class="text-secondary-800 text-md leading-snug font-bold"
+			style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+		>
 			{title}
 		</h3>
 
 		<div class="relative">
-			<div class="h-4 w-full overflow-hidden rounded-full bg-secondary-100 shadow-sm">
+			<div class="bg-secondary-100 h-4 w-full overflow-hidden rounded-full shadow-sm">
 				<div
 					class="bg-primary-400 h-full rounded-full transition-all duration-500 ease-out"
 					style={`width: ${progress}%`}
 				>
 				</div>
 			</div>
-			<p class="text-secondary-800 pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-[10px] font-black tracking-wider">
+			<p
+				class="text-secondary-800 pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-[10px] font-black tracking-wider"
+			>
 				{progress}% COMPLETADO
 			</p>
 		</div>
 
-			<ButtonLink href="" variant="secondary">
-				<span>▶</span> Empezar curso
-			</ButtonLink>
+		<ButtonLink href="" variant="secondary">
+			<span>▶</span> Empezar curso
+		</ButtonLink>
 	</div>
 </div>

@@ -1,4 +1,5 @@
 ---
+// TODO: Refactor to BEM with tailwind method using @apply in main.css for cleaner HTML markup.
 import logo from "@assets/knowy.svg"
 
 interface Props {
@@ -10,7 +11,7 @@ const { href } = Astro.props
 
 <a
 	href={href}
-	class="group border-primary-300 from-primary-100 via-primary-300 to-primary-100 relative min-h-[76px] h-[76px] cursor-pointer overflow-hidden rounded-lg border-4 bg-gradient-to-r px-6 transition-all duration-300"
+	class="group border-primary-300 from-primary-100 via-primary-300 to-primary-100 relative h-[76px] min-h-[76px] cursor-pointer overflow-hidden rounded-lg border-4 bg-gradient-to-r px-6 transition-all duration-300"
 >
 	<img src={logo.src} alt="emote" class="pointer-events-none absolute top-1/12 right-2/24 h-24 w-24 opacity-15" />
 	<div class="relative z-10 flex h-full w-full items-center justify-between">

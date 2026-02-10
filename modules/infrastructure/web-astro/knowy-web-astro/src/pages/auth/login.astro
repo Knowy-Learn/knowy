@@ -1,4 +1,5 @@
 ---
+// TODO: Refactor to BEM with tailwind method using @apply in main.css for cleaner HTML markup.
 import logo from "../../assets/knowy.svg"
 import Layout from "../../layouts/Layout.astro"
 import InputField from "../../components/InputField.astro"
@@ -22,9 +23,7 @@ import ButtonLink from "../../components/ButtonLink.astro"
 			</div>
 
 			<form class="flex w-full flex-col gap-5">
-				<h1 class="text-primary-700 w-full text-center text-3xl font-semibold">
-					Inicio de sesión
-				</h1>
+				<h1 class="text-primary-700 w-full text-center text-3xl font-semibold">Inicio de sesión</h1>
 
 				<InputField id="email" placeholder="text@gmail.com" label="Correo electrónico" type="email" />
 
@@ -35,36 +34,32 @@ import ButtonLink from "../../components/ButtonLink.astro"
 				</InputField>
 
 				<button
-					class="rounded-md bg-primary-600 p-2 text-lg text-accent-100 shadow-md transition-all duration-200 hover:scale-105 hover:bg-primary-700 focus:ring-2 focus:ring-accent-600"
+					class="bg-primary-600 text-accent-100 hover:bg-primary-700 focus:ring-accent-600 rounded-md p-2 text-lg shadow-md transition-all duration-200 hover:scale-105 focus:ring-2"
 					type="submit"
 				>
 					Iniciar sesión
 				</button>
 
 				{/* Separator */}
-				<div class="flex w-full items-center gap-3 text-secondary-600">
-					<div class="flex-grow border-t border-secondary-300"></div>
+				<div class="text-secondary-600 flex w-full items-center gap-3">
+					<div class="border-secondary-300 flex-grow border-t"></div>
 					<span class="text-sm">o</span>
-					<div class="flex-grow border-t border-secondary-300"></div>
+					<div class="border-secondary-300 flex-grow border-t"></div>
 				</div>
 
-				<ButtonLink href="/auth/guest" variant="secondary">
-					Entrar como invitado
-				</ButtonLink>
+				<ButtonLink href="/auth/guest" variant="secondary"> Entrar como invitado </ButtonLink>
 
 				<div class="mt-2 flex flex-col items-center gap-2 text-center text-sm">
-
-					<a href="/auth/regist" class="text-secondary-500 hover:text-primary-600 hover:underline transition">
+					<a href="/auth/regist" class="text-secondary-500 hover:text-primary-600 transition hover:underline">
 						¿No tienes cuenta?
-						<span class="font-semibold text-primary-600">¡Regístrate aquí!</span>
+						<span class="text-primary-600 font-semibold">¡Regístrate aquí!</span>
 					</a>
 
-					<a href="/" class="mt-1 text-secondary-400 hover:text-secondary-600 hover:underline text-xs">
+					<a href="/" class="text-secondary-400 hover:text-secondary-600 mt-1 text-xs hover:underline">
 						← Volver a la web
 					</a>
 				</div>
 			</form>
-
 		</section>
 	</main>
 </Layout>

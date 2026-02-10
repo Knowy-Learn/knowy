@@ -1,4 +1,5 @@
 ---
+// TODO: Refactor to BEM with tailwind method using @apply in main.css for cleaner HTML markup.
 import logo from "../../assets/knowy.svg"
 import Layout from "../../layouts/Layout.astro"
 import InputField from "../../components/InputField.astro"
@@ -21,17 +22,16 @@ import InputField from "../../components/InputField.astro"
 			</div>
 
 			<form class="flex w-full flex-col gap-5">
+				<h1 class="text-primary-700 w-full text-center text-3xl font-semibold">Acceso temporal</h1>
 
-				<h1 class="text-primary-700 w-full text-center text-3xl font-semibold">
-					Acceso temporal
-				</h1>
-
-				<p class="flex items-start gap-2 rounded-md border border-warning/40 bg-warning/10 p-3 text-sm text-secondary-700">
+				<p
+					class="border-warning/40 bg-warning/10 text-secondary-700 flex items-start gap-2 rounded-md border p-3 text-sm"
+				>
 					<span class="text-warning text-lg">⚠️</span>
 					<span>
-			Esta cuenta temporal solo se mantendrá en este dispositivo y navegador durante
-			<span class="font-semibold text-warning">7 días</span>.
-		</span>
+						Esta cuenta temporal solo se mantendrá en este dispositivo y navegador durante
+						<span class="text-warning font-semibold">7 días</span>.
+					</span>
 				</p>
 
 				<InputField id="name" placeholder="knowy" label="Nombre de usuario" type="text" />
@@ -41,37 +41,32 @@ import InputField from "../../components/InputField.astro"
 				<InputField id="password-repeat" placeholder="*******" label="Repetir contraseña" type="password" />
 
 				<button
-					class="rounded-md bg-primary-600 p-2 text-lg text-accent-100 shadow-md transition-all duration-200 hover:scale-105 hover:bg-primary-700 focus:ring-2 focus:ring-accent-600"
+					class="bg-primary-600 text-accent-100 hover:bg-primary-700 focus:ring-accent-600 rounded-md p-2 text-lg shadow-md transition-all duration-200 hover:scale-105 focus:ring-2"
 					type="submit"
 				>
 					Entrar con acceso temporal
 				</button>
 
 				<div class="mt-2 flex flex-col items-center gap-2 text-center text-sm">
-
 					<p class="text-secondary-500">
 						¿Ya tienes una cuenta?
-						<a href="/auth/login" class="font-semibold text-primary-600 hover:underline">
+						<a href="/auth/login" class="text-primary-600 font-semibold hover:underline">
 							Inicia sesión aquí
 						</a>
 					</p>
 
 					<a
 						href="/auth/regist"
-						class="text-secondary-500 hover:text-primary-600 font-medium hover:underline transition"
+						class="text-secondary-500 hover:text-primary-600 font-medium transition hover:underline"
 					>
 						¿Quieres registrarte?
 					</a>
 
-					<a
-						href="/"
-						class="mt-1 text-secondary-400 hover:text-secondary-600 hover:underline text-xs"
-					>
+					<a href="/" class="text-secondary-400 hover:text-secondary-600 mt-1 text-xs hover:underline">
 						← Volver a la web
 					</a>
 				</div>
 			</form>
-
 		</section>
 	</main>
 </Layout>

@@ -1,4 +1,5 @@
 ---
+// TODO: Refactor to BEM with tailwind method using @apply in main.css for cleaner HTML markup.
 import logo from "../../assets/knowy.svg"
 import Layout from "../../layouts/Layout.astro"
 import InputField from "../../components/InputField.astro"
@@ -28,9 +29,7 @@ import InputField from "../../components/InputField.astro"
 					<InputField id="nickname" placeholder="knowy" label="Apodo / Nickname" type="text" />
 
 					<div class="flex flex-col gap-1">
-						<label for="gender" class="text-primary-700 font-medium">
-							Género:
-						</label>
+						<label for="gender" class="text-primary-700 font-medium"> Género: </label>
 						<select
 							id="gender"
 							name="gender"
@@ -43,7 +42,6 @@ import InputField from "../../components/InputField.astro"
 							<option value="other">Otro</option>
 						</select>
 					</div>
-
 				</div>
 
 				{/* Separator */}
