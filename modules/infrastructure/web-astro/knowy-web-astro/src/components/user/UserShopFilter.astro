@@ -1,0 +1,56 @@
+---
+import filterIcon from "@icons/filter.svg"
+import SelectField from "../SelectField.astro"
+import ButtonForm from "../ButtonForm.astro"
+---
+
+<form id="filter-form" class="border-secondary-100 bg-background relative mt-4 w-full rounded-2xl border p-4 shadow-lg">
+	<div
+		class="border-secondary-100 bg-background absolute -top-3 -left-5 flex h-9 w-9 items-center justify-center rounded-full border shadow-lg"
+	>
+		<img src={filterIcon.src} alt="Filter Icon" class="h-5 w-5 object-contain opacity-40" />
+	</div>
+
+	<div class="flex flex-col items-center gap-4 lg:flex-row">
+		<div class="flex w-full flex-col items-center gap-4 sm:flex-row lg:flex-1">
+			{/* Category select filter */}
+			<SelectField id="category-select" name="categories">
+				<option value="all">Todas las categorías</option>
+			</SelectField>
+
+			{/* Order */}
+			<SelectField id="order-select" name="order-select">
+				<option value="az">Alfabético A-Z</option>
+				<option value="za">Alfabético Z-A</option>
+			</SelectField>
+		</div>
+
+		{/* Buttons apply and reset */}
+		<div class="flex h-full w-full flex-wrap gap-3 lg:w-auto">
+			<ButtonForm variant="primary" type="submit">
+				<div class="flex h-6 w-full items-center justify-center">
+					<span class="leading-none">Aplicar</span>
+				</div>
+			</ButtonForm>
+
+			<ButtonForm variant="secondary" type="reset">
+				<div class="flex h-6 w-full items-center justify-center gap-2">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="stroke-primary-600 h-4.5 w-4.5 shrink-0"
+						fill="none"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+						></path>
+					</svg>
+					<span class="leading-none">Borrar</span>
+				</div>
+			</ButtonForm>
+		</div>
+	</div>
+</form>
