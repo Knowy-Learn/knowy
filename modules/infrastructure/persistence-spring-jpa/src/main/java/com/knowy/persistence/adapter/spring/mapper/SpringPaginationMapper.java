@@ -24,4 +24,11 @@ public class SpringPaginationMapper {
 
 		return Sort.by(direction, order.field());
 	}
+
+	public Pageable toPageableWithoutSort(Pagination pagination) {
+		return PageRequest.of(
+			pagination.page().number(),
+			pagination.page().size()
+		);
+	}
 }

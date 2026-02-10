@@ -28,7 +28,6 @@ import java.util.Set;
 public class GetUserRecommendationUseCase implements KnowyUseCase<PaginationData, PaginatedCourseResponseWrapper> {
 
 	private final CourseService courseService;
-	private final OrderMapper orderMapper = new OrderMapper();
 
 	/**
 	 * Constructs the use case and initializes the internal CourseService.
@@ -67,14 +66,13 @@ public class GetUserRecommendationUseCase implements KnowyUseCase<PaginationData
 	}
 
 	private Pagination createPagination(PaginationData paginationData, Set<Category> category) {
-		var order = Optional.of(orderMapper.toDomain(paginationData.getOrder(), paginationData.getDirection()));
 		var filters = (category == null || category.isEmpty())
 			? Set.<Filter>of()
 			: Set.of(new Filter("category", Filter.Operator.IN, category));
 
 		return new Pagination(
 			new Page(paginationData.getPage(), paginationData.getSize()),
-			order,
+			Optional.empty(),
 			filters);
 	}
 

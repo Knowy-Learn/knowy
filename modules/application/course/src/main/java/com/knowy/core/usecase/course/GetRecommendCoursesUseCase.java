@@ -45,6 +45,7 @@ public class GetRecommendCoursesUseCase implements KnowyUseCase<GetRecommendCour
 	@Override
 	public PagedResult<Course> execute(GetRecommendCoursesCommand command) throws KnowyDataAccessException {
 		checkCategoryFilterOperator(command.pagination());
+		assertOrderIsEmpty(command.pagination());
 
 		return courseRepository.findAllRandomUnsubscribedUsers(command.userId(), command.pagination());
 	}
@@ -63,6 +64,12 @@ public class GetRecommendCoursesUseCase implements KnowyUseCase<GetRecommendCour
 	private void validateOperator(Filter filter) {
 		if (filter.operator() != Filter.Operator.IN) {
 			throw new KnowyIllegalArgumentRuntimeException("Category filter must use 'IN' operator.");
+		}
+	}
+
+	private void assertOrderIsEmpty(Pagination pagination) {
+		if (pagination.order().isPresent()) {
+			throw new KnowyIllegalArgumentRuntimeException("Order must be empty.");
 		}
 	}
 }

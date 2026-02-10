@@ -28,6 +28,7 @@ public class JpaCourseRepository implements CourseRepository {
 	private final JpaCategoryDao jpaCategoryDao;
 	private final JpaLessonDao jpaLessonDao;
 	private final JpaExerciseDao jpaExerciseDao;
+	private final Random random = new Random();
 
 	public JpaCourseRepository(
 		JpaCourseDao jpaCourseDao,
@@ -99,12 +100,13 @@ public class JpaCourseRepository implements CourseRepository {
 	public PagedResult<Course> findAllRandomUnsubscribedUsers(int userId, Pagination pagination) {
 		var courseMapper = new JpaCourseMapper(jpaCategoryDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao);
 
-		Pageable pageable = new SpringPaginationMapper().toPageable(pagination);
+		Pageable pageable = new SpringPaginationMapper().toPageableWithoutSort(pagination);
 		Set<Integer> categoryIds = extractCategoryIds(pagination.filters());
 
 		Page<CourseEntity> courseEntities = jpaCourseDao.findAllRandomUnsubscribedUsers(
 			userId,
 			nonEmptyElse(categoryIds, null),
+			random.nextInt(100),
 			pageable
 		);
 		List<Course> courses = courseEntities.getContent().stream()
