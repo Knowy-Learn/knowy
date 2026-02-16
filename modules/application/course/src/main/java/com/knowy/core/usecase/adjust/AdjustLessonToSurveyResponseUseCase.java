@@ -7,7 +7,7 @@ import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.port.UserLessonRepository;
-import com.knowy.core.usecase.exercise.GetAllUserExercisesByCourseIdAndLessonIdUseCase;
+import com.knowy.core.usecase.exercise.FindAllUserExercisesByCourseIdAndLessonIdUseCase;
 import com.knowy.core.usecase.lesson.UpdateUserLessonStatusUseCase;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class AdjustLessonToSurveyResponseUseCase {
 
-	private final GetAllUserExercisesByCourseIdAndLessonIdUseCase getAllUserExercisesByCourseIdAndLessonIdUseCase;
+	private final FindAllUserExercisesByCourseIdAndLessonIdUseCase findAllUserExercisesByCourseIdAndLessonIdUseCase;
 	private final AdjustExerciseToSurveyResponseUseCase adjustExerciseToSurveyResponseUseCase;
 	private final UpdateUserLessonStatusUseCase updateUserLessonStatusUseCase;
 
@@ -38,7 +38,7 @@ public class AdjustLessonToSurveyResponseUseCase {
 		UserLessonRepository userLessonRepository
 	) {
 		this(
-			new GetAllUserExercisesByCourseIdAndLessonIdUseCase(userExerciseRepository),
+			new FindAllUserExercisesByCourseIdAndLessonIdUseCase(userExerciseRepository),
 			new AdjustExerciseToSurveyResponseUseCase(userExerciseRepository),
 			new UpdateUserLessonStatusUseCase(userLessonRepository)
 		);
@@ -49,16 +49,16 @@ public class AdjustLessonToSurveyResponseUseCase {
 	 * <p>
 	 * Useful for testing or advanced configuration.
 	 *
-	 * @param getAllUserExercisesByCourseIdAndLessonIdUseCase use case for retrieving user exercises of a lesson
+	 * @param findAllUserExercisesByCourseIdAndLessonIdUseCase use case for retrieving user exercises of a lesson
 	 * @param adjustExerciseToSurveyResponseUseCase           use case for adjusting a user's exercise answer
 	 * @param updateUserLessonStatusUseCase                   use case for updating lesson status
 	 */
 	AdjustLessonToSurveyResponseUseCase(
-		GetAllUserExercisesByCourseIdAndLessonIdUseCase getAllUserExercisesByCourseIdAndLessonIdUseCase,
+		FindAllUserExercisesByCourseIdAndLessonIdUseCase findAllUserExercisesByCourseIdAndLessonIdUseCase,
 		AdjustExerciseToSurveyResponseUseCase adjustExerciseToSurveyResponseUseCase,
 		UpdateUserLessonStatusUseCase updateUserLessonStatusUseCase
 	) {
-		this.getAllUserExercisesByCourseIdAndLessonIdUseCase = getAllUserExercisesByCourseIdAndLessonIdUseCase;
+		this.findAllUserExercisesByCourseIdAndLessonIdUseCase = findAllUserExercisesByCourseIdAndLessonIdUseCase;
 		this.adjustExerciseToSurveyResponseUseCase = adjustExerciseToSurveyResponseUseCase;
 		this.updateUserLessonStatusUseCase = updateUserLessonStatusUseCase;
 	}
@@ -91,7 +91,7 @@ public class AdjustLessonToSurveyResponseUseCase {
 	}
 
 	private List<UserExercise> loadUserExercises(int userId, int lessonId) throws KnowyDataAccessException {
-		return getAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, lessonId);
+		return findAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, lessonId);
 	}
 
 	private double calculateLessonProgress(List<UserExercise> userExercises) throws KnowyInconsistentDataException {

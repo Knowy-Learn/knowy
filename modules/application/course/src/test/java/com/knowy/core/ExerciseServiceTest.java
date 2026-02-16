@@ -162,7 +162,7 @@ public class ExerciseServiceTest {
 	}
 
 	@Nested
-	class GetAllUserExercisesByCourseIdAndLessonIdUseCase {
+	class FindAllUserExercisesByCourseIdAndLessonIdUseCase {
 
 		@Test
 		void given_validUserAndLesson_when_getUserExercisesByUserIdAndLessonId_then_returnListUserExercises() throws KnowyDataAccessException {

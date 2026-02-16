@@ -13,7 +13,7 @@ import java.util.List;
  * to the given user and lesson.
  * </p>
  */
-public class GetAllUserExercisesByCourseIdAndLessonIdUseCase {
+public class FindAllUserExercisesByCourseIdAndLessonIdUseCase {
 
 	private final UserExerciseRepository userExerciseRepository;
 
@@ -22,7 +22,7 @@ public class GetAllUserExercisesByCourseIdAndLessonIdUseCase {
 	 *
 	 * @param userExerciseRepository the repository used to access user exercises
 	 */
-	public GetAllUserExercisesByCourseIdAndLessonIdUseCase(UserExerciseRepository userExerciseRepository) {
+	public FindAllUserExercisesByCourseIdAndLessonIdUseCase(UserExerciseRepository userExerciseRepository) {
 		this.userExerciseRepository = userExerciseRepository;
 	}
 

@@ -5,7 +5,7 @@ import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.port.UserLessonRepository;
-import com.knowy.core.usecase.exercise.GetAllUserExercisesByCourseIdAndLessonIdUseCase;
+import com.knowy.core.usecase.exercise.FindAllUserExercisesByCourseIdAndLessonIdUseCase;
 import com.knowy.core.usecase.lesson.UpdateUserLessonStatusUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AdjustLessonToSurveyResponseUseCaseTest {
 
-	private GetAllUserExercisesByCourseIdAndLessonIdUseCase getAllUserExercisesByCourseIdAndLessonIdUseCase;
+	private FindAllUserExercisesByCourseIdAndLessonIdUseCase findAllUserExercisesByCourseIdAndLessonIdUseCase;
 	private AdjustExerciseToSurveyResponseUseCase adjustExerciseToSurveyResponseUseCase;
 	private UpdateUserLessonStatusUseCase updateUserLessonStatusUseCase;
 
@@ -28,12 +28,12 @@ class AdjustLessonToSurveyResponseUseCaseTest {
 
 	@BeforeEach
 	void setUp() {
-		getAllUserExercisesByCourseIdAndLessonIdUseCase = Mockito.mock(GetAllUserExercisesByCourseIdAndLessonIdUseCase.class);
+		findAllUserExercisesByCourseIdAndLessonIdUseCase = Mockito.mock(FindAllUserExercisesByCourseIdAndLessonIdUseCase.class);
 		adjustExerciseToSurveyResponseUseCase = Mockito.mock(AdjustExerciseToSurveyResponseUseCase.class);
 		updateUserLessonStatusUseCase = Mockito.mock(UpdateUserLessonStatusUseCase.class);
 
 		adjustLessonToSurveyResponseUseCase = new AdjustLessonToSurveyResponseUseCase(
-			getAllUserExercisesByCourseIdAndLessonIdUseCase,
+			findAllUserExercisesByCourseIdAndLessonIdUseCase,
 			adjustExerciseToSurveyResponseUseCase,
 			updateUserLessonStatusUseCase
 		);
@@ -66,7 +66,7 @@ class AdjustLessonToSurveyResponseUseCaseTest {
 		UserExercise userExercise3 = new UserExercise(userId, exercise3, 70, LocalDateTime.now());
 		List<UserExercise> userExercises = List.of(userExercise1, userExercise2, userExercise3);
 
-		Mockito.when(getAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, exercise2.lessonId()))
+		Mockito.when(findAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, exercise2.lessonId()))
 			.thenReturn(userExercises);
 
 		AdjustLessonToSurveyResponseResult result = assertDoesNotThrow(() ->
@@ -75,7 +75,7 @@ class AdjustLessonToSurveyResponseUseCaseTest {
 
 		Mockito.verify(adjustExerciseToSurveyResponseUseCase, Mockito.times(1))
 			.execute(exerciseDifficult, userExercise2);
-		Mockito.verify(getAllUserExercisesByCourseIdAndLessonIdUseCase, Mockito.times(1))
+		Mockito.verify(findAllUserExercisesByCourseIdAndLessonIdUseCase, Mockito.times(1))
 			.execute(userId, exercise2.lessonId());
 		assertAll(
 			() -> assertEquals(userId, result.userId()),
@@ -104,7 +104,7 @@ class AdjustLessonToSurveyResponseUseCaseTest {
 			userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED
 		);
 
-		Mockito.when(getAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, exercise2.lessonId()))
+		Mockito.when(findAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, exercise2.lessonId()))
 			.thenReturn(userExercises);
 		Mockito.when(updateUserLessonStatusUseCase.execute(UserLesson.ProgressStatus.COMPLETED, userId, exercise2.lessonId()))
 			.thenReturn(userLesson);
@@ -115,7 +115,7 @@ class AdjustLessonToSurveyResponseUseCaseTest {
 
 		Mockito.verify(adjustExerciseToSurveyResponseUseCase, Mockito.times(1))
 			.execute(exerciseDifficult, userExercise2);
-		Mockito.verify(getAllUserExercisesByCourseIdAndLessonIdUseCase, Mockito.times(1))
+		Mockito.verify(findAllUserExercisesByCourseIdAndLessonIdUseCase, Mockito.times(1))
 			.execute(userId, exercise2.lessonId());
 		assertAll(
 			() -> assertEquals(userId, result.userId()),
@@ -136,7 +136,7 @@ class AdjustLessonToSurveyResponseUseCaseTest {
 		Exercise exercise = Mockito.mock(Exercise.class);
 		UserExercise userExercise = new UserExercise(userId, exercise, 50, LocalDateTime.now());
 
-		Mockito.when(getAllUserExercisesByCourseIdAndLessonIdUseCase.execute(Mockito.anyInt(), Mockito.anyInt()))
+		Mockito.when(findAllUserExercisesByCourseIdAndLessonIdUseCase.execute(Mockito.anyInt(), Mockito.anyInt()))
 			.thenReturn(List.of());
 
 		assertThrows(

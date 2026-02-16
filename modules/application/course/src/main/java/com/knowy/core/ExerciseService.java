@@ -5,7 +5,7 @@ import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.KnowyExerciseNotFoundException;
 import com.knowy.core.port.ExerciseRepository;
 import com.knowy.core.port.UserExerciseRepository;
-import com.knowy.core.usecase.exercise.GetAllUserExercisesByCourseIdAndLessonIdUseCase;
+import com.knowy.core.usecase.exercise.FindAllUserExercisesByCourseIdAndLessonIdUseCase;
 import com.knowy.core.usecase.exercise.GetNextExerciseByLessonIdUseCase;
 import com.knowy.core.usecase.exercise.GetNextExerciseByUserIdUseCase;
 import com.knowy.core.usecase.exercise.GetUserExerciseByIdOrCreate;
@@ -17,7 +17,7 @@ public class ExerciseService {
 	private final GetNextExerciseByLessonIdUseCase getNextExerciseByLessonIdUseCase;
 	private final GetNextExerciseByUserIdUseCase getNextExerciseByUserIdUseCase;
 	private final GetUserExerciseByIdOrCreate getUserExerciseByIdOrCreate;
-	private final GetAllUserExercisesByCourseIdAndLessonIdUseCase getAllUserExercisesByCourseIdAndLessonIdUseCase;
+	private final FindAllUserExercisesByCourseIdAndLessonIdUseCase findAllUserExercisesByCourseIdAndLessonIdUseCase;
 
 	/**
 	 * Constructs a new {@code ExerciseService} and initializes all underlying use cases.
@@ -32,7 +32,7 @@ public class ExerciseService {
 		this.getNextExerciseByLessonIdUseCase = new GetNextExerciseByLessonIdUseCase(userExerciseRepository);
 		this.getNextExerciseByUserIdUseCase = new GetNextExerciseByUserIdUseCase(userExerciseRepository);
 		this.getUserExerciseByIdOrCreate = new GetUserExerciseByIdOrCreate(userExerciseRepository, exerciseRepository);
-		this.getAllUserExercisesByCourseIdAndLessonIdUseCase = new GetAllUserExercisesByCourseIdAndLessonIdUseCase(userExerciseRepository);
+		this.findAllUserExercisesByCourseIdAndLessonIdUseCase = new FindAllUserExercisesByCourseIdAndLessonIdUseCase(userExerciseRepository);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ExerciseService {
 	/**
 	 * Retrieves all exercises associated with a given user and lesson.
 	 * <p>
-	 * This method delegates to {@link GetAllUserExercisesByCourseIdAndLessonIdUseCase} to fetch the {@link UserExercise} entities. If no
+	 * This method delegates to {@link FindAllUserExercisesByCourseIdAndLessonIdUseCase} to fetch the {@link UserExercise} entities. If no
 	 * exercises are found, an empty list is returned.
 	 * </p>
 	 *
@@ -95,6 +95,6 @@ public class ExerciseService {
 	 * @throws KnowyDataAccessException if an error occurs while accessing the data source
 	 */
 	public List<UserExercise> getAllUserExerciseByUserIdAndLessonId(int userId, int lessonId) throws KnowyDataAccessException {
-		return getAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, lessonId);
+		return findAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, lessonId);
 	}
 }
