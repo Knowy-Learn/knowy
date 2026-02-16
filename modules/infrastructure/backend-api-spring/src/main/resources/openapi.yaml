@@ -258,18 +258,18 @@ paths:
                                         example: 8.7
                 '401':
                     $ref: '#/components/responses/UnauthorizedError'
-    /user/learn/courses:
+    /user/courses:
         get:
             tags:
                 - User
-            summary: Get filtered courses with pagination
-            description: Fetches the user's course collection. Supports pagination and custom sorting.
+            summary: Get user courses
+            description: Fetches the user's personal course collection. Supports filtering by category or status, pagination, and custom sorting.
             security:
                 -   BearerAuth: [ ]
             parameters:
                 -   name: paging
                     in: query
-                    description: Pagination and sorting criteria (page, size, order, direction).
+                    description: Pagination and sorting criteria.
                     style: form
                     explode: true
                     required: true
@@ -277,15 +277,16 @@ paths:
                         $ref: '#/components/schemas/PaginationData'
                 -   name: categories
                     in: query
-                    description: Filter by category languages (e.g., 'java', 'python').
+                    description: Filter by programming languages or categories (e.g., 'java', 'python').
+                    style: form
+                    explode: true
                     schema:
                         type: array
                         items:
                             type: string
-                    style: form
                 -   name: courseStatus
                     in: query
-                    description: Filter by one or more progress statuses (no duplicates).
+                    description: Filter by course progress status.
                     schema:
                         type: array
                         uniqueItems: true
@@ -296,6 +297,40 @@ paths:
                     $ref: '#/components/responses/PaginatedCourseResponse'
                 '400':
                     $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+    
+    /user/courses/unsubscribed:
+        get:
+            tags:
+                - User
+            summary: Get available courses
+            description: Fetches courses that are available for the user to enroll in. Supports filtering, pagination, and custom sorting.
+            security:
+                -   BearerAuth: [ ]
+            parameters:
+                -   name: paging
+                    in: query
+                    description: Pagination and sorting criteria.
+                    style: form
+                    explode: true
+                    required: true
+                    schema:
+                        $ref: '#/components/schemas/PaginationData'
+                -   name: categories
+                    in: query
+                    description: Filter by category languages.
+                    style: form
+                    explode: true
+                    schema:
+                        type: array
+                        items:
+                            type: string
+            responses:
+                '200':
+                    $ref: '#/components/responses/PaginatedCourseResponse'
                 '401':
                     $ref: '#/components/responses/UnauthorizedError'
                 '500':

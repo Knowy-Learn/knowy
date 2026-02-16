@@ -13,7 +13,6 @@ import com.knowy.server.api.controller.exception.KnowyInternalServerErrorExcepti
 import com.knowy.server.api.dto.PaginatedCourseResponseWrapper;
 import com.knowy.server.api.dto.PaginationData;
 import com.knowy.server.api.mapper.CourseMapper;
-import com.knowy.server.api.mapper.OrderMapper;
 import com.knowy.server.api.mapper.PagedResultMapper;
 import com.knowy.server.api.util.SecurityHelper;
 
@@ -78,7 +77,7 @@ public class GetUserRecommendationUseCase implements KnowyUseCase<PaginationData
 
 	private PagedResult<Course> getCourses(User user, Pagination pagination) {
 		try {
-			return courseService.getRecommendedCourses(user.id(), pagination);
+			return courseService.findRecommended(user.id(), pagination);
 		} catch (KnowyDataAccessException e) {
 			throw new KnowyInternalServerErrorException("Failed to fetch paginated user course data", e);
 		}

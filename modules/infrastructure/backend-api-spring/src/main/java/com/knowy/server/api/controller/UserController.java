@@ -7,10 +7,7 @@ import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
 import com.knowy.server.api.dto.*;
-import com.knowy.server.api.usecase.user.GetLearnCoursesDataUseCase;
-import com.knowy.server.api.usecase.user.GetNavbarUserDataUseCase;
-import com.knowy.server.api.usecase.user.GetResumeUserDataUseCase;
-import com.knowy.server.api.usecase.user.GetUserRecommendationUseCase;
+import com.knowy.server.api.usecase.user.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,8 +20,9 @@ public class UserController implements UserApi {
 
 	private final GetNavbarUserDataUseCase getNavbarUserDataUseCase;
 	private final GetResumeUserDataUseCase getResumeUserDataUseCase;
-	private final GetLearnCoursesDataUseCase getLearnCoursesDataUseCase;
+	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetUserRecommendationUseCase getUserRecommendationUseCase;
+	private final FindNotSubscribedCoursesUseCase findNotSubscribedCoursesUseCase;
 
 	public UserController(
 		CourseRepository courseRepository,
@@ -33,41 +31,36 @@ public class UserController implements UserApi {
 		UserCourseRepository userCourseRepository
 	) {
 		this.getUserRecommendationUseCase = new GetUserRecommendationUseCase(
-			courseRepository,
-			lessonRepository,
-			userLessonRepository,
-			userCourseRepository
+			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
 		this.getNavbarUserDataUseCase = new GetNavbarUserDataUseCase();
 		this.getResumeUserDataUseCase = new GetResumeUserDataUseCase(
-			courseRepository,
-			lessonRepository,
-			userLessonRepository,
-			userCourseRepository
+			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
-		this.getLearnCoursesDataUseCase = new GetLearnCoursesDataUseCase(
-			courseRepository,
-			lessonRepository,
-			userLessonRepository,
-			userCourseRepository
+		this.getUserCoursesUseCase = new GetUserCoursesUseCase(
+			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
+		);
+		this.findNotSubscribedCoursesUseCase = new FindNotSubscribedCoursesUseCase(
+			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
 	}
 
 	/**
-	 * GET /user/learn/courses : Get filtered courses with pagination Fetches the user&#39;s course collection. Supports
-	 * pagination and custom sorting.
+	 * GET /user/courses : Get user courses Fetches the user&#39;s personal course collection. Supports filtering by
+	 * category or status, pagination, and custom sorting.
 	 *
-	 * @param paging       Pagination and sorting criteria (page, size, order, direction). (required)
-	 * @param categories   Filter by category languages (e.g., &#39;java&#39;, &#39;python&#39;). (optional)
-	 * @param courseStatus Filter by one or more progress statuses (no duplicates). (optional)
+	 * @param paging       Pagination and sorting criteria. (required)
+	 * @param categories   Filter by programming languages or categories (e.g., &#39;java&#39;, &#39;python&#39;).
+	 *                     (optional)
+	 * @param courseStatus Filter by course progress status. (optional)
 	 * @return A paginated list of courses was successfully retrieved. (status code 200) or Bad Request. The request is
 	 * invalid or cannot be processed. (status code 400) or Access unauthorized. The request requires valid
 	 * authentication credentials (e.g., a valid token). (status code 401) or Internal Server Error. Something went
 	 * wrong on the server. (status code 500)
 	 */
 	@Override
-	public ResponseEntity<PaginatedCourseResponseWrapper> userLearnCoursesGet(PaginationData paging, @Nullable List<String> categories, @Nullable Set<CourseStatusEnum> courseStatus) {
-		return ResponseEntity.ok(getLearnCoursesDataUseCase.execute(paging, courseStatus, categories));
+	public ResponseEntity<PaginatedCourseResponseWrapper> userCoursesGet(PaginationData paging, @Nullable List<String> categories, @Nullable Set<CourseStatusEnum> courseStatus) {
+		return ResponseEntity.ok(getUserCoursesUseCase.execute(paging, courseStatus, categories));
 	}
 
 	/**
@@ -80,6 +73,22 @@ public class UserController implements UserApi {
 	@Override
 	public ResponseEntity<UserNavbarGet200Response> userNavbarGet() {
 		return ResponseEntity.ok(getNavbarUserDataUseCase.execute());
+	}
+
+	/**
+	 * GET /user/courses/unsubscribed : Get available courses Fetches courses that are available for the user to enroll
+	 * in. Supports filtering, pagination, and custom sorting.
+	 *
+	 * @param paging     Pagination and sorting criteria. (required)
+	 * @param categories Filter by category languages. (optional)
+	 * @return A paginated list of courses was successfully retrieved. (status code 200) or Access unauthorized. The
+	 * request requires valid authentication credentials (e.g., a valid token). (status code 401) or Internal Server
+	 * Error. Something went wrong on the server. (status code 500)
+	 */
+	@Override
+	public ResponseEntity<PaginatedCourseResponseWrapper> userCoursesUnsubscribedGet(PaginationData paging, @Nullable List<String> categories) {
+		var findNotSubscribedCoursesCommand = new FindNotSubscribedCoursesCommand(paging, categories);
+		return ResponseEntity.ok(findNotSubscribedCoursesUseCase.execute(findNotSubscribedCoursesCommand));
 	}
 
 	/**
