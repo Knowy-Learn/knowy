@@ -24,7 +24,7 @@ import java.util.Set;
  * Use case for retrieving a paginated list of recommended courses for the authenticated user. Recommendations are
  * generated based on the user's preferred categories and requested pagination criteria (sorting, page size, etc.).
  */
-public class GetUserRecommendationUseCase implements KnowyUseCase<PaginationData, PaginatedCourseResponseWrapper> {
+public class FindUserRecommendationUseCase implements KnowyUseCase<PaginationData, PaginatedCourseResponseWrapper> {
 
 	private final CourseService courseService;
 
@@ -36,7 +36,7 @@ public class GetUserRecommendationUseCase implements KnowyUseCase<PaginationData
 	 * @param userLessonRepository the repository for user-specific lesson progress.
 	 * @param userCourseRepository the repository for user-specific course enrollment.
 	 */
-	public GetUserRecommendationUseCase(
+	public FindUserRecommendationUseCase(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
 		UserLessonRepository userLessonRepository,

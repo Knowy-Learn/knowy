@@ -20,8 +20,8 @@ public class UserController implements UserApi {
 
 	private final GetNavbarUserDataUseCase getNavbarUserDataUseCase;
 	private final GetResumeUserDataUseCase getResumeUserDataUseCase;
-	private final GetUserCoursesUseCase getUserCoursesUseCase;
-	private final GetUserRecommendationUseCase getUserRecommendationUseCase;
+	private final FindUserCoursesUseCase findUserCoursesUseCase;
+	private final FindUserRecommendationUseCase findUserRecommendationUseCase;
 	private final FindNotSubscribedCoursesUseCase findNotSubscribedCoursesUseCase;
 
 	public UserController(
@@ -30,14 +30,14 @@ public class UserController implements UserApi {
 		UserLessonRepository userLessonRepository,
 		UserCourseRepository userCourseRepository
 	) {
-		this.getUserRecommendationUseCase = new GetUserRecommendationUseCase(
+		this.findUserRecommendationUseCase = new FindUserRecommendationUseCase(
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
 		this.getNavbarUserDataUseCase = new GetNavbarUserDataUseCase();
 		this.getResumeUserDataUseCase = new GetResumeUserDataUseCase(
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
-		this.getUserCoursesUseCase = new GetUserCoursesUseCase(
+		this.findUserCoursesUseCase = new FindUserCoursesUseCase(
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
 		this.findNotSubscribedCoursesUseCase = new FindNotSubscribedCoursesUseCase(
@@ -60,7 +60,7 @@ public class UserController implements UserApi {
 	 */
 	@Override
 	public ResponseEntity<PaginatedCourseResponseWrapper> userCoursesGet(PaginationData paging, @Nullable List<String> categories, @Nullable Set<CourseStatusEnum> courseStatus) {
-		return ResponseEntity.ok(getUserCoursesUseCase.execute(paging, courseStatus, categories));
+		return ResponseEntity.ok(findUserCoursesUseCase.execute(paging, courseStatus, categories));
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class UserController implements UserApi {
 	 */
 	@Override
 	public ResponseEntity<PaginatedCourseResponseWrapper> userRecommendationsGet(PaginationData paginationData) {
-		return ResponseEntity.ok(getUserRecommendationUseCase.execute(paginationData));
+		return ResponseEntity.ok(findUserRecommendationUseCase.execute(paginationData));
 	}
 
 	/**

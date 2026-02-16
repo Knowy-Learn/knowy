@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * Use case for retrieving paginated course data for the authenticated user's learning section. It handles filtering by
  * status and category, pagination, and mapping results to DTOs.
  */
-public class GetUserCoursesUseCase {
+public class FindUserCoursesUseCase {
 
 	private final CourseService courseService;
 	private final CourseMapper courseMapper = new CourseMapper();
@@ -40,7 +40,7 @@ public class GetUserCoursesUseCase {
 	 * @param userLessonRepository the repository for tracking user progress in lessons.
 	 * @param userCourseRepository the repository for user-specific course associations.
 	 */
-	public GetUserCoursesUseCase(
+	public FindUserCoursesUseCase(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
 		UserLessonRepository userLessonRepository,
