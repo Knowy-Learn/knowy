@@ -10,19 +10,18 @@ import java.util.List;
 /**
  * Use case for retrieving all courses associated with a given user.
  */
-// FIXME: Revise method functionality and uses
-public class GetUserCoursesUseCase {
+public class FindAllCoursesUseCase {
 
 	private final UserLessonRepository userLessonRepository;
 	private final CourseRepository courseRepository;
 
 	/**
-	 * Creates a new {@code GetUserCoursesUseCase}.
+	 * Creates a new {@code FindAllCoursesUseCase}.
 	 *
 	 * @param userLessonRepository Repository for retrieving course IDs linked to users.
 	 * @param courseRepository     Repository for retrieving course details by ID.
 	 */
-	public GetUserCoursesUseCase(UserLessonRepository userLessonRepository, CourseRepository courseRepository) {
+	public FindAllCoursesUseCase(UserLessonRepository userLessonRepository, CourseRepository courseRepository) {
 		this.userLessonRepository = userLessonRepository;
 		this.courseRepository = courseRepository;
 	}

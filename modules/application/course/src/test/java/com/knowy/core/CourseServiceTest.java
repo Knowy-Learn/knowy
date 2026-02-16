@@ -40,7 +40,7 @@ class CourseServiceTest {
 	private CourseService courseService;
 
 	@Nested
-	class GetUserCoursesUseCaseTest {
+	class FindAllCoursesUseCaseTest {
 
 		@Test
 		void given_userHasCourses_when_getUserCourses_then_returnListOfCourses() throws KnowyInconsistentDataException {

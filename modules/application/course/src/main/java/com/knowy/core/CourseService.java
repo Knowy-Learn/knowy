@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class CourseService {
 
-	private final GetUserCoursesUseCase getUserCoursesUseCase;
+	private final FindAllCoursesUseCase findAllCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
 	private final FindCoursesRecommendUseCase findCoursesRecommendUseCase;
 	private final FindCoursesUseCase findCoursesUseCase;
@@ -33,7 +33,7 @@ public class CourseService {
 		UserLessonRepository userLessonRepository,
 		UserCourseRepository userCourseRepository
 	) {
-		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
+		this.findAllCoursesUseCase = new FindAllCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
 		this.findCoursesRecommendUseCase = new FindCoursesRecommendUseCase(courseRepository);
 		this.findCoursesUseCase = new FindCoursesUseCase(courseRepository);
@@ -50,7 +50,7 @@ public class CourseService {
 	/**
 	 * Retrieves all courses associated with a given user.
 	 *
-	 * <p>This method delegates to {@link GetUserCoursesUseCase} to fetch the
+	 * <p>This method delegates to {@link FindAllCoursesUseCase} to fetch the
 	 * list of courses the user is enrolled in.</p>
 	 *
 	 * @param userId the ID of the user whose courses should be retrieved
@@ -58,7 +58,7 @@ public class CourseService {
 	 * @throws KnowyInconsistentDataException if inconsistencies occur while retrieving course data
 	 */
 	public List<Course> findAllByUserId(Integer userId) throws KnowyInconsistentDataException {
-		return getUserCoursesUseCase.execute(userId);
+		return findAllCoursesUseCase.execute(userId);
 	}
 
 	/**
