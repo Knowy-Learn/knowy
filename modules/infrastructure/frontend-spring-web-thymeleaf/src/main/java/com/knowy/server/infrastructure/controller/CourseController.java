@@ -113,7 +113,7 @@ public class CourseController {
 			Optional.empty(),
 			Set.of(new Filter("category", Filter.Operator.EQUALS, userDetails.getUser().categories()))
 		);
-		for (Course course : courseService.getRecommendedCourses(userDetails.getUser().id(), pagination).collection()) {
+		for (Course course : courseService.findRecommended(userDetails.getUser().id(), pagination).collection()) {
 			CourseCardDTO courseCardDTO = CourseCardDTO.fromDomain(
 				course,
 				0.0f,

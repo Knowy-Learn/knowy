@@ -34,7 +34,24 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 	Page<CourseEntity> findAllRandomUnsubscribedUsers(
 		@Param("userId") int userId,
 		@Param("categories") @Nullable Set<Integer> categories,
-		@Param("seed")  long seed,
+		@Param("seed") long seed,
+		Pageable pageable
+	);
+
+	@Query("""
+		SELECT c
+		FROM CourseEntity c
+		JOIN c.languages lang
+		WHERE NOT EXISTS (
+		    SELECT 1
+		    FROM PublicUserLessonEntity pul
+		    JOIN pul.lessonEntity l
+		    WHERE l.course = c AND pul.userId = :userId
+		) AND (:categories IS NULL OR lang.id IN :categories)
+		""")
+	Page<CourseEntity> findNotSubscribedByUserId(
+		@Param("userId") int userId,
+		@Param("categories") @Nullable Set<Integer> categories,
 		Pageable pageable
 	);
 

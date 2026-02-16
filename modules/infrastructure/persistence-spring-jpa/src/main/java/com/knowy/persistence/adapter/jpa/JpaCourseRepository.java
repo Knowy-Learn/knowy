@@ -2,6 +2,7 @@ package com.knowy.persistence.adapter.jpa;
 
 import com.knowy.core.domain.*;
 import com.knowy.core.exception.KnowyCourseNotFound;
+import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.persistence.adapter.jpa.dao.*;
@@ -10,6 +11,7 @@ import com.knowy.persistence.adapter.jpa.entity.LessonEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 import com.knowy.persistence.adapter.jpa.mapper.JpaCourseMapper;
 import com.knowy.persistence.adapter.spring.mapper.SpringPaginationMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -97,7 +99,7 @@ public class JpaCourseRepository implements CourseRepository {
 	}
 
 	@Override
-	public PagedResult<Course> findAllRandomUnsubscribedUsers(int userId, Pagination pagination) {
+	public PagedResult<Course> findRandomNotSubscribedByUserId(int userId, Pagination pagination) {
 		var courseMapper = new JpaCourseMapper(jpaCategoryDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao);
 
 		Pageable pageable = new SpringPaginationMapper().toPageableWithoutSort(pagination);
@@ -114,6 +116,29 @@ public class JpaCourseRepository implements CourseRepository {
 			.toList();
 
 		return new PagedResult<>(pagination.page(), courses, courseEntities.getTotalElements());
+	}
+
+	@Override
+	public PagedResult<Course> findNotSubscribedByUserId(int userId, Pagination pagination) throws KnowyDataAccessException {
+		var courseMapper = new JpaCourseMapper(jpaCategoryDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao);
+
+		Pageable pageable = new SpringPaginationMapper().toPageableWithoutSort(pagination);
+		Set<Integer> categoryIds = extractCategoryIds(pagination.filters());
+
+		try {
+			Page<CourseEntity> courseEntities = jpaCourseDao.findNotSubscribedByUserId(
+				userId,
+				nonEmptyElse(categoryIds, null),
+				pageable
+			);
+			List<Course> courses = courseEntities.getContent().stream()
+				.map(courseMapper::toDomain)
+				.toList();
+
+			return new PagedResult<>(pagination.page(), courses, courseEntities.getTotalElements());
+		} catch (DataAccessException e) {
+			throw new KnowyDataAccessException(String.format("Error while fetching courses by userId: %s", userId), e);
+		}
 	}
 
 	private Set<Integer> extractCategoryIds(Set<Filter> filters) {
