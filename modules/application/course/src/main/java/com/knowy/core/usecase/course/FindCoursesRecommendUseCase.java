@@ -18,7 +18,7 @@ import java.util.Optional;
  * It enforces business rules regarding filtering, specifically ensuring that category-based filters use the correct
  * logical operators.
  */
-public class GetRecommendCoursesUseCase implements KnowyUseCase<GetRecommendCoursesCommand, PagedResult<Course>> {
+public class FindCoursesRecommendUseCase implements KnowyUseCase<FindCoursesRecommendCommand, PagedResult<Course>> {
 
 	private final CourseRepository courseRepository;
 
@@ -27,7 +27,7 @@ public class GetRecommendCoursesUseCase implements KnowyUseCase<GetRecommendCour
 	 *
 	 * @param courseRepository the repository used to fetch course data.
 	 */
-	public GetRecommendCoursesUseCase(CourseRepository courseRepository) {
+	public FindCoursesRecommendUseCase(CourseRepository courseRepository) {
 		this.courseRepository = courseRepository;
 	}
 
@@ -43,7 +43,7 @@ public class GetRecommendCoursesUseCase implements KnowyUseCase<GetRecommendCour
 	 * @throws KnowyIllegalArgumentRuntimeException if the provided filters are invalid.
 	 */
 	@Override
-	public PagedResult<Course> execute(GetRecommendCoursesCommand command) throws KnowyDataAccessException {
+	public PagedResult<Course> execute(FindCoursesRecommendCommand command) throws KnowyDataAccessException {
 		checkCategoryFilterOperator(command.pagination());
 		assertOrderIsEmpty(command.pagination());
 

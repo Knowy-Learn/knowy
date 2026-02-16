@@ -9,13 +9,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Use case for retrieving all courses a user is subscribed to, along with their progress in each course.
- * <p>
- * This use case fetches all lessons for a specific user, groups them by course, calculates the user's progress in each
- * course based on lesson completion status, and returns a list of results containing the course ID, the user's lessons,
- * and the computed progress.
+ * Retrieves enrolled courses for a user, including lesson status and calculated progress.
  */
-public class GetAllCoursesWithProgressUseCase {
+public class FindCoursesWithProgressUseCase {
 
 	private final UserLessonRepository userLessonRepository;
 
@@ -24,7 +20,7 @@ public class GetAllCoursesWithProgressUseCase {
 	 *
 	 * @param userLessonRepository Repository to fetch user's lesson subscriptions.
 	 */
-	public GetAllCoursesWithProgressUseCase(UserLessonRepository userLessonRepository) {
+	public FindCoursesWithProgressUseCase(UserLessonRepository userLessonRepository) {
 		this.userLessonRepository = userLessonRepository;
 	}
 
@@ -32,12 +28,12 @@ public class GetAllCoursesWithProgressUseCase {
 	 * Executes the use case to retrieve all courses along with the user's progress for each.
 	 *
 	 * @param userId the ID of the user whose course progress is to be retrieved
-	 * @return a list of {@link GetAllCoursesWithProgressResult}, each containing a course ID, the user's lessons, and
+	 * @return a list of {@link FindCoursesWithProgressResult}, each containing a course ID, the user's lessons, and
 	 * progress
 	 * @throws KnowyInconsistentDataException if there is an inconsistency while retrieving lessons or calculating
 	 *                                        progress
 	 */
-	public List<GetAllCoursesWithProgressResult> execute(int userId) throws KnowyInconsistentDataException {
+	public List<FindCoursesWithProgressResult> execute(int userId) throws KnowyInconsistentDataException {
 		List<UserLesson> userLessons = userLessonRepository.findAllWhereUserIsSubscribed(userId);
 
 		Map<Integer, List<UserLesson>> lessonByCourses = userLessons.stream()
@@ -50,8 +46,8 @@ public class GetAllCoursesWithProgressUseCase {
 			.toList();
 	}
 
-	private GetAllCoursesWithProgressResult toCoursesWithProgress(Map.Entry<Integer, List<UserLesson>> entry) {
-		return new GetAllCoursesWithProgressResult(
+	private FindCoursesWithProgressResult toCoursesWithProgress(Map.Entry<Integer, List<UserLesson>> entry) {
+		return new FindCoursesWithProgressResult(
 			entry.getKey(),
 			entry.getValue(),
 			calculateCourseProgress(entry.getValue())

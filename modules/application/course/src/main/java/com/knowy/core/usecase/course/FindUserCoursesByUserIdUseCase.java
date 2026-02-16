@@ -12,7 +12,7 @@ import java.util.Set;
  * Use case responsible for retrieving all courses associated with a specific user. This class handles the logic of
  * fetching user-specific course data with support for pagination.
  */
-public class GetAllUserCoursesByUserIdUseCase {
+public class FindUserCoursesByUserIdUseCase {
 
 	private final UserCourseRepository userCourseRepository;
 
@@ -21,7 +21,7 @@ public class GetAllUserCoursesByUserIdUseCase {
 	 *
 	 * @param userCourseRepository the repository port used to access user course data
 	 */
-	public GetAllUserCoursesByUserIdUseCase(UserCourseRepository userCourseRepository) {
+	public FindUserCoursesByUserIdUseCase(UserCourseRepository userCourseRepository) {
 		this.userCourseRepository = userCourseRepository;
 	}
 

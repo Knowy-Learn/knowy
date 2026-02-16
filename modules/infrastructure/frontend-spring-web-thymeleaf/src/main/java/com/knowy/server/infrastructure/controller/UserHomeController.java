@@ -2,7 +2,7 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.CourseService;
-import com.knowy.core.usecase.course.GetAllCoursesWithProgressResult;
+import com.knowy.core.usecase.course.FindCoursesWithProgressResult;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseBannerDTO;
 import com.knowy.server.infrastructure.controller.dto.MissionsDto;
@@ -30,7 +30,7 @@ public class UserHomeController {
 	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) throws KnowyInconsistentDataException {
 		Integer userId = userDetails.getUser().id();
 
-		List<GetAllCoursesWithProgressResult> coursesWithProgress = courseService.getAllCourseProgress(userId);
+		List<FindCoursesWithProgressResult> coursesWithProgress = courseService.getAllCourseProgress(userId);
 
 		long coursesCompleted = coursesWithProgress.stream()
 			.filter(course -> course.progress() >= 1.0)

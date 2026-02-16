@@ -11,5 +11,5 @@ import com.knowy.core.domain.Pagination;
  * @param userId     the unique identifier of the user for whom recommendations are being generated.
  * @param pagination the {@link Pagination} criteria, including page limits, sorting, and filters.
  */
-public record GetRecommendCoursesCommand(int userId, Pagination pagination) {
+public record FindCoursesRecommendCommand(int userId, Pagination pagination) {
 }

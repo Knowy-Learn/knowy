@@ -6,12 +6,10 @@ import com.knowy.core.domain.Pagination;
 import com.knowy.core.exception.KnowyCourseNotFound;
 import com.knowy.core.port.CourseRepository;
 
-import java.util.List;
-
 /**
  * Use case for retrieving all courses with pagination support.
  */
-public class GetAllCoursesUseCase {
+public class FindCoursesUseCase {
 
 	private final CourseRepository courseRepository;
 
@@ -20,7 +18,7 @@ public class GetAllCoursesUseCase {
 	 *
 	 * @param courseRepository the repository used to access course data
 	 */
-	public GetAllCoursesUseCase(CourseRepository courseRepository) {
+	public FindCoursesUseCase(CourseRepository courseRepository) {
 		this.courseRepository = courseRepository;
 	}
 

@@ -18,14 +18,14 @@ public class CourseService {
 
 	private final GetUserCoursesUseCase getUserCoursesUseCase;
 	private final GetAllCoursesRandomized getAllCoursesRandomized;
-	private final GetRecommendCoursesUseCase getRecommendCoursesUseCase;
-	private final GetAllCoursesUseCase getAllCoursesUseCase;
-	private final GetCourseWithProgressUseCase getCourseWithProgressUseCase;
-	private final GetAllCoursesWithProgressUseCase getAllCoursesWithProgressUseCase;
+	private final FindCoursesRecommendUseCase findCoursesRecommendUseCase;
+	private final FindCoursesUseCase findCoursesUseCase;
+	private final GetCourseWithProgressByIdUseCase getCourseWithProgressByIdUseCase;
+	private final FindCoursesWithProgressUseCase findCoursesWithProgressUseCase;
 	private final GetCourseByIdUseCase getCourseByIdUseCase;
 	private final SubscribeUserToCourseUseCase subscribeUserToCourseUseCase;
-	private final GetAllUserCoursesByUserIdUseCase getAllUserCoursesByUserIdUseCase;
-	private final FindNotSubscribedUseCase findNotSubscribedUseCase;
+	private final FindUserCoursesByUserIdUseCase findUserCoursesByUserIdUseCase;
+	private final FindCoursesNotSubscribedByUserIdUseCase findCoursesNotSubscribedByUserIdUseCase;
 
 	public CourseService(
 		CourseRepository courseRepository,
@@ -35,16 +35,16 @@ public class CourseService {
 	) {
 		this.getUserCoursesUseCase = new GetUserCoursesUseCase(userLessonRepository, courseRepository);
 		this.getAllCoursesRandomized = new GetAllCoursesRandomized(courseRepository);
-		this.getRecommendCoursesUseCase = new GetRecommendCoursesUseCase(courseRepository);
-		this.getAllCoursesUseCase = new GetAllCoursesUseCase(courseRepository);
-		this.getCourseWithProgressUseCase = new GetCourseWithProgressUseCase(
+		this.findCoursesRecommendUseCase = new FindCoursesRecommendUseCase(courseRepository);
+		this.findCoursesUseCase = new FindCoursesUseCase(courseRepository);
+		this.getCourseWithProgressByIdUseCase = new GetCourseWithProgressByIdUseCase(
 			courseRepository, userLessonRepository
 		);
-		this.getAllCoursesWithProgressUseCase = new GetAllCoursesWithProgressUseCase(userLessonRepository);
+		this.findCoursesWithProgressUseCase = new FindCoursesWithProgressUseCase(userLessonRepository);
 		this.getCourseByIdUseCase = new GetCourseByIdUseCase(courseRepository);
 		this.subscribeUserToCourseUseCase = new SubscribeUserToCourseUseCase(lessonRepository, userLessonRepository);
-		this.getAllUserCoursesByUserIdUseCase = new GetAllUserCoursesByUserIdUseCase(userCourseRepository);
-		this.findNotSubscribedUseCase = new FindNotSubscribedUseCase(courseRepository);
+		this.findUserCoursesByUserIdUseCase = new FindUserCoursesByUserIdUseCase(userCourseRepository);
+		this.findCoursesNotSubscribedByUserIdUseCase = new FindCoursesNotSubscribedByUserIdUseCase(courseRepository);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class CourseService {
 	/**
 	 * Retrieves a paginated list of recommended courses for a specific user.
 	 * <p>
-	 * This method delegates the logic to {@link GetRecommendCoursesUseCase}, which filters out courses the user is
+	 * This method delegates the logic to {@link FindCoursesRecommendUseCase}, which filters out courses the user is
 	 * already enrolled in and provides a randomized selection based on the provided pagination and filtering criteria.
 	 *
 	 * @param userId     the unique identifier of the user.
@@ -87,12 +87,12 @@ public class CourseService {
 	 * @throws KnowyDataAccessException if there is an error during the retrieval process.
 	 */
 	public PagedResult<Course> findRecommended(int userId, Pagination pagination) throws KnowyDataAccessException {
-		return getRecommendCoursesUseCase.execute(new GetRecommendCoursesCommand(userId, pagination));
+		return findCoursesRecommendUseCase.execute(new FindCoursesRecommendCommand(userId, pagination));
 	}
 
 	// JAVADOC
 	public PagedResult<Course> findNotSubscribed(int userId, Pagination pagination) throws KnowyDataAccessException {
-		return findNotSubscribedUseCase.execute(userId, pagination);
+		return findCoursesNotSubscribedByUserIdUseCase.execute(userId, pagination);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class CourseService {
 	 * @throws KnowyCourseNotFound if no courses are found
 	 */
 	public PagedResult<Course> getAllCourses(Pagination pagination) throws KnowyCourseNotFound {
-		return getAllCoursesUseCase.execute(pagination);
+		return findCoursesUseCase.execute(pagination);
 	}
 
 	/**
@@ -140,32 +140,32 @@ public class CourseService {
 	/**
 	 * Retrieves a course along with the progress of a specific user in that course.
 	 *
-	 * <p>Delegates the operation to {@link GetCourseWithProgressUseCase#execute(int, int)} to fetch
+	 * <p>Delegates the operation to {@link GetCourseWithProgressByIdUseCase#execute(int, int)} to fetch
 	 * all lessons of the course the user is enrolled in and calculate overall progress.</p>
 	 *
 	 * @param userId   the ID of the user
 	 * @param courseId the ID of the course
-	 * @return a {@link GetCourseWithProgressResult} containing the course and the user's progress
+	 * @return a {@link GetCourseWithProgressByResult} containing the course and the user's progress
 	 * @throws KnowyInconsistentDataException if no lessons are found for the user in the given course
 	 */
-	public GetCourseWithProgressResult getCourseProgress(Integer userId, Integer courseId)
+	public GetCourseWithProgressByResult getCourseProgress(Integer userId, Integer courseId)
 		throws KnowyInconsistentDataException {
 
-		return getCourseWithProgressUseCase.execute(userId, courseId);
+		return getCourseWithProgressByIdUseCase.execute(userId, courseId);
 	}
 
 	/**
 	 * Retrieves all courses along with the progress of a specific user in each course.
 	 * <p>
-	 * Delegates to {@link GetAllCoursesWithProgressUseCase} to fetch all courses and calculate the user's progress for
+	 * Delegates to {@link FindCoursesWithProgressUseCase} to fetch all courses and calculate the user's progress for
 	 * each course.
 	 *
 	 * @param userId the ID of the user whose course progress should be retrieved
-	 * @return a list of {@link GetAllCoursesWithProgressResult} containing course data and user progress
+	 * @return a list of {@link FindCoursesWithProgressResult} containing course data and user progress
 	 * @throws KnowyInconsistentDataException if there is an inconsistency while retrieving course or progress data
 	 */
-	public List<GetAllCoursesWithProgressResult> getAllCourseProgress(int userId) throws KnowyInconsistentDataException {
-		return getAllCoursesWithProgressUseCase.execute(userId);
+	public List<FindCoursesWithProgressResult> getAllCourseProgress(int userId) throws KnowyInconsistentDataException {
+		return findCoursesWithProgressUseCase.execute(userId);
 	}
 
 	/**
@@ -182,6 +182,6 @@ public class CourseService {
 		Set<CourseStatus> courseStatusIds,
 		Pagination pagination
 	) throws KnowyDataAccessException {
-		return getAllUserCoursesByUserIdUseCase.execute(userId, courseStatusIds, pagination);
+		return findUserCoursesByUserIdUseCase.execute(userId, courseStatusIds, pagination);
 	}
 }

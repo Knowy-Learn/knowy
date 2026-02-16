@@ -8,8 +8,8 @@ import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserLessonRepository;
-import com.knowy.core.usecase.course.GetAllCoursesWithProgressResult;
-import com.knowy.core.usecase.course.GetCourseWithProgressResult;
+import com.knowy.core.usecase.course.FindCoursesWithProgressResult;
+import com.knowy.core.usecase.course.GetCourseWithProgressByResult;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -338,7 +338,7 @@ class CourseServiceTest {
 	}
 
 	@Nested
-	class GetAllCoursesUseCase {
+	class FindCoursesUseCase {
 
 		@Test
 		void given_validPaginationData_when_getAllCourses_then_returnListOfCourses() throws KnowyInconsistentDataException {
@@ -401,7 +401,7 @@ class CourseServiceTest {
 			Mockito.when(courseRepository.findById(courseId))
 				.thenReturn(Optional.ofNullable(course));
 
-			GetCourseWithProgressResult result = assertDoesNotThrow(() ->
+			GetCourseWithProgressByResult result = assertDoesNotThrow(() ->
 				courseService.getCourseProgress(userId, courseId)
 			);
 			assertEquals(0.625f, result.progress());
@@ -493,7 +493,7 @@ class CourseServiceTest {
 	}
 
 	@Nested
-	class GetAllCoursesWithProgressUseCaseTest {
+	class FindCoursesWithProgressUseCaseTest {
 
 		@Test
 		void given_validUserId_when_getAllCourseProgress_then_returnAllCoursesWithTheirProgress()
@@ -522,7 +522,7 @@ class CourseServiceTest {
 			Mockito.when(userLessonRepository.findAllWhereUserIsSubscribed(userId))
 				.thenReturn(userLessons);
 
-			List<GetAllCoursesWithProgressResult> results = assertDoesNotThrow(
+			List<FindCoursesWithProgressResult> results = assertDoesNotThrow(
 				() -> courseService.getAllCourseProgress(userId)
 			);
 			assertAll(

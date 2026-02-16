@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Use case for retrieving a course along with a user's progress in that course.
  */
-public class GetCourseWithProgressUseCase {
+public class GetCourseWithProgressByIdUseCase {
 
 	private final CourseRepository courseRepository;
 	private final UserLessonRepository userLessonRepository;
@@ -23,7 +23,7 @@ public class GetCourseWithProgressUseCase {
 	 * @param courseRepository     repository to fetch course data
 	 * @param userLessonRepository repository to fetch user's lesson data
 	 */
-	public GetCourseWithProgressUseCase(CourseRepository courseRepository, UserLessonRepository userLessonRepository) {
+	public GetCourseWithProgressByIdUseCase(CourseRepository courseRepository, UserLessonRepository userLessonRepository) {
 		this.courseRepository = courseRepository;
 		this.userLessonRepository = userLessonRepository;
 	}
@@ -33,17 +33,17 @@ public class GetCourseWithProgressUseCase {
 	 *
 	 * @param userId   the ID of the user
 	 * @param courseId the ID of the course
-	 * @return a {@link GetCourseWithProgressResult} containing the course and the user's progress
+	 * @return a {@link GetCourseWithProgressByResult} containing the course and the user's progress
 	 * @throws KnowyInconsistentDataException if no lessons are found for the user in the given course
 	 * @throws KnowyCourseNotFound            if the course with the given ID does not exist
 	 */
-	public GetCourseWithProgressResult execute(int userId, int courseId) throws KnowyInconsistentDataException {
+	public GetCourseWithProgressByResult execute(int userId, int courseId) throws KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllUserLessonByUserIdAndCourseId(userId, courseId);
 		float totalCourseProgress = calculateCourseProgress(userLessons);
 
 		Course course = getCourseByCourseId(courseId);
 
-		return new GetCourseWithProgressResult(course, totalCourseProgress);
+		return new GetCourseWithProgressByResult(course, totalCourseProgress);
 	}
 
 	private List<UserLesson> getAllUserLessonByUserIdAndCourseId(int userId, int courseId) throws KnowyInconsistentDataException {

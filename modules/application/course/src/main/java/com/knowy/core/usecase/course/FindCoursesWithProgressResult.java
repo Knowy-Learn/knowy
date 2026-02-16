@@ -4,5 +4,5 @@ import com.knowy.core.domain.UserLesson;
 
 import java.util.List;
 
-public record GetAllCoursesWithProgressResult(int courseId, List<UserLesson> userLessons, float progress) {
+public record FindCoursesWithProgressResult(int courseId, List<UserLesson> userLessons, float progress) {
 }

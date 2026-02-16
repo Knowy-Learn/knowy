@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * Use case for retrieving all courses associated with a given user.
  */
+// FIXME: Revise method functionality and uses
 public class GetUserCoursesUseCase {
 
 	private final UserLessonRepository userLessonRepository;

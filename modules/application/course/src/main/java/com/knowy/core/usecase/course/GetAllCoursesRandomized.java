@@ -7,8 +7,10 @@ import com.knowy.core.port.CourseRepository;
 import java.util.List;
 
 /**
- * Use case for retrieving all available courses in a randomized order.
+ * @deprecated Use {@link FindCoursesRecommendUseCase} instead.
+ * This version lacks pagination and is performance-inefficient.
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class GetAllCoursesRandomized {
 
 	private final CourseRepository courseRepository;

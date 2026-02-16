@@ -10,11 +10,11 @@ import com.knowy.core.port.CourseRepository;
 
 import java.util.Optional;
 
-public class FindNotSubscribedUseCase {
+public class FindCoursesNotSubscribedByUserIdUseCase {
 
 	private final CourseRepository courseRepository;
 
-	public FindNotSubscribedUseCase(CourseRepository courseRepository) {
+	public FindCoursesNotSubscribedByUserIdUseCase(CourseRepository courseRepository) {
 		this.courseRepository = courseRepository;
 	}
 

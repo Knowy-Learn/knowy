@@ -6,7 +6,7 @@ import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
-import com.knowy.core.usecase.course.GetAllCoursesWithProgressResult;
+import com.knowy.core.usecase.course.FindCoursesWithProgressResult;
 import com.knowy.core.user.domain.User;
 import com.knowy.server.api.controller.exception.KnowyUnauthorizedException;
 import com.knowy.server.api.dto.GenderEnum;
@@ -56,7 +56,7 @@ public class GetResumeUserDataUseCase {
 	 */
 	public UserResumeGet200Response execute() throws KnowyInconsistentDataException {
 		User user = new SecurityHelper().getAuthenticatedUser();
-		List<GetAllCoursesWithProgressResult> values = courseService.getAllCourseProgress(user.id());
+		List<FindCoursesWithProgressResult> values = courseService.getAllCourseProgress(user.id());
 
 		getAverageProgress(values);
 
@@ -67,9 +67,9 @@ public class GetResumeUserDataUseCase {
 			.completedCourses((float) getAverageProgress(values));
 	}
 
-	private double getAverageProgress(List<GetAllCoursesWithProgressResult> courses) {
+	private double getAverageProgress(List<FindCoursesWithProgressResult> courses) {
 		return courses.stream()
-			.mapToDouble(GetAllCoursesWithProgressResult::progress)
+			.mapToDouble(FindCoursesWithProgressResult::progress)
 			.average()
 			.orElse(0.0);
 	}
