@@ -17,7 +17,9 @@ public interface CourseRepository {
 
 	PagedResult<Course> findAll(Pagination pagination) throws KnowyCourseNotFound;
 
-	PagedResult<Course> findAllRandomUnsubscribedUsers(int userId, Pagination pagination) throws KnowyDataAccessException;
+	PagedResult<Course> findRandomNotSubscribedByUserId(int userId, Pagination pagination) throws KnowyDataAccessException;
+
+	PagedResult<Course> findNotSubscribedByUserId(int userId, Pagination pagination) throws KnowyDataAccessException;
 
 	Set<Course> findInRandomOrder(int numOfRecords) throws KnowyInconsistentDataException;
 

@@ -47,7 +47,7 @@ public class GetRecommendCoursesUseCase implements KnowyUseCase<GetRecommendCour
 		checkCategoryFilterOperator(command.pagination());
 		assertOrderIsEmpty(command.pagination());
 
-		return courseRepository.findAllRandomUnsubscribedUsers(command.userId(), command.pagination());
+		return courseRepository.findRandomNotSubscribedByUserId(command.userId(), command.pagination());
 	}
 
 	private void checkCategoryFilterOperator(Pagination pagination) {

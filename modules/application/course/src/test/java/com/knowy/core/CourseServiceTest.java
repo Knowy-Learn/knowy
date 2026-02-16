@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -179,11 +178,11 @@ class CourseServiceTest {
 				10
 			);
 
-			Mockito.when(courseRepository.findAllRandomUnsubscribedUsers(userId, mockPagination))
+			Mockito.when(courseRepository.findRandomNotSubscribedByUserId(userId, mockPagination))
 				.thenReturn(coursePagedResult);
 
 			List<Course> result = assertDoesNotThrow(
-				() -> courseService.getRecommendedCourses(userId, mockPagination)
+				() -> courseService.findRecommended(userId, mockPagination)
 			).collection()
 				.stream()
 				.toList();
@@ -212,11 +211,11 @@ class CourseServiceTest {
 				10
 			);
 
-			Mockito.when(courseRepository.findAllRandomUnsubscribedUsers(userId, mockPagination))
+			Mockito.when(courseRepository.findRandomNotSubscribedByUserId(userId, mockPagination))
 				.thenReturn(coursePagedResult);
 
 			Collection<Course> result = assertDoesNotThrow(
-				() -> courseService.getRecommendedCourses(userId, mockPagination)
+				() -> courseService.findRecommended(userId, mockPagination)
 			).collection()
 				.stream()
 				.toList();
@@ -236,12 +235,12 @@ class CourseServiceTest {
 
 			Pagination mockPagination = new Pagination(new Page(0, 4), Optional.empty(), Set.of(filter));
 
-			Mockito.when(courseRepository.findAllRandomUnsubscribedUsers(userId, mockPagination))
+			Mockito.when(courseRepository.findRandomNotSubscribedByUserId(userId, mockPagination))
 				.thenThrow(new KnowyInconsistentDataException("Inconsistent Data of courses"));
 
 			assertThrows(
 				KnowyInconsistentDataException.class,
-				() -> courseService.getRecommendedCourses(userId, mockPagination)
+				() -> courseService.findRecommended(userId, mockPagination)
 			);
 		}
 	}

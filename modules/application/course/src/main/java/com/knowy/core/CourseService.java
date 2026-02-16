@@ -25,6 +25,7 @@ public class CourseService {
 	private final GetCourseByIdUseCase getCourseByIdUseCase;
 	private final SubscribeUserToCourseUseCase subscribeUserToCourseUseCase;
 	private final GetAllUserCoursesByUserIdUseCase getAllUserCoursesByUserIdUseCase;
+	private final FindNotSubscribedUseCase findNotSubscribedUseCase;
 
 	public CourseService(
 		CourseRepository courseRepository,
@@ -43,6 +44,7 @@ public class CourseService {
 		this.getCourseByIdUseCase = new GetCourseByIdUseCase(courseRepository);
 		this.subscribeUserToCourseUseCase = new SubscribeUserToCourseUseCase(lessonRepository, userLessonRepository);
 		this.getAllUserCoursesByUserIdUseCase = new GetAllUserCoursesByUserIdUseCase(userCourseRepository);
+		this.findNotSubscribedUseCase = new FindNotSubscribedUseCase(courseRepository);
 	}
 
 	/**
@@ -84,8 +86,13 @@ public class CourseService {
 	 * @return a {@link PagedResult} containing the recommended {@link Course} entities.
 	 * @throws KnowyDataAccessException if there is an error during the retrieval process.
 	 */
-	public PagedResult<Course> getRecommendedCourses(int userId, Pagination pagination) throws KnowyDataAccessException {
+	public PagedResult<Course> findRecommended(int userId, Pagination pagination) throws KnowyDataAccessException {
 		return getRecommendCoursesUseCase.execute(new GetRecommendCoursesCommand(userId, pagination));
+	}
+
+	// JAVADOC
+	public PagedResult<Course> findNotSubscribed(int userId, Pagination pagination) throws KnowyDataAccessException {
+		return findNotSubscribedUseCase.execute(userId, pagination);
 	}
 
 	/**
