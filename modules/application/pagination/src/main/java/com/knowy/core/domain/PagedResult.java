@@ -29,6 +29,6 @@ public record PagedResult<T>(Page page, Collection<T> collection, long totalItem
 	 * @return the total number of pages (rounded up)
 	 */
 	public int pages() {
-		return (int) Math.ceil((double) totalItems() / page.size());
+		return (int) Math.ceil((double) totalItems() / page.size()) - 1;
 	}
 }
