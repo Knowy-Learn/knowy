@@ -74,7 +74,7 @@ public class LessonServiceTest {
 	}
 
 	@Nested
-	class GetAllUserLessonByCourseIdUseCaseTest {
+	class FindAllUserLessonByCourseIdUseCaseTest {
 
 		@Test
 		void given_validUserCourseIds_when_getUserLessonByCourseId_then_returnListOfUserLessons()

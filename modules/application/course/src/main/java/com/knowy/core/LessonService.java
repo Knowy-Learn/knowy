@@ -12,10 +12,10 @@ import com.knowy.core.port.UserExerciseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.usecase.adjust.AdjustLessonToSurveyResponseResult;
 import com.knowy.core.usecase.adjust.AdjustLessonToSurveyResponseUseCase;
-import com.knowy.core.usecase.lesson.GetAllUserLessonByCourseIdUseCase;
+import com.knowy.core.usecase.lesson.FindAllUserLessonByCourseIdUseCase;
 import com.knowy.core.usecase.lesson.GetUserLessonByIdUseCase;
 import com.knowy.core.usecase.lesson.UpdateUserLessonStatusUseCase;
-import com.knowy.core.usecase.lessonbase.GetLessonBaseByIdUserCase;
+import com.knowy.core.usecase.lesson.GetLessonBaseByIdUserCase;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class LessonService {
 
 	private final GetLessonBaseByIdUserCase getLessonBaseByIdUserCase;
 	private final GetUserLessonByIdUseCase getUserLessonByIdUseCase;
-	private final GetAllUserLessonByCourseIdUseCase getAllUserLessonByCourseIdUseCase;
+	private final FindAllUserLessonByCourseIdUseCase findAllUserLessonByCourseIdUseCase;
 	private final UpdateUserLessonStatusUseCase updateUserLessonStatusUseCase;
 	private final AdjustLessonToSurveyResponseUseCase adjustLessonToSurveyResponseUseCase;
 
@@ -44,7 +44,7 @@ public class LessonService {
 	) {
 		this.getLessonBaseByIdUserCase = new GetLessonBaseByIdUserCase(lessonBaseRepository);
 		this.getUserLessonByIdUseCase = new GetUserLessonByIdUseCase(userLessonRepository);
-		this.getAllUserLessonByCourseIdUseCase = new GetAllUserLessonByCourseIdUseCase(userLessonRepository);
+		this.findAllUserLessonByCourseIdUseCase = new FindAllUserLessonByCourseIdUseCase(userLessonRepository);
 		this.updateUserLessonStatusUseCase = new UpdateUserLessonStatusUseCase(userLessonRepository);
 		this.adjustLessonToSurveyResponseUseCase = new AdjustLessonToSurveyResponseUseCase(
 			userExerciseRepository, userLessonRepository
@@ -80,7 +80,7 @@ public class LessonService {
 	/**
 	 * Retrieves all lessons associated with a specific user in a given course.
 	 *
-	 * <p>This method delegates to {@link GetAllUserLessonByCourseIdUseCase} to fetch the data.</p>
+	 * <p>This method delegates to {@link FindAllUserLessonByCourseIdUseCase} to fetch the data.</p>
 	 *
 	 * @param userId   the ID of the user
 	 * @param courseId the ID of the course
@@ -88,7 +88,7 @@ public class LessonService {
 	 * @throws KnowyInconsistentDataException if there is an issue retrieving the user lessons
 	 */
 	public List<UserLesson> getUserLessonAllByCourseId(int userId, int courseId) throws KnowyInconsistentDataException {
-		return getAllUserLessonByCourseIdUseCase.execute(userId, courseId);
+		return findAllUserLessonByCourseIdUseCase.execute(userId, courseId);
 	}
 
 	/**

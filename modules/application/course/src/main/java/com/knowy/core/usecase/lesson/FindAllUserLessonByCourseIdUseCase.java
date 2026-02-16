@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Use case for retrieving all {@link UserLesson} entries for a specific user and course.
  */
-public class GetAllUserLessonByCourseIdUseCase {
+public class FindAllUserLessonByCourseIdUseCase {
 
 	private final UserLessonRepository userLessonRepository;
 
@@ -18,7 +18,7 @@ public class GetAllUserLessonByCourseIdUseCase {
 	 *
 	 * @param userLessonRepository the repository used to access user lessons
 	 */
-	public GetAllUserLessonByCourseIdUseCase(UserLessonRepository userLessonRepository) {
+	public FindAllUserLessonByCourseIdUseCase(UserLessonRepository userLessonRepository) {
 		this.userLessonRepository = userLessonRepository;
 	}
 

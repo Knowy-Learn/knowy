@@ -1,4 +1,4 @@
-package com.knowy.core.usecase.lessonbase;
+package com.knowy.core.usecase.lesson;
 
 import com.knowy.core.domain.LessonInfo;
 import com.knowy.core.exception.data.KnowyDataAccessException;
