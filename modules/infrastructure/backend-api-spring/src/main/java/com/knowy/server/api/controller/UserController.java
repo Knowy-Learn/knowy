@@ -8,6 +8,7 @@ import com.knowy.core.port.UserLessonRepository;
 import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
 import com.knowy.server.api.dto.*;
 import com.knowy.server.api.usecase.user.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ public class UserController implements UserApi {
 	private final FindUserCoursesUseCase findUserCoursesUseCase;
 	private final FindUserRecommendationUseCase findUserRecommendationUseCase;
 	private final FindNotSubscribedCoursesUseCase findNotSubscribedCoursesUseCase;
+	private final SubscribeToCourseUseCase subscribeToCourseUseCase;
 
 	public UserController(
 		CourseRepository courseRepository,
@@ -41,6 +43,9 @@ public class UserController implements UserApi {
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
 		this.findNotSubscribedCoursesUseCase = new FindNotSubscribedCoursesUseCase(
+			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
+		);
+		this.subscribeToCourseUseCase = new SubscribeToCourseUseCase(
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
 	}
@@ -87,7 +92,8 @@ public class UserController implements UserApi {
 	 */
 	@Override
 	public ResponseEntity<Void> userCourseSubscribePost(UserCourseSubscribePostRequest userCourseSubscribePostRequest) {
-		return null; // TODO: Implement
+		subscribeToCourseUseCase.execute(userCourseSubscribePostRequest);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	/**
