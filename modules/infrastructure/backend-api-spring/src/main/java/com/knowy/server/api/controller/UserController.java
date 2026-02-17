@@ -46,6 +46,51 @@ public class UserController implements UserApi {
 	}
 
 	/**
+	 * GET /user/course : Get user course Fetch the user&#39;s personal course details by its ID.
+	 *
+	 * @param course The unique numerical ID of the course. (required)
+	 * @return Successfully retrieved the course details. (status code 200) or Bad Request. The request is invalid or
+	 * cannot be processed. (status code 400) or Access unauthorized. The request requires valid authentication
+	 * credentials (e.g., a valid token). (status code 401) or Internal Server Error. Something went wrong on the
+	 * server. (status code 500)
+	 */
+	@Override
+	public ResponseEntity<CourseDto> userCourseGet(Long course) {
+		return null; // TODO: Implement
+	}
+
+	/**
+	 * GET /user/course/lesson : Get user lesson details Retrieve detailed information about a specific lesson within a
+	 * course for the authenticated user, including content and progress status.
+	 *
+	 * @param courseId The unique identifier of the course. (required)
+	 * @param lessonId The unique identifier of the lesson to retrieve. (required)
+	 * @return Successfully retrieved lesson details. (status code 200) or Bad Request. The request is invalid or cannot
+	 * be processed. (status code 400) or Access unauthorized. The request requires valid authentication credentials
+	 * (e.g., a valid token). (status code 401) or Internal Server Error. Something went wrong on the server. (status
+	 * code 500)
+	 */
+	@Override
+	public ResponseEntity<LessonDto> userCourseLessonGet(Long courseId, Long lessonId) {
+		return null; // TODO: Implement
+	}
+
+	/**
+	 * POST /user/course/subscribe : Subscribe user to a course Enrolls the authenticated user into a specific Java
+	 * course using its ID.
+	 *
+	 * @param userCourseSubscribePostRequest (required)
+	 * @return Successfully subscribed to the course. (status code 201) or Bad Request. The request is invalid or cannot
+	 * be processed. (status code 400) or Access unauthorized. The request requires valid authentication credentials
+	 * (e.g., a valid token). (status code 401) or Internal Server Error. Something went wrong on the server. (status
+	 * code 500)
+	 */
+	@Override
+	public ResponseEntity<Void> userCourseSubscribePost(UserCourseSubscribePostRequest userCourseSubscribePostRequest) {
+		return null; // TODO: Implement
+	}
+
+	/**
 	 * GET /user/courses : Get user courses Fetches the user&#39;s personal course collection. Supports filtering by
 	 * category or status, pagination, and custom sorting.
 	 *
