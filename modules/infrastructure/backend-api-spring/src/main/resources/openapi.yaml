@@ -258,6 +258,107 @@ paths:
                                         example: 8.7
                 '401':
                     $ref: '#/components/responses/UnauthorizedError'
+    /user/course:
+        get:
+            tags:
+                - User
+            summary: Get user course
+            description: Fetch the user's personal course details by its ID.
+            security:
+                -   BearerAuth: [ ]
+            parameters:
+                -   name: course
+                    in: query
+                    description: The unique numerical ID of the course.
+                    required: true
+                    schema:
+                        type: integer
+                        format: int64
+                    style: form
+                    explode: true
+            responses:
+                '200':
+                    description: "Successfully retrieved the course details."
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CourseDto"
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+    /user/course/subscribe:
+        post:
+            tags:
+                - User
+            summary: Subscribe user to a course
+            description: Enrolls the authenticated user into a specific Java course using its ID.
+            security:
+                -   BearerAuth: [ ]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - courseId
+                            properties:
+                                courseId:
+                                    type: integer
+                                    format: int32
+                                    example: 101
+            responses:
+                '201':
+                    description: Successfully subscribed to the course.
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+    /user/course/lesson:
+        get:
+            tags:
+                - User
+            summary: Get user lesson details
+            description: > 
+                Retrieve detailed information about a specific lesson within a course for the authenticated
+                user, including content and progress status.
+            security:
+                -   BearerAuth: [ ]
+            parameters:
+                -   name: courseId
+                    in: query
+                    required: true
+                    description: The unique identifier of the course.
+                    schema:
+                        type: integer
+                        format: int64
+                    example: 75
+                -   name: lessonId
+                    in: query
+                    required: true
+                    description: The unique identifier of the lesson to retrieve.
+                    schema:
+                        type: integer
+                        format: int64
+                    example: 2048
+            responses:
+                '200':
+                    description: Successfully retrieved lesson details.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/LessonDto'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
     /user/courses:
         get:
             tags:
@@ -533,6 +634,48 @@ components:
                     type: string
                     description: A brief textual description of the image for accessibility (Alt text).
                     example: "Java logo and code on a screen"
+        CourseDto:
+            type: object
+            required:
+                - id
+                - title
+                - description
+                - author
+                - creationDate
+                - categories
+                - lessons
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                    example: 101
+                title:
+                    type: string
+                    example: "Modern Java: From Zero to Expert"
+                description:
+                    type: string
+                    description: "A comprehensive overview of the course content and objectives."
+                    example: >
+                        Master Java 21 from core syntax to advanced features like Virtual Threads and Records. 
+                        Learn to build, test, and deploy production-ready APIs using Spring Boot 3 and cloud-native practices.
+                author:
+                    type: string
+                    example: "Mika Miura"
+                creationDate:
+                    type: string
+                    format: date-time
+                    description: "Mapping to LocalDateTime (ISO-8601)"
+                    example: "2024-03-15T10:00:00Z"
+                categories:
+                    type: array
+                    uniqueItems: true
+                    items:
+                        $ref: '#/components/schemas/CategoryDto'
+                lessons:
+                    type: array
+                    uniqueItems: true
+                    items:
+                        $ref: '#/components/schemas/LessonStepDto'
         CategoryDto:
             type: object
             required:
@@ -548,7 +691,97 @@ components:
                     type: string
                     description: The display name of the category.
                     example: "TypeScript"
-
+        LessonStepDto:
+            type: object
+            description: Represents a lesson indicator used for navigation or displaying progress within a course.
+            required:
+                - id
+                - courseId
+                - nextLessonId
+                - title
+                - isCompleted
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                    description: The unique identifier for the specific lesson step.
+                    example: 2048
+                courseId:
+                    type: integer
+                    format: int32
+                    description: The unique identifier of the course to which this lesson belongs.
+                    example: 75
+                nextLessonId:
+                    type: integer
+                    format: int32
+                    nullable: true
+                    description: The unique identifier of the following lesson. Returns null if this is the final lesson in the sequence.
+                    example: 2049
+                title:
+                    type: string
+                    description: The display name or title of the lesson.
+                    example: "Implementing JWT Authentication"
+                isCompleted:
+                    type: boolean
+                    description: Indicates whether the user has successfully finished this lesson.
+                    example: false
+        LessonDto:
+            type: object
+            description: Represents an individual lesson.
+            required:
+                - id
+                - courseId
+                - nextLessonId
+                - title
+                - explanation
+                - documentations
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                    example: 45
+                courseId:
+                    type: integer
+                    format: int64
+                    description: "The ID of the Spring Boot course this lesson belongs to."
+                    example: 101
+                nextLessonId:
+                    type: integer
+                    format: int64
+                    nullable: true
+                    description: "The ID of the following lesson (null if it's the last one in the module)."
+                    example: 46
+                title:
+                    type: string
+                    example: "Reactive Programming with Project Reactor"
+                explanation:
+                    type: string
+                    example: "In this lesson, we will explore how to use Mono and Flux to handle asynchronous data streams..."
+                documentations:
+                    type: array
+                    uniqueItems: true
+                    description: "A set of additional resources (PDFs, Links, Javadocs)."
+                    items:
+                        $ref: '#/components/schemas/DocumentationDto'
+        DocumentationDto:
+            type: object
+            description: Additional resources for the lesson (JavaDocs, GitHub repositories, etc.)
+            required:
+                - id
+                - title
+                - link
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                    example: 1
+                title:
+                    type: string
+                    example: "Spring Boot Official Documentation"
+                link:
+                    type: string
+                    format: uri
+                    example: "https://docs.spring.io/spring-boot/docs/current/reference/html/"
         #################################
         # Knowy Error DTO
         #################################
