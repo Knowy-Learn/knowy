@@ -2,7 +2,6 @@ package com.knowy.server.api.usecase.user;
 
 import com.knowy.core.CourseService;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
-import com.knowy.core.exception.KnowyException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.CourseRepository;
 import com.knowy.core.port.LessonRepository;
@@ -15,6 +14,10 @@ import com.knowy.server.api.controller.exception.KnowyInternalServerErrorExcepti
 import com.knowy.server.api.dto.UserCourseSubscribePostRequest;
 import com.knowy.server.api.util.SecurityHelper;
 
+/**
+ * Use case for subscribing the currently authenticated user to a specific course.
+ * <p>Retrieves the user from the security context and delegates the enrollment logic to the {@link CourseService}.</p>
+ */
 public class SubscribeToCourseUseCase implements KnowyUseCase<UserCourseSubscribePostRequest, Void> {
 
 	private final CourseService courseService;
@@ -30,8 +33,16 @@ public class SubscribeToCourseUseCase implements KnowyUseCase<UserCourseSubscrib
 		);
 	}
 
+	/**
+	 * Executes the subscription process.
+	 *
+	 * @param param Request containing the target course ID.
+	 * @return null upon successful completion.
+	 * @throws KnowyBadRequestRuntimeException   If the user is already enrolled or the request is invalid.
+	 * @throws KnowyInternalServerErrorException If a data consistency error occurs in the system.
+	 */
 	@Override
-	public Void execute(UserCourseSubscribePostRequest param) throws KnowyException {
+	public Void execute(UserCourseSubscribePostRequest param) {
 		User user = new SecurityHelper().getAuthenticatedUser();
 
 		try {
