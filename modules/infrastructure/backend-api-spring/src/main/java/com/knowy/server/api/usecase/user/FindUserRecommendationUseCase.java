@@ -9,7 +9,7 @@ import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.user.domain.User;
 import com.knowy.core.util.KnowyUseCase;
-import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
+import com.knowy.server.api.controller.exception.KnowyInternalServerErrorRuntimeException;
 import com.knowy.server.api.dto.PaginatedCourseResponseWrapper;
 import com.knowy.server.api.dto.PaginationData;
 import com.knowy.server.api.mapper.CourseMapper;
@@ -50,7 +50,7 @@ public class FindUserRecommendationUseCase implements KnowyUseCase<PaginationDat
 	 *
 	 * @param paginationData the pagination, sorting, and ordering parameters.
 	 * @return a wrapper containing the list of recommended courses and pagination metadata.
-	 * @throws KnowyInternalServerErrorException if there is an error during data retrieval.
+	 * @throws KnowyInternalServerErrorRuntimeException if there is an error during data retrieval.
 	 */
 	@Override
 	public PaginatedCourseResponseWrapper execute(PaginationData paginationData) {
@@ -79,7 +79,7 @@ public class FindUserRecommendationUseCase implements KnowyUseCase<PaginationDat
 		try {
 			return courseService.findRecommended(user.id(), pagination);
 		} catch (KnowyDataAccessException e) {
-			throw new KnowyInternalServerErrorException("Failed to fetch paginated user course data", e);
+			throw new KnowyInternalServerErrorRuntimeException("Failed to fetch paginated user course data", e);
 		}
 	}
 }

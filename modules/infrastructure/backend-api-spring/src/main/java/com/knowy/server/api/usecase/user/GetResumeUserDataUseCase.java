@@ -8,7 +8,7 @@ import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.usecase.course.FindCoursesWithProgressResult;
 import com.knowy.core.user.domain.User;
-import com.knowy.server.api.controller.exception.KnowyUnauthorizedException;
+import com.knowy.server.api.controller.exception.KnowyUnauthorizedRuntimeException;
 import com.knowy.server.api.dto.GenderEnum;
 import com.knowy.server.api.dto.UserResumeGet200Response;
 import com.knowy.server.api.util.SecurityHelper;
@@ -51,7 +51,7 @@ public class GetResumeUserDataUseCase {
 	 *
 	 * @return a {@link UserResumeGet200Response} containing the username, gender, total courses, and overall average
 	 * progress.
-	 * @throws KnowyUnauthorizedException     if no authenticated user is found in the security context.
+	 * @throws KnowyUnauthorizedRuntimeException     if no authenticated user is found in the security context.
 	 * @throws KnowyInconsistentDataException if there is a mismatch or error in the retrieved progress data.
 	 */
 	public UserResumeGet200Response execute() throws KnowyInconsistentDataException {

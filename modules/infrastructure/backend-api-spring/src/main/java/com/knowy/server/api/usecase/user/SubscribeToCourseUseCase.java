@@ -10,7 +10,7 @@ import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.user.domain.User;
 import com.knowy.core.util.KnowyUseCase;
 import com.knowy.server.api.controller.exception.KnowyBadRequestRuntimeException;
-import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
+import com.knowy.server.api.controller.exception.KnowyInternalServerErrorRuntimeException;
 import com.knowy.server.api.dto.UserCourseSubscribePostRequest;
 import com.knowy.server.api.util.SecurityHelper;
 
@@ -39,7 +39,7 @@ public class SubscribeToCourseUseCase implements KnowyUseCase<UserCourseSubscrib
 	 * @param param Request containing the target course ID.
 	 * @return null upon successful completion.
 	 * @throws KnowyBadRequestRuntimeException   If the user is already enrolled or the request is invalid.
-	 * @throws KnowyInternalServerErrorException If a data consistency error occurs in the system.
+	 * @throws KnowyInternalServerErrorRuntimeException If a data consistency error occurs in the system.
 	 */
 	@Override
 	public Void execute(UserCourseSubscribePostRequest param) {
@@ -53,7 +53,7 @@ public class SubscribeToCourseUseCase implements KnowyUseCase<UserCourseSubscrib
 				"Unable to complete subscription. Please verify if the user is already enrolled", e
 			);
 		} catch (KnowyInconsistentDataException e) {
-			throw new KnowyInternalServerErrorException(
+			throw new KnowyInternalServerErrorRuntimeException(
 				"An unexpected internal error occurred while processing the enrollment. Please try again later.", e
 			);
 		}

@@ -12,8 +12,8 @@ import com.knowy.core.user.port.*;
 import com.knowy.security.usecase.ValidateUserUseCase;
 import com.knowy.server.api.controller.exception.KnowyBadRequestRuntimeException;
 import com.knowy.server.api.controller.exception.KnowyConflictRuntimeException;
-import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
-import com.knowy.server.api.controller.exception.KnowyUnauthorizedException;
+import com.knowy.server.api.controller.exception.KnowyInternalServerErrorRuntimeException;
+import com.knowy.server.api.controller.exception.KnowyUnauthorizedRuntimeException;
 import com.knowy.server.api.dto.*;
 import com.knowy.server.api.usecase.auth.LoginUserUseCase;
 import com.knowy.server.api.usecase.auth.RegisterUserUseCase;
@@ -75,17 +75,17 @@ public class AuthenticationController implements AuthApi {
 	 *
 	 * @param authLoginPostRequest the login request containing user credentials
 	 * @return 200 OK with login response if successful
-	 * @throws KnowyUnauthorizedException        if the credentials are invalid
-	 * @throws KnowyInternalServerErrorException if a token processing error occurs
+	 * @throws KnowyUnauthorizedRuntimeException        if the credentials are invalid
+	 * @throws KnowyInternalServerErrorRuntimeException if a token processing error occurs
 	 */
 	@Override
 	public ResponseEntity<AuthLoginPost200Response> authLoginPost(AuthLoginPostRequest authLoginPostRequest) {
 		try {
 			return ResponseEntity.ok(loginUserUseCase.execute(authLoginPostRequest));
 		} catch (BadCredentialsException ex) {
-			throw new KnowyUnauthorizedException("Invalid credentials.", ex);
+			throw new KnowyUnauthorizedRuntimeException("Invalid credentials.", ex);
 		} catch (KnowyTokenException ex) {
-			throw new KnowyInternalServerErrorException("An unexpected error occurred while processing the token.", ex);
+			throw new KnowyInternalServerErrorRuntimeException("An unexpected error occurred while processing the token.", ex);
 		}
 	}
 
@@ -96,7 +96,7 @@ public class AuthenticationController implements AuthApi {
 	 * @return 201 Created with registration response if successful
 	 * @throws KnowyBadRequestRuntimeException   if the user data is invalid
 	 * @throws KnowyConflictRuntimeException     if the email or nickname is already taken
-	 * @throws KnowyInternalServerErrorException if an unexpected error occurs (token or image processing)
+	 * @throws KnowyInternalServerErrorRuntimeException if an unexpected error occurs (token or image processing)
 	 */
 	@Override
 	public ResponseEntity<AuthRegisterPost201Response> authRegisterPost(AuthRegisterPostRequest authRegisterPostRequest) {
@@ -120,13 +120,13 @@ public class AuthenticationController implements AuthApi {
 			throw new KnowyConflictRuntimeException("The nickname is already taken. Please choose another.", e);
 
 		} catch (KnowyTokenException e) {
-			throw new KnowyInternalServerErrorException("An error occurred while generating the authentication token.", e);
+			throw new KnowyInternalServerErrorRuntimeException("An error occurred while generating the authentication token.", e);
 
 		} catch (KnowyImageNotFoundException e) {
-			throw new KnowyInternalServerErrorException("An unexpected error occurred while processing the profile image.", e);
+			throw new KnowyInternalServerErrorRuntimeException("An unexpected error occurred while processing the profile image.", e);
 
 		} catch (KnowyDataAccessException e) {
-			throw new KnowyInternalServerErrorException("Unexpected error occurred while accessing the persistence layer", e);
+			throw new KnowyInternalServerErrorRuntimeException("Unexpected error occurred while accessing the persistence layer", e);
 
 		}
 	}

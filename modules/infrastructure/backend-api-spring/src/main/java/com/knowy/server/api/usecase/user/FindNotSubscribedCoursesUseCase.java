@@ -9,7 +9,7 @@ import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.user.domain.User;
 import com.knowy.core.util.KnowyUseCase;
-import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
+import com.knowy.server.api.controller.exception.KnowyInternalServerErrorRuntimeException;
 import com.knowy.server.api.dto.CourseCardDto;
 import com.knowy.server.api.dto.PaginatedCourseResponseWrapper;
 import com.knowy.server.api.dto.PaginationData;
@@ -60,7 +60,7 @@ public class FindNotSubscribedCoursesUseCase implements KnowyUseCase<FindNotSubs
 				.results(mapToDtoList(pagedResult.collection()));
 
 		} catch (KnowyDataAccessException e) {
-			throw new KnowyInternalServerErrorException("Failed to fetch paginated user course data", e);
+			throw new KnowyInternalServerErrorRuntimeException("Failed to fetch paginated user course data", e);
 		}
 	}
 

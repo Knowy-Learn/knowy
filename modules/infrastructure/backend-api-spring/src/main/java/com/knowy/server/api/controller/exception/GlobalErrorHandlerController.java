@@ -97,9 +97,9 @@ public class GlobalErrorHandlerController {
 	 * @param request the HTTP request that caused the exception
 	 * @return ResponseEntity with the exception UUID and message
 	 */
-	@ExceptionHandler(KnowyUnauthorizedException.class)
+	@ExceptionHandler(KnowyUnauthorizedRuntimeException.class)
 	public ResponseEntity<KnowyErrorReportDto> handleUnauthorizedRuntimeException(
-		KnowyUnauthorizedException ex,
+		KnowyUnauthorizedRuntimeException ex,
 		HttpServletRequest request
 	) {
 		logger.warn("Unauthorized Error Code: {}\nRequest: {}\nMessage: {}"

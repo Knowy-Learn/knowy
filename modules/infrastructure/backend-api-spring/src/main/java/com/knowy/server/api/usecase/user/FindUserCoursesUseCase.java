@@ -8,7 +8,7 @@ import com.knowy.core.port.LessonRepository;
 import com.knowy.core.port.UserCourseRepository;
 import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.user.domain.User;
-import com.knowy.server.api.controller.exception.KnowyInternalServerErrorException;
+import com.knowy.server.api.controller.exception.KnowyInternalServerErrorRuntimeException;
 import com.knowy.server.api.dto.*;
 import com.knowy.server.api.mapper.CourseMapper;
 import com.knowy.server.api.mapper.CourseStatusMapper;
@@ -56,7 +56,7 @@ public class FindUserCoursesUseCase {
 	 * @param coursesStatuses the set of statuses to filter the courses.
 	 * @param categories        an optional category filter.
 	 * @return a response object containing paginated course DTOs and metadata.
-	 * @throws KnowyInternalServerErrorException if a data access error occurs during execution.
+	 * @throws KnowyInternalServerErrorRuntimeException if a data access error occurs during execution.
 	 */
 	public PaginatedCourseResponseWrapper execute(
 		PaginationData paging,
@@ -78,7 +78,7 @@ public class FindUserCoursesUseCase {
 				.results(mapToDtoList(pagedResult.collection()));
 
 		} catch (KnowyDataAccessException e) {
-			throw new KnowyInternalServerErrorException("Failed to fetch paginated user course data", e);
+			throw new KnowyInternalServerErrorRuntimeException("Failed to fetch paginated user course data", e);
 		}
 	}
 

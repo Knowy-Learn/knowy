@@ -1,7 +1,7 @@
 package com.knowy.server.api.usecase.user;
 
 import com.knowy.core.user.domain.User;
-import com.knowy.server.api.controller.exception.KnowyUnauthorizedException;
+import com.knowy.server.api.controller.exception.KnowyUnauthorizedRuntimeException;
 import com.knowy.server.api.dto.UserNavbarGet200Response;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +18,7 @@ public class GetNavbarUserDataUseCase {
 	 * Executes the logic to retrieve the authenticated user's display information.
 	 *
 	 * @return a {@link UserNavbarGet200Response} containing the user's nickname and avatar URL.
-	 * @throws KnowyUnauthorizedException if no valid authenticated user is found in the security context.
+	 * @throws KnowyUnauthorizedRuntimeException if no valid authenticated user is found in the security context.
 	 */
 	public UserNavbarGet200Response execute() {
 		User user = getAuthenticatedUser();
@@ -34,7 +34,7 @@ public class GetNavbarUserDataUseCase {
 
 		if (!(principal instanceof User user)) {
 			String principalClass = principal != null ? principal.getClass().getName() : "null";
-			throw new KnowyUnauthorizedException("Expected principal of type User, but got: " + principalClass);
+			throw new KnowyUnauthorizedRuntimeException("Expected principal of type User, but got: " + principalClass);
 		}
 
 		return user;
