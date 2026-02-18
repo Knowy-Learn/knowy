@@ -12,6 +12,7 @@ import com.knowy.core.port.UserLessonRepository;
 import com.knowy.core.usecase.course.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class CourseService {
@@ -26,6 +27,7 @@ public class CourseService {
 	private final SubscribeUserToCourseUseCase subscribeUserToCourseUseCase;
 	private final FindUserCoursesByUserIdUseCase findUserCoursesByUserIdUseCase;
 	private final FindCoursesNotSubscribedByUserIdUseCase findCoursesNotSubscribedByUserIdUseCase;
+	private final FindUserCourseByIdUseCase findUserCourseByIdUseCase;
 
 	public CourseService(
 		CourseRepository courseRepository,
@@ -45,6 +47,7 @@ public class CourseService {
 		this.subscribeUserToCourseUseCase = new SubscribeUserToCourseUseCase(lessonRepository, userLessonRepository);
 		this.findUserCoursesByUserIdUseCase = new FindUserCoursesByUserIdUseCase(userCourseRepository);
 		this.findCoursesNotSubscribedByUserIdUseCase = new FindCoursesNotSubscribedByUserIdUseCase(courseRepository);
+		this.findUserCourseByIdUseCase = new FindUserCourseByIdUseCase(userCourseRepository);
 	}
 
 	/**
@@ -166,6 +169,18 @@ public class CourseService {
 	 */
 	public List<FindCoursesWithProgressResult> getAllCourseProgress(int userId) throws KnowyInconsistentDataException {
 		return findCoursesWithProgressUseCase.execute(userId);
+	}
+
+	/**
+	 * Retrieves a user's course progress by user and course identifiers.
+	 *
+	 * @param userId   The unique identifier of the user.
+	 * @param courseId The unique identifier of the course.
+	 * @return An {@link Optional} containing the {@link UserCourse} if found, otherwise empty.
+	 * @throws KnowyDataAccessException if a database error occurs during execution.
+	 */
+	public Optional<UserCourse> findUserCourseById(int userId, int courseId) throws KnowyDataAccessException {
+		return findUserCourseByIdUseCase.execute(userId, courseId);
 	}
 
 	/**
