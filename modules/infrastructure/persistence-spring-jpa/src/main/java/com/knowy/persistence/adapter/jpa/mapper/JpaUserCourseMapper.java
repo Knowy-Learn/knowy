@@ -1,11 +1,16 @@
 package com.knowy.persistence.adapter.jpa.mapper;
 
+import com.knowy.core.domain.CourseIdentifiedInfo;
 import com.knowy.core.domain.UserCourse;
+import com.knowy.core.domain.UserLesson;
+import com.knowy.core.util.CommonUtils;
 import com.knowy.persistence.adapter.jpa.dao.*;
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
+import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -89,5 +94,28 @@ public class JpaUserCourseMapper {
 		return courseEntities.stream()
 			.map(CourseEntity::getId)
 			.toList();
+	}
+
+	/**
+	 * Maps a list of user lesson entities to a {@link UserCourse} domain object.
+	 *
+	 * @param userId The unique identifier of the user.
+	 * @param userLessonEntities List of lesson entities; must not be empty.
+	 * @return A {@link UserCourse} containing the course info and mapped domain lessons.
+	 */
+	public UserCourse toUserCourse(int userId, List<PublicUserLessonEntity> userLessonEntities) {
+		CommonUtils.nonEmpty(userLessonEntities);
+
+		var userLessonMapper = new JpaUserLessonMapper(jpaUserDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao);
+		var courseInfoMapper = new JpaCourseInfoMapper(jpaCategoryDao);
+
+		CourseEntity courseEntity = userLessonEntities.getFirst().getLessonEntity().getCourse();
+		CourseIdentifiedInfo courseIdentifiedInfo = courseInfoMapper.toDomain(courseEntity);
+
+		List<UserLesson> userLessons = userLessonEntities.stream()
+			.map(userLessonMapper::toDomain)
+			.toList();
+
+		return new UserCourse(userId, courseIdentifiedInfo, userLessons);
 	}
 }

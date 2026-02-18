@@ -6,6 +6,7 @@ import com.knowy.core.domain.Pagination;
 import com.knowy.core.domain.UserCourse;
 import com.knowy.core.exception.data.KnowyDataAccessException;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -15,14 +16,14 @@ import java.util.Set;
 public interface UserCourseRepository {
 
 	/**
-	 * Retrieves a specific course enrollment record for a user.
+	 * Retrieves a user's progress within a specific course.
 	 *
-	 * @param userId   the unique identifier of the user
+	 * @param userId the unique identifier of the user
 	 * @param courseId the unique identifier of the course
-	 * @return the {@link UserCourse} record associated with the user and course
-	 * @throws KnowyDataAccessException if there is an error accessing to the data
+	 * @return an Optional containing the UserCourse, or empty if no records exist
+	 * @throws KnowyDataAccessException if a data access error occurs
 	 */
-	UserCourse findById(int userId, int courseId) throws KnowyDataAccessException;
+	Optional<UserCourse> findById(int userId, int courseId) throws KnowyDataAccessException;
 
 	/**
 	 * Retrieves a paginated list of all courses associated with a specific user.

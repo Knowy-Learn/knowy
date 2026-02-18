@@ -6,15 +6,14 @@ import com.knowy.core.port.UserCourseRepository;
 import com.knowy.persistence.adapter.jpa.dao.*;
 import com.knowy.persistence.adapter.jpa.entity.CourseEntity;
 import com.knowy.persistence.adapter.jpa.entity.PublicUserLessonEntity;
-import com.knowy.persistence.adapter.jpa.mapper.JpaCourseInfoMapper;
 import com.knowy.persistence.adapter.jpa.mapper.JpaUserCourseMapper;
-import com.knowy.persistence.adapter.jpa.mapper.JpaUserLessonMapper;
 import com.knowy.persistence.adapter.spring.mapper.SpringPaginationMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,26 +46,29 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 	}
 
 	/**
-	 * Retrieves a specific course enrollment record for a user.
+	 * Retrieves user course details by user and course identifiers.
 	 *
 	 * @param userId   the unique identifier of the user
 	 * @param courseId the unique identifier of the course
-	 * @return the {@link UserCourse} record associated with the user and course
-	 * @throws KnowyDataAccessException if there is an error accessing to the data
+	 * @return an Optional containing the mapped UserCourse, or empty if no lessons found
+	 * @throws KnowyDataAccessException if an error occurs during database communication
 	 */
 	@Override
-	public UserCourse findById(int userId, int courseId) throws KnowyDataAccessException {
-		var userLessonMapper = new JpaUserLessonMapper(jpaUserDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao);
-		var courseInfoMapper = new JpaCourseInfoMapper(jpaCategoryDao);
+	public Optional<UserCourse> findById(int userId, int courseId) throws KnowyDataAccessException {
+		var userCourseMapper = new JpaUserCourseMapper(
+			jpaUserDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao, jpaUserLessonDao, jpaCategoryDao
+		);
 
-		List<PublicUserLessonEntity> userLessonEntities = jpaUserLessonDao.findAllByUserIdAndCourseId(userId, courseId);
+		try {
+			List<PublicUserLessonEntity> userLessonEntities = jpaUserLessonDao.findAllByUserIdAndCourseId(userId, courseId);
+			if (userLessonEntities.isEmpty()) {
+				return Optional.empty();
+			}
+			return Optional.of(userCourseMapper.toUserCourse(userId, userLessonEntities));
 
-		CourseIdentifiedInfo courseIdentifiedInfo = courseInfoMapper.toDomain(userLessonEntities.getFirst().getLessonEntity().getCourse());
-		List<UserLesson> userLessons = userLessonEntities.stream()
-			.map(userLessonMapper::toDomain)
-			.toList();
-
-		return new UserCourse(userId, courseIdentifiedInfo, userLessons);
+		} catch (DataAccessException ex) {
+			throw new KnowyDataAccessException("Data access error while fetching user course details", ex);
+		}
 	}
 
 	/**
