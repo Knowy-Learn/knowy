@@ -11,7 +11,7 @@ import com.knowy.core.user.domain.User;
 import com.knowy.server.api.controller.exception.KnowyInternalServerErrorRuntimeException;
 import com.knowy.server.api.dto.*;
 import com.knowy.server.api.mapper.CourseMapper;
-import com.knowy.server.api.mapper.CourseStatusMapper;
+import com.knowy.server.api.mapper.ProgressStatusMapper;
 import com.knowy.server.api.mapper.OrderMapper;
 import com.knowy.server.api.util.SecurityHelper;
 
@@ -29,7 +29,7 @@ public class FindUserCoursesUseCase {
 
 	private final CourseService courseService;
 	private final CourseMapper courseMapper = new CourseMapper();
-	private final CourseStatusMapper statusMapper = new CourseStatusMapper();
+	private final ProgressStatusMapper statusMapper = new ProgressStatusMapper();
 	private final OrderMapper orderMapper = new OrderMapper();
 
 	/**
@@ -53,14 +53,14 @@ public class FindUserCoursesUseCase {
 	 * Executes the process of fetching and mapping user courses based on the provided filters and pagination.
 	 *
 	 * @param paging          the pagination and sorting criteria.
-	 * @param coursesStatuses the set of statuses to filter the courses.
+	 * @param progressStatusEnums the set of statuses to filter the courses.
 	 * @param categories        an optional category filter.
 	 * @return a response object containing paginated course DTOs and metadata.
 	 * @throws KnowyInternalServerErrorRuntimeException if a data access error occurs during execution.
 	 */
 	public PaginatedCourseResponseWrapper execute(
 		PaginationData paging,
-		Set<CourseStatusEnum> coursesStatuses,
+		Set<ProgressStatusEnum> progressStatusEnums,
 		List<String> categories
 	) {
 		User user = new SecurityHelper().getAuthenticatedUser();
@@ -69,7 +69,7 @@ public class FindUserCoursesUseCase {
 		try {
 			PagedResult<UserCourse> pagedResult = courseService.getAllUserCoursesByUserId(
 				user.id(),
-				statusMapper.toDomain(coursesStatuses),
+				statusMapper.toDomain(progressStatusEnums),
 				paginationRequest
 			);
 

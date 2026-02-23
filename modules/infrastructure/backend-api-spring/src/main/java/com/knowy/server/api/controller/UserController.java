@@ -108,15 +108,19 @@ public class UserController implements UserApi {
 	 * @param paging       Pagination and sorting criteria. (required)
 	 * @param categories   Filter by programming languages or categories (e.g., &#39;java&#39;, &#39;python&#39;).
 	 *                     (optional)
-	 * @param courseStatus Filter by course progress status. (optional)
+	 * @param progressStatusEnums Filter by course progress status. (optional)
 	 * @return A paginated list of courses was successfully retrieved. (status code 200) or Bad Request. The request is
 	 * invalid or cannot be processed. (status code 400) or Access unauthorized. The request requires valid
 	 * authentication credentials (e.g., a valid token). (status code 401) or Internal Server Error. Something went
 	 * wrong on the server. (status code 500)
 	 */
 	@Override
-	public ResponseEntity<PaginatedCourseResponseWrapper> userCoursesGet(PaginationData paging, @Nullable List<String> categories, @Nullable Set<CourseStatusEnum> courseStatus) {
-		return ResponseEntity.ok(findUserCoursesUseCase.execute(paging, courseStatus, categories));
+	public ResponseEntity<PaginatedCourseResponseWrapper> userCoursesGet(
+		PaginationData paging,
+		@Nullable List<String> categories,
+		@Nullable Set<ProgressStatusEnum> progressStatusEnums
+	) {
+		return ResponseEntity.ok(findUserCoursesUseCase.execute(paging, progressStatusEnums, categories));
 	}
 
 	/**
