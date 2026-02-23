@@ -50,7 +50,7 @@ public class LessonServiceTest {
 
 			Lesson lesson = new Lesson(lessonId, 12, 41, "Title", "Desc");
 			UserLesson userLesson = new UserLesson(
-				userId, lesson, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+				userId, lesson, LocalDate.now(), ProgressStatus.IN_PROGRESS);
 
 			Mockito.when(userLessonRepository.findById(userId, lessonId))
 				.thenReturn(Optional.of(userLesson));
@@ -118,11 +118,11 @@ public class LessonServiceTest {
 
 			Lesson currentLesson = new Lesson(lessonId, courseId, nextLessonId, "Title", "Desc");
 			UserLesson currentUserLesson = new UserLesson(
-				userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+				userId, currentLesson, LocalDate.now(), ProgressStatus.IN_PROGRESS);
 
 			Lesson nextLesson = new Lesson(nextLessonId, courseId, null, "Title", "Desc");
 			UserLesson nextUserLesson = new UserLesson(
-				userId, nextLesson, LocalDate.now(), UserLesson.ProgressStatus.PENDING);
+				userId, nextLesson, LocalDate.now(), ProgressStatus.NOT_STARTED);
 
 			Mockito.when(userLessonRepository.findById(userId, lessonId))
 				.thenReturn(Optional.of(currentUserLesson));
@@ -130,12 +130,12 @@ public class LessonServiceTest {
 				.thenReturn(Optional.of(nextUserLesson));
 
 			assertDoesNotThrow(() ->
-				lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userId, lessonId)
+				lessonService.updateUserLessonStatus(ProgressStatus.COMPLETED, userId, lessonId)
 			);
 			Mockito.verify(userLessonRepository, Mockito.times(1))
-				.save(new UserLesson(userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.COMPLETED));
+				.save(new UserLesson(userId, currentLesson, LocalDate.now(), ProgressStatus.COMPLETED));
 			Mockito.verify(userLessonRepository, Mockito.times(1))
-				.save(new UserLesson(userId, nextLesson, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS));
+				.save(new UserLesson(userId, nextLesson, LocalDate.now(), ProgressStatus.IN_PROGRESS));
 		}
 
 		@Test
@@ -146,16 +146,16 @@ public class LessonServiceTest {
 
 			Lesson currentLesson = new Lesson(lessonId, courseId, null, "Title", "Desc");
 			UserLesson currentUserLesson = new UserLesson(
-				userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+				userId, currentLesson, LocalDate.now(), ProgressStatus.IN_PROGRESS);
 
 			Mockito.when(userLessonRepository.findById(userId, lessonId))
 				.thenReturn(Optional.of(currentUserLesson));
 
 			assertDoesNotThrow(() ->
-				lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userId, lessonId)
+				lessonService.updateUserLessonStatus(ProgressStatus.COMPLETED, userId, lessonId)
 			);
 			Mockito.verify(userLessonRepository, Mockito.times(1))
-				.save(new UserLesson(userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.COMPLETED));
+				.save(new UserLesson(userId, currentLesson, LocalDate.now(), ProgressStatus.COMPLETED));
 			Mockito.verify(userLessonRepository, Mockito.times(1))
 				.save(Mockito.any(UserLesson.class));
 		}
@@ -171,7 +171,7 @@ public class LessonServiceTest {
 
 			assertThrows(
 				KnowyUserLessonNotFoundException.class,
-				() -> lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userId, lessonId)
+				() -> lessonService.updateUserLessonStatus(ProgressStatus.COMPLETED, userId, lessonId)
 			);
 			Mockito.verify(userLessonRepository, Mockito.never()).save(Mockito.any(UserLesson.class));
 		}
@@ -186,7 +186,7 @@ public class LessonServiceTest {
 
 			Lesson currentLesson = new Lesson(lessonId, courseId, nextLessonId, "Title", "Desc");
 			UserLesson currentUserLesson = new UserLesson(
-				userId, currentLesson, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+				userId, currentLesson, LocalDate.now(), ProgressStatus.IN_PROGRESS);
 
 			Mockito.when(userLessonRepository.findById(userId, lessonId))
 				.thenReturn(Optional.of(currentUserLesson));
@@ -195,7 +195,7 @@ public class LessonServiceTest {
 
 			assertThrows(
 				KnowyUserLessonNotFoundException.class,
-				() -> lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.COMPLETED, userId, lessonId)
+				() -> lessonService.updateUserLessonStatus(ProgressStatus.COMPLETED, userId, lessonId)
 			);
 			Mockito.verify(userLessonRepository, Mockito.never()).save(Mockito.any(UserLesson.class));
 		}
@@ -209,7 +209,7 @@ public class LessonServiceTest {
 
 			assertThrows(
 				KnowyUnsupportedOperationRuntimeException.class,
-				() -> lessonService.updateUserLessonStatus(UserLesson.ProgressStatus.PENDING, userId, lessonId)
+				() -> lessonService.updateUserLessonStatus(ProgressStatus.NOT_STARTED, userId, lessonId)
 			);
 			Mockito.verify(userLessonRepository, Mockito.never()).save(Mockito.any(UserLesson.class));
 		}

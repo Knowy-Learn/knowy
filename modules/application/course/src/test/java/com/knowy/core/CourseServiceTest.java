@@ -259,13 +259,13 @@ class CourseServiceTest {
 			Set<Lesson> lessons = Set.of(lesson1, lesson2, lesson3, lesson4);
 
 			UserLesson userLesson1 = new UserLesson(
-				2, lesson1, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+				2, lesson1, LocalDate.now(), ProgressStatus.IN_PROGRESS);
 			UserLesson userLesson2 = new UserLesson(
-				2, lesson2, LocalDate.now(), UserLesson.ProgressStatus.PENDING);
+				2, lesson2, LocalDate.now(), ProgressStatus.NOT_STARTED);
 			UserLesson userLesson3 = new UserLesson(
-				2, lesson3, LocalDate.now(), UserLesson.ProgressStatus.PENDING);
+				2, lesson3, LocalDate.now(), ProgressStatus.NOT_STARTED);
 			UserLesson userLesson4 = new UserLesson(
-				2, lesson4, LocalDate.now(), UserLesson.ProgressStatus.PENDING);
+				2, lesson4, LocalDate.now(), ProgressStatus.NOT_STARTED);
 			List<UserLesson> userLessons = List.of(userLesson1, userLesson2, userLesson3, userLesson4);
 
 			Mockito.when(lessonRepository.findAllByCourseId(courseId))
@@ -385,13 +385,13 @@ class CourseServiceTest {
 			int courseId = 20;
 
 			UserLesson userLesson1 = new UserLesson(
-				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED);
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), ProgressStatus.COMPLETED);
 			UserLesson userLesson2 = new UserLesson(
-				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED);
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), ProgressStatus.COMPLETED);
 			UserLesson userLesson3 = new UserLesson(
-				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), ProgressStatus.IN_PROGRESS);
 			UserLesson userLesson4 = new UserLesson(
-				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.PENDING);
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), ProgressStatus.NOT_STARTED);
 			List<UserLesson> userLessons = List.of(userLesson1, userLesson2, userLesson3, userLesson4);
 
 			Course course = Mockito.mock(Course.class);
@@ -429,13 +429,13 @@ class CourseServiceTest {
 			int courseId = 20;
 
 			UserLesson userLesson1 = new UserLesson(
-				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED);
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), ProgressStatus.COMPLETED);
 			UserLesson userLesson2 = new UserLesson(
-				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED);
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), ProgressStatus.COMPLETED);
 			UserLesson userLesson3 = new UserLesson(
-				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS);
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), ProgressStatus.IN_PROGRESS);
 			UserLesson userLesson4 = new UserLesson(
-				userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.PENDING);
+				userId, Mockito.mock(Lesson.class), LocalDate.now(), ProgressStatus.NOT_STARTED);
 			List<UserLesson> userLessons = List.of(userLesson1, userLesson2, userLesson3, userLesson4);
 
 			Mockito.when(userLessonRepository.findAllByUserIdAndCourseId(userId, courseId))
@@ -511,12 +511,12 @@ class CourseServiceTest {
 			Lesson l6 = new Lesson(31, courseId2, null, "Title6", "Desc6");
 
 			List<UserLesson> userLessons = List.of(
-				new UserLesson(userId, l1, LocalDate.now(), UserLesson.ProgressStatus.COMPLETED),
-				new UserLesson(userId, l2, LocalDate.now(), UserLesson.ProgressStatus.COMPLETED),
-				new UserLesson(userId, l3, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS),
-				new UserLesson(userId, l4, LocalDate.now(), UserLesson.ProgressStatus.PENDING),
-				new UserLesson(userId, l5, LocalDate.now(), UserLesson.ProgressStatus.IN_PROGRESS),
-				new UserLesson(userId, l6, LocalDate.now(), UserLesson.ProgressStatus.PENDING)
+				new UserLesson(userId, l1, LocalDate.now(), ProgressStatus.COMPLETED),
+				new UserLesson(userId, l2, LocalDate.now(), ProgressStatus.COMPLETED),
+				new UserLesson(userId, l3, LocalDate.now(), ProgressStatus.IN_PROGRESS),
+				new UserLesson(userId, l4, LocalDate.now(), ProgressStatus.NOT_STARTED),
+				new UserLesson(userId, l5, LocalDate.now(), ProgressStatus.IN_PROGRESS),
+				new UserLesson(userId, l6, LocalDate.now(), ProgressStatus.NOT_STARTED)
 			);
 
 			Mockito.when(userLessonRepository.findAllWhereUserIsSubscribed(userId))

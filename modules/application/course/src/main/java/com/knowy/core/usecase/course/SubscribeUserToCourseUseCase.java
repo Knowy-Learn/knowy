@@ -1,8 +1,8 @@
 package com.knowy.core.usecase.course;
 
 import com.knowy.core.domain.Lesson;
+import com.knowy.core.domain.ProgressStatus;
 import com.knowy.core.domain.UserLesson;
-import com.knowy.core.domain.UserLesson.ProgressStatus;
 import com.knowy.core.exception.KnowyCourseSubscriptionException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.port.LessonRepository;
@@ -37,8 +37,7 @@ public class SubscribeUserToCourseUseCase {
 	 * <p>
 	 * It retrieves all lessons of the course that the user is not already subscribed to, validates the consistency of
 	 * the lesson sequence, and creates new {@link UserLesson} subscriptions. The first lesson is marked as
-	 * {@link UserLesson.ProgressStatus#IN_PROGRESS}, while subsequent lessons are marked as
-	 * {@link UserLesson.ProgressStatus#PENDING}.
+	 * {@link ProgressStatus#IN_PROGRESS}, while subsequent lessons are marked as {@link ProgressStatus#NOT_STARTED}.
 	 *
 	 * @param userId   the identifier of the user subscribing to the course
 	 * @param courseId the identifier of the course to subscribe to
@@ -105,7 +104,7 @@ public class SubscribeUserToCourseUseCase {
 	private Function<Lesson, ProgressStatus> defaultStatusResolver(Lesson firstLesson) {
 		return lesson -> lesson == firstLesson
 			? ProgressStatus.IN_PROGRESS
-			: ProgressStatus.PENDING;
+			: ProgressStatus.NOT_STARTED;
 	}
 
 	private List<UserLesson> createUserLessons(

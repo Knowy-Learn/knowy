@@ -83,7 +83,7 @@ class AdjustLessonToSurveyResponseUseCaseTest {
 			() -> assertEquals(exercise2.id(), result.exerciseId()),
 			() -> assertEquals(userExercises, result.userExercises()),
 			() -> assertEquals("0.65", String.format(Locale.US, "%.2f", result.lessonProgress())),
-			() -> assertEquals(UserLesson.ProgressStatus.IN_PROGRESS, result.lessonStatus())
+			() -> assertEquals(ProgressStatus.IN_PROGRESS, result.lessonStatus())
 		);
 	}
 
@@ -101,12 +101,12 @@ class AdjustLessonToSurveyResponseUseCaseTest {
 		List<UserExercise> userExercises = List.of(userExercise1, userExercise2, userExercise3);
 
 		UserLesson userLesson = new UserLesson(
-			userId, Mockito.mock(Lesson.class), LocalDate.now(), UserLesson.ProgressStatus.COMPLETED
+			userId, Mockito.mock(Lesson.class), LocalDate.now(), ProgressStatus.COMPLETED
 		);
 
 		Mockito.when(findAllUserExercisesByCourseIdAndLessonIdUseCase.execute(userId, exercise2.lessonId()))
 			.thenReturn(userExercises);
-		Mockito.when(updateUserLessonStatusUseCase.execute(UserLesson.ProgressStatus.COMPLETED, userId, exercise2.lessonId()))
+		Mockito.when(updateUserLessonStatusUseCase.execute(ProgressStatus.COMPLETED, userId, exercise2.lessonId()))
 			.thenReturn(userLesson);
 
 		AdjustLessonToSurveyResponseResult result = assertDoesNotThrow(() ->
@@ -123,7 +123,7 @@ class AdjustLessonToSurveyResponseUseCaseTest {
 			() -> assertEquals(exercise2.id(), result.exerciseId()),
 			() -> assertEquals(userExercises, result.userExercises()),
 			() -> assertEquals("1.00", String.format(Locale.US, "%.2f", result.lessonProgress())),
-			() -> assertEquals(UserLesson.ProgressStatus.COMPLETED, result.lessonStatus())
+			() -> assertEquals(ProgressStatus.COMPLETED, result.lessonStatus())
 		);
 	}
 

@@ -28,22 +28,25 @@ public class JpaUserLessonMapper implements EntityMapper<UserLesson, PublicUserL
 
 	@Override
 	public UserLesson toDomain(PublicUserLessonEntity entity) {
+		var jpaProgressStatusMapper = new JpaProgressStatusMapper();
+
 		return new UserLesson(
 			entity.getPublicUserEntity().getId(),
 			jpaLessonMapper.toDomain(entity.getLessonEntity()),
 			entity.getStartDate(),
-			UserLesson.ProgressStatus
-				.valueOf(entity.getStatus().toUpperCase())
+			jpaProgressStatusMapper.toDomain(entity.getStatus())
 		);
 	}
 
 	@Override
 	public PublicUserLessonEntity toEntity(UserLesson domain) throws KnowyUserNotFoundException, KnowyLessonNotFoundException {
+		var jpaProgressStatusMapper = new JpaProgressStatusMapper();
+
 		return new PublicUserLessonEntity(
 			domain.userId(),
 			domain.lesson().id(),
 			domain.startDate(),
-			domain.status().name().toLowerCase(),
+			jpaProgressStatusMapper.toEntity(domain.status()),
 			jpaUserDao.findById(domain.userId())
 				.orElseThrow(() -> new KnowyUserNotFoundException("User with ID: " + domain.userId() + " not found")),
 			jpaLessonDao.findById(domain.lesson().id())

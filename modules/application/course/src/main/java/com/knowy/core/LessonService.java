@@ -1,9 +1,6 @@
 package com.knowy.core;
 
-import com.knowy.core.domain.ExerciseDifficult;
-import com.knowy.core.domain.LessonInfo;
-import com.knowy.core.domain.UserExercise;
-import com.knowy.core.domain.UserLesson;
+import com.knowy.core.domain.*;
 import com.knowy.core.exception.data.KnowyDataAccessException;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.exception.KnowyUnsupportedOperationRuntimeException;
@@ -104,7 +101,7 @@ public class LessonService {
 	 * @throws KnowyInconsistentDataException            if the user lesson cannot be found or saved
 	 * @throws KnowyUnsupportedOperationRuntimeException if the given status is not {@code COMPLETED}
 	 */
-	public void updateUserLessonStatus(UserLesson.ProgressStatus statusToUpdate, int userId, int lessonId)
+	public void updateUserLessonStatus(ProgressStatus statusToUpdate, int userId, int lessonId)
 		throws KnowyInconsistentDataException, KnowyUnsupportedOperationRuntimeException {
 
 		updateUserLessonStatusUseCase.execute(statusToUpdate, userId, lessonId);

@@ -1,6 +1,7 @@
 package com.knowy.core.usecase.adjust;
 
 import com.knowy.core.domain.ExerciseDifficult;
+import com.knowy.core.domain.ProgressStatus;
 import com.knowy.core.domain.UserExercise;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.data.KnowyDataAccessException;
@@ -84,7 +85,7 @@ public class AdjustLessonToSurveyResponseUseCase {
 		List<UserExercise> updatedUserExercises = loadUserExercises(userId, lessonId);
 		double lessonProgress = calculateLessonProgress(updatedUserExercises);
 
-		UserLesson.ProgressStatus lessonStatus = updateLessonStatusIfCompleted(userId, lessonId, lessonProgress);
+		ProgressStatus lessonStatus = updateLessonStatusIfCompleted(userId, lessonId, lessonProgress);
 		return new AdjustLessonToSurveyResponseResult(
 			userId, lessonId, exerciseId, updatedUserExercises, lessonProgress, lessonStatus
 		);
@@ -101,13 +102,13 @@ public class AdjustLessonToSurveyResponseUseCase {
 		return UserLesson.calculateLessonProgressById(userExercises);
 	}
 
-	private UserLesson.ProgressStatus updateLessonStatusIfCompleted(int userId, int lessonId, double progress) throws KnowyInconsistentDataException {
+	private ProgressStatus updateLessonStatusIfCompleted(int userId, int lessonId, double progress) throws KnowyInconsistentDataException {
 		if (progress >= 0.8) {
 			UserLesson userLesson = updateUserLessonStatusUseCase.execute(
-				UserLesson.ProgressStatus.COMPLETED, userId, lessonId);
+				ProgressStatus.COMPLETED, userId, lessonId);
 			return userLesson.status();
 		}
-		return UserLesson.ProgressStatus.IN_PROGRESS;
+		return ProgressStatus.IN_PROGRESS;
 	}
 }
 

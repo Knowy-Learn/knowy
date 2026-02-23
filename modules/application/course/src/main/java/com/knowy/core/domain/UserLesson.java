@@ -41,24 +41,4 @@ public record UserLesson(
 			));
 		return averageRate / 100;
 	}
-
-	/**
-	 * Represents the lifecycle stages of a lesson from a user's perspective.
-	 * <p>
-	 * This enum governs the progression logic, allowing the system to track whether a user has started, is currently
-	 * working on, or has finished a specific educational unit.
-	 */
-	@Deprecated
-	public enum ProgressStatus {
-		PENDING,
-		IN_PROGRESS,
-		COMPLETED;
-
-		public ProgressStatus getNextStatus() {
-			return switch (this) {
-				case PENDING -> IN_PROGRESS;
-				case IN_PROGRESS, COMPLETED -> COMPLETED;
-			};
-		}
-	}
 }

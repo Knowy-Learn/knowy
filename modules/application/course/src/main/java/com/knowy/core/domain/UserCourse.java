@@ -35,7 +35,7 @@ public record UserCourse(int userId, CourseInfo<Category> courseInfo, List<UserL
 			.orElse(0.0);
 	}
 
-	private double statusToWeight(UserLesson.ProgressStatus status) {
+	private double statusToWeight(ProgressStatus status) {
 		return switch (status) {
 			case COMPLETED -> 1.0;
 			case IN_PROGRESS -> 0.5;

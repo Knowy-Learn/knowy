@@ -1,5 +1,6 @@
 package com.knowy.core.usecase.adjust;
 
+import com.knowy.core.domain.ProgressStatus;
 import com.knowy.core.domain.UserExercise;
 import com.knowy.core.domain.UserLesson;
 
@@ -11,6 +12,6 @@ public record AdjustLessonToSurveyResponseResult(
 	int exerciseId,
 	List<UserExercise> userExercises,
 	double lessonProgress,
-	UserLesson.ProgressStatus lessonStatus
+	ProgressStatus lessonStatus
 ) {
 }

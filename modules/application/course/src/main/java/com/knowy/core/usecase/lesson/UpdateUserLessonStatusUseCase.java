@@ -1,5 +1,6 @@
 package com.knowy.core.usecase.lesson;
 
+import com.knowy.core.domain.ProgressStatus;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
 import com.knowy.core.exception.KnowyUnsupportedOperationRuntimeException;
@@ -9,7 +10,7 @@ import com.knowy.core.port.UserLessonRepository;
 /**
  * Use case for updating the progress status of a {@link UserLesson}.
  * <p>
- * Currently, only updating the status to {@link UserLesson.ProgressStatus#COMPLETED} is supported. Attempting to set
+ * Currently, only updating the status to {@link ProgressStatus#COMPLETED} is supported. Attempting to set
  * any other status will throw a {@link KnowyUnsupportedOperationRuntimeException}. When completing a lesson, the next
  * lesson (if it exists) will automatically be advanced to the next logical status.
  * </p>
@@ -30,7 +31,7 @@ public class UpdateUserLessonStatusUseCase {
 	/**
 	 * Updates the progress status of a user's lesson.
 	 * <p>
-	 * If {@code statusToUpdate} is {@link UserLesson.ProgressStatus#COMPLETED}, this method will also update the next
+	 * If {@code statusToUpdate} is {@link ProgressStatus#COMPLETED}, this method will also update the next
 	 * lesson (if any) to its next logical status. Only {@code COMPLETED} is supported.
 	 * </p>
 	 *
@@ -41,10 +42,10 @@ public class UpdateUserLessonStatusUseCase {
 	 * @throws KnowyInconsistentDataException            if the user lesson cannot be found or persisted
 	 * @throws KnowyUnsupportedOperationRuntimeException if the status is not {@code COMPLETED}
 	 */
-	public UserLesson execute(UserLesson.ProgressStatus statusToUpdate, int userId, int lessonId)
+	public UserLesson execute(ProgressStatus statusToUpdate, int userId, int lessonId)
 		throws KnowyInconsistentDataException, KnowyUnsupportedOperationRuntimeException {
 
-		if (!statusToUpdate.equals(UserLesson.ProgressStatus.COMPLETED)) {
+		if (!statusToUpdate.equals(ProgressStatus.COMPLETED)) {
 			throw new KnowyUnsupportedOperationRuntimeException("Updating to " + statusToUpdate + " not implemented yet");
 		}
 
@@ -67,7 +68,7 @@ public class UpdateUserLessonStatusUseCase {
 			));
 	}
 
-	private UserLesson saveUpdatedUserLesson(UserLesson userLesson, UserLesson.ProgressStatus status) throws KnowyInconsistentDataException {
+	private UserLesson saveUpdatedUserLesson(UserLesson userLesson, ProgressStatus status) throws KnowyInconsistentDataException {
 		return userLessonRepository.save(new UserLesson(
 			userLesson.userId(),
 			userLesson.lesson(),

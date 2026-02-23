@@ -1,5 +1,6 @@
 package com.knowy.server.api.mapper;
 
+import com.knowy.core.domain.ProgressStatus;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.server.api.dto.LessonStepDto;
 
@@ -14,7 +15,7 @@ public class LessonMapper {
 			userLesson.lesson().id(),
 			userLesson.lesson().nextLessonId(),
 			userLesson.lesson().title(),
-			UserLesson.ProgressStatus.COMPLETED.equals(userLesson.status())
+			ProgressStatus.COMPLETED.equals(userLesson.status())
 		);
 	}
 }

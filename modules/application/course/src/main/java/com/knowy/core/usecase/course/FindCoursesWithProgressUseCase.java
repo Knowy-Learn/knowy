@@ -63,7 +63,7 @@ public class FindCoursesWithProgressUseCase {
 
 	private double lessonProgressValue(UserLesson userLesson) {
 		return switch (userLesson.status()) {
-			case PENDING -> 0.0;
+			case NOT_STARTED -> 0.0;
 			case IN_PROGRESS -> 0.5;
 			case COMPLETED -> 1.0;
 		};

@@ -1,5 +1,6 @@
 package com.knowy.server.infrastructure.controller.dto;
 
+import com.knowy.core.domain.ProgressStatus;
 import com.knowy.core.domain.UserLesson;
 
 import java.util.List;
@@ -33,10 +34,10 @@ public record LessonDto(
 		NEXT_LESSON,
 		BLOCKED;
 
-		public static LessonStatus fromString(UserLesson.ProgressStatus status) {
+		public static LessonStatus fromString(ProgressStatus status) {
 			return switch (status) {
-				case UserLesson.ProgressStatus.COMPLETED -> LessonDto.LessonStatus.COMPLETE;
-				case UserLesson.ProgressStatus.IN_PROGRESS -> LessonDto.LessonStatus.NEXT_LESSON;
+				case ProgressStatus.COMPLETED -> LessonDto.LessonStatus.COMPLETE;
+				case ProgressStatus.IN_PROGRESS -> LessonDto.LessonStatus.NEXT_LESSON;
 				default -> LessonDto.LessonStatus.BLOCKED;
 			};
 		}
