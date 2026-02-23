@@ -1,7 +1,6 @@
 package com.knowy.server.api.mapper;
 
 import com.knowy.core.domain.ProgressStatus;
-import com.knowy.core.domain.UserLesson;
 import com.knowy.server.api.dto.ProgressStatusEnum;
 
 import java.util.Objects;
@@ -28,5 +27,11 @@ public class ProgressStatusMapper {
 			.map(Enum::name)
 			.map(ProgressStatus::fromString)
 			.collect(Collectors.toUnmodifiableSet());
+	}
+
+	// JAVADOC
+	public ProgressStatusEnum fromDomain(ProgressStatus progressStatus) {
+		Objects.requireNonNull(progressStatus);
+		return ProgressStatusEnum.fromValue(progressStatus.name());
 	}
 }
