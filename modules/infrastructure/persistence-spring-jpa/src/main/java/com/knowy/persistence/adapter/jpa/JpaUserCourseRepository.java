@@ -80,7 +80,7 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 	 * @throws KnowyDataAccessException if there is an error accessing to the data or processing the paginated request
 	 */
 	@Override
-	public PagedResult<UserCourse> findAllByUserId(int userId, Set<CourseStatus> courseStatuses, Pagination pagination) throws KnowyDataAccessException {
+	public PagedResult<UserCourse> findAllByUserId(int userId, Set<ProgressStatus> progressStatuses, Pagination pagination) throws KnowyDataAccessException {
 		var userCourseMapper = new JpaUserCourseMapper(
 			jpaUserDao, jpaLessonDao, jpaCourseDao, jpaExerciseDao, jpaUserLessonDao, jpaCategoryDao
 		);
@@ -89,7 +89,7 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 		try {
 			Set<String> categoryNames = extractCategoryNames(pagination.filters());
 			Page<CourseEntity> courseEntitiesPage = jpaCourseDao.findAllByUserId(
-				userId, extractStatusIds(courseStatuses), nonEmptyElse(categoryNames, null), pageable
+				userId, extractStatusIds(progressStatuses), nonEmptyElse(categoryNames, null), pageable
 			);
 
 			return new PagedResult<>(
@@ -102,9 +102,9 @@ public class JpaUserCourseRepository implements UserCourseRepository {
 		}
 	}
 
-	private Set<Integer> extractStatusIds(Set<CourseStatus> courseStatuses) {
-		return courseStatuses.stream()
-			.map(CourseStatus::ordinal)
+	private Set<Integer> extractStatusIds(Set<ProgressStatus> progressStatuses) {
+		return progressStatuses.stream()
+			.map(ProgressStatus::ordinal)
 			.collect(Collectors.toSet());
 	}
 

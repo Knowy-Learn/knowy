@@ -48,6 +48,7 @@ public record UserLesson(
 	 * This enum governs the progression logic, allowing the system to track whether a user has started, is currently
 	 * working on, or has finished a specific educational unit.
 	 */
+	@Deprecated
 	public enum ProgressStatus {
 		PENDING,
 		IN_PROGRESS,

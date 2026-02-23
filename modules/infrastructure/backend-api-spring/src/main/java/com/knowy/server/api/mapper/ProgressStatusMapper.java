@@ -1,6 +1,6 @@
 package com.knowy.server.api.mapper;
 
-import com.knowy.core.domain.CourseStatus;
+import com.knowy.core.domain.ProgressStatus;
 import com.knowy.core.domain.UserLesson;
 import com.knowy.server.api.dto.ProgressStatusEnum;
 
@@ -19,14 +19,14 @@ public class ProgressStatusMapper {
 	 * @param statusEnums the set of DTO enums to map.
 	 * @return an unmodifiable set of mapped CourseStatus, or an empty set if input is null or empty.
 	 */
-	public Set<CourseStatus> toDomain(Set<ProgressStatusEnum> statusEnums) {
+	public Set<ProgressStatus> toDomain(Set<ProgressStatusEnum> statusEnums) {
 		if (statusEnums == null || statusEnums.isEmpty()) {
 			return Set.of();
 		}
 
 		return statusEnums.stream()
 			.map(Enum::name)
-			.map(CourseStatus::fromString)
+			.map(ProgressStatus::fromString)
 			.collect(Collectors.toUnmodifiableSet());
 	}
 }

@@ -32,9 +32,9 @@ public class FindUserCoursesByUserIdUseCase {
 	 * @param pagination the pagination parameters (page number, size, etc.)
 	 * @return a {@link PagedResult} containing a list of {@link UserCourse} objects and metadata
 	 */
-	public PagedResult<UserCourse> execute(int userId, Set<CourseStatus> courseStatusIds, Pagination pagination) throws KnowyDataAccessException {
+	public PagedResult<UserCourse> execute(int userId, Set<ProgressStatus> progressStatusIds, Pagination pagination) throws KnowyDataAccessException {
 		checkCategoryFilterOperator(pagination);
-		return userCourseRepository.findAllByUserId(userId, ensureNotEmpty(courseStatusIds), pagination);
+		return userCourseRepository.findAllByUserId(userId, ensureNotEmpty(progressStatusIds), pagination);
 	}
 
 	private void checkCategoryFilterOperator(Pagination pagination) {
@@ -62,9 +62,9 @@ public class FindUserCoursesByUserIdUseCase {
 		}
 	}
 
-	private Set<CourseStatus> ensureNotEmpty(Set<CourseStatus> courseStatuses) {
-		return (courseStatuses == null || courseStatuses.isEmpty())
-			? Set.of(CourseStatus.IN_PROGRESS, CourseStatus.NOT_STARTED)
-			: courseStatuses;
+	private Set<ProgressStatus> ensureNotEmpty(Set<ProgressStatus> progressStatuses) {
+		return (progressStatuses == null || progressStatuses.isEmpty())
+			? Set.of(ProgressStatus.IN_PROGRESS, ProgressStatus.NOT_STARTED)
+			: progressStatuses;
 	}
 }

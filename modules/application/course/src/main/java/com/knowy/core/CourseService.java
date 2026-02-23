@@ -194,9 +194,9 @@ public class CourseService {
 	 */
 	public PagedResult<UserCourse> getAllUserCoursesByUserId(
 		int userId,
-		Set<CourseStatus> courseStatusIds,
+		Set<ProgressStatus> progressStatusIds,
 		Pagination pagination
 	) throws KnowyDataAccessException {
-		return findUserCoursesByUserIdUseCase.execute(userId, courseStatusIds, pagination);
+		return findUserCoursesByUserIdUseCase.execute(userId, progressStatusIds, pagination);
 	}
 }

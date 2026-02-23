@@ -79,7 +79,7 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 		        WHEN 0 THEN 2 /* PENDING */
 		        WHEN 1 THEN 0 /* COMPLETED */
 		        ELSE 1        /* IN_PROGRESS */
-		    END IN (:courseStatusIds)
+		    END IN (:progressStatusIds)
 		    ORDER BY AVG(CASE pul.status
 		        WHEN 'completed' THEN 1
 		        WHEN 'pending' THEN 0
@@ -88,7 +88,7 @@ public interface JpaCourseDao extends JpaRepository<CourseEntity, Integer> {
 		""")
 	Page<CourseEntity> findAllByUserId(
 		@Param("userId") int userId,
-		@Param("courseStatusIds") Set<Integer> courseStatusIds,
+		@Param("progressStatusIds") Set<Integer> progressStatusIds,
 		@Param("categories") @Nullable Set<String> categories,
 		Pageable pageable
 	);
