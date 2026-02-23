@@ -273,7 +273,7 @@ paths:
                     required: true
                     schema:
                         type: integer
-                        format: int64
+                        format: int32
                     style: form
                     explode: true
             responses:
@@ -696,7 +696,6 @@ components:
             description: Represents a lesson indicator used for navigation or displaying progress within a course.
             required:
                 - id
-                - courseId
                 - nextLessonId
                 - title
                 - isCompleted
@@ -706,11 +705,6 @@ components:
                     format: int32
                     description: The unique identifier for the specific lesson step.
                     example: 2048
-                courseId:
-                    type: integer
-                    format: int32
-                    description: The unique identifier of the course to which this lesson belongs.
-                    example: 75
                 nextLessonId:
                     type: integer
                     format: int32

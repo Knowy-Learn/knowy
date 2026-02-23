@@ -3,10 +3,13 @@ package com.knowy.server.api.mapper;
 import com.knowy.core.domain.Course;
 import com.knowy.core.domain.UserCourse;
 import com.knowy.server.api.dto.CourseCardDto;
+import com.knowy.server.api.dto.CourseDto;
 
 import java.time.ZoneOffset;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Mapper for converting UserCourse domain objects into CourseCardDto objects.
@@ -74,6 +77,28 @@ public class CourseMapper {
 			course.creationDate().atOffset(ZoneOffset.UTC),
 			categoryDtoMapper.toCategoryDto(course.categories()),
 			0.0F
+		);
+	}
+
+	public CourseDto toCourseDto(UserCourse userCourse) {
+		Objects.requireNonNull(userCourse);
+
+		var categoryMapper = new CategoryMapper();
+		var userLessonMapper = new LessonMapper();
+
+
+		return new CourseDto(
+			userCourse.courseInfo().id(),
+			userCourse.courseInfo().title(),
+			userCourse.courseInfo().description(),
+			userCourse.courseInfo().author(),
+			userCourse.courseInfo().creationDate().atOffset(ZoneOffset.UTC),
+			userCourse.courseInfo().categories().stream()
+				.map(categoryMapper::toCategoryDto)
+				.collect(Collectors.toSet()),
+			userCourse.userLessons().stream()
+				.map(userLessonMapper::toLessonStepDto)
+				.collect(Collectors.toCollection(LinkedHashSet::new))
 		);
 	}
 }

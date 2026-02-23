@@ -2,6 +2,7 @@ package com.knowy.server.api.config;
 
 import com.knowy.core.NewsService;
 import com.knowy.core.port.NewsRepository;
+import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,5 +14,8 @@ public class ApplicationConfiguration {
 		return new NewsService(newsRepository);
 	}
 
-
+	@Bean
+	public JsonNullableModule jsonNullableModule() {
+		return new JsonNullableModule();
+	}
 }

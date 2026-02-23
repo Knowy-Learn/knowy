@@ -25,6 +25,7 @@ public class UserController implements UserApi {
 	private final FindUserRecommendationUseCase findUserRecommendationUseCase;
 	private final FindNotSubscribedCoursesUseCase findNotSubscribedCoursesUseCase;
 	private final SubscribeToCourseUseCase subscribeToCourseUseCase;
+	private final FindUserCourseByIdUseCase findUserCourseByIdUseCase;
 
 	public UserController(
 		CourseRepository courseRepository,
@@ -48,6 +49,9 @@ public class UserController implements UserApi {
 		this.subscribeToCourseUseCase = new SubscribeToCourseUseCase(
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
+		this.findUserCourseByIdUseCase = new FindUserCourseByIdUseCase(
+			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
+		);
 	}
 
 	/**
@@ -60,8 +64,9 @@ public class UserController implements UserApi {
 	 * server. (status code 500)
 	 */
 	@Override
-	public ResponseEntity<CourseDto> userCourseGet(Long course) {
-		return null; // TODO: Implement
+	public ResponseEntity<CourseDto> userCourseGet(Integer course) {
+		CourseDto courseDto =  findUserCourseByIdUseCase.execute(course);
+		return ResponseEntity.ok(courseDto);
 	}
 
 	/**
