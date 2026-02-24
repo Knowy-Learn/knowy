@@ -1,8 +1,11 @@
 package com.knowy.server.api.mapper;
 
+import com.knowy.core.domain.Category;
 import com.knowy.core.domain.Course;
+import com.knowy.core.domain.CourseInfo;
 import com.knowy.core.domain.UserCourse;
 import com.knowy.server.api.dto.CourseCardDto;
+import com.knowy.server.api.dto.CourseDto;
 import com.knowy.server.api.dto.CourseWithStepsDto;
 import com.knowy.server.api.dto.UserCourseDto;
 
@@ -81,22 +84,30 @@ public class CourseMapper {
 		);
 	}
 
-	public CourseWithStepsDto toCourseDto(UserCourse userCourse) {
-		Objects.requireNonNull(userCourse);
+	public CourseDto toCourseDto(CourseInfo<Category> course) {
+		Objects.requireNonNull(course);
 
 		var categoryMapper = new CategoryMapper();
+
+		return new CourseDto(
+			course.id(),
+			course.title(),
+			course.description(),
+			course.author(),
+			course.creationDate().atOffset(ZoneOffset.UTC),
+			course.categories().stream()
+				.map(categoryMapper::toCategoryDto)
+				.collect(Collectors.toSet())
+		);
+	}
+
+	public CourseWithStepsDto toCourseWithStepsDto(UserCourse userCourse) {
+		Objects.requireNonNull(userCourse);
+
 		var userLessonMapper = new LessonMapper();
 
-
 		return new CourseWithStepsDto(
-			userCourse.courseInfo().id(),
-			userCourse.courseInfo().title(),
-			userCourse.courseInfo().description(),
-			userCourse.courseInfo().author(),
-			userCourse.courseInfo().creationDate().atOffset(ZoneOffset.UTC),
-			userCourse.courseInfo().categories().stream()
-				.map(categoryMapper::toCategoryDto)
-				.collect(Collectors.toSet()),
+			toCourseDto(userCourse.courseInfo()),
 			userCourse.userLessons().stream()
 				.map(userLessonMapper::toLessonStepDto)
 				.collect(Collectors.toCollection(LinkedHashSet::new))
@@ -107,7 +118,7 @@ public class CourseMapper {
 		Objects.requireNonNull(userCourse);
 
 		return new UserCourseDto(
-			toCourseDto(userCourse),
+			toCourseWithStepsDto(userCourse),
 			userCourse.courseProgress()
 		);
 	}

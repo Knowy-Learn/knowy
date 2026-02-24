@@ -650,9 +650,9 @@ components:
                     maximum: 100
                     example: 75.0
                     description: "The user's completion percentage for this course."
-        CourseWithStepsDto:
+        CourseDto:
             type: object
-            description: Represents a course with its details and associated lessons, used for displaying the user's enrolled courses.
+            description: Represents a course with its details, used for displaying available courses to enroll in.
             required:
                 - id
                 - title
@@ -660,7 +660,6 @@ components:
                 - author
                 - creationDate
                 - categories
-                - lessons
             properties:
                 id:
                     type: integer
@@ -688,6 +687,15 @@ components:
                     uniqueItems: true
                     items:
                         $ref: '#/components/schemas/CategoryDto'
+        CourseWithStepsDto:
+            type: object
+            description: Represents a course with its details and associated lessons, used for displaying the user's enrolled courses.
+            required:
+                - course
+                - lessons
+            properties:
+                course:
+                    $ref: '#/components/schemas/CourseDto'
                 lessons:
                     type: array
                     uniqueItems: true
@@ -736,6 +744,17 @@ components:
                     type: boolean
                     description: Indicates whether the user has successfully finished this lesson.
                     example: false
+        UserLessonDto:
+            type: object
+            description: Represents the user's specific lesson data, including progress and details.
+            required:
+                - lesson
+                - status
+            properties:
+                lesson:
+                    $ref: '#/components/schemas/LessonDto'
+                status:
+                    $ref: '#/components/schemas/ProgressStatusEnum'
         LessonDto:
             type: object
             description: Represents an individual lesson.
