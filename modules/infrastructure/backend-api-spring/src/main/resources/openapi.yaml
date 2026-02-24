@@ -282,7 +282,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/CourseDto"
+                                $ref: "#/components/schemas/UserCourseDto"
                 '400':
                     $ref: '#/components/responses/BadRequestError'
                 '401':
@@ -324,7 +324,7 @@ paths:
             tags:
                 - User
             summary: Get user lesson details
-            description: > 
+            description: >
                 Retrieve detailed information about a specific lesson within a course for the authenticated
                 user, including content and progress status.
             security:
@@ -634,8 +634,25 @@ components:
                     type: string
                     description: A brief textual description of the image for accessibility (Alt text).
                     example: "Java logo and code on a screen"
-        CourseDto:
+        UserCourseDto:
             type: object
+            description: Represents the user's specific course data, including progress and details.
+            required:
+                - course
+                - progress
+            properties:
+                course:
+                    $ref: '#/components/schemas/CourseWithStepsDto'
+                progress:
+                    type: number
+                    format: double
+                    minimum: 0
+                    maximum: 100
+                    example: 75.0
+                    description: "The user's completion percentage for this course."
+        CourseWithStepsDto:
+            type: object
+            description: Represents a course with its details and associated lessons, used for displaying the user's enrolled courses.
             required:
                 - id
                 - title

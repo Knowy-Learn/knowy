@@ -3,7 +3,8 @@ package com.knowy.server.api.mapper;
 import com.knowy.core.domain.Course;
 import com.knowy.core.domain.UserCourse;
 import com.knowy.server.api.dto.CourseCardDto;
-import com.knowy.server.api.dto.CourseDto;
+import com.knowy.server.api.dto.CourseWithStepsDto;
+import com.knowy.server.api.dto.UserCourseDto;
 
 import java.time.ZoneOffset;
 import java.util.LinkedHashSet;
@@ -80,14 +81,14 @@ public class CourseMapper {
 		);
 	}
 
-	public CourseDto toCourseDto(UserCourse userCourse) {
+	public CourseWithStepsDto toCourseDto(UserCourse userCourse) {
 		Objects.requireNonNull(userCourse);
 
 		var categoryMapper = new CategoryMapper();
 		var userLessonMapper = new LessonMapper();
 
 
-		return new CourseDto(
+		return new CourseWithStepsDto(
 			userCourse.courseInfo().id(),
 			userCourse.courseInfo().title(),
 			userCourse.courseInfo().description(),
@@ -99,6 +100,15 @@ public class CourseMapper {
 			userCourse.userLessons().stream()
 				.map(userLessonMapper::toLessonStepDto)
 				.collect(Collectors.toCollection(LinkedHashSet::new))
+		);
+	}
+
+	public UserCourseDto toUserCourseDto(UserCourse userCourse) {
+		Objects.requireNonNull(userCourse);
+
+		return new UserCourseDto(
+			toCourseDto(userCourse),
+			userCourse.courseProgress()
 		);
 	}
 }

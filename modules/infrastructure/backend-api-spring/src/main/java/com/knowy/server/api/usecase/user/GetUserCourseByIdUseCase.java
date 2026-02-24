@@ -10,16 +10,16 @@ import com.knowy.core.user.domain.User;
 import com.knowy.core.util.KnowyUseCase;
 import com.knowy.server.api.controller.exception.KnowyBadRequestRuntimeException;
 import com.knowy.server.api.controller.exception.KnowyInternalServerErrorRuntimeException;
-import com.knowy.server.api.dto.CourseDto;
+import com.knowy.server.api.dto.UserCourseDto;
 import com.knowy.server.api.mapper.CourseMapper;
 import com.knowy.server.api.util.SecurityHelper;
 
-public class FindUserCourseByIdUseCase implements KnowyUseCase<Integer, CourseDto> {
+public class GetUserCourseByIdUseCase implements KnowyUseCase<Integer, UserCourseDto> {
 
 	private final CourseService courseService;
 	private final CourseMapper courseMapper = new CourseMapper();
 
-	public FindUserCourseByIdUseCase(
+	public GetUserCourseByIdUseCase(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
 		UserLessonRepository userLessonRepository,
@@ -29,14 +29,14 @@ public class FindUserCourseByIdUseCase implements KnowyUseCase<Integer, CourseDt
 	}
 
 	@Override
-	public CourseDto execute(Integer courseId) {
+	public UserCourseDto execute(Integer courseId) {
 		if (courseId == null) throw new KnowyBadRequestRuntimeException("Course ID cannot be null.");
 
 		try {
 			User user = new SecurityHelper().getAuthenticatedUser();
 
 			return courseService.findUserCourseById(user.id(), courseId)
-				.map(courseMapper::toCourseDto)
+				.map(courseMapper::toUserCourseDto)
 				.orElseThrow(() -> new KnowyBadRequestRuntimeException("Course not found or user is not enrolled."));
 		} catch (KnowyDataAccessException e) {
 			throw new KnowyInternalServerErrorRuntimeException(

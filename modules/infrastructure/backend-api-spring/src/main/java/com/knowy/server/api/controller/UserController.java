@@ -25,7 +25,7 @@ public class UserController implements UserApi {
 	private final FindUserRecommendationUseCase findUserRecommendationUseCase;
 	private final FindNotSubscribedCoursesUseCase findNotSubscribedCoursesUseCase;
 	private final SubscribeToCourseUseCase subscribeToCourseUseCase;
-	private final FindUserCourseByIdUseCase findUserCourseByIdUseCase;
+	private final GetUserCourseByIdUseCase getUserCourseByIdUseCase;
 
 	public UserController(
 		CourseRepository courseRepository,
@@ -49,7 +49,7 @@ public class UserController implements UserApi {
 		this.subscribeToCourseUseCase = new SubscribeToCourseUseCase(
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
-		this.findUserCourseByIdUseCase = new FindUserCourseByIdUseCase(
+		this.getUserCourseByIdUseCase = new GetUserCourseByIdUseCase(
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
 		);
 	}
@@ -64,9 +64,9 @@ public class UserController implements UserApi {
 	 * server. (status code 500)
 	 */
 	@Override
-	public ResponseEntity<CourseDto> userCourseGet(Integer course) {
-		CourseDto courseDto =  findUserCourseByIdUseCase.execute(course);
-		return ResponseEntity.ok(courseDto);
+	public ResponseEntity<UserCourseDto> userCourseGet(Integer course) {
+		UserCourseDto userCourseDto = getUserCourseByIdUseCase.execute(course);
+		return ResponseEntity.ok(userCourseDto);
 	}
 
 	/**
@@ -105,9 +105,9 @@ public class UserController implements UserApi {
 	 * GET /user/courses : Get user courses Fetches the user&#39;s personal course collection. Supports filtering by
 	 * category or status, pagination, and custom sorting.
 	 *
-	 * @param paging       Pagination and sorting criteria. (required)
-	 * @param categories   Filter by programming languages or categories (e.g., &#39;java&#39;, &#39;python&#39;).
-	 *                     (optional)
+	 * @param paging              Pagination and sorting criteria. (required)
+	 * @param categories          Filter by programming languages or categories (e.g., &#39;java&#39;,
+	 *                            &#39;python&#39;). (optional)
 	 * @param progressStatusEnums Filter by course progress status. (optional)
 	 * @return A paginated list of courses was successfully retrieved. (status code 200) or Bad Request. The request is
 	 * invalid or cannot be processed. (status code 400) or Access unauthorized. The request requires valid
