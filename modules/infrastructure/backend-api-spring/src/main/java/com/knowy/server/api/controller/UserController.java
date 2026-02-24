@@ -1,10 +1,7 @@
 package com.knowy.server.api.controller;
 
 import com.knowy.core.exception.data.KnowyInconsistentDataException;
-import com.knowy.core.port.CourseRepository;
-import com.knowy.core.port.LessonRepository;
-import com.knowy.core.port.UserCourseRepository;
-import com.knowy.core.port.UserLessonRepository;
+import com.knowy.core.port.*;
 import com.knowy.server.api.controller.exception.KnowyInternalServerErrorRuntimeException;
 import com.knowy.server.api.dto.*;
 import com.knowy.server.api.usecase.user.*;
@@ -26,12 +23,15 @@ public class UserController implements UserApi {
 	private final FindNotSubscribedCoursesUseCase findNotSubscribedCoursesUseCase;
 	private final SubscribeToCourseUseCase subscribeToCourseUseCase;
 	private final GetUserCourseByIdUseCase getUserCourseByIdUseCase;
+	private final GetUserLessonByIdAndCourseIdUseCase getUserLessonByIdAndCourseIdUseCase;
 
 	public UserController(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
 		UserLessonRepository userLessonRepository,
-		UserCourseRepository userCourseRepository
+		UserCourseRepository userCourseRepository,
+		UserExerciseRepository userExerciseRepository,
+		LessonBaseRepository lessonBaseRepository
 	) {
 		this.findUserRecommendationUseCase = new FindUserRecommendationUseCase(
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
@@ -51,6 +51,9 @@ public class UserController implements UserApi {
 		);
 		this.getUserCourseByIdUseCase = new GetUserCourseByIdUseCase(
 			courseRepository, lessonRepository, userLessonRepository, userCourseRepository
+		);
+		this.getUserLessonByIdAndCourseIdUseCase = new GetUserLessonByIdAndCourseIdUseCase(
+			userLessonRepository, userExerciseRepository, lessonBaseRepository
 		);
 	}
 
@@ -81,8 +84,9 @@ public class UserController implements UserApi {
 	 * code 500)
 	 */
 	@Override
-	public ResponseEntity<LessonDto> userCourseLessonGet(Long courseId, Long lessonId) {
-		return null; // TODO: Implement
+	public ResponseEntity<UserLessonDto> userCourseLessonGet(Integer courseId, Integer lessonId) {
+		 UserLessonDto userLessonDto = getUserLessonByIdAndCourseIdUseCase.execute(courseId, lessonId);
+		 return ResponseEntity.ok(userLessonDto);
 	}
 
 	/**
