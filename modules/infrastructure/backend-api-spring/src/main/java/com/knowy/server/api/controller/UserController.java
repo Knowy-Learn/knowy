@@ -76,16 +76,16 @@ public class UserController implements UserApi {
 	 * GET /user/course/lesson : Get user lesson details Retrieve detailed information about a specific lesson within a
 	 * course for the authenticated user, including content and progress status.
 	 *
-	 * @param courseId The unique identifier of the course. (required)
-	 * @param lessonId The unique identifier of the lesson to retrieve. (required)
+	 * @param course The unique identifier of the course. (required)
+	 * @param lesson The unique identifier of the lesson to retrieve. (required)
 	 * @return Successfully retrieved lesson details. (status code 200) or Bad Request. The request is invalid or cannot
 	 * be processed. (status code 400) or Access unauthorized. The request requires valid authentication credentials
 	 * (e.g., a valid token). (status code 401) or Internal Server Error. Something went wrong on the server. (status
 	 * code 500)
 	 */
 	@Override
-	public ResponseEntity<UserLessonDto> userCourseLessonGet(Integer courseId, Integer lessonId) {
-		 UserLessonDto userLessonDto = getUserLessonByIdAndCourseIdUseCase.execute(courseId, lessonId);
+	public ResponseEntity<UserLessonDto> userCourseLessonGet(Integer course, Integer lesson) {
+		 UserLessonDto userLessonDto = getUserLessonByIdAndCourseIdUseCase.execute(course, lesson);
 		 return ResponseEntity.ok(userLessonDto);
 	}
 

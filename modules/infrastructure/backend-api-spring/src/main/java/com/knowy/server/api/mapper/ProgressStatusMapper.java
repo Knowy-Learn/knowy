@@ -29,9 +29,15 @@ public class ProgressStatusMapper {
 			.collect(Collectors.toUnmodifiableSet());
 	}
 
-	// JAVADOC
+	/**
+	 * Converts a domain ProgressStatus entity to a DTO status enum.
+	 *
+	 * @param progressStatus the domain status entity to map.
+	 * @return the corresponding DTO enum.
+	 * @throws NullPointerException if progressStatus is null.
+	 */
 	public ProgressStatusEnum fromDomain(ProgressStatus progressStatus) {
 		Objects.requireNonNull(progressStatus);
-		return ProgressStatusEnum.fromValue(progressStatus.name());
+		return ProgressStatusEnum.fromValue(progressStatus.name().toLowerCase());
 	}
 }
