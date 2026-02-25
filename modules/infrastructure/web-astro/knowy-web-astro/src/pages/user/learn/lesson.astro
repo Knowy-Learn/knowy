@@ -1,0 +1,253 @@
+---
+import NavbarUser from "src/components/user/NavbarUser.astro"
+import Layout from "src/layouts/Layout.astro"
+import Footer from "../../../components/Footer.astro"
+
+// TODO: Delete placeholder
+const bannerImage: string = "bg-orange-700"
+const bannerText: string = "text-white"
+
+const lessonTitles: string[] = [
+	"Estructura básica de un documento HTML5",
+	"Etiquetas de texto, listas y enlaces",
+	"Multimedia: Imágenes, audio y video",
+	"Formularios accesibles y funcionales",
+	"Semántica y accesibilidad web"
+]
+
+const lessonPercent = 33
+---
+
+<Layout>
+	<NavbarUser />
+
+	<div class="classroom">
+		{/* Sidebar: Lessons navigation and progress */}
+		<aside class="classroom__aside">
+			{/* Mobile drawer toggle handle */}
+			<div class="drawer-handle group" data-drawer-trigger="main-drawer">
+				<div class="drawer-handle__bar"></div>
+			</div>
+
+			<h2 class="classroom__aside--title">Introducción a HTML5</h2>
+
+			{/* Course completion tracking */}
+			<section class="progress-bar">
+				<div class="progress-bar__header">
+					<span>{lessonPercent}% completado</span>
+				</div>
+
+				<div class="progress-bar__track">
+					<div class="progress-bar__fill" style={`width: ${lessonPercent}%`}></div>
+				</div>
+
+				<p class="progress-bar__stats">3 de 9 lecciones</p>
+			</section>
+
+			{/* Collapsible lesson list for mobile/desktop */}
+			<section class="drawer-main" data-drawer-target="main-drawer" data-drawer-status="closed">
+				<button class="lesson__btn_general-view">
+					<span class="grid-icon"></span>
+					Vista general
+				</button>
+
+				<section class="lesson">
+					<h3 class="lesson__title">Lecciones</h3>
+
+					<ul class="lesson__list">
+						{
+							lessonTitles.map((title) => (
+								<li class="lesson__item group">
+									<span class="check-icon" aria-hidden="true" />
+									<p class="text-sm">{title}</p>
+								</li>
+							))
+						}
+					</ul>
+				</section>
+			</section>
+		</aside>
+
+		{/* Main content area */}
+		<main class="classroom__main">
+			<div class="classroom__content">
+				{/* Course introduction banner */}
+				<section class={`hero-banner ${bannerImage} ${bannerText}`}>
+					<h1 class="text-3xl font-bold">Introducción a HTML5</h1>
+				</section>
+
+				<section class="lesson-content">
+					<div class="mb-6 grid grid-cols-[1fr_auto] items-center gap-4">
+						<div class="lesson-content__tags">
+							<span class="lesson-content__tags--item lesson-content__tags--item--green">Completada</span>
+							<span class="lesson-content__tags--item lesson-content__tags--item--yellow">HTML</span>
+							<span class="lesson-content__tags--item lesson-content__tags--item--red">CSS</span>
+						</div>
+
+						<a href="#" class="btn-start-lesson btn-start-lesson--tag"> Empezar Lección </a>
+					</div>
+
+					<article>
+						<div class="mb-6">
+							<h2 class="mb-3 text-3xl font-extrabold tracking-tight text-gray-900">
+								Bienvenida y objetivos del curso
+							</h2>
+							<p class="text-base leading-relaxed text-gray-600">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+								incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+								exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Conoce lo que
+								aprenderás en este curso y cómo está estructurado para maximizar tu aprendizaje mediante
+								una metodología práctica y ágil.
+							</p>
+						</div>
+
+						<div class="my-4 space-y-4 text-gray-600">
+							<p>
+								Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+								nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+								officia deserunt mollit anim id est laborum.
+							</p>
+							<ul class="list-disc space-y-2 pl-5 text-sm">
+								<li>Dominio completo de estructuras semánticas.</li>
+								<li>Optimización de estilos con Tailwind CSS de forma eficiente.</li>
+								<li>Arquitectura de componentes escalables y reutilizables.</li>
+							</ul>
+						</div>
+					</article>
+
+					<div id="video-container" class="w-full">
+						<div
+							id="video-wrapper"
+							class="group hover:border-primary-400 relative mx-auto flex aspect-video w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-gray-200 bg-gray-900 transition-all hover:shadow-xl md:max-w-[80%] lg:max-w-[70%] xl:max-w-[60%]"
+						>
+							<iframe
+								id="youtube-player"
+								class="absolute inset-0 z-20 hidden h-full w-full rounded-3xl"
+								frameborder="0"
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowfullscreen
+							></iframe>
+
+							<img
+								id="video-thumb"
+								src="https://img.youtube.com/vi/b4QpP0mpFIE/maxresdefault.jpg"
+								class="absolute inset-0 h-full w-full object-cover opacity-50 transition-opacity group-hover:opacity-80"
+								alt="Miniatura"
+							/>
+
+							<div id="video-ui" class="z-10 flex flex-col items-center transition-transform group-hover:scale-110">
+								<div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary-500 text-2xl text-white shadow-xl">
+									▶
+								</div>
+								<p class="mt-4 text-sm font-bold uppercase tracking-widest text-white drop-shadow-md">
+									Reproducir lección
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="mt-10">
+						<a href="#" class="btn-start-lesson btn-start-lesson--end"> Empezar Lección Ahora </a>
+					</div>
+				</section>
+			</div>
+
+			{/* Drawer background overlay for mobile */}
+			<div class="drawer-background" data-drawer-target="main-drawer" data-drawer-status="closed"></div>
+
+			<Footer />
+
+			{/* Spacing element for mobile footer visibility */}
+			<div class="footer-lifter"></div>
+		</main>
+	</div>
+</Layout>
+
+<style>
+	@import "./classroom.css";
+
+	.lesson-content {
+		@apply p-8;
+	}
+
+	.lesson-content__tags {
+		@apply flex flex-row flex-wrap gap-1;
+	}
+
+	.lesson-content__tags--item {
+		@apply rounded-full px-2 py-0.5 text-sm;
+		@apply text-primary-600 bg-primary-100;
+
+		&.lesson-content__tags--item--green {
+			@apply bg-success/20 text-success border-success/15 border;
+		}
+
+		&.lesson-content__tags--item--red {
+			@apply bg-error/20 text-error/70 border-error/15 border;
+		}
+
+		&.lesson-content__tags--item--yellow {
+			@apply bg-warning/20 text-warning border-warning/15 border;
+		}
+	}
+
+	.btn-start-lesson {
+		@apply block w-full rounded-xl text-center text-lg font-bold shadow-lg transition-all duration-200 active:scale-102;
+		@apply bg-primary-500 hover:bg-primary-600 hover:shadow-primary-200/50 text-white;
+	}
+
+	.btn-start-lesson--end {
+		@apply px-8 py-4;
+	}
+
+	.btn-start-lesson--tag {
+		@apply px-4 py-1;
+	}
+</style>
+
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		document.querySelectorAll("[data-drawer-trigger]").forEach(bindDrawerTrigger)
+	})
+
+	function bindDrawerTrigger(trigger: Element) {
+		trigger.addEventListener("click", () => {
+			const targetId = trigger.getAttribute("data-drawer-trigger")
+			const target = document.querySelectorAll(`[data-drawer-target="${targetId}"]`)
+
+			target.forEach(toggleDrawerStatus)
+		})
+	}
+
+	function toggleDrawerStatus(drawer: Element) {
+		const isOpen = drawer.getAttribute("data-drawer-status") === "open"
+		drawer.setAttribute("data-drawer-status", isOpen ? "closed" : "open")
+	}
+</script>
+
+<script is:inline>
+	(function() {
+		const wrapper = document.getElementById('video-wrapper');
+		const iframe = document.getElementById('youtube-player');
+		const ui = document.getElementById('video-ui');
+		const thumb = document.getElementById('video-thumb');
+
+		if (!wrapper || !iframe) return;
+
+		wrapper.addEventListener('click', function() {
+			const videoId = 'b4QpP0mpFIE';
+
+			// 1. Asignar el SRC solo ahora (Firefox agradece esto)
+			iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0`;
+
+			// 2. Mostrar el iframe y ocultar la UI
+			iframe.classList.remove('hidden');
+			ui.classList.add('hidden');
+			thumb.classList.add('hidden');
+
+			// 3. Quitar estilos de "clickeable"
+			wrapper.classList.remove('cursor-pointer', 'border-dashed', 'hover:bg-gray-100');
+			wrapper.classList.add('border-solid', 'border-primary-500');
+		}, { once: true });
+	})();
+</script>

@@ -22,12 +22,16 @@ const lessonPercent = 33
 	<NavbarUser />
 
 	<div class="classroom">
+		{/* Sidebar: Lessons navigation and progress */}
 		<aside class="classroom__aside">
+			{/* Mobile drawer toggle handle */}
 			<div class="drawer-handle group" data-drawer-trigger="main-drawer">
 				<div class="drawer-handle__bar"></div>
 			</div>
 
 			<h2 class="classroom__aside--title">Introducción a HTML5</h2>
+
+			{/* Course completion tracking */}
 			<section class="progress-bar">
 				<div class="progress-bar__header">
 					<span>{lessonPercent}% completado</span>
@@ -40,6 +44,7 @@ const lessonPercent = 33
 				<p class="progress-bar__stats">3 de 9 lecciones</p>
 			</section>
 
+			{/* Collapsible lesson list for mobile/desktop */}
 			<section class="drawer-main" data-drawer-target="main-drawer" data-drawer-status="closed">
 				<button class="lesson__btn_general-view">
 					<span class="grid-icon"></span>
@@ -63,8 +68,10 @@ const lessonPercent = 33
 			</section>
 		</aside>
 
+		{/* Main content area */}
 		<main class="classroom__main">
 			<div class="classroom__content">
+				{/* Course introduction banner */}
 				<section class={`hero-banner ${bannerImage} ${bannerText}`}>
 					<h1 class="text-3xl font-bold">Introducción a HTML5</h1>
 					<p class="text-secondary600 text-lg leading-relaxed">
@@ -75,12 +82,14 @@ const lessonPercent = 33
 				</section>
 
 				<section class="content-body">
+					{/* Brief overview of materials */}
 					<div class="course-stats">
 						<b>Contenido:</b>
 						<div class="course-stats__item">📄 4 lecciones</div>
 						<div class="course-stats__item">📝 14 ejercicios</div>
 					</div>
 
+					{/* Key learning objectives */}
 					<div class="learning-container">
 						<div class="learning-container__title">
 							<span class="check-icon"></span>
@@ -101,170 +110,19 @@ const lessonPercent = 33
 				</section>
 			</div>
 
-			{/* Drawer background of items */}
+			{/* Drawer background overlay for mobile */}
 			<div class="drawer-background" data-drawer-target="main-drawer" data-drawer-status="closed"></div>
 
 			<Footer />
 
+			{/* Spacing element for mobile footer visibility */}
 			<div class="footer-lifter"></div>
 		</main>
 	</div>
 </Layout>
 
 <style>
-	@reference "../../../styles/global.css";
-
-	body {
-		@apply text-secondary-900 flex h-screen flex-col;
-	}
-
-	.classroom {
-		@apply flex flex-1 overflow-hidden;
-	}
-
-	.classroom__main {
-		@apply flex flex-1 flex-col overflow-y-auto;
-	}
-
-	.classroom__content {
-		@apply grow;
-	}
-
-	.hero-banner {
-		@apply p-12;
-	}
-
-	.content-body {
-		@apply p-8;
-	}
-
-	.course-stats {
-		@apply border-secondary-500 flex cursor-default gap-4 rounded-xl border bg-white p-4 shadow-sm;
-	}
-
-	.course-stats__item {
-		@apply text-secondary-600 flex items-center gap-2 text-sm;
-	}
-
-	.learning-container {
-		@apply py-4;
-	}
-
-	.learning-container__title {
-		@apply mb-6 flex items-center gap-3;
-	}
-
-	.check-icon {
-		@apply bg-primary-500 h-6 w-6 shrink-0;
-		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%23000'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' /%3E%3C/svg%3E")
-			no-repeat center / contain;
-	}
-
-	.grid-icon {
-		@apply bg-secondary-100 inline-block h-5 w-5;
-		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z' /%3E%3C/svg%3E")
-			no-repeat center / contain;
-	}
-
-	.learning-container__title--text {
-		@apply text-secondary-800 text-xl font-bold;
-	}
-
-	.learning-list {
-		@apply flex flex-col gap-3;
-	}
-
-	.learning-list__item {
-		@apply flex cursor-pointer items-center gap-4 rounded-xl border p-4 transition-colors duration-200;
-		@apply border-secondary-200 hover:border-primary-400 hover:bg-primary-100/30;
-	}
-
-	.classroom__aside {
-		@apply flex w-full flex-col px-6 transition-transform duration-300 lg:w-80 lg:p-6;
-		@apply overflow-y-auto bg-white;
-		@apply border-r-secondary-200 shadow-secondary-900/70 border-r shadow-md;
-
-		@apply not-lg:fixed not-lg:inset-x-0 not-lg:bottom-0 not-lg:z-30;
-		@apply not-lg:max-h-3/4 not-lg:rounded-t-4xl;
-		@apply not-lg:shadow-[0_-5px_30px_-10px_rgba(0,0,0,0.2)];
-	}
-
-	.drawer-main {
-		@apply my-4;
-
-		&[data-drawer-target="main-drawer"] {
-			@apply overflow-hidden transition-[max-height,opacity,visibility] duration-400 ease-in-out;
-			@apply visible max-h-250 opacity-100;
-		}
-		&[data-drawer-target="main-drawer"][data-drawer-status="closed"] {
-			@apply not-lg:invisible not-lg:h-1/8 not-lg:max-h-0 not-lg:opacity-0;
-		}
-	}
-
-	.drawer-handle {
-		@apply flex w-full cursor-pointer flex-col items-center lg:hidden;
-	}
-
-	.drawer-handle__bar {
-		@apply bg-secondary-500 group-hover:bg-secondary-600 m-3 h-1.5 w-12 rounded-full;
-	}
-
-	.drawer-background {
-		@apply pointer-events-auto fixed top-0 right-0 z-25 h-full w-full transition-all duration-300 lg:invisible;
-		@apply bg-secondary-800/30 opacity-100;
-
-		&[data-drawer-target="main-drawer"][data-drawer-status="open"] {
-			@apply visible opacity-100;
-		}
-		&[data-drawer-target="main-drawer"][data-drawer-status="closed"] {
-			@apply not-lg:invisible not-lg:opacity-0;
-		}
-	}
-
-	.classroom__aside--title {
-		@apply text-secondary-900 text-xl font-bold;
-	}
-
-	.progress-bar {
-		@apply cursor-default;
-	}
-
-	.progress-bar__header {
-		@apply text-secondary-500 mb-1 flex justify-between text-sm;
-	}
-
-	.progress-bar__track {
-		@apply bg-secondary-200 h-2 w-full overflow-hidden rounded-full;
-	}
-
-	.progress-bar__fill {
-		@apply bg-primary-500 h-full rounded-full transition-all duration-300;
-	}
-
-	.progress-bar__stats {
-		@apply text-secondary-400 mt-2 text-xs;
-	}
-
-	.lesson__btn_general-view {
-		@apply mb-4 flex w-full cursor-pointer items-center gap-3 p-2 transition-colors;
-		@apply bg-primary-500 hover:bg-primary-600 rounded-xl font-medium text-white;
-	}
-
-	.lesson {
-		@apply border-t-secondary-200 border-t-2 pt-4;
-	}
-
-	.lesson__title {
-		@apply text-secondary-400 mb-4 text-xs font-bold tracking-wider uppercase;
-	}
-
-	.lesson__item {
-		@apply hover:bg-primary-100/30 flex h-10 cursor-pointer items-center gap-2 rounded-md p-2;
-	}
-
-	.footer-lifter {
-		@apply from-primary-400 via-primary-600 to-primary-500 min-h-35 w-full bg-linear-to-r lg:hidden;
-	}
+	@import "./classroom.css";
 </style>
 
 <script>
