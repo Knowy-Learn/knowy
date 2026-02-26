@@ -1,4 +1,4 @@
-@reference "../../../styles/global.css";
+@reference "@styles/global.css";
 
 body {
 	@apply text-secondary-900 flex h-screen flex-col;
