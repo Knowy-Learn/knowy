@@ -1,0 +1,125 @@
+---
+import Footer from "src/components/Footer.astro"
+import NavbarUser from "src/components/user/NavbarUser.astro"
+import Layout from "src/layouts/Layout.astro"
+
+const options = [
+	{ id: "A", text: "<b>" },
+	{ id: "B", text: "<strong>" },
+	{ id: "C", text: "<bold>" },
+	{ id: "D", text: "<em>" }
+]
+---
+
+<Layout>
+	<NavbarUser />
+
+	<main class="quiz">
+		<div class="quiz__card">
+			<div class="quiz__header">
+				<span class="quiz__progress">1 / 1</span>
+				<div class="quiz__progress-color"></div>
+			</div>
+
+			<div class="quiz__content">
+				<h2 class="quiz__question">
+					¿Qué etiqueta se usa para resaltar texto en negrita con significado semántico?
+				</h2>
+
+				<div class="quiz__options">
+					{
+						options.map((option) => (
+							<button class="quiz__option-btn group">
+								<span class="quiz__option-id">{option.id}</span>
+								<code class="quiz__option-code">{option.text}</code>
+							</button>
+						))
+					}
+				</div>
+			</div>
+
+			<div class="quiz__footer">
+				<span class="quiz__footer-hint">Elige una opción</span>
+				<button class="quiz__footer-submit">
+					Responder
+					<span class="icon-chevron-right"></span>
+				</button>
+			</div>
+		</div>
+	</main>
+	<Footer />
+</Layout>
+
+<style>
+	@import "../../../styles/global.css";
+
+	.quiz {
+		@apply flex grow items-center justify-center overflow-auto py-8 md:grow;
+		@apply md:from-primary-500/5 md:to-primary-600/35 md:bg-linear-to-br;
+	}
+
+	.quiz__card {
+		@apply mx-auto overflow-hidden rounded-2xl font-sans md:max-w-3xl md:border md:shadow-sm;
+		@apply border-secondary-200 bg-background;
+	}
+
+	.quiz__header {
+		@apply border-secondary-200 flex items-center justify-between border-b px-6 py-4;
+	}
+
+	.quiz__progress {
+		@apply text-secondary-500 text-sm font-bold;
+	}
+
+	.quiz__progress-color {
+		@apply bg-success h-2 w-8 rounded-full;
+	}
+
+	.quiz__content {
+		@apply px-8 pt-4;
+	}
+
+	.quiz__question {
+		@apply text-secondary-800 mb-8 text-xl font-bold;
+	}
+
+	.quiz__options {
+		@apply space-y-4;
+	}
+
+	.quiz__option-btn {
+		@apply flex w-full cursor-pointer items-center gap-4 rounded-2xl border-2 p-4 transition-all;
+		@apply border-secondary-100 hover:border-accent-200 hover:bg-accent-100/50;
+		@apply focus:border-accent-500 focus:bg-accent-200/50;
+	}
+
+	.quiz__option-id {
+		@apply flex h-10 min-h-10 w-10 min-w-10 items-center justify-center rounded-full font-bold;
+		@apply group-hover:bg-accent-100 bg-secondary-100 group-focus:bg-accent-400;
+	}
+
+	.quiz__option-code {
+		@apply text-secondary-800 text-lg font-medium;
+	}
+
+	.quiz__footer {
+		@apply flex items-center justify-between border-t border-gray-100 bg-gray-50/50 px-8 py-6;
+	}
+
+	.quiz__footer-hint {
+		@apply text-sm text-gray-400 italic;
+	}
+
+	.quiz__footer-submit {
+		@apply flex cursor-pointer items-center gap-2 rounded-xl px-6 py-2.5 font-semibold shadow-sm transition-all;
+		@apply bg-primary-500 shadow-primary-200 hover:bg-primary-600 text-white;
+	}
+
+	.icon-chevron-right {
+		@apply inline-block h-5 w-5 bg-current;
+		mask-repeat: no-repeat;
+		mask-position: center;
+		mask-size: contain;
+		mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E");
+	}
+</style>

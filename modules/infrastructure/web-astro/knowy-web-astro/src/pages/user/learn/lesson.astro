@@ -224,30 +224,3 @@ const lessonPercent = 33
 		drawer.setAttribute("data-drawer-status", isOpen ? "closed" : "open")
 	}
 </script>
-
-<script is:inline>
-	(function() {
-		const wrapper = document.getElementById('video-wrapper');
-		const iframe = document.getElementById('youtube-player');
-		const ui = document.getElementById('video-ui');
-		const thumb = document.getElementById('video-thumb');
-
-		if (!wrapper || !iframe) return;
-
-		wrapper.addEventListener('click', function() {
-			const videoId = 'b4QpP0mpFIE';
-
-			// 1. Asignar el SRC solo ahora (Firefox agradece esto)
-			iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0`;
-
-			// 2. Mostrar el iframe y ocultar la UI
-			iframe.classList.remove('hidden');
-			ui.classList.add('hidden');
-			thumb.classList.add('hidden');
-
-			// 3. Quitar estilos de "clickeable"
-			wrapper.classList.remove('cursor-pointer', 'border-dashed', 'hover:bg-gray-100');
-			wrapper.classList.add('border-solid', 'border-primary-500');
-		}, { once: true });
-	})();
-</script>
