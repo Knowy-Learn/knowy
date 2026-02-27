@@ -1,0 +1,62 @@
+---
+export interface Links {
+	id: number,
+	name: string,
+	url: string,
+}
+
+interface Props {
+	links: Links[]
+	activeLinkId: number
+}
+
+const { links, activeLinkId } = Astro.props
+---
+
+<aside class="setting-sidebar">
+	<h2 class="setting-sidebar--title">Ajustes</h2>
+	<nav class="setting-sidebar__nav">
+		{
+			links.map((link) => (
+				<a
+					href={link.url}
+					class={`setting-sidebar__nav-item ${
+						link.id == activeLinkId ? "setting-sidebar__nav-item--active" : "setting-sidebar__nav-item--inactive"
+					}`}
+				>
+					<span>{link.name}</span>
+				</a>
+			))
+		}
+	</nav>
+</aside>
+
+<style>
+	@import "@styles/global.css";
+
+	.setting-sidebar {
+		@apply w-full p-6 not-md:border-b-2 not-md:border-secondary-100;
+		@apply md:border-secondary-100 md:bg-secondary-100/30 md:w-2/8 md:rounded-l-3xl md:border-r;
+	}
+
+	.setting-sidebar--title {
+		@apply mb-8 text-xs font-bold tracking-widest text-gray-400 uppercase;
+	}
+
+	.setting-sidebar__nav {
+		@apply space-y-4;
+	}
+
+	.setting-sidebar__nav-item {
+		@apply flex items-center gap-3 rounded-lg px-4 py-3 transition-all;
+	}
+
+	.setting-sidebar__nav-item--active {
+		@apply border-b-primary-500 bg-primary-100/20 text-primary-500 border-r-4 font-semibold;
+	}
+
+	.setting-sidebar__nav-item--inactive {
+		@apply text-secondary-500;
+		@apply hover:bg-secondary-100/50 hover:scale-102 hover:font-medium;
+	}
+</style>
