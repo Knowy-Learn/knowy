@@ -1,27 +1,27 @@
 ---
-import Layout from "../../../layouts/Layout.astro"
-import NavbarUser from "../../../components/user/NavbarUser.astro"
-import Footer from "../../../components/Footer.astro"
-import InputField from "../../../components/InputField.astro"
-import Sidebar, { type Links } from "./sidebar.astro"
+import Layout from "src/layouts/Layout.astro"
+import NavbarUser from "src/components/user/NavbarUser.astro"
+import Footer from "src/components/Footer.astro"
+import InputField from "src/components/InputField.astro"
+import Sidebar, { type Links } from "src/components/user/settings/Sidebar.astro"
 
-const menuLinks : Links[] = [
-	{ id: 1, name: "Perfil Público", url: "/settings/profile" },
-	{ id: 2, name: "Privacidad y Cuenta", url: "/settings/privacy" }
+const menuLinks: Links[] = [
+	{ id: 1, name: "Perfil Público", url: "/user/settings/profile" },
+	{ id: 2, name: "Privacidad y Cuenta", url: "/user/settings/privacy" }
 ]
 
 const tags = [
-	{ name: "Programación", selected: true },
-	{ name: "Diseño UI/UX", selected: true },
-	{ name: "Marketing Digital", selected: true },
-	{ name: "Negocios", selected: true },
-	{ name: "Idiomas", selected: true },
-	{ name: "Programación", selected: true },
-	{ name: "Diseño UI/UX", selected: true },
-	{ name: "Marketing Digital", selected: true },
-	{ name: "Negocios", selected: true },
-	{ name: "Idiomas", selected: true },
-	{ name: "Fotografía", selected: true }
+	{ name: "Programación" },
+	{ name: "Diseño UI/UX" },
+	{ name: "Marketing Digital" },
+	{ name: "Negocios" },
+	{ name: "Idiomas" },
+	{ name: "Programación" },
+	{ name: "Diseño UI/UX" },
+	{ name: "Marketing Digital" },
+	{ name: "Negocios" },
+	{ name: "Idiomas" },
+	{ name: "Fotografía" }
 ]
 ---
 
@@ -30,7 +30,7 @@ const tags = [
 
 	<main class="profile-setting">
 		<div class="profile-setting__container">
-			<Sidebar links={menuLinks} activeLinkId={1}/>
+			<Sidebar links={menuLinks} activeLinkId={1} />
 
 			<form class="profile-setting__content">
 				<header class="profile-setting__header">
@@ -59,7 +59,7 @@ const tags = [
 					</div>
 				</div>
 
-				<InputField id="username" label="Nombre de usuario" placeholder="Ej: juanperez123" type="text" />
+				<InputField id="username" label="Nombre de usuario" placeholder="Ej: knowyuser123" type="text" />
 
 				<div class="profile-category">
 					<h3 class="profile-category__title">Intereses y Categorías</h3>
@@ -78,8 +78,7 @@ const tags = [
 						{
 							tags.map((tag) => (
 								<button class="profile-category__btn group">
-									{tag.name}
-									{tag.selected && <span class="profile-category__btn--remove">✕</span>}
+									{tag.name} <span class="profile-category__btn--remove">✕</span>
 								</button>
 							))
 						}
@@ -207,7 +206,7 @@ const tags = [
 	}
 
 	.separator {
-		@apply border-b-secondary-200 mb-4;
+		@apply border-secondary-100 mb-2;
 	}
 
 	.form-actions {

@@ -1,8 +1,8 @@
 ---
 export interface Links {
-	id: number,
-	name: string,
-	url: string,
+	id: number
+	name: string
+	url: string
 }
 
 interface Props {
@@ -21,7 +21,9 @@ const { links, activeLinkId } = Astro.props
 				<a
 					href={link.url}
 					class={`setting-sidebar__nav-item ${
-						link.id == activeLinkId ? "setting-sidebar__nav-item--active" : "setting-sidebar__nav-item--inactive"
+						link.id == activeLinkId
+							? "setting-sidebar__nav-item--active"
+							: "setting-sidebar__nav-item--inactive"
 					}`}
 				>
 					<span>{link.name}</span>
@@ -35,7 +37,7 @@ const { links, activeLinkId } = Astro.props
 	@import "@styles/global.css";
 
 	.setting-sidebar {
-		@apply w-full p-6 not-md:border-b-2 not-md:border-secondary-100;
+		@apply not-md:border-secondary-100 w-full p-6 not-md:border-b-2;
 		@apply md:border-secondary-100 md:bg-secondary-100/30 md:w-2/8 md:rounded-l-3xl md:border-r;
 	}
 
