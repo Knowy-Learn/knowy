@@ -1,0 +1,11 @@
+---
+import InputField from "src/components/InputField.astro"
+import Modal from "src/components/user/settings/Modal.astro"
+
+const { id = "modalEmail" } = Astro.props
+---
+
+<Modal id={id} title="Actualizar correo" description="Introduce tu nueva dirección de correo electrónico.">
+	<InputField label="Nuevo correo" type="email" placeholder="nuevo@correo.com" />
+	<InputField label="Contraseña actual" type="password" />
+</Modal>

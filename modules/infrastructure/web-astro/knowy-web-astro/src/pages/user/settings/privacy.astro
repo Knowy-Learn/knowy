@@ -1,0 +1,175 @@
+---
+import Layout from "src/layouts/Layout.astro"
+import NavbarUser from "src/components/user/NavbarUser.astro"
+import Footer from "src/components/Footer.astro"
+import Sidebar, { type Links } from "src/components/user/settings/Sidebar.astro"
+import ModalEmail from "src/components/user/settings/ModalEmail.astro"
+import ModalPassword from "src/components/user/settings/ModalPassword.astro"
+import ModalDelete from "src/components/user/settings/ModalDelete.astro"
+
+const menuLinks: Links[] = [
+	{ id: 1, name: "Perfil Público", url: "/user/settings/profile" },
+	{ id: 2, name: "Privacidad y Cuenta", url: "/user/settings/privacy" }
+]
+---
+
+<Layout title="Privacidad y Cuenta - Configuración">
+	<NavbarUser />
+
+	<main class="profile-setting">
+		<div class="profile-setting__container">
+			<Sidebar links={menuLinks} activeLinkId={2} />
+
+			<section class="profile-setting__content">
+				<div class="profile-setting__header">
+					<h1 class="profile-setting__header--title">Privacidad y Cuenta</h1>
+					<p class="profile-setting__header--subtitle">Gestiona el acceso y la seguridad de tu cuenta.</p>
+				</div>
+
+				<div class="profile-setting__change-options">
+					<div class="profile-setting__item">
+						<div>
+							<h3 class="profile-setting__item-title">Correo electrónico</h3>
+							<p class="profile-setting__item-subtitle">
+								Tu dirección actual es
+								<span class="profile-setting__item-mask">us***@ejemplo.com</span>
+							</p>
+						</div>
+						<button
+							class="profile-setting__item-btn"
+							onclick="document.getElementById('modalEmail')?.showModal()"
+						>
+							Actualizar correo
+						</button>
+					</div>
+
+					<hr class="profile-setting__separator" />
+
+					<div class="profile-setting__item">
+						<div>
+							<h3 class="profile-setting__item-title">Contraseña</h3>
+							<p class="profile-setting__item-subtitle">
+								Cambia tu contraseña para mantener tu cuenta segura.
+							</p>
+						</div>
+						<button
+							class="profile-setting__item-btn"
+							onclick="document.getElementById('modalPassword')?.showModal()"
+						>
+							Cambiar contraseña
+						</button>
+					</div>
+
+					<div class="profile-setting__item profile-setting__item--danger">
+						<div class="profile-setting__item-content">
+							<h3 class="profile-setting__item-title">Eliminar cuenta</h3>
+							<p class="profile-setting__item-subtitle">
+								Una vez elimines tu cuenta, todos tus datos se borrarán permanentemente.
+							</p>
+						</div>
+						<button
+							class="profile-setting__item-btn profile-setting__item-btn--delete"
+							onclick="document.getElementById('modalDelete')?.showModal()"
+						>
+							Eliminar mi cuenta definitivamente
+						</button>
+					</div>
+				</div>
+			</section>
+
+			<ModalEmail />
+			<ModalPassword />
+			<ModalDelete />
+		</div>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	@import "@styles/global.css";
+
+	.profile-setting {
+		@apply flex grow items-center justify-center p-4 md:p-8;
+		@apply md:from-primary-200/5 md:to-primary-300/35 md:bg-linear-to-br;
+	}
+
+	.profile-setting__container {
+		@apply flex min-h-[600px] w-full max-w-5xl overflow-hidden rounded-3xl not-md:flex-col;
+		@apply md:border-secondary-200 bg-background md:border md:shadow-sm;
+	}
+
+	.profile-setting__content {
+		@apply bg-background flex-1 p-6 md:p-10;
+	}
+
+	.profile-setting__header {
+		@apply mb-8;
+	}
+
+	.profile-setting__header--title {
+		@apply text-secondary-900 text-2xl font-bold;
+	}
+
+	.profile-setting__header--subtitle {
+		@apply text-secondary-500 text-sm;
+	}
+
+	.profile-setting__change-options {
+		@apply flex flex-col gap-10;
+	}
+
+	.profile-setting__item {
+		@apply flex items-center justify-between gap-4 py-4;
+	}
+
+	.profile-setting__item-title {
+		@apply text-secondary-800 font-bold;
+	}
+
+	.profile-setting__item-subtitle {
+		@apply text-secondary-500 text-sm;
+	}
+
+	.profile-setting__item-mask {
+		@apply text-secondary-900 font-medium;
+	}
+
+	.profile-setting__item-btn {
+		@apply cursor-pointer rounded-lg border px-4 py-2 text-sm font-semibold transition-all active:scale-95;
+		@apply border-secondary-200 text-secondary-700 hover:bg-secondary-100 bg-secondary-100/20;
+	}
+
+	.profile-setting__separator {
+		@apply border-secondary-100;
+	}
+
+	.profile-setting__item--danger {
+		@apply mt-6 flex-col items-start gap-2 rounded-2xl border border-red-100 bg-red-50/50 p-6;
+	}
+
+	.profile-setting__item--danger .profile-setting__item-title {
+		@apply text-lg text-red-600;
+	}
+
+	.profile-setting__item--danger .profile-setting__item-subtitle {
+		@apply text-red-500/80;
+	}
+
+	.profile-setting__item-btn--delete {
+		@apply mt-4 border-red-200 bg-white text-red-600 hover:bg-red-50;
+	}
+</style>
+
+<script>
+	document.addEventListener("click", handleBackdropDialog)
+
+	function handleBackdropDialog(event: PointerEvent) {
+		const target = event.target as HTMLDialogElement
+		if (target.tagName === "DIALOG") closeDialog(target)
+	}
+
+	function closeDialog(dialog: HTMLDialogElement) {
+		if (dialog.open) dialog.close()
+	}
+</script>

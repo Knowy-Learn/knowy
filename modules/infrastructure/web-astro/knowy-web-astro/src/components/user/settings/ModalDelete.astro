@@ -1,0 +1,43 @@
+---
+import InputField from "src/components/InputField.astro"
+import Modal from "src/components/user/settings/Modal.astro"
+
+interface Props {
+	id?: string
+}
+
+const { id = "modalDelete" } = Astro.props
+---
+
+<Modal
+	id={id}
+	title="¿Estás seguro?"
+	description="Esta acción no se puede deshacer. Todos tus datos se borrarán permanentemente."
+>
+	<div class="modal-delete">
+		<p class="modal-delete__text">
+			Escribe <span class="modal-delete__keyword">BORRAR</span> para confirmar.
+		</p>
+		<InputField label="Confirmación" variant="danger" placeholder="BORRAR" />
+	</div>
+
+	<button type="submit" slot="action-button" class="btn-danger-confirm"> Eliminar definitivamente </button>
+</Modal>
+
+<style>
+	@import "@styles/global.css";
+
+	.modal-delete__text {
+		@apply text-secondary-500 mb-2 text-sm;
+	}
+
+	.modal-delete__keyword {
+		@apply font-bold text-red-600;
+	}
+
+	.btn-danger-confirm {
+		@apply rounded-xl bg-red-600 px-5 py-2.5 text-sm font-bold text-white transition-all;
+		@apply shadow-sm hover:bg-red-700 active:scale-95;
+		@apply cursor-pointer;
+	}
+</style>

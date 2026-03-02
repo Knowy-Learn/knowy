@@ -1,0 +1,74 @@
+---
+interface Props {
+	id: string
+	title: string
+	description?: string
+}
+
+const { id, title, description } = Astro.props
+---
+
+<dialog id={id} class="modal-settings">
+	<div class="modal-settings__container">
+		<h2 class="modal-settings__title">{title}</h2>
+		{description && <p class="modal-settings__description">{description}</p>}
+
+		<form method="dialog" class="modal-settings__form">
+			<slot />
+
+			<div class="modal-settings__actions">
+				<button
+					type="button"
+					class="modal-settings__btn modal-settings__btn--cancel"
+					onclick={`document.getElementById('${id}')?.close()`}
+				>
+					Cancelar
+				</button>
+				<slot name="action-button">
+					<button type="submit" class="modal-settings__btn modal-settings__btn--submit"> Confirmar </button>
+				</slot>
+			</div>
+		</form>
+	</div>
+</dialog>
+
+<style>
+	@import "@styles/global.css";
+
+	.modal-settings {
+		@apply m-auto max-h-[90vh] overflow-y-auto rounded-2xl border-none p-0 shadow-2xl;
+		@apply backdrop:bg-secondary-900/40 backdrop:backdrop-blur-sm;
+	}
+
+	.modal-settings__container {
+		@apply w-[95vw] max-w-md bg-white p-8 outline-none;
+	}
+
+	.modal-settings__title {
+		@apply text-secondary-900 mb-2 text-xl font-bold;
+	}
+
+	.modal-settings__description {
+		@apply text-secondary-500 mb-6 text-sm;
+	}
+
+	.modal-settings__form {
+		@apply flex flex-col gap-4;
+	}
+
+	.modal-settings__actions {
+		@apply mt-8 flex justify-end gap-3;
+	}
+
+	.modal-settings__btn {
+		@apply cursor-pointer px-4 py-2 text-sm font-medium transition-all active:scale-95;
+	}
+
+	.modal-settings__btn--cancel {
+		@apply text-secondary-500 hover:text-secondary-800;
+	}
+
+	.modal-settings__btn--submit {
+		@apply bg-primary-500 hover:bg-primary-600 rounded-xl px-5 py-2.5 font-bold text-white;
+	}
+</style>
