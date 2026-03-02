@@ -1,35 +1,68 @@
 ---
-// TODO: Refactor to BEM with tailwind method using @apply in main.css for cleaner HTML markup.
 interface Props {
 	id?: string
 	label?: string
 	placeholder?: string
 	type?: "text" | "password" | "email" | "tel" | "url" | "search" | "number" | "time" | "date"
+	variant?: "default" | "danger"
 }
 
+
+const randomId: string = Math.random().toString(36).substring(2, 9)
 const {
-	id = "password",
-	label = "Contraseña",
-	placeholder = "Escriba su contraseña",
-	type = "text"
+	id = `input-${randomId}`,
+	label,
+	placeholder = "",
+	type = "text",
+	variant = "default"
 } = Astro.props as Props
+
+const variantClass = `input-group--${variant}`
 ---
 
-<div class="flex flex-col gap-1">
+<div class={`input-group ${variantClass}`}>
 	{
 		label && (
-			<label for={id} class="text-primary-700 font-medium">
-				{label}:
+			<label for={id} class="input-group__label">
+				{label}
 			</label>
 		)
 	}
-	<input
-		id={id}
-		name={id}
-		placeholder={placeholder}
-		class="bg-background border-primary-300/80 text-secondary-500 focus:border-accent-600 w-full rounded-lg border-2 px-3 py-2 focus:border-2 focus:ring"
-		required
-		type={type}
-	/>
+	<input id={id} name={id} placeholder={placeholder} class="input-group__input" type={type} />
 	<slot />
 </div>
+
+<style>
+	@import "@styles/global.css";
+
+	.input-group {
+		@apply flex w-full flex-col gap-1.5;
+	}
+
+	.input-group__label {
+		@apply text-sm font-semibold transition-colors duration-200;
+	}
+
+	.input-group__input {
+		@apply w-full rounded-lg border-2 px-3 py-2.5 text-sm transition-all duration-200 outline-none;
+		@apply placeholder:text-secondary-400;
+	}
+
+	/* Variant: Default */
+	.input-group--default .input-group__label {
+		@apply text-slate-700;
+	}
+	.input-group--default .input-group__input {
+		@apply border-secondary-100 bg-background text-secondary-900;
+		@apply focus:border-primary-600 focus:ring-primary-100 focus:ring-4;
+	}
+
+	/* Variant: Danger */
+	.input-group--danger .input-group__label {
+		@apply text-error;
+	}
+	.input-group--danger .input-group__input {
+		@apply border-error/30  text-error placeholder:text-error font-medium;
+		@apply focus:border-error focus:ring-error/20 focus:ring-4;
+	}
+</style>
