@@ -6,10 +6,16 @@ info:
 tags:
     -   name: Authentication
         description: Authentication and login-related endpoints
+    -   name: Settings
+        description: Endpoints for user account settings and preferences
+    -   name: User
+        description: Endpoints related to user management
+    -   name: Course
+        description: Endpoints for course management and enrollment
+    -   name: Exercise
+        description: Endpoints for exercise sessions and submissions
     -   name: News
         description: Endpoints related to news
-    -   name: User
-        description: Endpoints related to user
 
 servers:
     -   url: http://localhost:8080/api/v1
@@ -148,60 +154,187 @@ paths:
                 '401':
                     $ref: '#/components/responses/UnauthorizedError'
     #################################
-    # News
+    # User Settings
     #################################
-    /news:
-        get:
+    /user/settings/profile:
+        patch:
             tags:
-                - News
-            summary: Get the latest news
-            security: [ ]
-            parameters:
-                -   name: Accept-Language
-                    in: header
-                    description: Language for the response (e.g., es, en)
-                    required: false
-                    schema:
-                        type: string
-                        default: en
-                -   name: page
-                    in: query
-                    description: Page number
-                    required: false
-                    schema:
-                        type: integer
-                        default: 0
-                        minimum: 0
-                -   name: pageSize
-                    in: query
-                    description: Page size
-                    required: false
-                    schema:
-                        type: integer
-                        default: 10
-                        minimum: 1
+                - Settings
+            summary: Update user profile settings
+            description: Update the user's profile information including username, gender, and bio.
+            security:
+                -   BearerAuth: [ ]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                nickname:
+                                    type: string
+                                    description: The user's nickname.
+                                    example: "newNickname"
+                                gender:
+                                    $ref: '#/components/schemas/GenderEnum'
+                                bio:
+                                    type: string
+                                    description: A brief biography of the user.
+                                    example: "Software developer and Java enthusiast"
             responses:
                 '200':
-                    description: Array News
+                    description: Profile updated successfully.
                     content:
                         application/json:
                             schema:
                                 type: object
                                 properties:
-                                    info:
-                                        $ref: '#/components/schemas/PaginationMetadata'
-                                    items:
-                                        type: array
-                                        description: List of new items
-                                        items:
-                                            $ref: '#/components/schemas/NewsDto'
-                                required:
-                                    - info
-                                    - items
+                                    message:
+                                        type: string
+                                        example: "Profile updated successfully"
                 '400':
                     $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
                 '500':
                     $ref: '#/components/responses/InternalServerError'
+
+    /user/settings/email:
+        patch:
+            tags:
+                - Settings
+            summary: Update user email
+            description: Change the user's email address. Requires password confirmation.
+            security:
+                -   BearerAuth: [ ]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - newEmail
+                                - password
+                            properties:
+                                newEmail:
+                                    type: string
+                                    format: email
+                                    description: The new email address.
+                                    example: "newemail@example.com"
+                                password:
+                                    type: string
+                                    format: password
+                                    description: The user's current password for confirmation.
+                                    example: "currentPassword123"
+            responses:
+                '200':
+                    description: Email updated successfully.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: "Email updated successfully"
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '409':
+                    description: Email already registered.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/KnowyErrorReportDto'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+
+    /user/settings/password:
+        patch:
+            tags:
+                - Settings
+            summary: Update user password
+            description: Change the user's password. Requires the current password and a new password confirmation.
+            security:
+                -   BearerAuth: [ ]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - currentPassword
+                                - newPassword
+                                - newPasswordConfirm
+                            properties:
+                                currentPassword:
+                                    type: string
+                                    format: password
+                                    description: The user's current password.
+                                    example: "oldPassword123"
+                                newPassword:
+                                    type: string
+                                    format: password
+                                    description: The new password.
+                                    example: "newPassword456"
+                                newPasswordConfirm:
+                                    type: string
+                                    format: password
+                                    description: Confirmation of the new password.
+                                    example: "newPassword456"
+            responses:
+                '200':
+                    description: Password updated successfully.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: "Password updated successfully"
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+
+    /user/settings/delete-account:
+        delete:
+            tags:
+                - Settings
+            summary: Delete user account
+            description: Permanently delete the user's account. This action is irreversible and requires password confirmation.
+            security:
+                -   BearerAuth: [ ]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - password
+                            properties:
+                                password:
+                                    type: string
+                                    format: password
+                                    description: The user's password for confirmation.
+                                    example: "confirmPassword123"
+            responses:
+                '204':
+                    description: Account deleted successfully. No content is returned.
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+
     #################################
     # User
     #################################
@@ -258,10 +391,68 @@ paths:
                                         example: 8.7
                 '401':
                     $ref: '#/components/responses/UnauthorizedError'
+    #################################
+    # News
+    #################################
+    /news:
+        get:
+            tags:
+                - News
+            summary: Get the latest news
+            security: [ ]
+            parameters:
+                -   name: Accept-Language
+                    in: header
+                    description: Language for the response (e.g., es, en)
+                    required: false
+                    schema:
+                        type: string
+                        default: en
+                -   name: page
+                    in: query
+                    description: Page number
+                    required: false
+                    schema:
+                        type: integer
+                        default: 0
+                        minimum: 0
+                -   name: pageSize
+                    in: query
+                    description: Page size
+                    required: false
+                    schema:
+                        type: integer
+                        default: 10
+                        minimum: 1
+            responses:
+                '200':
+                    description: Array News
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    info:
+                                        $ref: '#/components/schemas/PaginationMetadata'
+                                    items:
+                                        type: array
+                                        description: List of new items
+                                        items:
+                                            $ref: '#/components/schemas/NewsDto'
+                                required:
+                                    - info
+                                    - items
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+    #################################
+    # Course
+    #################################
     /user/course:
         get:
             tags:
-                - User
+                - Course
             summary: Get user course
             description: Fetch the user's personal course details by its ID.
             security:
@@ -292,7 +483,7 @@ paths:
     /user/course/subscribe:
         post:
             tags:
-                - User
+                - Course
             summary: Subscribe user to a course
             description: Enrolls the authenticated user into a specific Java course using its ID.
             security:
@@ -322,7 +513,7 @@ paths:
     /user/course/lesson:
         get:
             tags:
-                - User
+                - Course
             summary: Get user lesson details
             description: >
                 Retrieve detailed information about a specific lesson within a course for the authenticated
@@ -362,7 +553,7 @@ paths:
     /user/courses:
         get:
             tags:
-                - User
+                - Course
             summary: Get user courses
             description: Fetches the user's personal course collection. Supports filtering by category or status, pagination, and custom sorting.
             security:
@@ -406,7 +597,7 @@ paths:
     /user/courses/unsubscribed:
         get:
             tags:
-                - User
+                - Course
             summary: Get available courses
             description: Fetches courses that are available for the user to enroll in. Supports filtering, pagination, and custom sorting.
             security:
@@ -440,7 +631,7 @@ paths:
     /user/recommendations:
         get:
             tags:
-                - User
+                - Course
             summary: Get course recommendations for the current user
             description: Returns a personalized list of courses based on the user's interests, past enrollments, and browsing history.
             security:
@@ -461,6 +652,271 @@ paths:
                     $ref: '#/components/responses/UnauthorizedError'
                 '500':
                     $ref: '#/components/responses/InternalServerError'
+
+    #################################
+    # User Exercise Sessions
+    #################################
+    /user/exercise-session:
+        get:
+            tags:
+                - Exercise
+            summary: Get an exercise for the user
+            description: Retrieve an exercise session for the authenticated user with exercise content and question details.
+            security:
+                -   BearerAuth: [ ]
+            responses:
+                '200':
+                    description: Exercise session retrieved successfully.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ExerciseSessionDto'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+        post:
+            tags:
+                - Exercise
+            summary: Submit exercise answer and record result
+            description: Submit the user's answer to an exercise. The answer is compared with a hash, and the result is recorded in the backend.
+            security:
+                -   BearerAuth: [ ]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - exerciseId
+                                - answerHash
+                                - difficulty
+                            properties:
+                                exerciseId:
+                                    type: integer
+                                    format: int32
+                                    description: The unique identifier of the exercise.
+                                    example: 501
+                                answerHash:
+                                    type: string
+                                    description: Hash of the submitted answer for validation.
+                                    example: "a1b2c3d4e5f6"
+                                difficulty:
+                                    type: integer
+                                    description: Difficulty level of the exercise.
+                                    example: 3
+            responses:
+                '200':
+                    description: Exercise answer submitted successfully.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - isCorrect
+                                properties:
+                                    isCorrect:
+                                        type: boolean
+                                        description: Whether the answer is correct.
+                                        example: true
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+
+    /user/course/exercise-session:
+        get:
+            tags:
+                - Exercise
+            summary: Get an exercise within a course
+            description: Retrieve an exercise session for a specific course with exercise content and question details.
+            security:
+                -   BearerAuth: [ ]
+            parameters:
+                -   name: course
+                    in: query
+                    required: true
+                    description: The unique identifier of the course.
+                    schema:
+                        type: integer
+                        format: int32
+                    example: 75
+            responses:
+                '200':
+                    description: Exercise session retrieved successfully.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ExerciseSessionDto'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+        post:
+            tags:
+                - Exercise
+            summary: Submit exercise answer for a course
+            description: Submit the user's answer to an exercise within a course. The answer is compared with a hash, and the result is recorded.
+            security:
+                -   BearerAuth: [ ]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - course
+                                - exerciseId
+                                - answerHash
+                                - difficulty
+                            properties:
+                                course:
+                                    type: integer
+                                    format: int32
+                                    description: The unique identifier of the course.
+                                    example: 75
+                                exerciseId:
+                                    type: integer
+                                    format: int32
+                                    description: The unique identifier of the exercise.
+                                    example: 501
+                                answerHash:
+                                    type: string
+                                    description: Hash of the submitted answer for validation.
+                                    example: "a1b2c3d4e5f6"
+                                difficulty:
+                                    type: integer
+                                    description: Difficulty level of the exercise.
+                                    example: 3
+            responses:
+                '200':
+                    description: Exercise answer submitted successfully.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - isCorrect
+                                properties:
+                                    isCorrect:
+                                        type: boolean
+                                        description: Whether the answer is correct.
+                                        example: true
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+
+    /user/course/lesson/exercise-session:
+        get:
+            tags:
+                - Exercise
+            summary: Get an exercise within a lesson
+            description: Retrieve an exercise session for a specific lesson within a course with exercise content and question details.
+            security:
+                -   BearerAuth: [ ]
+            parameters:
+                -   name: course
+                    in: query
+                    required: true
+                    description: The unique identifier of the course.
+                    schema:
+                        type: integer
+                        format: int32
+                    example: 75
+                -   name: lesson
+                    in: query
+                    required: true
+                    description: The unique identifier of the lesson.
+                    schema:
+                        type: integer
+                        format: int32
+                    example: 2048
+            responses:
+                '200':
+                    description: Exercise session retrieved successfully.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ExerciseSessionDto'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+        post:
+            tags:
+                - Exercise
+            summary: Submit exercise answer for a lesson
+            description: Submit the user's answer to an exercise within a lesson. The answer is compared with a hash, and the result is recorded.
+            security:
+                -   BearerAuth: [ ]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - course
+                                - lesson
+                                - exerciseId
+                                - answerHash
+                                - difficulty
+                            properties:
+                                course:
+                                    type: integer
+                                    format: int32
+                                    description: The unique identifier of the course.
+                                    example: 75
+                                lesson:
+                                    type: integer
+                                    format: int32
+                                    description: The unique identifier of the lesson.
+                                    example: 2048
+                                exerciseId:
+                                    type: integer
+                                    format: int32
+                                    description: The unique identifier of the exercise.
+                                    example: 501
+                                answerHash:
+                                    type: string
+                                    description: Hash of the submitted answer for validation.
+                                    example: "a1b2c3d4e5f6"
+                                difficulty:
+                                    type: integer
+                                    description: Difficulty level of the exercise.
+                                    example: 3
+            responses:
+                '200':
+                    description: Exercise answer submitted successfully.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - isCorrect
+                                properties:
+                                    isCorrect:
+                                        type: boolean
+                                        description: Whether the answer is correct.
+                                        example: true
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '500':
+                    $ref: '#/components/responses/InternalServerError'
+
 
 components:
     securitySchemes:
@@ -812,6 +1268,41 @@ components:
                     type: string
                     format: uri
                     example: "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+        ExerciseSessionDto:
+            type: object
+            description: Represents an exercise session with question and answer options.
+            required:
+                - id
+                - question
+                - options
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                    description: The unique identifier of the exercise.
+                    example: 501
+                question:
+                    type: string
+                    description: The exercise question or prompt.
+                    example: "What is the correct way to declare a variable in Java?"
+                options:
+                    type: array
+                    description: Array of possible answers for the exercise.
+                    items:
+                        type: object
+                        required:
+                            - id
+                            - text
+                        properties:
+                            id:
+                                type: integer
+                                format: int32
+                                description: The unique identifier of the answer option.
+                                example: 1
+                            text:
+                                type: string
+                                description: The text of the answer option.
+                                example: "int myVar = 10;"
         #################################
         # Knowy Error DTO
         #################################

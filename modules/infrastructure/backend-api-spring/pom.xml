@@ -176,6 +176,7 @@
 						<generateApiUtil>false</generateApiUtil>
 						<skipDefaultInterface>true</skipDefaultInterface>
 						<useBeanValidation>true</useBeanValidation>
+						<useTags>true</useTags>
 					</configOptions>
 					<globalProperties>
 						<supportingFiles>false</supportingFiles>

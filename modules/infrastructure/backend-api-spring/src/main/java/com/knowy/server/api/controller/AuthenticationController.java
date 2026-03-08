@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  * REST controller responsible for user authentication operations, including login, registration, and token validation.
  */
 @RestController
-public class AuthenticationController implements AuthApi {
+public class AuthenticationController implements AuthenticationApi {
 
 	private final LoginUserUseCase loginUserUseCase;
 	private final RegisterUserUseCase registerUserUseCase;
